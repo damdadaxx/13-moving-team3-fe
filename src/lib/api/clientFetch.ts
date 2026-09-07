@@ -55,7 +55,11 @@ export default async function clientFetch<T = unknown>(
       .json()
       .catch(() => null);
 
-    if (errorBody?.code === 'TOKEN_EXPIRED' && !init._retried) {
+    // 백엔드는 만료/미인증 모두 UNAUTHORIZED. TOKEN_EXPIRED가 오면 그것도 갱신.
+    const shouldRefresh =
+      errorBody?.code === 'TOKEN_EXPIRED' || errorBody?.code === 'UNAUTHORIZED';
+
+    if (shouldRefresh && !init._retried) {
       try {
         const refreshResponse = await requestRefresh();
 
@@ -80,5 +84,17 @@ export default async function clientFetch<T = unknown>(
     );
   }
 
-  return response.json() as Promise<T>;
+  // { success: true, data }면 data만 반환
+  const body = (await response.json()) as unknown;
+  if (
+    body &&
+    typeof body === 'object' &&
+    'success' in body &&
+    body.success === true &&
+    'data' in body
+  ) {
+    return (body as { data: T }).data;
+  }
+
+  return body as T;
 }

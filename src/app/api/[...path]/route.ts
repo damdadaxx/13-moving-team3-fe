@@ -53,10 +53,17 @@ async function proxy(request: NextRequest, { params }: RouteContext) {
     },
   });
 
-  /** Set-Cookie 헤더 전달 */
+  /*
+  @ Set-Cookie Path 보정
+  - 백엔드는 refreshToken Path=/auth (BE 기준)
+  - 브라우저는 프론트 오리진에 쿠키를 저장하므로 /api/auth 요청에 붙이려면 Path=/api/auth 여야 함
+  */
   const setCookieHeaders = response.headers.getSetCookie?.() ?? [];
   setCookieHeaders.forEach((cookie) => {
-    proxyResponse.headers.append('Set-Cookie', cookie);
+    proxyResponse.headers.append(
+      'Set-Cookie',
+      cookie.replace(/;\s*Path=\/auth(?=;|$)/i, '; Path=/api/auth'),
+    );
   });
 
   return proxyResponse;

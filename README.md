@@ -19,7 +19,7 @@ npm install
 npm run dev
 ```
 
-[http://localhost:3000](http://localhost:3000) 에서 확인
+브라우저에서 [http://localhost:5173](http://localhost:5173) (고정 포트)로 접속하여 확인할 수 있습니다.
 
 ## 스크립트
 
@@ -34,20 +34,48 @@ npm run dev
 ## 브랜치 전략
 
 ```
-main    ← 배포용 (PR로만 merge)
-dev     ← 개발 통합 브랜치
-feat/*  ← 기능 개발
-fix/*   ← 버그 수정
+main              ← 프로덕션 배포 (Vercel)
+dev               ← 개발 통합 브랜치
+feat/이슈번호-기능명  ← 기능 개발
+fix/이슈번호-기능명   ← 버그 수정
 ```
+
+### Merge 전략
+
+| 방향             | 방식             |
+| ---------------- | ---------------- |
+| `feat/*` → `dev` | Squash and Merge |
+| `dev` → `main`   | Merge Commit     |
+
+## Git 훅 (Husky)
+
+커밋 시 자동으로 아래 작업이 실행됩니다.
+
+| 훅           | 실행 내용                                 |
+| ------------ | ----------------------------------------- |
+| `pre-commit` | lint-staged (Prettier + ESLint 자동 수정) |
+| `commit-msg` | commitlint (커밋 메시지 형식 검사)        |
 
 ## 커밋 컨벤션
 
 ```
-feat:     새로운 기능
+feat:     새로운 기능 추가
 fix:      버그 수정
-style:    스타일 변경
-refactor: 리팩토링
-chore:    설정/의존성
-docs:     문서
-test:     테스트
+docs:     문서 내용 변경
+style:    포매팅, 세미콜론 누락 등 코드 변경이 없는 경우
+refactor: 코드 구조 개선 (리팩토링)
+test:     테스트 코드 작성
+chore:    빌드 수정, 패키지 매니저 설정 등
+```
+
+**예시**
+
+```bash
+git commit -m "feat: 사용자 로그인 기능 추가"
+git commit -m "fix: 모달 닫기 버튼 오류 수정"
+git commit -m "docs: README 설정 가이드 추가"
+git commit -m "style: 들여쓰기 정렬"
+git commit -m "refactor: 버튼 컴포넌트 구조 개선"
+git commit -m "test: 로그인 기능 단위 테스트 작성"
+git commit -m "chore: 패키지 의존성 업데이트"
 ```

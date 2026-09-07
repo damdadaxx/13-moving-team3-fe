@@ -10,7 +10,7 @@
   "importOrder": [
     "^react",
     "<THIRD_PARTY_MODULES>",
-    "^@/app/assets",
+    "^@/assets",
     "^@/app",
     "^@/lib",
     "^@/hooks",

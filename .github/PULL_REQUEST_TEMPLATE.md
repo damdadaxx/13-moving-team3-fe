@@ -44,8 +44,9 @@ resolve #
 ## ✅ 테스트
 
 - [ ] 로컬에서 정상 동작을 확인했습니다.
-- [ ] `pnpm build` (또는 `npm run build`)가 정상적으로 통과합니다.
+- [ ] `npm run build`가 정상적으로 통과합니다.
 - [ ] TypeScript 타입 에러가 없습니다. (`tsc --noEmit`)
+- [ ] ESLint 검사를 통과했습니다. (`npm run lint`)
 - [ ] 콘솔에 불필요한 에러/경고가 없습니다.
 - [ ] 테스트 코드를 작성 또는 갱신했습니다.
 

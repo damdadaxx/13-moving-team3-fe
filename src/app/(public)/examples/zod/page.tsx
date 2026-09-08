@@ -43,17 +43,17 @@ export default function ZodExamplePage() {
   return (
     <div className="mx-auto flex max-w-[720px] flex-col gap-10 p-[24px]">
       <div>
-        <h1 className="text-[20px] font-bold">Zod 관리 예시</h1>
-        <p className="mt-2 text-[14px] text-gray-600">
+        <h1 className="text-xl-bold">Zod 관리 예시</h1>
+        <p className="mt-2 text-md-regular text-gray-500">
           스키마는 <code>src/lib/validations</code>, 폼 연결은{' '}
           <code>hooks</code> + react-hook-form, API 응답은{' '}
           <code>safeParse</code>로 검사합니다.
         </p>
       </div>
 
-      <section className="flex flex-col gap-2 text-[14px]">
-        <h2 className="text-[16px] font-semibold">역할 분리</h2>
-        <ol className="list-decimal pl-5 text-gray-700">
+      <section className="flex flex-col gap-2 text-md-regular">
+        <h2 className="text-lg-semibold">역할 분리</h2>
+        <ol className="list-decimal pl-5 text-black-100">
           <li>
             <code>lib/validations/*.ts</code> — z.object 스키마 +{' '}
             <code>z.infer</code> 타입
@@ -69,10 +69,8 @@ export default function ZodExamplePage() {
       </section>
 
       <section className="flex flex-col gap-4">
-        <h2 className="text-[16px] font-semibold">
-          1. 폼 검증 (react-hook-form)
-        </h2>
-        <p className="text-[14px] text-gray-600">
+        <h2 className="text-lg-semibold">1. 폼 검증 (react-hook-form)</h2>
+        <p className="text-md-regular text-gray-500">
           포커스를 벗어나거나(onBlur) 제출할 때 signupSchema가 돌아갑니다.
         </p>
         <form
@@ -99,30 +97,28 @@ export default function ZodExamplePage() {
           />
           <button
             type="submit"
-            className="rounded-[8px] bg-black px-[16px] py-[8px] text-[14px] text-white"
+            className="rounded-[8px] bg-black px-[16px] py-[8px] text-md-regular text-white"
           >
             제출 (콘솔/아래에 결과 표시)
           </button>
         </form>
         {submitted && (
-          <pre className="overflow-x-auto rounded-[8px] bg-gray-100 p-[12px] text-[12px]">
+          <pre className="overflow-x-auto rounded-[8px] bg-gray-100 p-[12px] text-xs-regular">
             {JSON.stringify(submitted, null, 2)}
           </pre>
         )}
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-[16px] font-semibold">
-          2. API 응답 검증 (safeParse)
-        </h2>
-        <p className="text-[14px] text-gray-600">
+        <h2 className="text-lg-semibold">2. API 응답 검증 (safeParse)</h2>
+        <p className="text-md-regular text-gray-500">
           폼이 아닌 fetch 결과도 같은 스키마로 검사합니다. 실패해도 throw 하지
           않고 메시지를 꺼냅니다.
         </p>
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            className="rounded-[8px] border border-gray-300 px-[12px] py-[6px] text-[14px]"
+            className="rounded-[8px] border border-gray-300 px-[12px] py-[6px] text-md-regular"
             onClick={() =>
               handleApiParseExample(
                 '{"email":"user@test.com","password":"abcd1234"}',
@@ -133,7 +129,7 @@ export default function ZodExamplePage() {
           </button>
           <button
             type="button"
-            className="rounded-[8px] border border-gray-300 px-[12px] py-[6px] text-[14px]"
+            className="rounded-[8px] border border-gray-300 px-[12px] py-[6px] text-md-regular"
             onClick={() =>
               handleApiParseExample('{"email":"not-email","password":"12"}')
             }
@@ -142,7 +138,7 @@ export default function ZodExamplePage() {
           </button>
         </div>
         {apiParseMessage && (
-          <p className="text-[14px] text-gray-800">{apiParseMessage}</p>
+          <p className="text-md-regular text-black-400">{apiParseMessage}</p>
         )}
       </section>
     </div>

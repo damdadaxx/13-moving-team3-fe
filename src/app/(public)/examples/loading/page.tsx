@@ -12,16 +12,16 @@ export default function LoadingExamplePage() {
   return (
     <div className="mx-auto flex max-w-[720px] flex-col gap-10 p-[24px]">
       <div>
-        <h1 className="text-[20px] font-bold">로딩 UI 용도별 예시</h1>
-        <p className="mt-2 text-[14px] text-gray-600">
+        <h1 className="text-xl-bold">로딩 UI 용도별 예시</h1>
+        <p className="mt-2 text-md-regular text-gray-500">
           데이터 형태를 이미 알면 Skeleton, 영역 전체가 비어 있으면
           LoadingDisplay, 페이지 이동 중이면 app/loading.tsx 를 사용합니다.
         </p>
       </div>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-[16px] font-semibold">언제 무엇을 쓰나</h2>
-        <table className="w-full border-collapse text-left text-[14px]">
+        <h2 className="text-lg-semibold">언제 무엇을 쓰나</h2>
+        <table className="w-full border-collapse text-left text-md-regular">
           <thead>
             <tr className="border-b">
               <th className="py-2 pr-3">용도</th>
@@ -63,10 +63,10 @@ export default function LoadingExamplePage() {
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-[16px] font-semibold">
+        <h2 className="text-lg-semibold">
           1. 페이지/섹션 전체 — LoadingDisplay
         </h2>
-        <p className="text-[14px] text-gray-600">
+        <p className="text-md-regular text-gray-500">
           레이아웃을 아직 그릴 수 없을 때. 기본값 <code>fullHeight</code> 로
           영역 중앙에 스피너를 둡니다.
         </p>
@@ -76,16 +76,16 @@ export default function LoadingExamplePage() {
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-[16px] font-semibold">
+        <h2 className="text-lg-semibold">
           2. 인라인 — LoadingDisplay (fullHeight=false)
         </h2>
-        <p className="text-[14px] text-gray-600">
+        <p className="text-md-regular text-gray-500">
           버튼 옆, 필터 옆처럼 작은 자리에서 기다릴 때.
         </p>
         <div className="flex items-center gap-3">
           <button
             type="button"
-            className="rounded-[8px] bg-black px-[16px] py-[8px] text-[14px] text-white"
+            className="rounded-[8px] bg-black px-[16px] py-[8px] text-md-regular text-white"
           >
             견적 요청
           </button>
@@ -94,10 +94,8 @@ export default function LoadingExamplePage() {
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-[16px] font-semibold">
-          3. 콘텐츠 자리표시 — Skeleton
-        </h2>
-        <p className="text-[14px] text-gray-600">
+        <h2 className="text-lg-semibold">3. 콘텐츠 자리표시 — Skeleton</h2>
+        <p className="text-md-regular text-gray-500">
           카드 모양이 정해져 있을 때. 스피너보다 레이아웃이 덜 흔들립니다.{' '}
           <Link href="/examples/skeleton" className="underline">
             Skeleton 상세 예시
@@ -113,17 +111,15 @@ export default function LoadingExamplePage() {
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-[16px] font-semibold">
-          4. 라우트 전환 — app/loading.tsx
-        </h2>
-        <p className="text-[14px] text-gray-600">
+        <h2 className="text-lg-semibold">4. 라우트 전환 — app/loading.tsx</h2>
+        <p className="text-md-regular text-gray-500">
           페이지 파일을 직접 넣지 않고, 해당 폴더의 <code>loading.tsx</code>가
           이동하는 동안 자동으로 보입니다. 루트 <code>src/app/loading.tsx</code>
           는 지금 <code>LoadingDisplay</code>를 쓰고 있습니다.
         </p>
         <Link
           href="/examples/loading/route-demo"
-          className="w-fit rounded-[8px] border border-gray-300 px-[16px] py-[8px] text-[14px]"
+          className="w-fit rounded-[8px] border border-gray-300 px-[16px] py-[8px] text-md-regular"
         >
           라우트 전환 로딩 보기 (2초 지연)
         </Link>

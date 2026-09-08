@@ -26,7 +26,7 @@ export default function LoadingDisplay({
   return (
     <div
       className={cn(
-        'flex items-center justify-center',
+        'flex items-center justify-center text-gray-500',
         fullHeight ? 'min-h-[350px] w-full' : 'h-fit w-fit',
         className,
       )}
@@ -35,7 +35,7 @@ export default function LoadingDisplay({
         visible={true}
         height={size}
         width={size}
-        color="#000000" // TODO: 디자인 시스템에 따라 수정(고정 값으로 설정)
+        color="currentColor"
         ariaLabel="tail-spin-loading"
         radius={1}
       />

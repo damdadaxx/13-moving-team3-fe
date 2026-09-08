@@ -14,7 +14,7 @@ export default function InputBase({
 }: InputBaseProps) {
   return (
     <div className="flex flex-col gap-1">
-      {label && <label className="text-[14px]">{label}</label>}
+      {label && <label className="text-md-medium">{label}</label>}
       <input
         className={cn(
           'rounded-[8px] border border-gray-300 px-3 py-2',
@@ -22,7 +22,7 @@ export default function InputBase({
         )}
         {...props}
       />
-      {error && <p className="text-[12px] text-red-500">{error}</p>}
+      {error && <p className="text-xs-medium text-red-500">{error}</p>}
     </div>
   );
 }

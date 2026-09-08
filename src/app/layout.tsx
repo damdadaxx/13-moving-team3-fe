@@ -1,19 +1,14 @@
 import type { ReactNode } from 'react';
 
 import type { Metadata } from 'next';
-import { Geist_Mono } from 'next/font/google';
 
 import Providers from '@/app/providers';
+
+import { pretendard } from '@/lib/constants/fonts';
 
 import { cn } from '@/utils/cn';
 
 import './globals.css';
-
-// TODO: 디자인 시스템 작업 시 변경
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
 
 // TODO: 최적화 작업 시 변경
 export const metadata: Metadata = {
@@ -23,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="ko" className={cn(geistMono.variable, 'h-full antialiased')}>
+    <html lang="ko" className={cn(pretendard.variable, 'h-full antialiased')}>
       <body>
         {/* TODO: Container 컴포넌트 추가 */}
         <Providers>{children}</Providers>

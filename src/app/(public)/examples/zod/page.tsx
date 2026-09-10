@@ -75,7 +75,7 @@ export default function ZodExamplePage() {
         </p>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-4 rounded-[8px] border border-gray-200 p-[16px]"
+          className="flex flex-col gap-4 rounded-[8px] border border-line-200 p-[16px]"
         >
           <InputBase
             label="이메일"
@@ -97,13 +97,13 @@ export default function ZodExamplePage() {
           />
           <button
             type="submit"
-            className="rounded-[8px] bg-black px-[16px] py-[8px] text-md-regular text-white"
+            className="rounded-[8px] bg-black-500 px-[16px] py-[8px] text-md-regular text-gray-50"
           >
             제출 (콘솔/아래에 결과 표시)
           </button>
         </form>
         {submitted && (
-          <pre className="overflow-x-auto rounded-[8px] bg-gray-100 p-[12px] text-xs-regular">
+          <pre className="overflow-x-auto rounded-[8px] bg-background-200 p-[12px] text-xs-regular">
             {JSON.stringify(submitted, null, 2)}
           </pre>
         )}
@@ -118,7 +118,7 @@ export default function ZodExamplePage() {
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            className="rounded-[8px] border border-gray-300 px-[12px] py-[6px] text-md-regular"
+            className="rounded-[8px] border border-line-200 px-[12px] py-[6px] text-md-regular"
             onClick={() =>
               handleApiParseExample(
                 '{"email":"user@test.com","password":"abcd1234"}',
@@ -129,7 +129,7 @@ export default function ZodExamplePage() {
           </button>
           <button
             type="button"
-            className="rounded-[8px] border border-gray-300 px-[12px] py-[6px] text-md-regular"
+            className="rounded-[8px] border border-line-200 px-[12px] py-[6px] text-md-regular"
             onClick={() =>
               handleApiParseExample('{"email":"not-email","password":"12"}')
             }

@@ -9,7 +9,9 @@ export const ROUTES = {
   customerHome: '/customer/estimate-request',
   moverHome: '/mover/requests',
   customerSignin: '/customer/signin',
+  customerSignup: '/customer/signup',
   moverSignin: '/mover/signin',
+  moverSignup: '/mover/signup',
 } as const;
 
 export function getHomePath(role: Role): string {
@@ -18,6 +20,10 @@ export function getHomePath(role: Role): string {
 
 export function getSigninPath(role: Role): string {
   return role === 'customer' ? ROUTES.customerSignin : ROUTES.moverSignin;
+}
+
+export function getSignupPath(role: Role): string {
+  return role === 'customer' ? ROUTES.customerSignup : ROUTES.moverSignup;
 }
 
 /*

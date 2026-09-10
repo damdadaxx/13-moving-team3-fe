@@ -40,7 +40,7 @@ export function Skeleton({
             borderRadius,
             marginBottom: count > 1 ? 8 : 0,
             backgroundImage:
-              'linear-gradient(90deg, #9ca3af 0%, #e5e7eb 40%, #ffffff 50%, #e5e7eb 60%, #9ca3af 100%)',
+              'linear-gradient(90deg, var(--color-gray-200) 0%, var(--color-line-100) 40%, var(--color-gray-50) 50%, var(--color-line-100) 60%, var(--color-gray-200) 100%)',
             backgroundSize: '200% 100%',
             animation: 'skeleton-shimmer 1.5s ease-in-out infinite',
             ...style,

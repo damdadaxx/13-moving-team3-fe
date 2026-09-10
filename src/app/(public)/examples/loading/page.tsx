@@ -70,7 +70,7 @@ export default function LoadingExamplePage() {
           레이아웃을 아직 그릴 수 없을 때. 기본값 <code>fullHeight</code> 로
           영역 중앙에 스피너를 둡니다.
         </p>
-        <div className="rounded-[8px] border border-gray-200">
+        <div className="rounded-[8px] border border-line-200">
           <LoadingDisplay size={48} />
         </div>
       </section>
@@ -85,7 +85,7 @@ export default function LoadingExamplePage() {
         <div className="flex items-center gap-3">
           <button
             type="button"
-            className="rounded-[8px] bg-black px-[16px] py-[8px] text-md-regular text-white"
+            className="rounded-[8px] bg-black-500 px-[16px] py-[8px] text-md-regular text-gray-50"
           >
             견적 요청
           </button>
@@ -101,7 +101,7 @@ export default function LoadingExamplePage() {
             Skeleton 상세 예시
           </Link>
         </p>
-        <div className="flex items-center gap-3 rounded-[8px] border border-gray-200 p-[16px]">
+        <div className="flex items-center gap-3 rounded-[8px] border border-line-200 p-[16px]">
           <Skeleton width={48} height={48} borderRadius="50%" />
           <div className="flex-1">
             <Skeleton width="40%" height="16px" />
@@ -119,7 +119,7 @@ export default function LoadingExamplePage() {
         </p>
         <Link
           href="/examples/loading/route-demo"
-          className="w-fit rounded-[8px] border border-gray-300 px-[16px] py-[8px] text-md-regular"
+          className="w-fit rounded-[8px] border border-line-200 px-[16px] py-[8px] text-md-regular"
         >
           라우트 전환 로딩 보기 (2초 지연)
         </Link>

@@ -2,11 +2,22 @@
 
 import { createContext, useState } from 'react';
 
-// Context로 공유할 값의 타입
+import Modal from '@/components/ui/Modal/Modal';
+
+/*
+@ ModalProvider
+- 모달 상태를 전역으로 관리해 어느 컴포넌트에서든 useModal()로 열고 닫을 수 있게 한다.
+- Modal은 Provider 최상위에서 한 번만 렌더링되어 z-index/overflow 이슈를 피한다.
+*/
+
+export interface ModalOptions {
+  title: string;
+  variant?: 'popup' | 'sheet';
+}
+
 export interface ModalContextType {
   isOpen: boolean;
-  content: React.ReactNode;
-  openModal: (content: React.ReactNode) => void;
+  openModal: (content: React.ReactNode, options: ModalOptions) => void;
   closeModal: () => void;
 }
 
@@ -17,25 +28,35 @@ interface ModalProviderProps {
   children: React.ReactNode;
 }
 
-// Context 기반 모달 열림/닫힘 상태 관리
 export default function ModalProvider({ children }: ModalProviderProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [content, setContent] = useState<React.ReactNode>(null);
+  const [options, setOptions] = useState<ModalOptions>({ title: '' });
 
-  function openModal(modalContent: React.ReactNode): void {
+  function openModal(
+    modalContent: React.ReactNode,
+    modalOptions: ModalOptions,
+  ): void {
     setContent(modalContent);
+    setOptions(modalOptions);
     setIsOpen(true);
   }
 
   function closeModal(): void {
     setIsOpen(false);
-    setContent(null);
   }
 
   return (
-    <ModalContext.Provider value={{ isOpen, content, openModal, closeModal }}>
+    <ModalContext.Provider value={{ isOpen, openModal, closeModal }}>
       {children}
-      {content}
+      <Modal
+        isOpen={isOpen}
+        onClose={closeModal}
+        title={options.title}
+        variant={options.variant}
+      >
+        {content}
+      </Modal>
     </ModalContext.Provider>
   );
 }

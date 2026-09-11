@@ -8,6 +8,7 @@ import { useState } from 'react';
 import IcWriting from '@/assets/icons/ic_writing.svg';
 
 import Button from '@/components/ui/Button/Button';
+import ButtonLink from '@/components/ui/Button/ButtonLink';
 
 export default function ButtonExamplePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -185,41 +186,43 @@ export default function ButtonExamplePage() {
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-lg-semibold">8. href — 링크로 쓰기</h2>
+        <h2 className="text-lg-semibold">8. ButtonLink — 링크로 쓰기</h2>
         <p className="text-md-regular text-gray-500">
-          <code>href</code>를 넘기면 <code>&lt;button&gt;</code> 대신{' '}
-          <code>next/link</code>의 <code>&lt;Link&gt;</code>로 렌더됩니다.
-          모양은 똑같고 prefetch·클라이언트 라우팅이 그대로 동작합니다.{' '}
-          <code>onClick</code> 대신 이동이 목적이라면 이쪽을 쓰세요.
+          페이지 이동이 목적이면 <code>Button</code>이 아니라 별도 컴포넌트인{' '}
+          <code>ButtonLink</code>를 씁니다. <code>next/link</code>의{' '}
+          <code>&lt;Link&gt;</code>로 렌더되고, 모양은 <code>Button</code>과
+          똑같은 스타일을 공유합니다(<code>ButtonStyles.ts</code>).
+          prefetch·클라이언트 라우팅도 그대로 동작합니다.
         </p>
         <div className="w-[640px] max-w-full">
-          <Button href="/examples/zod">zod 예시로 이동</Button>
+          <ButtonLink href="/examples/zod">zod 예시로 이동</ButtonLink>
         </div>
         <div className="w-[640px] max-w-full">
-          <Button
+          <ButtonLink
             variant="outlined"
             href="/examples/skeleton"
             icon={<IcWriting />}
           >
             skeleton 예시로 이동
-          </Button>
+          </ButtonLink>
         </div>
         <p className="text-md-regular text-gray-500">
-          링크도 <code>disabled</code>와 <code>isLoading</code>을 받습니다.{' '}
-          <code>&lt;a&gt;</code>에는 <code>disabled</code>가 없어서, 이 경우엔{' '}
-          <code>href</code>를 떼고 <code>role=&quot;link&quot;</code>{' '}
-          <code>aria-disabled</code>를 붙인 <code>&lt;span&gt;</code>으로
-          내려갑니다. 눌러도 이동하지 않고 탭 포커스도 잡히지 않습니다.
+          <code>ButtonLink</code>도 <code>disabled</code>와{' '}
+          <code>isLoading</code>을 받습니다. <code>&lt;a&gt;</code>에는{' '}
+          <code>disabled</code>가 없어서, 이 경우엔 <code>href</code>를 떼고{' '}
+          <code>role=&quot;link&quot;</code> <code>aria-disabled</code>를 붙인{' '}
+          <code>&lt;span&gt;</code>으로 내려갑니다. 눌러도 이동하지 않고 탭
+          포커스도 잡히지 않습니다.
         </p>
         <div className="w-[640px] max-w-full">
-          <Button href="/examples/zod" disabled>
+          <ButtonLink href="/examples/zod" disabled>
             아직 이동할 수 없음
-          </Button>
+          </ButtonLink>
         </div>
         <div className="w-[640px] max-w-full">
-          <Button variant="outlined" href="/examples/zod" disabled>
+          <ButtonLink variant="outlined" href="/examples/zod" disabled>
             아직 이동할 수 없음
-          </Button>
+          </ButtonLink>
         </div>
       </section>
     </div>

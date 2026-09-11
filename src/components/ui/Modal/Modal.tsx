@@ -1,4 +1,36 @@
-// 공용 모달 컴포넌트
+/*=================================================
+공용 모달 컴포넌트 (Modal base)
+=================================================*/
+
+/*
+@ 오버레이 (바깥 div)
+- 클릭하면 onClose 실행 (배경 클릭으로 닫기), ESC 키도 동일하게 닫음
+- popup은 항상 items-center(수직 중앙), sheet는 모바일에서 items-end(하단 고정) → tablet: 이상에서 items-center로 전환
+*/
+
+/*
+@ 카드 (안쪽 div)
+- 공통: bg-gray-50, drop-shadow, 카드 클릭 시 stopPropagation으로 오버레이 닫힘 방지
+- max-h-[90vh] + overflow-y-auto: 견적 보내기처럼 내용이 긴 모달이 짧은 화면에서 잘리지 않고 카드 내부에서 스크롤되게 함
+- popup(모바일): w-[292px] 고정폭 + 전체 모서리 rounded-[24px] + px-16 py-24 gap-30 (예: 지정 견적 요청 확인)
+- sheet(모바일): w-full 풀폭 + 위쪽 모서리만 rounded-t-[32px] + px-24 pt-32 pb-40 gap-40, 화면 하단에 붙는 바텀시트 (예: 견적 보내기, 필터)
+- tablet: 이상에서는 variant 상관없이 w-[608px] / rounded-[32px](전체) / px-24 pt-32 pb-40 gap-40 로 수렴
+*/
+
+/*
+@ 헤더 (제목 + 닫기 아이콘)
+- variant와 무관하게 공통 레이아웃
+- 텍스트: 모바일 text-2lg-bold(18px) → tablet: text-2xl-semibold(24px)
+- 닫기 아이콘(ic_x.svg): 모바일 24px → tablet: 36px
+*/
+
+/*
+@ 사용 방식
+- 도메인 컴포넌트에서 Modal을 직접 쓰기보다, ModalProvider가 최상위에서 한 번만 렌더링하고
+  useModal()의 openModal(content, { title, variant }) / closeModal 로 전역에서 열고 닫는다
+- children에 텍스트 한 줄짜리 확인 모달부터 폼이 들어간 복잡한 모달까지 자유롭게 구성
+*/
+
 'use client';
 
 import { useEffect } from 'react';
@@ -58,7 +90,7 @@ export default function Modal({
         aria-labelledby="modal-title"
         onClick={(event) => event.stopPropagation()}
         className={cn(
-          'flex flex-col items-start bg-gray-50 drop-shadow-[4px_4px_5px_rgba(169,169,169,0.2)]',
+          'flex max-h-[90vh] flex-col items-start overflow-y-auto bg-gray-50 drop-shadow-[4px_4px_5px_rgba(169,169,169,0.2)]',
           isSheet
             ? 'w-full gap-[40px] rounded-t-[32px] px-[24px] pt-[32px] pb-[40px]'
             : 'w-[292px] gap-[30px] rounded-[24px] px-[16px] py-[24px]',

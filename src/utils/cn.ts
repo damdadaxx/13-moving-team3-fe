@@ -5,7 +5,7 @@ import { extendTailwindMerge } from 'tailwind-merge';
 
 /** twMerge
  * - 같은 그룹의 Tailwind 클래스가 중복되면 나중 값만 남기고 앞의 값을 지워줌
- * - (예: cn('bg-primary-400', 'bg-primary-500') => 'bg-primary-500')
+ * - (예: cn('bg-orange-400', 'bg-orange-500') => 'bg-orange-500')
  * - 기본 twMerge는 globals.css의 커스텀 text-24-bold 같은 폰트 토큰을 모르고
  * text 컬러 클래스와 같은 그룹으로 잘못 인식해 지워버리므로, font-size 그룹을 직접 등록해줌
  */

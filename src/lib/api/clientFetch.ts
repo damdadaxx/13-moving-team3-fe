@@ -55,23 +55,32 @@ export default async function clientFetch<T = unknown>(
       .json()
       .catch(() => null);
 
+    // 백엔드 에러 code는 { error: { code } }로 감싸져 온다 (한 단계 아래)
+    const code = errorBody?.error?.code ?? errorBody?.code;
     // 백엔드는 만료/미인증 모두 UNAUTHORIZED. TOKEN_EXPIRED가 오면 그것도 갱신.
-    const shouldRefresh =
-      errorBody?.code === 'TOKEN_EXPIRED' || errorBody?.code === 'UNAUTHORIZED';
+    const shouldRefresh = code === 'TOKEN_EXPIRED' || code === 'UNAUTHORIZED';
 
     if (shouldRefresh && !init._retried) {
+      let refreshResponse: Response;
       try {
-        const refreshResponse = await requestRefresh();
-
-        if (refreshResponse.ok) {
-          return clientFetch<T>(input, { ...init, _retried: true });
-        }
+        refreshResponse = await requestRefresh();
       } catch {
         throw new HttpError(
           '세션 갱신에 실패했습니다. 다시 로그인해주세요.',
           'REFRESH_FAILED',
+          401,
         );
       }
+
+      if (refreshResponse.ok) {
+        return clientFetch<T>(input, { ...init, _retried: true });
+      }
+
+      throw new HttpError(
+        '세션 갱신에 실패했습니다. 다시 로그인해주세요.',
+        'REFRESH_FAILED',
+        401,
+      );
     }
   }
 

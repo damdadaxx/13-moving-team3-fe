@@ -43,17 +43,20 @@ async function proxy(request: NextRequest, { params }: RouteContext) {
   }
 
   /*
-  @ GET /auth/me 401 정규화
-  - "나 누구야?"에 대한 게스트의 답은 401(접근 금지)이 아니라 "아무도 아님"이다
+  @ GET /auth/me 401 정규화 — accessToken 쿠키가 아예 없을 때만
+  - "나 누구야?"에 대한 게스트(쿠키 없음)의 답은 401(접근 금지)이 아니라 "아무도 아님"이다
   - 모든 페이지에 걸린 AuthProvider가 게스트/public 페이지에서도 이 요청을 보내므로,
-    401을 그대로 흘리면 브라우저 콘솔에 매번 에러가 찍힌다
-  - 여기(BFF)에서 200 { data: null }로 각색해 프론트가 비로그인 상태로 처리하게 한다
-  - 다른 보호 라우트의 401은 그대로 둔다
+    401을 그대로 흘리면 브라우저 콘솔에 매번 에러가 찍힌다 → 여기서 200 { data: null }로 각색
+  - accessToken 쿠키가 "있는데" 401(만료 등)이면 정규화하지 않고 그대로 흘려보낸다
+    → clientFetch가 401을 보고 TOKEN_EXPIRED 판단 후 refresh를 시도할 수 있어야 하기 때문
+  - accessToken 쿠키명은 백엔드 authConstants.ts의 ACCESS_TOKEN_COOKIE와 동일해야 한다
+  - 다른 보호 라우트의 401은 손대지 않는다
   */
   if (
     request.method === 'GET' &&
     pathname === 'auth/me' &&
-    response.status === 401
+    response.status === 401 &&
+    !request.cookies.get('accessToken')
   ) {
     return Response.json({ success: true, data: null }, { status: 200 });
   }

@@ -10,8 +10,9 @@ interface RouteContext {
 /** 백엔드로 요청을 프록시하는 함수 */
 async function proxy(request: NextRequest, { params }: RouteContext) {
   const { path } = await params;
+  const pathname = path.join('/');
   /** 실제 백엔드 URL 생성 */
-  const targetUrl = new URL(`${API_BASE_URL}/${path.join('/')}`);
+  const targetUrl = new URL(`${API_BASE_URL}/${pathname}`);
   targetUrl.search = request.nextUrl.searchParams.toString();
 
   /** GET 외 method면 body 전달 */
@@ -39,6 +40,22 @@ async function proxy(request: NextRequest, { params }: RouteContext) {
       },
       { status: 502 },
     );
+  }
+
+  /*
+  @ GET /auth/me 401 정규화
+  - "나 누구야?"에 대한 게스트의 답은 401(접근 금지)이 아니라 "아무도 아님"이다
+  - 모든 페이지에 걸린 AuthProvider가 게스트/public 페이지에서도 이 요청을 보내므로,
+    401을 그대로 흘리면 브라우저 콘솔에 매번 에러가 찍힌다
+  - 여기(BFF)에서 200 { data: null }로 각색해 프론트가 비로그인 상태로 처리하게 한다
+  - 다른 보호 라우트의 401은 그대로 둔다
+  */
+  if (
+    request.method === 'GET' &&
+    pathname === 'auth/me' &&
+    response.status === 401
+  ) {
+    return Response.json({ success: true, data: null }, { status: 200 });
   }
 
   /** 백엔드 응답 데이터 반환 */

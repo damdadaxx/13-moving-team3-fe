@@ -54,13 +54,15 @@ function isUnauthenticatedError(error: unknown): boolean {
 
 /*
 @ GET /auth/me
-- 비로그인(401)은 에러가 아니라 null. 게스트 페이지에서 콘솔 에러가 나지 않게 한다
+- 비로그인은 에러가 아니라 null. 게스트 페이지에서 콘솔 에러가 나지 않게 한다
+  - 프록시(app/api/[...path]/route.ts)가 게스트의 /auth/me 401을 200 { data: null }로 정규화한다
+  - 그 외 경로로 401이 새어 들어와도 isUnauthenticatedError로 흡수한다
 - clientFetch가 401이면 refresh를 한 번 시도한 뒤 여기로 온다
 */
 export async function getMe(): Promise<AuthUser | null> {
   try {
-    const user = await clientFetch<AuthUserResponse>(ENDPOINTS.auth.me);
-    return toAuthUser(user);
+    const user = await clientFetch<AuthUserResponse | null>(ENDPOINTS.auth.me);
+    return user ? toAuthUser(user) : null;
   } catch (error) {
     if (isUnauthenticatedError(error)) {
       return null;

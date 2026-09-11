@@ -1,6 +1,7 @@
 // API 엔드포인트 모음
 // 주석 예시: [메서드] [인증필요여부] - 설명
 // 브라우저는 프록시(/api)만 사용. 백엔드 실경로는 프록시가 API_BASE_URL 뒤로 붙인다.
+import type { SocialProvider } from '@/types/auth';
 
 const API_PREFIX = '/api';
 const api = (path: string) => `${API_PREFIX}${path}`;
@@ -62,6 +63,3 @@ export const ENDPOINTS = {
     readAll: api('/notifications/read-all'), // [PATCH] 로그인 - 전체 읽음
   },
 } as const;
-
-// 소셜 로그인 Provider 타입
-type SocialProvider = 'google' | 'kakao' | 'naver';

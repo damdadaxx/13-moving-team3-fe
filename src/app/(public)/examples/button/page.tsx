@@ -8,6 +8,13 @@ import ButtonRoundedSquare from '@/components/ui/Button/ButtonRoundedSquare';
 
 export default function ButtonExamplePage() {
   const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  /* isLoading 확인용. 실제로는 mutation의 isPending을 그대로 넘기면 된다 */
+  const handleSubmit = () => {
+    setIsSubmitting(true);
+    setTimeout(() => setIsSubmitting(false), 2000);
+  };
 
   return (
     <div className="mx-auto flex max-w-[720px] flex-col gap-10 p-[24px]">
@@ -79,6 +86,27 @@ export default function ButtonExamplePage() {
         <div className="flex items-end gap-3">
           <ButtonRoundedSquare variant="like" disabled />
           <ButtonRoundedSquare variant="kakao" disabled />
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <h2 className="text-lg-semibold">6. isLoading — 눌러보세요 (2초)</h2>
+        <p className="text-md-regular text-gray-500">
+          로딩 중에는 스피너만 남고 클릭이 막힙니다. <code>isLoading</code>은{' '}
+          <code>disabled</code>와 같이 공통으로 처리됩니다.
+        </p>
+        <div className="flex items-end gap-3">
+          <ButtonRoundedSquare
+            variant="like"
+            isLoading={isSubmitting}
+            onClick={handleSubmit}
+          />
+          <ButtonRoundedSquare
+            variant="kakao"
+            isLoading={isSubmitting}
+            onClick={handleSubmit}
+          />
+          <ButtonRoundedSquare variant="facebook" isLoading />
         </div>
       </section>
     </div>

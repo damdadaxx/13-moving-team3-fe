@@ -74,6 +74,7 @@ export default function ButtonRoundedSquare({
   variant = 'like',
   className,
   disabled,
+  isLoading,
   onClick,
   type = 'button',
   'aria-label': ariaLabel,
@@ -91,6 +92,7 @@ export default function ButtonRoundedSquare({
       {...(props as ButtonElementProps)}
       type={type}
       disabled={disabled}
+      isLoading={isLoading}
       onClick={onClick}
       aria-label={ariaLabel ?? variantAriaLabel}
       className={cn(

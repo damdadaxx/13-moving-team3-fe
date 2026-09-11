@@ -1,6 +1,8 @@
 // button / Link 공통 렌더러
 'use client';
 
+import { TailSpin } from 'react-loader-spinner';
+
 import Link from 'next/link';
 
 import { cn } from '@/utils/cn';
@@ -14,6 +16,8 @@ type ButtonElementOwnProps = {
   'aria-label'?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement | HTMLAnchorElement>;
   type?: React.ButtonHTMLAttributes<HTMLButtonElement>['type'];
+  /** 로딩 중이면 스피너만 보여주고 클릭·이동을 막는다 */
+  isLoading?: boolean;
 };
 
 /** href가 없으면 평범한 `<button>` */
@@ -45,10 +49,11 @@ export default function ButtonElement({
   onClick,
   type = 'button',
   href,
+  isLoading = false,
   'aria-label': ariaLabel,
   ...props
 }: ButtonElementProps) {
-  const isDisabled = Boolean(disabled);
+  const isDisabled = Boolean(disabled) || isLoading;
   const isLink = href !== undefined;
   const classes = cn(BUTTON_BASE_CLASS, className);
 
@@ -78,6 +83,7 @@ export default function ButtonElement({
     <Component
       className={classes}
       aria-label={ariaLabel}
+      aria-busy={isLoading || undefined}
       {...(isLink && isDisabled ? {} : (props as Record<string, unknown>))}
       {...(isLink && !isDisabled ? { href } : {})}
       {...(isNativeButton
@@ -89,7 +95,18 @@ export default function ButtonElement({
           })}
       onClick={handleClick}
     >
-      {children}
+      {isLoading ? (
+        <TailSpin
+          visible
+          height={24}
+          width={24}
+          color="currentColor"
+          ariaLabel="로딩 중"
+          radius={1}
+        />
+      ) : (
+        children
+      )}
     </Component>
   );
 }

@@ -87,8 +87,10 @@ export default async function clientFetch<T = unknown>(
   if (!response.ok) {
     const errorBody = await response.json().catch(() => null);
     throw new HttpError(
-      errorBody?.message ?? '요청 처리 중 오류가 발생했습니다.',
-      errorBody?.code ?? 'UNKNOWN_ERROR',
+      errorBody?.error?.message ??
+        errorBody?.message ??
+        '요청 처리 중 오류가 발생했습니다.',
+      errorBody?.error?.code ?? errorBody?.code ?? 'UNKNOWN_ERROR',
       response.status,
     );
   }

@@ -89,7 +89,9 @@ export default function ButtonExamplePage() {
       <section className="flex flex-col gap-3">
         <h2 className="text-lg-semibold">4. disabled</h2>
         <p className="text-md-regular text-gray-500">
-          네이티브 <code>disabled</code>를 그대로 씁니다. hover 색은 적용되지
+          <code>disabled</code>를 넘기면 네이티브 속성과 함께{' '}
+          <code>aria-disabled</code>가 붙고, 상태 스타일은 이 값을 봅니다(링크로
+          쓸 때 <code>:disabled</code>가 안 걸려서). hover 색은 적용되지
           않습니다. solid는 배경이 gray-300(#D9D9D9), outlined는 테두리 #C4C4C4
           · 글씨 #808080이 되는데 이 두 색은 globals.css에 토큰이 없어 임의값을
           쓰고 있습니다.
@@ -178,6 +180,45 @@ export default function ButtonExamplePage() {
           </Button>
           <Button variant="outlined" size="sm" className="w-fit">
             내용만큼만
+          </Button>
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <h2 className="text-lg-semibold">8. href — 링크로 쓰기</h2>
+        <p className="text-md-regular text-gray-500">
+          <code>href</code>를 넘기면 <code>&lt;button&gt;</code> 대신{' '}
+          <code>next/link</code>의 <code>&lt;Link&gt;</code>로 렌더됩니다.
+          모양은 똑같고 prefetch·클라이언트 라우팅이 그대로 동작합니다.{' '}
+          <code>onClick</code> 대신 이동이 목적이라면 이쪽을 쓰세요.
+        </p>
+        <div className="w-[640px] max-w-full">
+          <Button href="/examples/zod">zod 예시로 이동</Button>
+        </div>
+        <div className="w-[640px] max-w-full">
+          <Button
+            variant="outlined"
+            href="/examples/skeleton"
+            icon={<IcWriting />}
+          >
+            skeleton 예시로 이동
+          </Button>
+        </div>
+        <p className="text-md-regular text-gray-500">
+          링크도 <code>disabled</code>와 <code>isLoading</code>을 받습니다.{' '}
+          <code>&lt;a&gt;</code>에는 <code>disabled</code>가 없어서, 이 경우엔{' '}
+          <code>href</code>를 떼고 <code>role=&quot;link&quot;</code>{' '}
+          <code>aria-disabled</code>를 붙인 <code>&lt;span&gt;</code>으로
+          내려갑니다. 눌러도 이동하지 않고 탭 포커스도 잡히지 않습니다.
+        </p>
+        <div className="w-[640px] max-w-full">
+          <Button href="/examples/zod" disabled>
+            아직 이동할 수 없음
+          </Button>
+        </div>
+        <div className="w-[640px] max-w-full">
+          <Button variant="outlined" href="/examples/zod" disabled>
+            아직 이동할 수 없음
           </Button>
         </div>
       </section>

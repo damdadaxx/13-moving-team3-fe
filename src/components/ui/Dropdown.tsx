@@ -45,6 +45,8 @@ interface DropdownProps<T extends string> {
 - scrollbar: 디자인의 회색 둥근 thumb 재현용. 표준 scrollbar-width를 같이 주면
   Chrome이 ::-webkit-scrollbar 스타일을 무시하므로 webkit 쪽만 쓴다
   (Firefox는 기본 스크롤바로 보인다)
+  오른쪽 여백: 네이티브 스크롤바는 thumb만 띄울 수 없어서, 트랙을 thumb 두께의 2배로
+  잡고 thumb에 투명 border-right + bg-clip-padding을 줘서 오른쪽을 비운다
 */
 const SIZE_STYLES = {
   sm: {
@@ -60,7 +62,7 @@ const SIZE_STYLES = {
     },
     maxHeight: { 1: 'max-h-40', 2: 'max-h-45' },
     scrollbar:
-      '[&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-200',
+      '[&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-track]:my-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-r-[3px] [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-clip-padding',
   },
   md: {
     trigger: 'h-12.5 gap-1.5 rounded-xl pl-5 pr-3 text-lg-medium',
@@ -75,7 +77,7 @@ const SIZE_STYLES = {
     },
     maxHeight: { 1: 'max-h-60', 2: 'max-h-80' },
     scrollbar:
-      '[&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-200',
+      '[&::-webkit-scrollbar]:w-3 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-r-[6px] [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-clip-padding',
   },
 } as const;
 

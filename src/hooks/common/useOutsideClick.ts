@@ -25,7 +25,8 @@ type OutsideClickHandler = (e: MouseEvent | FocusEvent | KeyboardEvent) => void;
  * 옵션 미사용 시 기본적으로 마우스 외부 클릭만 감지합니다.
  */
 export function useOutsideClick(
-  ref: RefObject<HTMLElement>,
+  // useRef<T>(null)이 RefObject<T | null>을 반환하므로 null을 허용해야 한다
+  ref: RefObject<HTMLElement | null>,
   handler: OutsideClickHandler,
   {
     enabled = true,

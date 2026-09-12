@@ -24,8 +24,8 @@ type OutsideClickHandler = (e: MouseEvent | FocusEvent | KeyboardEvent) => void;
  * (closeOnEscape=true 시) ESC 키를 눌렀을 때 handler를 호출하는 공통 훅입니다.
  * 옵션 미사용 시 기본적으로 마우스 외부 클릭만 감지합니다.
  */
-export function useOutsideClick(
-  ref: RefObject<HTMLElement>,
+export function useOutsideClick<T extends HTMLElement>(
+  ref: RefObject<T | null>,
   handler: OutsideClickHandler,
   {
     enabled = true,

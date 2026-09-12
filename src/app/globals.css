@@ -9,8 +9,9 @@
   /* --breakpoint-desktop: 1920px; */
 
   /* -------- z-index -------- */
-  --z-index-dropdown: 70;
-  --z-index-header: 80;
+  --z-index-dropdown: 60;
+  --z-index-header: 70;
+  --z-index-header-m: 80;
   --z-index-toast: 90;
   --z-index-modal: 100;
 
@@ -195,6 +196,32 @@
   }
   100% {
     background-position: -200% 0;
+  }
+}
+
+/*
+@ 커스텀 스크롤바
+- thumb: gray-300
+- Chrome은 scrollbar-width가 ::-webkit-scrollbar를 덮어쓰므로 Firefox에만 적용
+*/
+@utility scrollbar-gray-300 {
+  scrollbar-color: var(--color-gray-300) transparent;
+
+  @supports (-moz-appearance: none) {
+    scrollbar-width: thin;
+  }
+
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background-color: var(--color-gray-300);
   }
 }
 

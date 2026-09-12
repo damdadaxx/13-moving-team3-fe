@@ -39,7 +39,7 @@ type Role = 'customer' | 'mover';
 - 컬렉션 라우트는 복수형 (`estimates`, `reviews`, `liked-movers`)
 - 약어는 가급적 피한다
 
-### 이미지 import 별칭
+### 이미지 / 아이콘
 
 파일명의 `ic_` / `img_` 접두사는 그대로 두고, 나머지 snake_case를 PascalCase로 변환한다.
 
@@ -50,10 +50,17 @@ type Role = 'customer' | 'mover';
 | `img_boxes.svg`     | `ImgBoxes`    |
 | `img_logo.svg`      | `ImgLogo`     |
 
-```ts
+SVG는 `@svgr/webpack`으로 **React 컴포넌트**로 import한다. `next/image`의 `src`로 쓰지 않는다. 크기·색은 `className`으로 지정한다.
+
+```tsx
 import IcArrow from '@/assets/icons/ic_arrow.svg';
-import ImgBoxes from '@/assets/images/img_boxes.svg';
+import ImgLogo from '@/assets/images/img_logo.svg';
+
+<IcArrow aria-hidden className="h-[24px] w-[24px]" />
+<ImgLogo aria-hidden className="h-[44px] w-[116px]" />
 ```
+
+png / jpg / webp 는 `next/image`를 사용한다.
 
 ---
 

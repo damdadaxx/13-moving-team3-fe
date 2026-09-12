@@ -41,7 +41,10 @@ interface DropdownProps<T extends string> {
 /*
 @ 사이즈별 스타일 (Figma size=sm / size=md)
 - maxHeight: 디자인에 보이는 항목 수(1열 4개, 2열 5행) 기준. 넘치면 스크롤
-- 목록 항목 정렬은 Figma를 그대로 따른다 — md 2열만 가운데 정렬이다
+- 항목 텍스트는 전부 왼쪽 정렬. Figma md 2열에 justify-center가 있지만 자식이
+  flex-[1_0_0]로 남는 너비를 다 차지해 실제로는 효과가 없다(텍스트 노드 x=24 = padding)
+- twoColumnGrid: Figma 2열은 열 너비가 고정(sm 75 / md 164)이라 트리거보다 목록이 넓어질
+  수 있다. grid-cols-2로 트리거 너비를 반씩 나누면 항목이 눌려 패딩까지 깎인다
 - scrollbar: 디자인의 회색 둥근 thumb 재현용. 표준 scrollbar-width를 같이 주면
   Chrome이 ::-webkit-scrollbar 스타일을 무시하므로 webkit 쪽만 쓴다
   (Firefox는 기본 스크롤바로 보인다)
@@ -61,6 +64,7 @@ const SIZE_STYLES = {
       2: 'h-9 px-3.5',
     },
     maxHeight: { 1: 'max-h-40', 2: 'max-h-45' },
+    twoColumnGrid: 'grid grid-cols-[repeat(2,minmax(75px,1fr))]',
     scrollbar:
       '[&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-track]:my-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-r-[3px] [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-clip-padding',
   },
@@ -76,6 +80,7 @@ const SIZE_STYLES = {
       2: 'h-16 px-6 text-2lg-medium',
     },
     maxHeight: { 1: 'max-h-60', 2: 'max-h-80' },
+    twoColumnGrid: 'grid grid-cols-[repeat(2,minmax(164px,1fr))]',
     scrollbar:
       '[&::-webkit-scrollbar]:w-3 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-r-[6px] [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-clip-padding',
   },
@@ -209,7 +214,8 @@ export default function Dropdown<T extends string>({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         className={cn(
-          'flex w-full cursor-pointer items-center justify-between border bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50',
+          // text-left: <button> 기본 text-align:center 때문에 라벨이 줄바꿈되면 가운데로 튄다
+          'flex w-full cursor-pointer items-center justify-between border bg-gray-50 text-left disabled:cursor-not-allowed disabled:opacity-50',
           styles.trigger,
           isOpen
             ? cn(
@@ -245,7 +251,7 @@ export default function Dropdown<T extends string>({
               'overflow-y-auto overflow-x-hidden',
               styles.maxHeight[columns],
               styles.scrollbar,
-              columns === 2 && 'grid grid-cols-2',
+              columns === 2 && styles.twoColumnGrid,
             )}
           >
             {options.map((option, index) => (
@@ -262,7 +268,7 @@ export default function Dropdown<T extends string>({
                   onClick={() => handleSelect(option.value)}
                   className={cn(
                     // 디자인에 focus 상태가 없어 hover와 같은 배경으로 키보드 위치를 표시한다
-                    'flex w-full cursor-pointer items-center whitespace-nowrap text-black-400 hover:bg-background-200 focus:bg-background-200',
+                    'flex w-full cursor-pointer items-center whitespace-nowrap text-left text-black-400 hover:bg-background-200 focus:bg-background-200',
                     styles.item,
                     styles.itemByColumns[columns],
                     // 2열은 왼쪽 열에만 세로 구분선을 둔다 (Figma: 첫 열 border-r)

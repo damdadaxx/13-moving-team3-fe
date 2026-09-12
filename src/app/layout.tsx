@@ -8,6 +8,8 @@ import { pretendard } from '@/lib/constants/fonts';
 
 import { cn } from '@/utils/cn';
 
+import PageHeader from '@/components/ui/PageHeader/PageHeader';
+
 import './globals.css';
 
 // TODO: 최적화 작업 시 변경
@@ -20,8 +22,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ko" className={cn(pretendard.variable, 'h-full antialiased')}>
       <body>
-        {/* TODO: Container 컴포넌트 추가 */}
-        <Providers>{children}</Providers>
+        <Providers>
+          <PageHeader />
+          {children}
+        </Providers>
       </body>
     </html>
   );

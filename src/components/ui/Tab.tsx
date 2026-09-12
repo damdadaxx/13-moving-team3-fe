@@ -51,6 +51,8 @@ export default function Tab({
             <Link
               key={tab.label}
               href={tab.href}
+              role="tab"
+              aria-selected={isActive}
               className={tabItemClassName}
               onClick={() => onClick?.(tab.value)}
             >

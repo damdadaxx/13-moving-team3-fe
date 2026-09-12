@@ -59,6 +59,10 @@
 
   /* -------- Animation -------- */
   --animate-skeleton: skeleton-shimmer 1.5s ease-in-out infinite;
+  --animate-toast-slide-down: toast-slide-down 0.45s
+    cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  --animate-toast-slide-up: toast-slide-up 0.4s cubic-bezier(0.4, 0, 1, 1)
+    forwards;
 
   /* -------- Font system (Pretendard) --------
      letter-spacing은 Figma에 별도 값이 없어서 0em(기본값)으로 둔다. */
@@ -195,6 +199,29 @@
   }
   100% {
     background-position: -200% 0;
+  }
+}
+
+/* toast slide-down / slide-up 애니메이션 */
+@keyframes toast-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes toast-slide-up {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
   }
 }
 

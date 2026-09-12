@@ -6,7 +6,7 @@ import type { Role } from '@/types/role';
 import Link from 'next/link';
 
 import { HttpError } from '@/lib/api/errors';
-import { getSigninPath } from '@/lib/constants/routes';
+import { getSigninPath, getSignupPath } from '@/lib/constants/routes';
 import type { SignupFormValues } from '@/lib/validations/authValidation';
 
 import { useAuth } from '@/hooks/auth/useAuth';
@@ -25,6 +25,7 @@ const ROLE_LABEL: Record<Role, string> = {
 
 export default function SignupForm({ role }: SignupFormProps) {
   const { signup } = useAuth();
+  const otherRole: Role = role === 'customer' ? 'mover' : 'customer';
   const {
     register,
     handleSubmit,
@@ -107,6 +108,12 @@ export default function SignupForm({ role }: SignupFormProps) {
         이미 계정이 있으신가요?{' '}
         <Link href={getSigninPath(role)} className="underline">
           로그인
+        </Link>
+      </p>
+      <p className="text-md-regular text-gray-500">
+        {role === 'customer' ? '기사님이신가요?' : '일반 유저이신가요?'}{' '}
+        <Link href={getSignupPath(otherRole)} className="underline">
+          {ROLE_LABEL[otherRole]} 회원가입
         </Link>
       </p>
     </div>

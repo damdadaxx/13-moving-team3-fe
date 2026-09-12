@@ -1,8 +1,8 @@
 import type { Role } from '@/types/role';
 
 /*
-@ 인증 관련 경로
-- 로그인 후 기본 랜딩 / 가드 리다이렉트에 사용
+@ 앱 경로
+- 로그인 후 기본 랜딩 / 가드 리다이렉트 / 헤더·프로필 메뉴에 사용
 - (auth) 페이지는 역할별 signin, 보호 페이지는 역할별 home
 */
 export const ROUTES = {
@@ -12,6 +12,15 @@ export const ROUTES = {
   customerSignup: '/customer/signup',
   moverSignin: '/mover/signin',
   moverSignup: '/mover/signup',
+  moverList: '/mover',
+  customerEstimates: '/customer/estimates/received',
+  customerEstimatesRoot: '/customer/estimates',
+  moverEstimates: '/mover/estimates/sent',
+  moverEstimatesRoot: '/mover/estimates',
+  customerProfileEdit: '/customer/profile/edit',
+  customerLikedMovers: '/customer/liked-movers',
+  customerReviewsPending: '/customer/reviews/pending',
+  moverMypage: '/mover/mypage',
 } as const;
 
 export function getHomePath(role: Role): string {
@@ -24,6 +33,15 @@ export function getSigninPath(role: Role): string {
 
 export function getSignupPath(role: Role): string {
   return role === 'customer' ? ROUTES.customerSignup : ROUTES.moverSignup;
+}
+
+/*
+@ 비회원 헤더 로그인
+- 공개 GNB(기사님 찾기)는 고객 플로우가 기본이라 고객 로그인으로 보낸다
+- 기사님은 /mover/signin, 로그인·회원가입 폼에서 역할 전환
+*/
+export function getGuestSigninPath(): string {
+  return ROUTES.customerSignin;
 }
 
 /*
@@ -48,6 +66,19 @@ function isPublicPath(pathname: string): boolean {
   if (segments.length === 2) return !MOVER_PROTECTED_SEGMENTS.has(segments[1]); // '/mover/{id}'
 
   return false;
+}
+
+/*
+@ 로그인해야 볼 수 있는 경로인지 판정
+- signin/signup 은 비로그인 전용이므로 제외
+- 공개 페이지('/', '/mover', '/mover/{id}')는 제외
+- 그 외 /customer/*, /mover/requests|mypage|estimates 는 세션이 있다고 본다
+*/
+export function isProtectedPath(pathname: string): boolean {
+  if (pathname.includes('/signin') || pathname.includes('/signup')) {
+    return false;
+  }
+  return !isPublicPath(pathname);
 }
 
 /*

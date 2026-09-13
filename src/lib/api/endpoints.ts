@@ -15,7 +15,7 @@ export const ENDPOINTS = {
     refresh: api('/auth/refresh'), // [POST] 비로그인 (refreshToken 쿠키)
     me: api('/auth/me'), // [GET/PATCH] 로그인
     password: api('/auth/password'), // [PATCH] 로그인
-    social: (provider: SocialProvider) => api(`/auth/social/${provider}`), // [POST] 비로그인 (프론트 릴레이)
+    social: (provider: SocialProvider) => api(`/auth/social/${provider}`), // [GET] 비로그인 - 소셜 로그인 시작 (브라우저 이동, ?role=&callbackUrl=)
   },
 
   // --- Mover(기사) ---

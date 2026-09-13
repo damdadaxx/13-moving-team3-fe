@@ -91,7 +91,7 @@ export default function AuthPageLayout({
         <div className="mt-10 w-full tablet:mt-12">{children}</div>
 
         <div className="mt-12">
-          <SocialLoginButtons />
+          <SocialLoginButtons role={role} />
         </div>
 
         <Image

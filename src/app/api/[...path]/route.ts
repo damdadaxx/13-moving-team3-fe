@@ -4,9 +4,30 @@ import { ACCESS_TOKEN_COOKIE } from '@/lib/constants/auth';
 
 /** API 프록시 엔드포인트 */
 const API_BASE_URL = process.env.API_BASE_URL;
+/** 백엔드와 공유하는 시크릿 (서버 전용, NEXT_PUBLIC_ 아님) */
+const PROXY_SECRET = process.env.PROXY_SECRET;
 
 interface RouteContext {
   params: Promise<{ path: string[] }>;
+}
+
+/*
+@ 사용자 실제 IP
+- 백엔드는 이 프록시 서버 IP 만 보므로, 로그인 rate limit 을 사용자별로 걸 수 있게 IP 를 따로 넘긴다
+- 백엔드는 X-Proxy-Secret 이 일치할 때만 X-Client-IP 를 믿는다 (BE utils/clientIp.ts)
+@ 주의사항
+- 어떤 헤더를 믿을지는 호스팅에 따라 다르다
+  - Vercel: x-forwarded-for 를 플랫폼이 덮어써서 신뢰 가능
+  - nginx 등 자체 호스팅: proxy_set_header X-Forwarded-For $remote_addr 로 덮어쓰도록 설정
+- 로컬은 Next 가 소켓 주소(::1)로 채운다
+*/
+function getClientIp(request: NextRequest): string | undefined {
+  const realIp = request.headers.get('x-real-ip')?.trim();
+  if (realIp) return realIp;
+
+  // 여러 홉이면 가장 가까운(마지막) 항목이 인프라가 붙인 값이다
+  const forwardedFor = request.headers.get('x-forwarded-for');
+  return forwardedFor?.split(',').at(-1)?.trim() || undefined;
 }
 
 /** 백엔드로 요청을 프록시하는 함수 */
@@ -20,6 +41,7 @@ async function proxy(request: NextRequest, { params }: RouteContext) {
   /** GET 외 method면 body 전달 */
   const rawBody = request.method === 'GET' ? '' : await request.text();
   const body = rawBody || undefined;
+  const clientIp = getClientIp(request);
 
   let response: Response;
   try {
@@ -29,8 +51,12 @@ async function proxy(request: NextRequest, { params }: RouteContext) {
       headers: {
         'Content-Type': 'application/json',
         cookie: request.headers.get('cookie') ?? '',
+        ...(clientIp && { 'X-Client-IP': clientIp }),
+        ...(PROXY_SECRET && { 'X-Proxy-Secret': PROXY_SECRET }),
       },
       body,
+      // 소셜 로그인 302 를 서버에서 따라가지 않고 브라우저에 그대로 넘긴다
+      redirect: 'manual',
     });
   } catch {
     // 백엔드 연결 실패 시 JSON 에러 응답
@@ -63,21 +89,31 @@ async function proxy(request: NextRequest, { params }: RouteContext) {
     return Response.json({ success: true, data: null }, { status: 200 });
   }
 
-  /** 백엔드 응답 데이터 반환 */
-  const data = await response.text();
+  /*
+  @ 프록시 응답 생성
+  - 리다이렉트(소셜 로그인 시작·콜백): Location 만 넘겨 브라우저가 이동하게 한다
+  - 그 외: 백엔드 응답 body 를 그대로 반환
+  */
+  const location = response.headers.get('Location');
+  const isRedirect =
+    response.status >= 300 && response.status < 400 && location !== null;
 
-  /** 프록시 응답 생성 */
-  const proxyResponse = new Response(data, {
-    status: response.status,
-    headers: {
-      'Content-Type':
-        response.headers.get('Content-Type') ?? 'application/json',
-    },
-  });
+  const proxyResponse = isRedirect
+    ? new Response(null, {
+        status: response.status,
+        headers: { Location: location },
+      })
+    : new Response(await response.text(), {
+        status: response.status,
+        headers: {
+          'Content-Type':
+            response.headers.get('Content-Type') ?? 'application/json',
+        },
+      });
 
   /*
   @ Set-Cookie Path 보정
-  - 백엔드는 refreshToken Path=/auth (BE 기준)
+  - 백엔드는 refreshToken·oauthState(소셜 로그인 state) Path=/auth (BE 기준)
   - 브라우저는 프론트 오리진에 쿠키를 저장하므로 /api/auth 요청에 붙이려면 Path=/api/auth 여야 함
   */
   const setCookieHeaders = response.headers.getSetCookie?.() ?? [];

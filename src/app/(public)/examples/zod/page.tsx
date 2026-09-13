@@ -78,10 +78,22 @@ export default function ZodExamplePage() {
           className="flex flex-col gap-4 rounded-[8px] border border-line-200 p-[16px]"
         >
           <InputBase
+            label="이름"
+            type="text"
+            error={errors.name?.message}
+            {...register('name')}
+          />
+          <InputBase
             label="이메일"
             type="email"
             error={errors.email?.message}
             {...register('email')}
+          />
+          <InputBase
+            label="전화번호"
+            type="tel"
+            error={errors.phoneNumber?.message}
+            {...register('phoneNumber')}
           />
           <InputBase
             label="비밀번호"

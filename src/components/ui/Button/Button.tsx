@@ -1,48 +1,55 @@
-// 페이지 이동이 목적이면 이게 아니라 ButtonLink를 쓴다.
-'use client';
-
+// 공용 CTA 버튼 (Figma: Button/solid/CTA, Button/outlined/CTA)
+// 태그 분기(button / Link / 비활성 a)와 스피너는 ButtonElement가 담당하고,
+// 이 컴포넌트는 CTA variant 스타일과 아이콘 슬롯만 얹는다.
 import { cn } from '@/utils/cn';
 
-import ButtonContent from './ButtonContent';
+import ButtonElement, { type ButtonElementProps } from './ButtonElement';
 import { buttonVariants, type ButtonVariantProps } from './ButtonStyles';
 
-interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>, ButtonVariantProps {
-  /** 텍스트 오른쪽에 붙는 24x24 아이콘 (Figma의 solid-icon 변형) */
-  icon?: React.ReactNode;
-  /** 로딩 중이면 스피너만 보여주고 클릭을 막는다 */
-  isLoading?: boolean;
-}
+/* ButtonElementProps는 href 유무로 갈린 유니온이라 교차 타입이 분배된다.
+   덕분에 href를 넘기면 Link props, 안 넘기면 button props가 그대로 살아남는다 */
+type ButtonProps = ButtonElementProps &
+  ButtonVariantProps & {
+    /** 텍스트 오른쪽에 붙는 24x24 아이콘 (Figma의 solid-icon 변형) */
+    icon?: React.ReactNode;
+  };
 
 export default function Button({
   variant,
   size,
   icon,
-  isLoading = false,
-  disabled = false,
-  children,
   className,
-  /* HTML 기본값이 submit이라 <form> 안에 두면 폼이 제출된다.
-     button을 기본으로 두고, 제출 버튼이 필요하면 호출부에서 넘긴다 */
-  type = 'button',
+  children,
+  disabled,
+  isLoading = false,
   ...props
 }: ButtonProps) {
-  const isDisabled = disabled || isLoading;
+  const isDisabled = Boolean(disabled) || isLoading;
 
   return (
-    <button
-      type={type}
-      className={cn(buttonVariants({ variant, size }), className)}
-      disabled={isDisabled}
-      /* 네이티브 disabled만으론 색이 안 바뀐다. 공유 스타일이 ButtonLink에
-         맞추느라 aria-disabled를 기준으로 잡고 있어서 같이 붙여준다 */
-      aria-disabled={isDisabled}
-      aria-busy={isLoading}
+    <ButtonElement
       {...props}
+      disabled={disabled}
+      isLoading={isLoading}
+      /* variant 스타일은 aria-disabled를 보는데 ButtonElement는 네이티브
+         <button>에 이걸 붙이지 않는다. 안 넘기면 비활성 버튼이 회색으로 바뀌지
+         않고 hover도 계속 먹는다. 링크 분기에서는 ButtonElement가 자기 값으로
+         덮어쓰므로 중복되지 않는다 */
+      aria-disabled={isDisabled || undefined}
+      className={cn(buttonVariants({ variant, size }), className)}
     >
-      <ButtonContent icon={icon} isLoading={isLoading}>
-        {children}
-      </ButtonContent>
-    </button>
+      {children}
+      {/* 아이콘은 텍스트 옆 장식이라 보조기기에서는 숨긴다.
+          isLoading이면 ButtonElement가 children 대신 스피너를 그리므로
+          아이콘도 같이 사라진다 */}
+      {icon && (
+        <span
+          aria-hidden="true"
+          className="flex size-6 shrink-0 items-center justify-center"
+        >
+          {icon}
+        </span>
+      )}
+    </ButtonElement>
   );
 }

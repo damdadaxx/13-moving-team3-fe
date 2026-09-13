@@ -26,6 +26,40 @@ export default function InputExamplePage() {
       </section>
 
       <section className="flex flex-col gap-4">
+        <h2 className="text-lg-semibold">labelVariant / required</h2>
+        <div className="flex w-[327px] flex-col gap-4">
+          <InputBase
+            label="이메일 (auth)"
+            required
+            placeholder="codeit@email.com"
+          />
+          <InputBase
+            labelVariant="profile"
+            size="md"
+            label="이름 (profile)"
+            required
+            placeholder="이름"
+          />
+          <InputBase
+            labelVariant="profile"
+            label="이메일 (profile, readOnly)"
+            defaultValue="codeit@email.com"
+            readOnly
+          />
+          <InputBase
+            labelVariant="profile"
+            label="전화번호 (profile)"
+            defaultValue="010-1234-5678"
+          />
+          <InputBase
+            labelVariant="modal"
+            label="견적가를 입력해 주세요"
+            placeholder="견적가 입력"
+          />
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-4">
         <h2 className="text-lg-semibold">size=md</h2>
         <div className="flex w-[640px] flex-col gap-4">
           <InputBase size="md" placeholder="codeit@email.com" />

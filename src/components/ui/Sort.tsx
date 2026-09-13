@@ -5,6 +5,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import { cva, type VariantProps } from 'class-variance-authority';
+
 import IcChevronDownGray200 from '@/assets/icons/ic_chevron_down_20_gray200.svg';
 import IcChevronDownGray300 from '@/assets/icons/ic_chevron_down_20_gray300.svg';
 import IcChevronUpGray200 from '@/assets/icons/ic_chevron_up_20_gray200.svg';
@@ -13,7 +15,80 @@ import { useOutsideClick } from '@/hooks/common/useOutsideClick';
 
 import { cn } from '@/utils/cn';
 
-type SortSize = 'sm' | 'md';
+/*
+@ 사이즈별 스타일 (Figma size=sm / size=md)
+- Dropdown과 달리 트리거에 테두리가 없고, 목록에도 그림자가 없다
+- 트리거 그림자: Figma 컴포넌트 md에는 있지만 실제 페이지(기사님 찾기, 받은 요청)
+  인스턴스는 전부 그림자를 끈 상태라 페이지 기준으로 넣지 않는다
+- 페이지에서는 mobile·tablet sm / desktop md로 쓴다 (useBreakpointValue로 size를 넘긴다)
+- 글자가 상태에 따라 굵기·색이 바뀐다: 닫힘 semibold/black-400, 열림 medium/gray-400
+- 목록 위치(top)는 트리거 높이 + 간격. sm 32+6=38, md 40+8=48 (Figma 값)
+*/
+const sortTriggerVariants = cva(
+  // text-left: <button> 기본 text-align:center 때문에 라벨이 줄바꿈되면 가운데로 튄다
+  'flex w-full cursor-pointer items-center justify-center rounded-lg bg-gray-50 text-left disabled:cursor-not-allowed disabled:opacity-50',
+  {
+    variants: {
+      size: {
+        sm: 'gap-0.5 py-1.5 pl-2 pr-1.5',
+        md: 'gap-2.5 px-2.5 py-2',
+      },
+      isOpen: {
+        true: 'text-gray-400',
+        false: 'text-black-400',
+      },
+    },
+    compoundVariants: [
+      { size: 'sm', isOpen: false, className: 'text-xs-semibold' },
+      { size: 'sm', isOpen: true, className: 'text-xs-medium' },
+      { size: 'md', isOpen: false, className: 'text-md-semibold' },
+      { size: 'md', isOpen: true, className: 'text-md-medium' },
+    ],
+    defaultVariants: {
+      size: 'sm',
+      isOpen: false,
+    },
+  },
+);
+
+const sortListVariants = cva(
+  '-translate-x-1/2 absolute left-1/2 top-full z-dropdown min-w-full overflow-hidden rounded-lg border border-line-100 bg-gray-50',
+  {
+    variants: {
+      size: {
+        sm: 'mt-1.5',
+        md: 'mt-2',
+      },
+    },
+    defaultVariants: {
+      size: 'sm',
+    },
+  },
+);
+
+const sortItemVariants = cva(
+  // 디자인에 hover/focus 상태가 없어 배경으로 키보드 위치를 표시한다
+  'flex w-full cursor-pointer items-center whitespace-nowrap text-left text-black-400 hover:bg-background-200 focus:bg-background-200',
+  {
+    variants: {
+      size: {
+        sm: 'h-8 py-1.5 pl-2.5 pr-1.5 text-xs-medium',
+        md: 'px-3 py-2 text-md-medium',
+      },
+    },
+    defaultVariants: {
+      size: 'sm',
+    },
+  },
+);
+
+type SortSize = NonNullable<VariantProps<typeof sortTriggerVariants>['size']>;
+
+/** 닫힘 화살표 색이 사이즈마다 다르다 (sm gray-200 / md gray-300). 열림은 둘 다 gray-200 */
+const CHEVRON_CLOSED = {
+  sm: IcChevronDownGray200,
+  md: IcChevronDownGray300,
+} as const;
 
 export interface SortOption<T extends string> {
   value: T;
@@ -29,33 +104,6 @@ interface SortProps<T extends string> {
   /** 너비는 지정하지 않는다(라벨 길이에 맞춰짐). 필요하면 여기로 w-* 를 넘긴다 */
   className?: string;
 }
-
-/*
-@ 사이즈별 스타일 (Figma size=sm / size=md)
-- Dropdown과 달리 트리거에 테두리가 없고, 목록에도 그림자가 없다
-- 글자가 상태에 따라 굵기·색이 바뀐다: 닫힘 semibold/black-400, 열림 medium/gray-400
-- 목록 위치(top)는 트리거 높이 + 간격. sm 32+6=38, md 40+8=48 (Figma 값)
-*/
-const SIZE_STYLES = {
-  sm: {
-    trigger: 'gap-0.5 py-1.5 pl-2 pr-1.5',
-    triggerClosedText: 'text-xs-semibold text-black-400',
-    triggerOpenText: 'text-xs-medium text-gray-400',
-    triggerShadow: '',
-    list: 'mt-1.5',
-    item: 'h-8 py-1.5 pl-2.5 pr-1.5 text-xs-medium',
-    chevronClosed: IcChevronDownGray200,
-  },
-  md: {
-    trigger: 'gap-2.5 px-2.5 py-2',
-    triggerClosedText: 'text-md-semibold text-black-400',
-    triggerOpenText: 'text-md-medium text-gray-400',
-    triggerShadow: 'shadow-[4px_4px_5px_rgb(220_220_220_/_0.2)]',
-    list: 'mt-2',
-    item: 'px-3 py-2 text-md-medium',
-    chevronClosed: IcChevronDownGray300,
-  },
-} as const;
 
 export default function Sort<T extends string>({
   options,
@@ -87,8 +135,7 @@ export default function Sort<T extends string>({
     optionRefs.current[activeIndex]?.focus();
   }, [isOpen, activeIndex]);
 
-  const styles = SIZE_STYLES[size];
-  const ChevronIcon = isOpen ? IcChevronUpGray200 : styles.chevronClosed;
+  const ChevronIcon = isOpen ? IcChevronUpGray200 : CHEVRON_CLOSED[size];
   const selectedIndex = options.findIndex((option) => option.value === value);
   const selectedLabel = options[selectedIndex]?.label ?? '';
 
@@ -168,26 +215,14 @@ export default function Sort<T extends string>({
         onClick={() => (isOpen ? closeList() : openList(-1))}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        className={cn(
-          // text-left: <button> 기본 text-align:center 때문에 라벨이 줄바꿈되면 가운데로 튄다
-          'flex w-full cursor-pointer items-center justify-center rounded-lg bg-gray-50 text-left disabled:cursor-not-allowed disabled:opacity-50',
-          styles.trigger,
-          styles.triggerShadow,
-          isOpen ? styles.triggerOpenText : styles.triggerClosedText,
-        )}
+        className={sortTriggerVariants({ size, isOpen })}
       >
         <span className="whitespace-nowrap">{selectedLabel}</span>
         <ChevronIcon className="size-5 shrink-0" />
       </button>
 
       {isOpen && (
-        <ul
-          role="listbox"
-          className={cn(
-            '-translate-x-1/2 absolute left-1/2 top-full z-dropdown min-w-full overflow-hidden rounded-lg border border-line-100 bg-gray-50',
-            styles.list,
-          )}
-        >
+        <ul role="listbox" className={sortListVariants({ size })}>
           {options.map((option, index) => (
             <li key={option.value} role="none">
               <button
@@ -200,11 +235,7 @@ export default function Sort<T extends string>({
                 tabIndex={-1}
                 aria-selected={option.value === value}
                 onClick={() => handleSelect(option.value)}
-                className={cn(
-                  // 디자인에 hover/focus 상태가 없어 배경으로 키보드 위치를 표시한다
-                  'flex w-full cursor-pointer items-center whitespace-nowrap text-left text-black-400 hover:bg-background-200 focus:bg-background-200',
-                  styles.item,
-                )}
+                className={sortItemVariants({ size })}
               >
                 {option.label}
               </button>

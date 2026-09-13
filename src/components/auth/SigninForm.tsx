@@ -3,7 +3,6 @@
 import { useState } from 'react';
 
 import type { Role } from '@/types/role';
-import Link from 'next/link';
 
 import { HttpError } from '@/lib/api/errors';
 import { getSigninPath, getSignupPath } from '@/lib/constants/routes';
@@ -13,16 +12,14 @@ import { useAuth } from '@/hooks/auth/useAuth';
 import { useLoginForm } from '@/hooks/auth/useLoginForm';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
-import InputBase from '@/components/ui/Form/InputBase';
+import AuthField from '@/components/auth/AuthField';
+import AuthLinkText from '@/components/auth/AuthLinkText';
+import AuthPageLayout from '@/components/auth/AuthPageLayout';
+import AuthSubmitButton from '@/components/auth/AuthSubmitButton';
 
 interface SigninFormProps {
   role: Role;
 }
-
-const ROLE_LABEL: Record<Role, string> = {
-  customer: '일반 유저',
-  mover: '기사님',
-};
 
 export default function SigninForm({ role }: SigninFormProps) {
   const { login } = useAuth();
@@ -30,7 +27,7 @@ export default function SigninForm({ role }: SigninFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
   } = useLoginForm();
   const [submitError, setSubmitError] = useState('');
   const inputSize = useBreakpointValue('sm', 'md', 'md');
@@ -50,48 +47,45 @@ export default function SigninForm({ role }: SigninFormProps) {
   }
 
   return (
-    <div className="mx-auto flex max-w-[400px] flex-col gap-6 p-6">
-      <h1 className="text-xl-bold">{ROLE_LABEL[role]} 로그인</h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-        <InputBase
-          label="이메일"
-          type="email"
-          autoComplete="email"
-          size={inputSize}
-          error={errors.email?.message}
-          {...register('email')}
+    <AuthPageLayout role={role} mode="signin">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        className="flex w-full flex-col gap-4 tablet:gap-6"
+      >
+        <div className="flex flex-col gap-8 tablet:gap-14">
+          <div className="flex flex-col gap-4 tablet:gap-8">
+            <AuthField
+              label="이메일"
+              type="email"
+              autoComplete="email"
+              placeholder="이메일을 입력해 주세요"
+              error={errors.email?.message}
+              {...register('email')}
+            />
+            <AuthField
+              label="비밀번호"
+              type="password"
+              autoComplete="current-password"
+              placeholder="비밀번호를 입력해 주세요"
+              error={errors.password?.message}
+              {...register('password')}
+            />
+          </div>
+          <AuthSubmitButton
+            disabled={!isValid}
+            isLoading={isSubmitting}
+            error={submitError}
+          >
+            로그인
+          </AuthSubmitButton>
+        </div>
+        <AuthLinkText
+          text="아직 무빙 회원이 아니신가요?"
+          linkLabel="이메일로 회원가입하기"
+          href={getSignupPath(role)}
         />
-        <InputBase
-          label="비밀번호"
-          type="password"
-          autoComplete="current-password"
-          size={inputSize}
-          error={errors.password?.message}
-          {...register('password')}
-        />
-        {submitError && (
-          <p className="text-xs-medium text-red-500">{submitError}</p>
-        )}
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="rounded-[8px] bg-black px-4 py-2 text-md-regular text-white disabled:opacity-50"
-        >
-          {isSubmitting ? '로그인 중...' : '로그인'}
-        </button>
       </form>
-      <p className="text-md-regular text-gray-500">
-        계정이 없으신가요?{' '}
-        <Link href={getSignupPath(role)} className="underline">
-          회원가입
-        </Link>
-      </p>
-      <p className="text-md-regular text-gray-500">
-        {role === 'customer' ? '기사님이신가요?' : '일반 유저이신가요?'}{' '}
-        <Link href={getSigninPath(otherRole)} className="underline">
-          {ROLE_LABEL[otherRole]} 로그인
-        </Link>
-      </p>
-    </div>
+    </AuthPageLayout>
   );
 }

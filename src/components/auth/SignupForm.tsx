@@ -3,7 +3,6 @@
 import { useState } from 'react';
 
 import type { Role } from '@/types/role';
-import Link from 'next/link';
 
 import { HttpError } from '@/lib/api/errors';
 import { getSigninPath, getSignupPath } from '@/lib/constants/routes';
@@ -13,16 +12,14 @@ import { useAuth } from '@/hooks/auth/useAuth';
 import { useSignupForm } from '@/hooks/auth/useSignupForm';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
-import InputBase from '@/components/ui/Form/InputBase';
+import AuthField from '@/components/auth/AuthField';
+import AuthLinkText from '@/components/auth/AuthLinkText';
+import AuthPageLayout from '@/components/auth/AuthPageLayout';
+import AuthSubmitButton from '@/components/auth/AuthSubmitButton';
 
 interface SignupFormProps {
   role: Role;
 }
-
-const ROLE_LABEL: Record<Role, string> = {
-  customer: '일반 유저',
-  mover: '기사님',
-};
 
 export default function SignupForm({ role }: SignupFormProps) {
   const { signup } = useAuth();
@@ -30,7 +27,7 @@ export default function SignupForm({ role }: SignupFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
   } = useSignupForm();
   const [submitError, setSubmitError] = useState('');
   const inputSize = useBreakpointValue('sm', 'md', 'md');
@@ -56,73 +53,70 @@ export default function SignupForm({ role }: SignupFormProps) {
   }
 
   return (
-    <div className="mx-auto flex max-w-[400px] flex-col gap-6 p-6">
-      <h1 className="text-xl-bold">{ROLE_LABEL[role]} 회원가입</h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-        <InputBase
-          label="이름"
-          type="text"
-          autoComplete="name"
-          size={inputSize}
-          error={errors.name?.message}
-          {...register('name')}
+    <AuthPageLayout role={role} mode="signup">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        className="flex w-full flex-col gap-4 tablet:gap-6"
+      >
+        <div className="flex flex-col gap-8 tablet:gap-14">
+          <div className="flex flex-col gap-4 tablet:gap-8">
+            <AuthField
+              label="이름"
+              type="text"
+              autoComplete="name"
+              placeholder="성함을 입력해 주세요"
+              error={errors.name?.message}
+              {...register('name')}
+            />
+            <AuthField
+              label="이메일"
+              type="email"
+              autoComplete="email"
+              placeholder="이메일을 입력해 주세요"
+              error={errors.email?.message}
+              {...register('email')}
+            />
+            <AuthField
+              label="전화번호"
+              type="tel"
+              inputMode="numeric"
+              autoComplete="tel"
+              placeholder="숫자만 입력해 주세요"
+              error={errors.phoneNumber?.message}
+              {...register('phoneNumber')}
+            />
+            <AuthField
+              label="비밀번호"
+              type="password"
+              autoComplete="new-password"
+              placeholder="비밀번호를 입력해 주세요"
+              error={errors.password?.message}
+              {...register('password')}
+            />
+            <AuthField
+              label="비밀번호 확인"
+              type="password"
+              autoComplete="new-password"
+              placeholder="비밀번호 다시 한번 입력해 주세요"
+              error={errors.passwordConfirm?.message}
+              {...register('passwordConfirm')}
+            />
+          </div>
+          <AuthSubmitButton
+            disabled={!isValid}
+            isLoading={isSubmitting}
+            error={submitError}
+          >
+            시작하기
+          </AuthSubmitButton>
+        </div>
+        <AuthLinkText
+          text="이미 무빙 회원이신가요?"
+          linkLabel="로그인"
+          href={getSigninPath(role)}
         />
-        <InputBase
-          label="이메일"
-          type="email"
-          autoComplete="email"
-          size={inputSize}
-          error={errors.email?.message}
-          {...register('email')}
-        />
-        <InputBase
-          label="전화번호"
-          type="tel"
-          autoComplete="tel"
-          placeholder="01012345678"
-          size={inputSize}
-          error={errors.phoneNumber?.message}
-          {...register('phoneNumber')}
-        />
-        <InputBase
-          label="비밀번호"
-          type="password"
-          autoComplete="new-password"
-          size={inputSize}
-          error={errors.password?.message}
-          {...register('password')}
-        />
-        <InputBase
-          label="비밀번호 확인"
-          type="password"
-          autoComplete="new-password"
-          size={inputSize}
-          error={errors.passwordConfirm?.message}
-          {...register('passwordConfirm')}
-        />
-        {submitError && (
-          <p className="text-xs-medium text-red-500">{submitError}</p>
-        )}
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="rounded-[8px] bg-black px-4 py-2 text-md-regular text-white disabled:opacity-50"
-        >
-          {isSubmitting ? '가입 중...' : '회원가입'}
-        </button>
       </form>
-      <p className="text-md-regular text-gray-500">
-        이미 계정이 있으신가요?{' '}
-        <Link href={getSigninPath(role)} className="underline">
-          로그인
-        </Link>
-      </p>
-      <p className="text-md-regular text-gray-500">
-        {role === 'customer' ? '기사님이신가요?' : '일반 유저이신가요?'}{' '}
-        <Link href={getSignupPath(otherRole)} className="underline">
-          {ROLE_LABEL[otherRole]} 회원가입
-        </Link>
-      </p>
-    </div>
+    </AuthPageLayout>
   );
 }

@@ -14,7 +14,6 @@ interface PaginationProps {
   visiblePages: number;
   onClick?: (page: number) => void;
   size?: PaginationSize;
-  className?: string;
 }
 
 type PageItem = number | 'ellipsis';

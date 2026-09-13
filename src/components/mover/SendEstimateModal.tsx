@@ -8,15 +8,18 @@ import IcSolidDocument from '@/assets/icons/ic_solid_document.svg';
 import IcVisibility from '@/assets/icons/ic_visibility.svg';
 
 import Button from '@/components/ui/Button/Button';
+import Modal from '@/components/ui/Modal/Modal';
 
 interface SendEstimateModalProps {
+  isOpen: boolean;
+  onClose: () => void;
   moveType: string;
   isDesignatedRequest?: boolean;
   customerName: string;
   fromRegion: string;
   toRegion: string;
   moveDate: string;
-  onSubmit: (data: { price: string; comment: string }) => void;
+  onSubmit?: (data: { price: string; comment: string }) => void;
 }
 
 const MIN_COMMENT_LENGTH = 10;
@@ -27,6 +30,8 @@ function formatPrice(rawDigits: string): string {
 }
 
 export default function SendEstimateModal({
+  isOpen,
+  onClose,
   moveType,
   isDesignatedRequest = false,
   customerName,
@@ -47,11 +52,22 @@ export default function SendEstimateModal({
 
   function handleSubmit() {
     if (!isValid) return;
-    onSubmit({ price, comment });
+    onSubmit?.({ price, comment });
+    onClose();
   }
 
   return (
-    <>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="견적 보내기"
+      variant="sheet"
+      buttons={
+        <Button disabled={!isValid} onClick={handleSubmit}>
+          견적 보내기
+        </Button>
+      }
+    >
       <div className="flex w-full flex-col gap-[20px] tablet:gap-[32px]">
         <div className="flex flex-col gap-[16px] tablet:gap-[20px]">
           <div className="flex items-center gap-[8px]">
@@ -134,10 +150,6 @@ export default function SendEstimateModal({
           />
         </div>
       </div>
-
-      <Button disabled={!isValid} onClick={handleSubmit}>
-        견적 보내기
-      </Button>
-    </>
+    </Modal>
   );
 }

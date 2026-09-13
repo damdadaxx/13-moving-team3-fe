@@ -11,7 +11,7 @@ type OutsideClickHandler = (e: MouseEvent | FocusEvent | KeyboardEvent) => void;
 /**
  * 외부 클릭(Outside Click) 감지 훅
  *
- * @param {React.RefObject<HTMLElement>} ref - 감지할 요소의 ref
+ * @param {React.RefObject<HTMLElement | null>} ref - 감지할 요소의 ref
  * @param {(e: MouseEvent | FocusEvent | KeyboardEvent) => void} handler - 외부 클릭/포커스/ESC에 실행될 콜백
  * @param {Object} [options] - 옵션 객체
  * @param {boolean} [options.enabled=true] - 감지 활성화 여부
@@ -24,8 +24,8 @@ type OutsideClickHandler = (e: MouseEvent | FocusEvent | KeyboardEvent) => void;
  * (closeOnEscape=true 시) ESC 키를 눌렀을 때 handler를 호출하는 공통 훅입니다.
  * 옵션 미사용 시 기본적으로 마우스 외부 클릭만 감지합니다.
  */
-export function useOutsideClick(
-  ref: RefObject<HTMLElement>,
+export function useOutsideClick<T extends HTMLElement>(
+  ref: RefObject<T | null>,
   handler: OutsideClickHandler,
   {
     enabled = true,

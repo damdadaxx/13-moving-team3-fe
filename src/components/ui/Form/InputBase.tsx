@@ -16,11 +16,11 @@ import Label, { type LabelVariant } from '@/components/ui/Form/Label';
 
 /*
 @ 상태별 스타일 (Figma state 변형)
-- default: line-200 테두리
-- hover: gray-100 테두리 (Figma size=sm은 배경 gray-50, size=md는 background-200)
-- typing: focus-within 시 orange-400 테두리 + 주황 그림자
+- default: line-200 테두리, gray-50 배경
+- hover: gray-100 테두리, gray-50 배경
+- typing: focus-within 시 orange-400 테두리 + 주황 그림자. hover여도 테두리는 주황 유지
 - done: 값이 입력된 상태 — 테두리는 default와 같고 텍스트 색만 달라 별도 분기 불필요
-- error: red-200 테두리 + 하단 메시지. hover/focus 스타일을 적용하지 않는다
+- error: red-200 테두리 + 하단 메시지. hover 시 배경은 gray-50, 테두리는 red-200 유지
 
 @ size=sm은 화면이 커지면 Figma size=md 모양(18px 텍스트, 오른쪽 24px, 16px 에러)으로 바뀐다
 - 바뀌는 시점이 페이지마다 달라서 labelVariant로 분기한다
@@ -31,7 +31,7 @@ import Label, { type LabelVariant } from '@/components/ui/Form/Label';
 - 입력값이 아니라 readOnly·disabled로만 분기하므로 입력 중에 높이가 바뀌지 않는다
 */
 const inputBoxVariants = cva(
-  'flex items-center gap-2 rounded-2xl border bg-gray-50 px-3.5 transition-colors',
+  'flex items-center gap-2 rounded-2xl border bg-gray-50 px-3.5 transition-colors hover:bg-gray-50 hover:border-gray-100',
   {
     variants: {
       size: {
@@ -48,17 +48,21 @@ const inputBoxVariants = cva(
         false: '',
       },
       hasError: {
-        true: 'border-red-200',
+        true: 'border-red-200 hover:border-red-200',
         false: [
           'border-line-200 hover:border-gray-100',
-          'focus-within:border-orange-400 focus-within:bg-gray-50',
+          'focus-within:border-orange-400 focus-within:hover:border-orange-400 focus-within:bg-gray-50',
           // typing 상태의 주황 그림자 2겹 (Figma: orange-400 alpha 0.2 + 0.1)
           'focus-within:shadow-[0px_4px_4px_-1px_rgb(249_80_46_/_0.2),0px_4px_4px_-1px_rgb(249_80_46_/_0.1)]',
         ],
       },
     },
     compoundVariants: [
-      { size: 'sm', labelVariant: 'auth', className: 'tablet:pr-[24px]' },
+      {
+        size: 'sm',
+        labelVariant: 'auth',
+        className: 'tablet:pr-[24px]',
+      },
       {
         size: 'sm',
         labelVariant: 'profile',
@@ -70,19 +74,6 @@ const inputBoxVariants = cva(
         labelVariant: ['profile', 'modal'],
         className: 'desktop:pr-[24px]',
       },
-      {
-        size: 'sm',
-        labelVariant: 'auth',
-        hasError: false,
-        className: 'hover:bg-gray-50 tablet:hover:bg-background-200',
-      },
-      {
-        size: 'sm',
-        labelVariant: ['profile', 'modal'],
-        hasError: false,
-        className: 'hover:bg-gray-50 desktop:hover:bg-background-200',
-      },
-      { size: 'md', hasError: false, className: 'hover:bg-background-200' },
     ],
     defaultVariants: {
       size: 'sm',

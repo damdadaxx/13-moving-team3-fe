@@ -22,10 +22,7 @@ import { getAuthVariant } from '@/utils/getAuthVariant';
 import DesktopMenu from '@/components/ui/Header/DesktopMenu';
 import HeaderActions from '@/components/ui/Header/HeaderActions';
 import MobileMenu from '@/components/ui/Header/MobileMenu';
-import NotificationDropdown, {
-  DUMMY_UNREAD_COUNT,
-} from '@/components/ui/Header/NotificationDropdown';
-import ProfileDropdown from '@/components/ui/Header/ProfileDropdown';
+import { DUMMY_UNREAD_COUNT } from '@/components/ui/Header/NotificationDropdown';
 import type { HeaderMenuItem, HeaderPanel } from '@/components/ui/Header/types';
 
 interface HeaderProps {
@@ -157,36 +154,20 @@ export default function Header({ hasSessionCookie = false }: HeaderProps) {
         {/* 우측 액션 */}
         <HeaderActions
           isLoading={isLoading}
-          userName={user?.name ?? null}
+          user={user}
           isLoggedInHint={isLoggedInHint}
           unreadCount={unreadCount}
           isNotificationOpen={isNotificationMenuOpen}
           isProfileOpen={isProfileMenuOpen}
           isMobileMenuOpen={isMobileMenuOpen}
+          notificationMenuRef={notificationMenuRef}
+          profileMenuRef={profileMenuRef}
           onTogglePanel={togglePanel}
-        />
-      </div>
-
-      {/* 알림 메뉴 판넬 */}
-      {isLoggedIn ? (
-        <NotificationDropdown
-          ref={notificationMenuRef}
-          isOpen={isNotificationMenuOpen}
-          onClose={closePanel}
+          onClosePanel={closePanel}
           onUnreadChange={setUnreadCount}
-        />
-      ) : null}
-
-      {/* 프로필 메뉴 판넬 */}
-      {user ? (
-        <ProfileDropdown
-          ref={profileMenuRef}
-          user={user}
-          isOpen={isProfileMenuOpen}
-          onClose={closePanel}
           onLogout={logout}
         />
-      ) : null}
+      </div>
 
       {/* 모바일 메뉴 목록 */}
       <MobileMenu

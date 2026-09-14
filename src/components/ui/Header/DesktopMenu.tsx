@@ -20,7 +20,7 @@ const headerMenuItem = cva(
   {
     variants: {
       tone: {
-        default: 'text-black-500',
+        default: 'text-gray-400',
         active: 'text-black-500',
         inactive: 'text-gray-400',
       },

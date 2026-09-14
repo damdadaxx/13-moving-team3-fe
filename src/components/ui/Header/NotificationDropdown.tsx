@@ -1,7 +1,7 @@
 // 헤더 알림 드롭다운
 'use client';
 
-import { useState, type Ref } from 'react';
+import { useState } from 'react';
 
 import { cva } from 'class-variance-authority';
 
@@ -28,7 +28,6 @@ interface NotificationDropdownProps {
   isOpen: boolean;
   onClose: () => void;
   onUnreadChange?: (count: number) => void;
-  ref?: Ref<HTMLDivElement>;
 }
 
 // TODO: 알림 API 연동 후 실제 목록으로 교체
@@ -81,12 +80,12 @@ export const DUMMY_UNREAD_COUNT = DUMMY_NOTIFICATIONS.filter(
 
 const notificationDropdownPanel = cva(
   cn(
-    'absolute top-[48px] right-[20px] z-dropdown origin-center pt-[10px]',
+    'absolute top-[40px] right-[-4px] z-dropdown origin-top-right pt-[10px]',
     'flex max-h-[314px] w-[312px] flex-col items-start overflow-hidden rounded-[24px] border border-line-200 bg-gray-50',
     'drop-shadow-[2px_2px_8px_rgba(0,0,0,0.06)]',
     'transition-[opacity,transform] duration-200 ease-out',
-    'tablet:top-[50px] tablet:right-[108px]',
-    'desktop:top-[80px] desktop:right-[175px] desktop:w-[359px] desktop:max-h-[352px]',
+    'tablet:top-[43px] tablet:right-[36px]',
+    'desktop:top-[62px] desktop:right-[103px] desktop:w-[359px] desktop:max-h-[352px]',
   ),
   {
     variants: {
@@ -109,14 +108,13 @@ const notificationDropdownItem = cva(
  * 알림 드롭다운
  * @param isOpen - 드롭다운 열림 여부
  * @param onClose - 드롭다운 닫기 핸들러
- * @param ref - 드롭다운 참조
+ * @param onUnreadChange - 읽지 않은 알림 수 변경 핸들러
  * @returns 알림 드롭다운 컴포넌트
  */
 export default function NotificationDropdown({
   isOpen,
   onClose,
   onUnreadChange,
-  ref,
 }: NotificationDropdownProps) {
   const [notifications, setNotifications] = useState(DUMMY_NOTIFICATIONS);
 
@@ -149,7 +147,6 @@ export default function NotificationDropdown({
   return (
     <div
       id={HEADER_PANEL_IDS.notification}
-      ref={ref}
       aria-hidden={!isOpen}
       inert={!isOpen}
       className={notificationDropdownPanel({ open: isOpen })}

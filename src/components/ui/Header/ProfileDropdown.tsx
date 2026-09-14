@@ -1,6 +1,4 @@
 // 헤더 프로필 드롭다운
-import type { Ref } from 'react';
-
 import type { AuthUser } from '@/types/auth';
 import type { Role } from '@/types/role';
 import { cva } from 'class-variance-authority';
@@ -17,7 +15,6 @@ interface ProfileDropdownProps {
   isOpen: boolean;
   onClose: () => void;
   onLogout?: () => void;
-  ref?: Ref<HTMLDivElement>;
 }
 
 const PROFILE_MENU_DATA: Record<Role, { label: string; href: string }[]> = {
@@ -69,11 +66,12 @@ const profileDropdownItem = cva(
 
 const profileDropdownPanel = cva(
   cn(
-    'absolute top-[52px] right-[14px] z-dropdown origin-center px-[6px] pt-[10px] pb-[6px]',
+    'absolute top-[36px] right-[-58px] z-dropdown origin-top-right px-[6px] pt-[10px] pb-[6px]',
     'flex w-[152px] flex-col items-start rounded-[16px] border border-line-200 bg-gray-50 drop-shadow-[2px_2px_4px_rgba(224,224,224,0.2)]',
     'transition-[opacity,transform] duration-200 ease-out',
-    'tablet:right-[16px]',
-    'desktop:top-[80px] desktop:right-[36px] desktop:w-[248px] desktop:px-[4px] desktop:pt-[16px]',
+    'tablet:right-[-104px]',
+    'desktop:top-[58px] desktop:w-[248px] desktop:px-[4px] desktop:pt-[16px]',
+    'desktop:right-[max(-124px,calc(36px-max(72px,(100vw-1600px)/2)))]',
   ),
   {
     variants: {
@@ -91,7 +89,6 @@ const profileDropdownPanel = cva(
  * @param isOpen - 드롭다운 열림 여부
  * @param onClose - 드롭다운 닫기 핸들러
  * @param onLogout - 로그아웃 핸들러
- * @param ref - 드롭다운 참조
  * @returns 프로필 드롭다운 컴포넌트
  */
 export default function ProfileDropdown({
@@ -99,7 +96,6 @@ export default function ProfileDropdown({
   isOpen,
   onClose,
   onLogout,
-  ref,
 }: ProfileDropdownProps) {
   const handleLogout = () => {
     onLogout?.();
@@ -109,7 +105,6 @@ export default function ProfileDropdown({
   return (
     <div
       id={HEADER_PANEL_IDS.profile}
-      ref={ref}
       aria-hidden={!isOpen}
       inert={!isOpen}
       className={profileDropdownPanel({ open: isOpen })}

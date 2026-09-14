@@ -38,7 +38,8 @@ export default function TextareaExamplePage() {
         <h1 className="text-xl-bold text-black-400">Textarea 공통 컴포넌트</h1>
 
         <p className="text-md-regular text-black-100">
-          크기, 반응형, 오류, 스크롤과 focus-visible 상태를 확인합니다.
+          부모 컨테이너의 너비를 따르는 one-size 반응형 Textarea의 오류,
+          스크롤과 포커스 상태를 확인합니다.
         </p>
       </header>
 
@@ -50,11 +51,12 @@ export default function TextareaExamplePage() {
           <h2 className="text-lg-semibold text-black-300">반응형 Textarea</h2>
 
           <p className="text-md-regular text-black-100">
-            모바일에서는 sm, tablet 이상에서는 md 크기가 적용됩니다.
+            모바일 스타일에서 시작해 tablet 이상에서 padding과 typography가
+            자동으로 변경됩니다.
           </p>
         </div>
 
-        <div>
+        <div className="w-full max-w-[327px] tablet:max-w-[560px]">
           {/*
           @ 공용 Label 및 React Hook Form 연동
           - label을 전달하면 Textarea가 공용 Label을 렌더링하고 id와 연결합니다.
@@ -94,33 +96,17 @@ export default function TextareaExamplePage() {
           Default / Typing 상태
         </h2>
 
-        <div className="grid gap-[32px] desktop:grid-cols-2">
-          <div className="flex flex-col gap-[8px]">
-            <h3 className="text-md-semibold text-black-300">sm</h3>
-
-            <Textarea
-              id="default-sm"
-              size="sm"
-              aria-label="sm 기본 textarea"
-              placeholder="최소 10자 이상 입력해주세요"
-            />
-          </div>
-
-          <div className="flex flex-col gap-[8px]">
-            <h3 className="text-md-semibold text-black-300">md</h3>
-
-            <Textarea
-              id="default-md"
-              size="md"
-              aria-label="md 기본 textarea"
-              placeholder="최소 10자 이상 입력해주세요"
-            />
-          </div>
+        <div className="w-full max-w-[327px] tablet:max-w-[560px]">
+          <Textarea
+            id="default-textarea"
+            aria-label="기본 textarea"
+            placeholder="최소 10자 이상 입력해주세요"
+          />
         </div>
 
         <p className="text-sm-medium text-gray-400">
-          Tab 키로 Textarea에 이동하거나 클릭하면 입력 및 focus-visible 스타일을
-          확인할 수 있습니다.
+          Tab 키로 Textarea에 이동하거나 클릭하면 입력 및 focus 상태를 확인할 수
+          있습니다.
         </p>
       </section>
 
@@ -132,28 +118,12 @@ export default function TextareaExamplePage() {
           Filled / Scroll 상태
         </h2>
 
-        <div className="grid gap-[32px] desktop:grid-cols-2">
-          <div className="flex flex-col gap-[8px]">
-            <h3 className="text-md-semibold text-black-300">sm</h3>
-
-            <Textarea
-              id="filled-sm"
-              size="sm"
-              aria-label="sm 입력 완료 textarea"
-              defaultValue={LONG_REVIEW}
-            />
-          </div>
-
-          <div className="flex flex-col gap-[8px]">
-            <h3 className="text-md-semibold text-black-300">md</h3>
-
-            <Textarea
-              id="filled-md"
-              size="md"
-              aria-label="md 입력 완료 textarea"
-              defaultValue={LONG_REVIEW}
-            />
-          </div>
+        <div className="w-full max-w-[327px] tablet:max-w-[560px]">
+          <Textarea
+            id="filled-textarea"
+            aria-label="입력 완료 textarea"
+            defaultValue={LONG_REVIEW}
+          />
         </div>
       </section>
 
@@ -163,30 +133,13 @@ export default function TextareaExamplePage() {
       <section className="flex flex-col gap-[16px]">
         <h2 className="text-lg-semibold text-black-300">Error 상태</h2>
 
-        <div className="grid gap-[32px] desktop:grid-cols-2">
-          <div className="flex flex-col gap-[8px]">
-            <h3 className="text-md-semibold text-black-300">sm</h3>
-
-            <Textarea
-              id="error-sm"
-              size="sm"
-              aria-label="sm 오류 textarea"
-              defaultValue="후기"
-              error="10자 이상 입력해주세요."
-            />
-          </div>
-
-          <div className="flex flex-col gap-[8px]">
-            <h3 className="text-md-semibold text-black-300">md</h3>
-
-            <Textarea
-              id="error-md"
-              size="md"
-              aria-label="md 오류 textarea"
-              defaultValue="후기"
-              error="10자 이상 입력해주세요."
-            />
-          </div>
+        <div className="w-full max-w-[327px] tablet:max-w-[560px]">
+          <Textarea
+            id="error-textarea"
+            aria-label="오류 textarea"
+            defaultValue="후기"
+            error="10자 이상 입력해주세요."
+          />
         </div>
       </section>
     </main>

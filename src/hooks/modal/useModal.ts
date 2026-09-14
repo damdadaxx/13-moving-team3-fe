@@ -1,3 +1,35 @@
 // 모달 open/close 상태 훅
+import { useContext } from 'react';
 
-export function useModal() {}
+import { ModalContext } from '@/lib/providers/ModalProvider';
+
+/*
+@ useModal
+- ModalProvider 하위에서 openModal(content, options) / closeModal 로 모달을 제어한다.
+- options.variant: 'popup'(기본, 중앙 팝업) | 'sheet'(모바일 바텀시트, 태블릿 이상은 popup과 동일)
+- options.buttons: <> <Button /> <Button /> </> 형태로 전달. flex + gap 정렬 (1개면 gap 없음)
+- 버튼이 폼 상태(입력값 등)에 묶여 있으면 useModal 대신 도메인 컴포넌트가 Modal을 직접 렌더링하고
+  buttons prop으로 넘긴다 (예: SendEstimateModal)
+
+@example
+const { openModal, closeModal } = useModal();
+openModal(<p>내용</p>, {
+  title: '제목',
+  variant: 'sheet',
+  buttons: (
+    <>
+      <Button onClick={closeModal}>취소</Button>
+      <Button onClick={closeModal}>확인</Button>
+    </>
+  ),
+});
+*/
+export function useModal() {
+  const context = useContext(ModalContext);
+
+  if (!context) {
+    throw new Error('useModal은 ModalProvider 안에서 사용해야 합니다.');
+  }
+
+  return context;
+}

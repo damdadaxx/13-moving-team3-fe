@@ -54,30 +54,25 @@ export default function TextareaExamplePage() {
           </p>
         </div>
 
-        {/*
-        @ Label 연결
-        - 공용 Label이 머지되기 전까지는 기본 label 요소를 사용합니다.
-        - Label이 머지되면 아래 label을 공용 Label 컴포넌트로 교체합니다.
-        */}
         <div>
-          <label
-            htmlFor="responsive-review"
-            className="mb-[8px] block text-lg-semibold text-black-300"
-          >
-            후기
-          </label>
-
           {/*
-          @ React Hook Form 연동
+          @ 공용 Label 및 React Hook Form 연동
+          - label을 전달하면 Textarea가 공용 Label을 렌더링하고 id와 연결합니다.
+          - labelVariant로 사용 화면에 맞는 Label 스타일을 선택합니다.
+          - required는 *와 aria-required를 표시하고 실제 필수값 검증은 폼에서 처리합니다.
           - register가 반환하는 ref, name, onChange, onBlur를 Textarea에 전달합니다.
           - React 19에서는 ref가 일반 prop으로 전달되므로 forwardRef가 필요하지 않습니다.
           - 실제 페이지에서는 검증 규칙을 Zod 스키마에서 관리합니다.
           */}
           <Textarea
             id="responsive-review"
+            label="후기"
+            labelVariant="profile"
+            required
             placeholder="최소 10자 이상 입력해주세요"
             error={errors.review?.message}
             {...register('review', {
+              required: '후기를 입력해주세요.',
               minLength: {
                 value: 10,
                 message: '10자 이상 입력해주세요.',

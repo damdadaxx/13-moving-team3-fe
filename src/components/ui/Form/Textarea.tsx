@@ -1,18 +1,23 @@
-import type { ComponentProps } from 'react';
+import { useId, type ComponentProps } from 'react';
 
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/utils/cn';
 
+import Label, { type LabelVariant } from '@/components/ui/Form/Label';
+
 /*
 @ 공용 Textarea 사용 방법
 - 기본값인 size="responsive"는 모바일에서 sm, tablet 이상에서 md를 적용합니다.
 - size="sm" 또는 size="md"를 전달하면 반응형 변경 없이 크기를 고정합니다.
+- label을 전달하면 공용 Label을 렌더링하고 textarea와 자동으로 연결합니다.
+- labelVariant는 사용 화면에 맞춰 auth, profile(기본값), modal 중 하나를 전달합니다.
+- Label 없이 사용할 때는 aria-label 또는 aria-labelledby로 접근 가능한 이름을 제공합니다.
 - error를 전달하면 오류 테두리, 오류 메시지와 aria-invalid를 함께 적용합니다.
-- Label의 htmlFor와 Textarea의 id를 같은 값으로 지정해 연결합니다.
 - 글자 수와 필수값 검증은 페이지 또는 React Hook Form/Zod에서 관리합니다.
-- className은 textarea 요소에, wrapperClassName은 textarea와 오류 메시지를 감싸는 요소에 적용됩니다.
-- id와 error를 함께 전달하면 오류 메시지가 aria-describedby로 자동 연결됩니다.
+- required는 Label의 * 표시와 aria-required만 적용하며 브라우저 기본 검증은 실행하지 않습니다.
+- className은 textarea 요소에, wrapperClassName은 전체 필드 영역에 적용됩니다.
+- id를 생략하면 자동 생성하며, 오류 메시지는 aria-describedby로 textarea와 연결합니다.
 
 @ 디자인 및 접근성
 - Figma의 고정 높이를 유지하기 위해 h-[160px]과 resize-none을 사용합니다.
@@ -24,6 +29,8 @@ import { cn } from '@/utils/cn';
 // 일반 상태 관리
 <Textarea
   id="review"
+  label="후기"
+  labelVariant="profile"
   value={review}
   onChange={(event) => setReview(event.target.value)}
   error={error}
@@ -32,9 +39,12 @@ import { cn } from '@/utils/cn';
 // React Hook Form — React 19의 ref-as-prop을 통해 register의 ref가 textarea까지 전달됩니다.
 <Textarea
   id="review"
+  label="후기"
+  labelVariant="profile"
+  required
   placeholder="최소 10자 이상 입력해주세요"
   error={errors.review?.message}
-  {...register('review')}
+  {...register('review', { required: '후기를 입력해주세요.' })}
 />
 */
 
@@ -76,7 +86,7 @@ export const textareaVariants = cva(
   },
 );
 
-const textareaWrapperVariants = cva('flex w-full flex-col gap-[4px]', {
+const textareaWrapperVariants = cva('w-full', {
   variants: {
     size: {
       sm: 'max-w-[327px]',
@@ -108,6 +118,25 @@ export type TextareaSize = NonNullable<
 
 export interface TextareaProps extends ComponentProps<'textarea'> {
   /**
+   * Textarea 상단에 표시할 Label입니다.
+   * 전달하지 않으면 Label을 렌더링하지 않습니다.
+   */
+  label?: string;
+
+  /**
+   * 사용 화면에 맞는 공용 Label 스타일입니다.
+   * @default 'profile'
+   */
+  labelVariant?: LabelVariant;
+
+  /**
+   * 필수 입력 항목 표시입니다.
+   * Label에 *를 표시하고 textarea에 aria-required를 적용합니다.
+   * 실제 검증은 React Hook Form/Zod에서 처리합니다.
+   */
+  required?: boolean;
+
+  /**
    * Textarea의 크기입니다.
    * responsive는 모바일에서 sm, tablet 이상에서 md를 적용합니다.
    * @default 'responsive'
@@ -121,13 +150,16 @@ export interface TextareaProps extends ComponentProps<'textarea'> {
   error?: string;
 
   /**
-   * Textarea와 오류 메시지를 감싸는 wrapper에 추가할 클래스입니다.
+   * Label, Textarea와 오류 메시지를 감싸는 wrapper에 추가할 클래스입니다.
    * Textarea 자체에는 네이티브 className을 전달합니다.
    */
   wrapperClassName?: string;
 }
 
 export default function Textarea({
+  label,
+  labelVariant = 'profile',
+  required,
   id,
   size = 'responsive',
   error,
@@ -135,31 +167,47 @@ export default function Textarea({
   wrapperClassName,
   'aria-describedby': ariaDescribedBy,
   'aria-invalid': ariaInvalid,
+  'aria-required': ariaRequired,
   ...props
 }: TextareaProps) {
+  const generatedId = useId();
+  const textareaId = id ?? generatedId;
   const hasError = Boolean(error);
-  const errorId = id && hasError ? `${id}-error` : undefined;
+  const errorId = hasError ? `${textareaId}-error` : undefined;
   const describedBy = [ariaDescribedBy, errorId].filter(Boolean).join(' ');
 
   return (
     <div className={cn(textareaWrapperVariants({ size }), wrapperClassName)}>
-      <textarea
-        {...props}
-        id={id}
-        aria-describedby={describedBy || undefined}
-        aria-invalid={ariaInvalid ?? hasError}
-        className={cn(textareaVariants({ size, hasError }), className)}
-      />
-
-      {error && (
-        <p
-          id={errorId}
-          role="alert"
-          className={textareaErrorVariants({ size })}
-        >
-          {error}
-        </p>
+      {label && (
+        <Label htmlFor={textareaId} variant={labelVariant} required={required}>
+          {label}
+        </Label>
       )}
+
+      {/*
+      Label은 자체 margin-bottom으로 간격을 관리합니다.
+      Textarea와 오류 메시지 사이의 4px 간격은 안쪽 영역에서 따로 관리합니다.
+      */}
+      <div className="flex flex-col gap-[4px]">
+        <textarea
+          {...props}
+          id={textareaId}
+          aria-describedby={describedBy || undefined}
+          aria-invalid={ariaInvalid ?? hasError}
+          aria-required={ariaRequired ?? required}
+          className={cn(textareaVariants({ size, hasError }), className)}
+        />
+
+        {error && (
+          <p
+            id={errorId}
+            role="alert"
+            className={textareaErrorVariants({ size })}
+          >
+            {error}
+          </p>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 // [메뉴] 예시
-// [페이지] 공용 Calender 컴포넌트 사용법
+// [페이지] 공용 Calendar 컴포넌트 사용법
 
 'use client';
 
@@ -12,7 +12,7 @@ import { useOutsideClick } from '@/hooks/common/useOutsideClick';
 
 import { cn } from '@/utils/cn';
 
-import Calender from '@/components/ui/Calender/Calender';
+import Calendar from '@/components/ui/Calendar/Calendar';
 
 const formatDot = (date: Date | null) =>
   date
@@ -26,7 +26,7 @@ const formatKorean = (date: Date | null) =>
 
 /**
  * 견적 요청 화면의 "이사 예정일" 드롭다운 (Figma 견적요청_dropdown/Desktop, node 1:3784)
- * 트리거는 Dropdown2, 열리면 아래로 Calender가 붙는다.
+ * 트리거는 Dropdown2, 열리면 아래로 Calendar가 붙는다.
  * 재사용이 필요해지면 이 컴포넌트만 그대로 들어내면 된다.
  */
 function MovingDateDropdown() {
@@ -69,7 +69,7 @@ function MovingDateDropdown() {
 
       {isOpen && (
         <div className="absolute top-full left-0 z-dropdown mt-2">
-          <Calender
+          <Calendar
             value={date}
             onChange={setDate}
             onConfirm={(next) => {
@@ -83,14 +83,14 @@ function MovingDateDropdown() {
   );
 }
 
-export default function CalenderExamplePage() {
+export default function CalendarExamplePage() {
   const [picked, setPicked] = useState<Date | null>(null);
   const [confirmed, setConfirmed] = useState<Date | null>(null);
 
   return (
     <div className="mx-auto flex max-w-[720px] flex-col gap-10 p-[24px]">
       <div>
-        <h1 className="text-xl-bold">Calender 예시</h1>
+        <h1 className="text-xl-bold">Calendar 예시</h1>
         <p className="mt-2 text-md-regular text-gray-500">
           Figma <code>DatePicker/calendar/sm</code>을 옮긴 컴포넌트입니다. 날짜
           선택 로직은 프로젝트에 이미 설치돼 있는 <code>react-calendar</code>를
@@ -120,7 +120,7 @@ export default function CalenderExamplePage() {
           있습니다. 아무것도 고르지 않은 상태에서는 선택완료 버튼이
           비활성(gray-300)입니다.
         </p>
-        <Calender onConfirm={setConfirmed} />
+        <Calendar onConfirm={setConfirmed} />
         <p className="text-md-regular text-gray-500">
           선택완료로 확정한 날짜: <strong>{formatDot(confirmed)}</strong>
         </p>
@@ -132,7 +132,7 @@ export default function CalenderExamplePage() {
           <code>value</code> + <code>onChange</code>로 부모가 상태를 들고 있는
           경우입니다.
         </p>
-        <Calender value={picked} onChange={setPicked} />
+        <Calendar value={picked} onChange={setPicked} />
         <p className="text-md-regular text-gray-500">
           현재 선택: <strong>{formatDot(picked)}</strong>
         </p>
@@ -144,7 +144,7 @@ export default function CalenderExamplePage() {
           <code>minDate</code>를 오늘로 두면 지난 날짜는 비활성됩니다. 이사
           예정일처럼 과거를 못 고르게 할 때 씁니다.
         </p>
-        <Calender minDate={new Date()} confirmLabel="이사일 선택완료" />
+        <Calendar minDate={new Date()} confirmLabel="이사일 선택완료" />
       </section>
     </div>
   );

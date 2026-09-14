@@ -11,12 +11,12 @@ import { cn } from '@/utils/cn';
 
 import Button from '@/components/ui/Button/Button';
 
-import styles from './Calender.module.css';
+import styles from './Calendar.module.css';
 
-/* 헤더·요일 줄 스타일은 Calender.module.css에 있다 (이유는 그 파일 주석 참고) */
+/* 헤더·요일 줄 스타일은 Calendar.module.css에 있다 (이유는 그 파일 주석 참고) */
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
-interface CalenderProps {
+interface CalendarProps {
   /** 선택된 날짜. 넘기지 않으면 컴포넌트가 자체 상태로 관리한다 */
   value?: Date | null;
   /** 날짜를 눌렀을 때 */
@@ -30,7 +30,7 @@ interface CalenderProps {
   className?: string;
 }
 
-export default function Calender({
+export default function Calendar({
   value,
   onChange,
   onConfirm,
@@ -38,7 +38,7 @@ export default function Calender({
   minDate,
   maxDate,
   className,
-}: CalenderProps) {
+}: CalendarProps) {
   const [internalValue, setInternalValue] = useState<Date | null>(null);
   const selected = value !== undefined ? value : internalValue;
 

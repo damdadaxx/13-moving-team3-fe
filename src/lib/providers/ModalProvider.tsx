@@ -13,6 +13,7 @@ import Modal from '@/components/ui/Modal/Modal';
 export interface ModalOptions {
   title: string;
   variant?: 'popup' | 'sheet';
+  buttons?: React.ReactNode;
 }
 
 export interface ModalContextType {
@@ -54,6 +55,7 @@ export default function ModalProvider({ children }: ModalProviderProps) {
         onClose={closeModal}
         title={options.title}
         variant={options.variant}
+        buttons={options.buttons}
       >
         {content}
       </Modal>

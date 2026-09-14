@@ -1,0 +1,74 @@
+/* react-calendar가 직접 만드는 DOM(헤더·요일 줄)은 Tailwind 임의 선택자로 잡으면
+   클래스명의 `__`가 공백으로 해석돼 이스케이프 지옥이 된다. 그 부분만 여기서 다룬다.
+   날짜 칸은 tileClassName으로 Tailwind에서 처리한다.
+
+   색·타이포 값은 globals.css의 @theme이 :root에 심어준 CSS 변수를 그대로 쓴다.
+
+   react-calendar 기본 CSS(dist/Calendar.css)는 import하지 않는다.
+   7칸 그리드는 라이브러리가 inline flex-basis로 처리하므로 레이아웃에 필요 없고,
+   기본 CSS를 넣으면 노란 오늘 날짜·파란 선택·빨간 주말 색을 전부 덮어써야 한다. */
+
+.calendar {
+  width: 309px;
+  max-width: 100%;
+}
+
+/* 헤더: 화살표 - 2025. 07 - 화살표 (h-48, 좌우 14px) */
+.calendar :global(.react-calendar__navigation) {
+  display: flex;
+  height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+}
+
+.calendar :global(.react-calendar__navigation__arrow) {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--color-gray-300);
+}
+
+.calendar :global(.react-calendar__navigation__arrow:disabled) {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* minDetail="month"라 라벨은 드릴업되지 않는다. 텍스트처럼 보이게 둔다 */
+.calendar :global(.react-calendar__navigation__label) {
+  border: 0;
+  background: none;
+  cursor: default;
+  font-size: var(--text-2lg-semibold);
+  font-weight: var(--text-2lg-semibold--font-weight);
+  line-height: var(--text-2lg-semibold--line-height);
+  color: var(--color-black-500);
+}
+
+/* 날짜 영역을 7 x 40px = 280px로 고정해야 칸 하나가 정확히 40px가 된다 */
+.calendar :global(.react-calendar__month-view) {
+  width: 280px;
+  margin: 0 auto;
+}
+
+.calendar :global(.react-calendar__month-view__weekdays__weekday) {
+  display: flex;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-sm-medium);
+  font-weight: var(--text-sm-medium--font-weight);
+  line-height: var(--text-sm-medium--line-height);
+  color: var(--color-gray-400);
+}
+
+/* 요일은 <abbr>로 렌더된다. 브라우저 기본 밑줄 제거 */
+.calendar :global(.react-calendar__month-view__weekdays abbr) {
+  text-decoration: none;
+}

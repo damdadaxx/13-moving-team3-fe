@@ -18,7 +18,7 @@ type ToastPhase = 'in' | 'out' | 'done';
 /*
 @ Toast
 - 마운트 시 위에서 slide-down, 3초 후 slide-up 하고 닫힘
-- 위치는 ToastProvider가 document.body 포탈에서 스택으로 잡는다
+- 위치는 ToastProvider가 children 옆에서 스택으로 잡는다
 */
 
 export default function Toast({ message, className, onClose }: ToastProps) {

@@ -3,7 +3,9 @@
 
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
+
+import { cva } from 'class-variance-authority';
 
 import IcChevronDown20 from '@/assets/icons/ic_chevron_down_20.svg';
 import IcChevronDown36 from '@/assets/icons/ic_chevron_down_36.svg';
@@ -13,8 +15,6 @@ import IcChevronUp36 from '@/assets/icons/ic_chevron_up_36.svg';
 import { useOutsideClick } from '@/hooks/common/useOutsideClick';
 
 import { cn } from '@/utils/cn';
-
-type DropdownSize = 'sm' | 'md';
 
 /** Figma의 variant 1-line(1열) / 2-line(2열). Default variant는 닫힌 상태다 */
 type DropdownColumns = 1 | 2;
@@ -30,75 +30,115 @@ interface DropdownProps<T extends string> {
   onChange: (value: T) => void;
   /** 미선택일 때 트리거에 보여줄 텍스트 */
   placeholder?: string;
-  size?: DropdownSize;
   /** 2면 옵션을 2열로 배치한다 (지역 선택 같은 긴 목록용) */
   columns?: DropdownColumns;
   disabled?: boolean;
+  /** 트리거 id. 없으면 useId로 만든다 (외부 <label htmlFor>와 연결할 때 지정) */
+  id?: string;
+  /** 보이는 라벨이 없을 때 목록의 이름 (예: "서비스 종류") */
+  'aria-label'?: string;
+  /** 보이는 라벨이 있을 때 그 요소의 id. aria-label보다 우선한다 */
+  'aria-labelledby'?: string;
   /** 너비는 지정하지 않는다. 필요하면 여기로 w-* 를 넘긴다 */
   className?: string;
 }
 
 /*
-@ 사이즈별 스타일 (Figma size=sm / size=md)
+@ 반응형 사이즈 (Figma size=sm / size=md)
+- 사용처가 전부 mobile·tablet: sm, desktop: md 라서 prop 없이 기본 스타일을 반응형으로 둔다
 - maxHeight: 디자인에 보이는 항목 수(1열 4개, 2열 5행) 기준. 넘치면 스크롤
 - 항목 텍스트는 전부 왼쪽 정렬. Figma md 2열에 justify-center가 있지만 자식이
   flex-[1_0_0]로 남는 너비를 다 차지해 실제로는 효과가 없다(텍스트 노드 x=24 = padding)
-- twoColumnGrid: Figma 2열은 열 너비가 고정(sm 75 / md 164)이라 트리거보다 목록이 넓어질
+- 2열 grid: Figma 2열은 열 너비가 고정(sm 75 / md 164)이라 트리거보다 목록이 넓어질
   수 있다. grid-cols-2로 트리거 너비를 반씩 나누면 항목이 눌려 패딩까지 깎인다
-- scrollbar: 디자인의 회색 둥근 thumb 재현용. 표준 scrollbar-width를 같이 주면
-  Chrome이 ::-webkit-scrollbar 스타일을 무시하므로 webkit 쪽만 쓴다
-  (Firefox는 기본 스크롤바로 보인다)
-  오른쪽 여백: 네이티브 스크롤바는 thumb만 띄울 수 없어서, 트랙을 thumb 두께의 2배로
-  잡고 thumb에 투명 border-right + bg-clip-padding을 줘서 오른쪽을 비운다
 */
-const SIZE_STYLES = {
-  sm: {
-    trigger: 'gap-1.5 rounded-lg py-1.5 pl-3.5 pr-2.5 text-md-medium',
-    triggerClosedBorder: 'border-line-200',
-    triggerClosedShadow: 'shadow-[4px_4px_5px_rgb(238_238_238_/_0.1)]',
-    triggerOpenShadow: 'shadow-[4px_4px_5px_rgb(195_217_242_/_0.1)]',
-    list: 'mt-[9px] rounded-lg shadow-[4px_4px_10px_rgb(191_191_191_/_0.2)]',
-    item: 'text-md-medium',
-    itemByColumns: {
-      1: 'h-10 px-3.5',
-      2: 'h-9 px-3.5',
+const triggerVariants = cva(
+  [
+    // text-left: <button> 기본 text-align:center 때문에 라벨이 줄바꿈되면 가운데로 튄다
+    'flex w-full cursor-pointer items-center justify-between border text-left disabled:cursor-not-allowed disabled:opacity-50',
+    'gap-1.5 rounded-lg py-1.5 pl-3.5 pr-2.5 text-md-medium',
+    'desktop:h-12.5 desktop:rounded-xl desktop:py-0 desktop:pl-5 desktop:pr-3 desktop:text-lg-medium',
+  ],
+  {
+    variants: {
+      isOpen: {
+        true: [
+          'border-orange-400 bg-orange-100 text-orange-400',
+          'shadow-[4px_4px_5px_rgb(195_217_242_/_0.1)] desktop:shadow-[4px_4px_5px_rgb(195_217_242_/_0.2)]',
+        ],
+        false: [
+          'border-line-200 bg-gray-50 text-black-400 desktop:border-gray-100',
+          'shadow-[4px_4px_5px_rgb(238_238_238_/_0.1)] desktop:shadow-[4px_4px_5px_rgb(195_217_242_/_0.2)]',
+        ],
+      },
     },
-    maxHeight: { 1: 'max-h-40', 2: 'max-h-45' },
-    twoColumnGrid: 'grid grid-cols-[repeat(2,minmax(75px,1fr))]',
-    scrollbar:
-      '[&::-webkit-scrollbar]:w-0.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-clip-padding',
+    defaultVariants: { isOpen: false },
   },
-  md: {
-    trigger: 'h-12.5 gap-1.5 rounded-xl pl-5 pr-3 text-lg-medium',
-    triggerClosedBorder: 'border-gray-100',
-    triggerClosedShadow: 'shadow-[4px_4px_5px_rgb(195_217_242_/_0.2)]',
-    triggerOpenShadow: 'shadow-[4px_4px_5px_rgb(195_217_242_/_0.2)]',
-    list: 'mt-[11px] rounded-2xl shadow-[4px_4px_5px_rgb(224_224_224_/_0.25)]',
-    item: '',
-    itemByColumns: {
-      1: 'h-15 pl-5 text-lg-medium',
-      2: 'h-16 px-6 text-2lg-medium',
-    },
-    maxHeight: { 1: 'max-h-60', 2: 'max-h-80' },
-    twoColumnGrid: 'grid grid-cols-[repeat(2,minmax(164px,1fr))]',
-    scrollbar:
-      '[&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-clip-padding',
-  },
-} as const;
+);
 
-const CHEVRON = {
-  sm: { closed: IcChevronDown20, open: IcChevronUp20, className: 'size-5' },
-  md: { closed: IcChevronDown36, open: IcChevronUp36, className: 'size-9' },
-} as const;
+/*
+@ 테두리를 스크롤 영역(ul) 밖에 두는 이유
+- border-box에서 테두리가 max-height를 2px 잡아먹어, 항목 수가 딱 맞을 때도
+  스크롤바가 생긴다. 바깥 div가 테두리·라운드·클리핑을 맡고 ul만 스크롤한다
+*/
+const LIST_CONTAINER_CLASS = cn(
+  'absolute -left-px top-full z-dropdown min-w-full overflow-hidden border border-line-200 bg-gray-50',
+  'mt-[9px] rounded-lg shadow-[4px_4px_10px_rgb(191_191_191_/_0.2)]',
+  'desktop:mt-[11px] desktop:rounded-2xl desktop:shadow-[4px_4px_5px_rgb(224_224_224_/_0.25)]',
+);
+
+/*
+@ 스크롤바
+- 디자인의 회색 둥근 thumb 재현용. 표준 scrollbar-width를 같이 주면
+  Chrome이 ::-webkit-scrollbar 스타일을 무시하므로 webkit 쪽만 쓴다 (Firefox는 기본 스크롤바)
+- TODO: 디자인과 아직 다르다(thumb 여백·길이 등). 네이티브 스크롤바로는 맞추기 까다로워 추후 정리 예정
+*/
+const listboxVariants = cva(
+  [
+    'overflow-y-auto overflow-x-hidden',
+    '[&::-webkit-scrollbar]:w-0.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-clip-padding',
+    'desktop:[&::-webkit-scrollbar]:w-1',
+  ],
+  {
+    variants: {
+      columns: {
+        1: 'max-h-40 desktop:max-h-60',
+        2: 'grid max-h-45 grid-cols-[repeat(2,minmax(75px,1fr))] desktop:max-h-80 desktop:grid-cols-[repeat(2,minmax(164px,1fr))]',
+      },
+    },
+    defaultVariants: { columns: 1 },
+  },
+);
+
+const optionVariants = cva(
+  // 디자인에 focus 상태가 없어 hover와 같은 배경으로 키보드 위치를 표시한다
+  'flex w-full cursor-pointer items-center whitespace-nowrap text-left text-black-400 hover:bg-background-200 focus:bg-background-200',
+  {
+    variants: {
+      columns: {
+        1: 'h-10 px-3.5 text-md-medium desktop:h-15 desktop:pl-5 desktop:pr-0 desktop:text-lg-medium',
+        2: 'h-9 px-3.5 text-md-medium desktop:h-16 desktop:px-6 desktop:text-2lg-medium',
+      },
+      // 2열은 왼쪽 열에만 세로 구분선을 둔다 (Figma: 첫 열 border-r)
+      hasColumnDivider: {
+        true: 'border-r border-line-200',
+        false: '',
+      },
+    },
+    defaultVariants: { columns: 1, hasColumnDivider: false },
+  },
+);
 
 export default function Dropdown<T extends string>({
   options,
   value,
   onChange,
   placeholder = '',
-  size = 'sm',
   columns = 1,
   disabled = false,
+  id,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
   className,
 }: DropdownProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
@@ -107,6 +147,10 @@ export default function Dropdown<T extends string>({
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const generatedId = useId();
+  const triggerId = id ?? `${generatedId}-trigger`;
+  const listboxId = `${generatedId}-listbox`;
 
   // 바깥 클릭 / ESC 로 닫는다 (열려 있을 때만 감지)
   useOutsideClick(containerRef, () => closeList(), {
@@ -123,9 +167,6 @@ export default function Dropdown<T extends string>({
     optionRefs.current[activeIndex]?.focus();
   }, [isOpen, activeIndex]);
 
-  const styles = SIZE_STYLES[size];
-  const chevron = CHEVRON[size];
-  const ChevronIcon = isOpen ? chevron.open : chevron.closed;
   const selectedIndex = options.findIndex((option) => option.value === value);
   const selectedLabel = options[selectedIndex]?.label;
 
@@ -208,51 +249,57 @@ export default function Dropdown<T extends string>({
     >
       <button
         ref={triggerRef}
+        id={triggerId}
         type="button"
         disabled={disabled}
         onClick={() => (isOpen ? closeList() : openList(-1))}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        className={cn(
-          // text-left: <button> 기본 text-align:center 때문에 라벨이 줄바꿈되면 가운데로 튄다
-          'flex w-full cursor-pointer items-center justify-between border bg-gray-50 text-left disabled:cursor-not-allowed disabled:opacity-50',
-          styles.trigger,
-          isOpen
-            ? cn(
-                'border-orange-400 bg-orange-100 text-orange-400',
-                styles.triggerOpenShadow,
-              )
-            : cn(
-                'text-black-400',
-                styles.triggerClosedBorder,
-                styles.triggerClosedShadow,
-              ),
-        )}
+        // 목록은 열렸을 때만 DOM에 있으므로, 없는 id를 가리키지 않게 열렸을 때만 연결한다
+        aria-controls={isOpen ? listboxId : undefined}
+        aria-label={ariaLabel}
+        aria-labelledby={
+          ariaLabelledBy ? `${ariaLabelledBy} ${triggerId}` : undefined
+        }
+        className={triggerVariants({ isOpen })}
       >
         <span className="truncate">{selectedLabel ?? placeholder}</span>
-        <ChevronIcon className={cn('shrink-0', chevron.className)} />
+        {/* 아이콘 크기가 sm 20px / md 36px 로 달라 두 개를 두고 desktop에서 교체한다 */}
+        {isOpen ? (
+          <>
+            <IcChevronUp20
+              aria-hidden="true"
+              className="size-5 shrink-0 desktop:hidden"
+            />
+            <IcChevronUp36
+              aria-hidden="true"
+              className="hidden size-9 shrink-0 desktop:block"
+            />
+          </>
+        ) : (
+          <>
+            <IcChevronDown20
+              aria-hidden="true"
+              className="size-5 shrink-0 desktop:hidden"
+            />
+            <IcChevronDown36
+              aria-hidden="true"
+              className="hidden size-9 shrink-0 desktop:block"
+            />
+          </>
+        )}
       </button>
 
       {isOpen && (
-        /*
-        테두리를 스크롤 영역(ul) 밖에 두는 이유:
-        border-box에서 테두리가 max-height를 2px 잡아먹어, 항목 수가 딱 맞을 때도
-        스크롤바가 생긴다. 바깥 div가 테두리·라운드·클리핑을 맡고 ul만 스크롤한다.
-        */
-        <div
-          className={cn(
-            'absolute -left-px top-full z-dropdown min-w-full overflow-hidden border border-line-200 bg-gray-50',
-            styles.list,
-          )}
-        >
+        <div className={LIST_CONTAINER_CLASS}>
           <ul
+            id={listboxId}
             role="listbox"
-            className={cn(
-              'overflow-y-auto overflow-x-hidden',
-              styles.maxHeight[columns],
-              styles.scrollbar,
-              columns === 2 && styles.twoColumnGrid,
-            )}
+            aria-label={ariaLabelledBy ? undefined : ariaLabel}
+            aria-labelledby={
+              ariaLabelledBy ?? (ariaLabel ? undefined : triggerId)
+            }
+            className={listboxVariants({ columns })}
           >
             {options.map((option, index) => (
               <li key={option.value} role="none">
@@ -260,22 +307,17 @@ export default function Dropdown<T extends string>({
                   ref={(node) => {
                     optionRefs.current[index] = node;
                   }}
+                  id={`${listboxId}-option-${index}`}
                   type="button"
                   role="option"
                   // roving focus: 포커스는 키보드 이동으로만 옮기고 Tab 순서에서는 뺀다
                   tabIndex={-1}
                   aria-selected={option.value === value}
                   onClick={() => handleSelect(option.value)}
-                  className={cn(
-                    // 디자인에 focus 상태가 없어 hover와 같은 배경으로 키보드 위치를 표시한다
-                    'flex w-full cursor-pointer items-center whitespace-nowrap text-left text-black-400 hover:bg-background-200 focus:bg-background-200',
-                    styles.item,
-                    styles.itemByColumns[columns],
-                    // 2열은 왼쪽 열에만 세로 구분선을 둔다 (Figma: 첫 열 border-r)
-                    columns === 2 &&
-                      index % 2 === 0 &&
-                      'border-r border-line-200',
-                  )}
+                  className={optionVariants({
+                    columns,
+                    hasColumnDivider: columns === 2 && index % 2 === 0,
+                  })}
                 >
                   {option.label}
                 </button>

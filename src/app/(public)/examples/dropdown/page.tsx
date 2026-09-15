@@ -1,5 +1,5 @@
 // [메뉴] 예시
-// [페이지] Dropdown 사이즈/열 수 확인용
+// [페이지] Dropdown 반응형/열 수 확인용
 // 옵션은 백엔드 prisma enum(ServiceType, Region)을 그대로 따른다.
 // Figma 2-line의 표시 순서(전체|서울, 경기|인천 …)가 Region enum 순서와 정확히 일치한다.
 
@@ -42,53 +42,30 @@ const REGION_OPTIONS: DropdownOption<string>[] = [
 export default function DropdownExamplePage() {
   const [service, setService] = useState<string>();
   const [region, setRegion] = useState<string>();
-  const [serviceMd, setServiceMd] = useState<string>();
-  const [regionMd, setRegionMd] = useState<string>();
 
   return (
     <div className="flex flex-col gap-10 p-6">
       <h1 className="text-xl-bold">Dropdown</h1>
 
       <section className="flex flex-col gap-4">
-        <h2 className="text-lg-semibold">size=sm</h2>
-        <div className="flex items-start gap-6">
+        <h2 className="text-lg-semibold">mobile·tablet: sm / desktop: md</h2>
+        <div className="flex items-start gap-6 desktop:gap-10">
           <Dropdown
             options={SERVICE_OPTIONS}
             value={service}
             onChange={setService}
-            placeholder="Text"
-            className="w-[106px]"
+            placeholder="서비스"
+            aria-label="서비스 종류"
+            className="w-[106px] desktop:w-40"
           />
           <Dropdown
             options={REGION_OPTIONS}
             value={region}
             onChange={setRegion}
-            placeholder="Text"
+            placeholder="지역"
+            aria-label="지역"
             columns={2}
-            className="w-[106px]"
-          />
-        </div>
-      </section>
-
-      <section className="flex flex-col gap-4">
-        <h2 className="text-lg-semibold">size=md</h2>
-        <div className="flex items-start gap-10">
-          <Dropdown
-            size="md"
-            options={SERVICE_OPTIONS}
-            value={serviceMd}
-            onChange={setServiceMd}
-            placeholder="Text"
-            className="w-40"
-          />
-          <Dropdown
-            size="md"
-            options={REGION_OPTIONS}
-            value={regionMd}
-            onChange={setRegionMd}
-            placeholder="Text"
-            columns={2}
-            className="w-82"
+            className="w-[106px] desktop:w-82"
           />
         </div>
       </section>

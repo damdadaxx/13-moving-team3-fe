@@ -73,12 +73,17 @@ export default function AuthPageLayout({
           'desktop:max-w-[740px] desktop:px-[50px] desktop:py-12',
         )}
       >
-        <div className="flex w-full flex-col items-center tablet:gap-2">
-          <h1 className="flex h-[84px] items-center tablet:h-[100px]">
+        <div
+          className={cn('flex w-full flex-col items-center', 'tablet:gap-2')}
+        >
+          <h1 className={cn('flex h-[84px] items-center', 'tablet:h-[100px]')}>
             <ImgLogoText
               role="img"
               aria-label="무빙"
-              className="h-[44px] w-[85px] tablet:h-[55px] tablet:w-[107px]"
+              className={cn(
+                'h-[44px] w-[85px]',
+                'tablet:h-[55px] tablet:w-[107px]',
+              )}
             />
           </h1>
           <AuthLinkText
@@ -88,7 +93,7 @@ export default function AuthPageLayout({
           />
         </div>
 
-        <div className="mt-10 w-full tablet:mt-12">{children}</div>
+        <div className={cn('mt-10 w-full', 'tablet:mt-12')}>{children}</div>
 
         <div className="mt-12">
           <SocialLoginButtons role={role} />

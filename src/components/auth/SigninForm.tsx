@@ -11,6 +11,8 @@ import type { LoginFormValues } from '@/lib/validations/authValidation';
 import { useAuth } from '@/hooks/auth/useAuth';
 import { useLoginForm } from '@/hooks/auth/useLoginForm';
 
+import { cn } from '@/utils/cn';
+
 import AuthField from '@/components/auth/AuthField';
 import AuthLinkText from '@/components/auth/AuthLinkText';
 import AuthPageLayout from '@/components/auth/AuthPageLayout';
@@ -49,10 +51,10 @@ export default function SigninForm({ role }: SigninFormProps) {
       <form
         onSubmit={handleSubmit(onSubmit)}
         noValidate
-        className="flex w-full flex-col gap-4 tablet:gap-6"
+        className={cn('flex w-full flex-col gap-4', 'tablet:gap-6')}
       >
-        <div className="flex flex-col gap-8 tablet:gap-14">
-          <div className="flex flex-col gap-4 tablet:gap-8">
+        <div className={cn('flex flex-col gap-8', 'tablet:gap-14')}>
+          <div className={cn('flex flex-col gap-4', 'tablet:gap-8')}>
             <AuthField
               label="이메일"
               type="email"

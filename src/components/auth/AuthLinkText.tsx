@@ -28,7 +28,10 @@ export default function AuthLinkText({
       {text}
       <Link
         href={href}
-        className="text-xs-semibold text-orange-400 underline tablet:text-xl-semibold"
+        className={cn(
+          'text-xs-semibold text-orange-400 underline',
+          'tablet:text-xl-semibold',
+        )}
       >
         {linkLabel}
       </Link>

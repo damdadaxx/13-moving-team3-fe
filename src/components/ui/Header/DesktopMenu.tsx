@@ -33,9 +33,14 @@ const headerMenuItem = cva(
 /*
 @ GNB를 전부 비활성(회색)으로 둘 경로
 - 랜딩 `/`
+- 로그인·회원가입
 - 프로필 메뉴 하위(프로필 수정·찜한 기사님·이사 리뷰·마이페이지)
 */
 const INACTIVE_MENU_PATH_PREFIXES = [
+  ROUTES.customerSignin,
+  ROUTES.customerSignup,
+  ROUTES.moverSignin,
+  ROUTES.moverSignup,
   ROUTES.customerProfileRoot,
   ROUTES.customerLikedMovers,
   ROUTES.customerReviewsRoot,

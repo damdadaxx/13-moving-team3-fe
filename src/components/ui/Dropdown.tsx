@@ -66,7 +66,7 @@ const SIZE_STYLES = {
     maxHeight: { 1: 'max-h-40', 2: 'max-h-45' },
     twoColumnGrid: 'grid grid-cols-[repeat(2,minmax(75px,1fr))]',
     scrollbar:
-      '[&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-track]:my-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-r-[3px] [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-clip-padding',
+      '[&::-webkit-scrollbar]:w-0.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-clip-padding',
   },
   md: {
     trigger: 'h-12.5 gap-1.5 rounded-xl pl-5 pr-3 text-lg-medium',
@@ -82,7 +82,7 @@ const SIZE_STYLES = {
     maxHeight: { 1: 'max-h-60', 2: 'max-h-80' },
     twoColumnGrid: 'grid grid-cols-[repeat(2,minmax(164px,1fr))]',
     scrollbar:
-      '[&::-webkit-scrollbar]:w-3 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-r-[6px] [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-clip-padding',
+      '[&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-clip-padding',
   },
 } as const;
 

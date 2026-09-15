@@ -40,19 +40,34 @@
   opacity: 0.4;
 }
 
-/* minDetail="month"라 라벨은 드릴업되지 않는다. 텍스트처럼 보이게 둔다 */
+/* 라벨을 누르면 월 → 연 → 연대로 드릴업한다.
+   버튼에 flexGrow:1이 인라인으로 붙어 폭이 넓어서, 배경을 깔면 헤더를 가로지르는
+   띠처럼 보인다. 그래서 hover는 글자색만 바꿔 클릭 가능하다는 것만 알린다.
+   연대 뷰(minDetail)에서는 react-calendar가 이 버튼을 disabled로 렌더한다 */
 .calendar :global(.react-calendar__navigation__label) {
   border: 0;
   background: none;
-  cursor: default;
+  cursor: pointer;
   font-size: var(--text-2lg-semibold);
   font-weight: var(--text-2lg-semibold--font-weight);
   line-height: var(--text-2lg-semibold--line-height);
   color: var(--color-black-500);
+  transition: color 150ms;
 }
 
-/* 날짜 영역을 7 x 40px = 280px로 고정해야 칸 하나가 정확히 40px가 된다 */
-.calendar :global(.react-calendar__month-view) {
+.calendar :global(.react-calendar__navigation__label:enabled:hover) {
+  color: var(--color-orange-400);
+}
+
+.calendar :global(.react-calendar__navigation__label:disabled) {
+  cursor: default;
+}
+
+/* 날짜 영역을 7 x 40px = 280px로 고정해야 칸 하나가 정확히 40px가 된다.
+   연/연대 뷰도 같은 폭을 써야 드릴업할 때 그리드 좌우가 어긋나지 않는다 */
+.calendar :global(.react-calendar__month-view),
+.calendar :global(.react-calendar__year-view),
+.calendar :global(.react-calendar__decade-view) {
   width: 280px;
   margin: 0 auto;
 }

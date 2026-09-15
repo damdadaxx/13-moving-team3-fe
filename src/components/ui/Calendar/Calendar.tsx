@@ -66,39 +66,91 @@ export default function Calendar({
         locale="ko-KR"
         /* 일요일 시작 (Figma 요일 순서: 일~토) */
         calendarType="gregory"
-        /* 연/월 뷰로 드릴업하는 디자인이 없어서 월 뷰에 고정한다 */
-        minDetail="month"
+        /* 헤더 라벨을 누르면 월 → 연(월 12칸) → 연대(연 10칸)로 드릴업한다.
+           minDetail을 month로 두면 라벨 버튼이 disabled로 렌더돼 드릴업이 막힌다.
+           연/월 뷰는 Figma에 없어서 날짜 칸 토큰(38px·rounded-12·orange-400)을 그대로 따른다 */
+        minDetail="decade"
         maxDetail="month"
         prev2Label={null}
         next2Label={null}
         prevLabel={<IcChevronLeft />}
         nextLabel={<IcChevronRight />}
-        navigationLabel={({ date }) =>
-          `${date.getFullYear()}. ${String(date.getMonth() + 1).padStart(2, '0')}`
-        }
+        /* 뷰마다 라벨이 다르다. decade 뷰의 date는 연대 시작 연도인데,
+           react-calendar의 연대는 2021~2030처럼 1로 시작해 0으로 끝난다 */
+        navigationLabel={({ date, view }) => {
+          if (view === 'decade') {
+            return `${date.getFullYear()} – ${date.getFullYear() + 9}`;
+          }
+          if (view === 'year') {
+            return `${date.getFullYear()}년`;
+          }
+          return `${date.getFullYear()}. ${String(date.getMonth() + 1).padStart(2, '0')}`;
+        }}
         /* 기본 포맷은 "12일" / "일요일"이라 Figma대로 숫자·한 글자만 남긴다.
            배열로 직접 만들어 서버·클라이언트 locale 차이로 인한 hydration 불일치도 막는다 */
         formatDay={(_locale, date) => String(date.getDate())}
         formatShortWeekday={(_locale, date) => WEEKDAYS[date.getDay()]}
+        /* 연 뷰 칸은 "7월", 연대 뷰 칸은 "2025". formatMonthYear는 월 칸의 aria-label로 쓰인다 */
+        formatMonth={(_locale, date) => `${date.getMonth() + 1}월`}
+        formatMonthYear={(_locale, date) =>
+          `${date.getFullYear()}년 ${date.getMonth() + 1}월`
+        }
+        formatYear={(_locale, date) => String(date.getFullYear())}
         tileClassName={({ date, view, activeStartDate }) => {
-          if (view !== 'month') return '';
+          /* 월/연/연대 세 뷰가 공유하는 칸 모양 */
+          const tileBase =
+            'flex cursor-pointer items-center justify-center rounded-[12px] border-0 bg-transparent p-0 transition-colors disabled:cursor-not-allowed disabled:text-gray-300';
+          const selectedTile = 'bg-orange-400 text-gray-50';
+          const idleTile = 'text-black-500 enabled:hover:bg-background-200';
 
-          const isSelected =
-            !!selected && date.toDateString() === selected.toDateString();
-          const isNeighboringMonth =
-            date.getMonth() !== activeStartDate.getMonth();
+          if (view === 'month') {
+            const isSelected =
+              !!selected && date.toDateString() === selected.toDateString();
+            const isNeighboringMonth =
+              date.getMonth() !== activeStartDate.getMonth();
 
-          /* 세로 간격: Figma는 42px 행 + 2px 갭 = 44px 피치에 칸 높이 38px.
-             38 + 3*2 = 44로 맞춘다 */
-          return cn(
-            'my-[3px] flex h-[38px] cursor-pointer items-center justify-center rounded-[12px] border-0 bg-transparent p-0 text-md-medium transition-colors',
-            isSelected && 'bg-orange-400 text-md-semibold text-gray-50',
-            !isSelected && isNeighboringMonth && 'text-gray-300',
-            !isSelected &&
-              !isNeighboringMonth &&
-              'text-black-500 enabled:hover:bg-background-200',
-            'disabled:cursor-not-allowed disabled:text-gray-300',
-          );
+            /* 세로 간격: Figma는 42px 행 + 2px 갭 = 44px 피치에 칸 높이 38px.
+               38 + 3*2 = 44로 맞춘다 */
+            return cn(
+              tileBase,
+              'my-[3px] h-[38px] text-md-medium',
+              isSelected && cn(selectedTile, 'text-md-semibold'),
+              !isSelected && isNeighboringMonth && 'text-gray-300',
+              !isSelected && !isNeighboringMonth && idleTile,
+            );
+          }
+
+          /* 연/연대 뷰는 3열 고정(react-calendar TileGroup count=3)이라 4줄이 된다.
+             52 + 6*2 = 64px 피치 * 4줄 = 256px. 5주차 달의 월 뷰(요일 38 + 44*5 = 258px)와
+             맞춰서 드릴업할 때 팝업 높이가 튀지 않게 한다.
+             월 뷰 높이를 min-height로 고정하면 5주차 달에 46px 빈 공간이 생겨서 그건 쓰지 않는다 */
+          const wideTile = 'my-[6px] h-[52px] text-lg-medium';
+
+          if (view === 'year') {
+            const isSelected =
+              !!selected &&
+              selected.getFullYear() === date.getFullYear() &&
+              selected.getMonth() === date.getMonth();
+
+            return cn(
+              tileBase,
+              wideTile,
+              isSelected ? cn(selectedTile, 'text-lg-semibold') : idleTile,
+            );
+          }
+
+          if (view === 'decade') {
+            const isSelected =
+              !!selected && selected.getFullYear() === date.getFullYear();
+
+            return cn(
+              tileBase,
+              wideTile,
+              isSelected ? cn(selectedTile, 'text-lg-semibold') : idleTile,
+            );
+          }
+
+          return '';
         }}
       />
 

@@ -13,10 +13,10 @@ import { useSignupForm } from '@/hooks/auth/useSignupForm';
 
 import { cn } from '@/utils/cn';
 
-import AuthField from '@/components/auth/AuthField';
 import AuthLinkText from '@/components/auth/AuthLinkText';
 import AuthPageLayout from '@/components/auth/AuthPageLayout';
 import AuthSubmitButton from '@/components/auth/AuthSubmitButton';
+import InputBase from '@/components/ui/Form/InputBase';
 
 interface SignupFormProps {
   role: Role;
@@ -61,7 +61,7 @@ export default function SignupForm({ role }: SignupFormProps) {
       >
         <div className={cn('flex flex-col gap-8', 'tablet:gap-14')}>
           <div className={cn('flex flex-col gap-4', 'tablet:gap-8')}>
-            <AuthField
+            <InputBase
               label="이름"
               type="text"
               autoComplete="name"
@@ -69,7 +69,7 @@ export default function SignupForm({ role }: SignupFormProps) {
               error={errors.name?.message}
               {...register('name')}
             />
-            <AuthField
+            <InputBase
               label="이메일"
               type="email"
               autoComplete="email"
@@ -77,7 +77,7 @@ export default function SignupForm({ role }: SignupFormProps) {
               error={errors.email?.message}
               {...register('email')}
             />
-            <AuthField
+            <InputBase
               label="전화번호"
               type="tel"
               inputMode="numeric"
@@ -86,7 +86,7 @@ export default function SignupForm({ role }: SignupFormProps) {
               error={errors.phoneNumber?.message}
               {...register('phoneNumber')}
             />
-            <AuthField
+            <InputBase
               label="비밀번호"
               type="password"
               autoComplete="new-password"
@@ -94,7 +94,7 @@ export default function SignupForm({ role }: SignupFormProps) {
               error={errors.password?.message}
               {...register('password')}
             />
-            <AuthField
+            <InputBase
               label="비밀번호 확인"
               type="password"
               autoComplete="new-password"

@@ -26,6 +26,9 @@ import Label, { type LabelVariant } from '@/components/ui/Form/Label';
 - 바뀌는 시점이 페이지마다 달라서 labelVariant로 분기한다
 - auth(회원가입): tablet부터 / modal(받은 요청 모달), profile(기사님 기본정보 수정): desktop부터
 
+@ auth는 error일 때 tablet부터 높이가 64px로 커진다 (Figma 로그인·회원가입_error)
+- 모바일 error는 54px 그대로. 에러가 사라지면 다시 54px
+
 @ profile은 desktop에서 수정 가능 여부로 높이를 나눈다 (Figma 기본정보 수정_기사님)
 - 수정 가능한 칸: 64px / readOnly·disabled 칸(이름, 이메일): 54px
 - 입력값이 아니라 readOnly·disabled로만 분기하므로 입력 중에 높이가 바뀌지 않는다
@@ -62,6 +65,12 @@ const inputBoxVariants = cva(
         size: 'sm',
         labelVariant: 'auth',
         className: 'tablet:pr-[24px]',
+      },
+      {
+        size: 'sm',
+        labelVariant: 'auth',
+        hasError: true,
+        className: 'tablet:h-[64px]',
       },
       {
         size: 'sm',

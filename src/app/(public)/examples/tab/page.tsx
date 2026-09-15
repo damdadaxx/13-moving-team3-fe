@@ -53,17 +53,6 @@ export default function TabExamplePage() {
                   <code>label</code>, 이동 주소는 <code>href</code>입니다.
                 </td>
               </tr>
-              <tr className="align-top">
-                <td className="py-2 pr-3">
-                  <code>onClick</code>
-                </td>
-                <td className="py-2 pr-3 whitespace-nowrap">
-                  <code>{'(value: string) => void'}</code>
-                </td>
-                <td className="py-2">
-                  선택. 클릭 시 <code>value</code>를 받습니다.
-                </td>
-              </tr>
             </tbody>
           </table>
         </section>

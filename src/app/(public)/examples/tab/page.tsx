@@ -70,7 +70,7 @@ export default function TabExamplePage() {
       </div>
 
       <section className="flex flex-col gap-3">
-        <div className="mx-auto w-full max-w-[720px] px-[24px]">
+        <div className="mx-auto w-full max-w-[1200px] px-[24px]">
           <h2 className="text-lg-semibold">1.활성 탭 바꾸기</h2>
           <p className="mt-2 text-md-regular text-gray-500">
             아래 탭을 누르면 활성 탭이 바뀝니다.

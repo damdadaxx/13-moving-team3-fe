@@ -1,13 +1,14 @@
 'use client';
 
-import { cn } from '@/utils/cn';
-
-import SelectableChip, { type SelectableChipSize } from './SelectableChip';
 import {
   SERVICE_TYPE_LABELS,
   SERVICE_TYPES,
   type ServiceType,
-} from './serviceType';
+} from '@/types/serviceType';
+
+import { cn } from '@/utils/cn';
+
+import SelectableChip, { type SelectableChipSize } from './SelectableChip';
 
 /*
 @ 이용 서비스 선택 사용 방법

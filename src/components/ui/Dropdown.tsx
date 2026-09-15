@@ -80,11 +80,23 @@ const triggerVariants = cva(
 @ 테두리를 스크롤 영역(ul) 밖에 두는 이유
 - border-box에서 테두리가 max-height를 2px 잡아먹어, 항목 수가 딱 맞을 때도
   스크롤바가 생긴다. 바깥 div가 테두리·라운드·클리핑을 맡고 ul만 스크롤한다
+@ sm 1열 목록은 너비 106px 고정 (Figma). 트리거가 더 넓으면 min-w-full로 트리거에 맞춘다
 */
-const LIST_CONTAINER_CLASS = cn(
-  'absolute -left-px top-full z-dropdown min-w-full overflow-hidden border border-line-200 bg-gray-50',
-  'mt-[9px] rounded-lg shadow-[4px_4px_10px_rgb(191_191_191_/_0.2)]',
-  'desktop:mt-[11px] desktop:rounded-2xl desktop:shadow-[4px_4px_5px_rgb(224_224_224_/_0.25)]',
+const listContainerVariants = cva(
+  [
+    'absolute -left-px top-full z-dropdown min-w-full overflow-hidden border border-line-200 bg-gray-50',
+    'mt-[9px] rounded-lg shadow-[4px_4px_10px_rgb(191_191_191_/_0.2)]',
+    'desktop:mt-[11px] desktop:rounded-2xl desktop:shadow-[4px_4px_5px_rgb(224_224_224_/_0.25)]',
+  ],
+  {
+    variants: {
+      columns: {
+        1: 'w-[106px] desktop:w-auto',
+        2: '',
+      },
+    },
+    defaultVariants: { columns: 1 },
+  },
 );
 
 /*
@@ -318,7 +330,7 @@ export default function Dropdown<T extends string>({
       </button>
 
       {isOpen && (
-        <div className={LIST_CONTAINER_CLASS}>
+        <div className={listContainerVariants({ columns })}>
           <ul
             ref={listboxRef}
             id={listboxId}

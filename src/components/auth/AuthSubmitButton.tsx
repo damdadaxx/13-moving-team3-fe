@@ -2,6 +2,8 @@
 // 폼이 유효하지 않으면 gray-100, 유효하면 orange-400
 'use client';
 
+import { cn } from '@/utils/cn';
+
 import ButtonElement from '@/components/ui/Button/ButtonElement';
 
 interface AuthSubmitButtonProps {
@@ -24,14 +26,20 @@ export default function AuthSubmitButton({
         type="submit"
         disabled={disabled}
         isLoading={isLoading}
-        className="h-[54px] rounded-xl bg-orange-400 text-lg-semibold text-gray-50 disabled:bg-gray-100 tablet:h-[60px] tablet:rounded-2xl tablet:text-2lg-semibold"
+        className={cn(
+          'h-[54px] rounded-xl bg-orange-400 text-lg-semibold text-gray-50 disabled:bg-gray-100',
+          'tablet:h-[60px] tablet:rounded-2xl tablet:text-2lg-semibold',
+        )}
       >
         {children}
       </ButtonElement>
       {error && (
         <p
           role="alert"
-          className="text-center text-sm-medium text-red-200 tablet:text-lg-medium"
+          className={cn(
+            'text-center text-sm-medium text-red-200',
+            'tablet:text-lg-medium',
+          )}
         >
           {error}
         </p>

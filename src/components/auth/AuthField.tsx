@@ -6,6 +6,8 @@ import { useId } from 'react';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
+import { cn } from '@/utils/cn';
+
 import InputBase from '@/components/ui/Form/InputBase';
 import Label from '@/components/ui/Form/Label';
 
@@ -34,10 +36,13 @@ export default function AuthField({ label, id, ...props }: AuthFieldProps) {
   });
 
   return (
-    <div className="flex w-full flex-col gap-2 tablet:gap-4">
+    <div className={cn('flex w-full flex-col gap-2', 'tablet:gap-4')}>
       <Label
         htmlFor={inputId}
-        className="text-md-regular text-black-400 tablet:text-xl-regular"
+        className={cn(
+          'text-md-regular text-black-400',
+          'tablet:text-xl-regular',
+        )}
       >
         {label}
       </Label>

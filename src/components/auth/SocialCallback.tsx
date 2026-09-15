@@ -11,6 +11,8 @@ import { getSafeCallbackPath, getSigninPath } from '@/lib/constants/routes';
 
 import { useAuth } from '@/hooks/auth/useAuth';
 
+import { cn } from '@/utils/cn';
+
 import AuthLinkText from '@/components/auth/AuthLinkText';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
@@ -76,7 +78,12 @@ export default function SocialCallback({
 
   return (
     <section className="flex min-h-screen flex-col items-center justify-center gap-4 px-6">
-      <p className="text-center text-md-medium text-black-200 tablet:text-xl-medium">
+      <p
+        className={cn(
+          'text-center text-md-medium text-black-200',
+          'tablet:text-xl-medium',
+        )}
+      >
         {message}
       </p>
       <AuthLinkText

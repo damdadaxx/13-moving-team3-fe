@@ -14,10 +14,10 @@ import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
 import { cn } from '@/utils/cn';
 
-import AuthField from '@/components/auth/AuthField';
 import AuthLinkText from '@/components/auth/AuthLinkText';
 import AuthPageLayout from '@/components/auth/AuthPageLayout';
 import AuthSubmitButton from '@/components/auth/AuthSubmitButton';
+import InputBase from '@/components/ui/Form/InputBase';
 
 interface SigninFormProps {
   role: Role;
@@ -57,7 +57,7 @@ export default function SigninForm({ role }: SigninFormProps) {
       >
         <div className={cn('flex flex-col gap-8', 'tablet:gap-14')}>
           <div className={cn('flex flex-col gap-4', 'tablet:gap-8')}>
-            <AuthField
+            <InputBase
               label="이메일"
               type="email"
               autoComplete="email"
@@ -65,7 +65,7 @@ export default function SigninForm({ role }: SigninFormProps) {
               error={errors.email?.message}
               {...register('email')}
             />
-            <AuthField
+            <InputBase
               label="비밀번호"
               type="password"
               autoComplete="current-password"

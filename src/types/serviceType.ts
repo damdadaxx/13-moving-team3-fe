@@ -1,6 +1,7 @@
 /*
 @ 서비스 타입 값
 - 백엔드 Prisma ServiceType enum과 동일한 값을 사용합니다.
+- Chip뿐 아니라 견적, 프로필 등 여러 도메인에서 함께 사용하는 공용 타입입니다.
 - DESIGNATED는 서비스 타입이 아니므로 이 목록에 포함하지 않습니다.
 - 화면에 표시할 한글 이름은 SERVICE_TYPE_LABELS를 사용합니다.
 */

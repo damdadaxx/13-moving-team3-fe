@@ -5,18 +5,15 @@
 
 import { useState } from 'react';
 
+import { SERVICE_TYPES, type ServiceType } from '@/types/serviceType';
+
+import DesignatedEstimateTag from '@/components/ui/Chip/DesignatedEstimateTag';
 import RegionChip from '@/components/ui/Chip/RegionChip';
 import RegionChipGroup, {
   type Region,
 } from '@/components/ui/Chip/RegionChipGroup';
-import {
-  SERVICE_TYPES,
-  type ServiceType,
-} from '@/components/ui/Chip/serviceType';
 import ServiceTypeSelector from '@/components/ui/Chip/ServiceTypeSelector';
-import ServiceTypeTag, {
-  DesignatedEstimateTag,
-} from '@/components/ui/Chip/ServiceTypeTag';
+import ServiceTypeTag from '@/components/ui/Chip/ServiceTypeTag';
 
 export default function ChipsExamplePage() {
   const [selectedRegion, setSelectedRegion] = useState<Region>('SEOUL');
@@ -144,6 +141,29 @@ export default function ChipsExamplePage() {
             <DesignatedEstimateTag size="sm" />
             <DesignatedEstimateTag size="md" />
           </div>
+        </div>
+
+        <div className="flex flex-col gap-[8px]">
+          <h3 className="text-md-semibold">사용처별 반응형 조합</h3>
+
+          <div className="flex flex-wrap items-center gap-[12px]">
+            <ServiceTypeTag
+              serviceType="SMALL_MOVE"
+              size="sm"
+              className="tablet:h-[32px] tablet:w-[85px] tablet:gap-[4px] tablet:rounded-[6px] tablet:py-[4px] tablet:pl-[5px] tablet:text-md-semibold"
+            />
+            <ServiceTypeTag
+              serviceType="HOME_MOVE"
+              size="sm"
+              className="desktop:h-[32px] desktop:w-[85px] desktop:gap-[4px] desktop:rounded-[6px] desktop:py-[4px] desktop:pl-[5px] desktop:text-md-semibold"
+            />
+            <ServiceTypeTag serviceType="OFFICE_MOVE" size="sm" />
+            <ServiceTypeTag serviceType="SMALL_MOVE" size="md" />
+          </div>
+
+          <p className="text-sm-medium text-black-100">
+            순서대로 26/32/32, 26/26/32, 26/26/26, 32/32/32 조합입니다.
+          </p>
         </div>
       </section>
     </main>

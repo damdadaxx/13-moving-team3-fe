@@ -20,10 +20,13 @@ const headerMenuItem = cva(
   {
     variants: {
       tone: {
-        default: 'text-gray-400',
+        default: 'text-black-500',
         active: 'text-black-500',
         inactive: 'text-gray-400',
       },
+    },
+    defaultVariants: {
+      tone: 'default',
     },
   },
 );
@@ -75,8 +78,11 @@ function isMenuActive(
 /**
  * 메뉴 톤 조회
  * @param isActive - 메뉴 활성 여부
- * @param hasActiveMenu - 활성 메뉴 여부
+ * @param hasActiveMenu - GNB 중 활성 메뉴 존재 여부
  * @returns 메뉴 톤
+ *
+ * - GNB 매칭 없음(랜딩, 프로필 메뉴 페이지 등): default(검정)
+ * - GNB 매칭 있음: 활성만 active, 나머지 inactive
  */
 function getMenuTone(isActive: boolean, hasActiveMenu: boolean) {
   if (!hasActiveMenu) {

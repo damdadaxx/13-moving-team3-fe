@@ -50,7 +50,7 @@ export default function Tab({ tabs }: { tabs: Tabs[] }) {
       className={cn(
         'flex w-full items-stretch border-b-[1px] border-line-100 bg-gray-50 h-[54px] px-[24px]',
         'tablet:px-[72px] tablet:shadow-[0px_2px_10px_rgba(248,248,248,0.2)]',
-        'desktop:h-[80px] desktop:gap-[32px] desktop:px-[260px] desktop:shadow-[0px_2px_1px_rgba(248,248,248,0.1)]',
+        'desktop:h-[80px] desktop:gap-[32px] desktop:shadow-[0px_2px_1px_rgba(248,248,248,0.1)]',
       )}
     >
       <div className="flex h-full flex-1 items-stretch gap-[24px] max-w-[1200px] mx-auto">

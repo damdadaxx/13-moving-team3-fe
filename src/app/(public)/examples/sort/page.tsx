@@ -32,7 +32,7 @@ export default function SortExamplePage() {
       <section className="flex flex-col gap-4">
         <h2 className="text-lg-semibold">size=sm</h2>
         <div className="flex items-start gap-6">
-          <Sort options={SORT_OPTIONS} value={sm} onChange={setSm} />
+          <Sort size="sm" options={SORT_OPTIONS} value={sm} onChange={setSm} />
         </div>
         <p className="text-md-regular text-gray-500">선택: {sm}</p>
       </section>

@@ -49,8 +49,8 @@ interface DropdownProps<T extends string> {
 - maxHeight: 디자인에 보이는 항목 수(1열 4개, 2열 5행) 기준. 넘치면 스크롤
 - 항목 텍스트는 전부 왼쪽 정렬. Figma md 2열에 justify-center가 있지만 자식이
   flex-[1_0_0]로 남는 너비를 다 차지해 실제로는 효과가 없다(텍스트 노드 x=24 = padding)
-- 2열 grid: Figma 2열은 열 너비가 고정(sm 75 / md 164)이라 트리거보다 목록이 넓어질
-  수 있다. grid-cols-2로 트리거 너비를 반씩 나누면 항목이 눌려 패딩까지 깎인다
+- 2열 grid: Figma 2열은 열 너비가 고정(sm 75px / md 164px)이라 그대로 고정한다.
+  트리거보다 목록이 넓어질 수 있고, grid-cols-2로 트리거 너비를 반씩 나누면 항목이 눌려 패딩까지 깎인다
 */
 const triggerVariants = cva(
   [
@@ -117,7 +117,7 @@ const listboxVariants = cva(LISTBOX_BASE_CLASS, {
   variants: {
     columns: {
       1: 'max-h-40 desktop:max-h-60',
-      2: 'grid max-h-45 grid-cols-[repeat(2,minmax(75px,1fr))] desktop:max-h-80 desktop:grid-cols-[repeat(2,minmax(164px,1fr))]',
+      2: 'grid max-h-45 grid-cols-[repeat(2,75px)] desktop:max-h-80 desktop:grid-cols-[repeat(2,164px)]',
     },
   },
   defaultVariants: { columns: 1 },

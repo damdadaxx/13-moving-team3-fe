@@ -56,7 +56,6 @@ export default function DropdownExamplePage() {
             onChange={setService}
             placeholder="서비스"
             aria-label="서비스 종류"
-            className="w-[106px] desktop:w-40"
           />
           <Dropdown
             options={REGION_OPTIONS}
@@ -65,7 +64,6 @@ export default function DropdownExamplePage() {
             placeholder="지역"
             aria-label="지역"
             columns={2}
-            className="w-[106px] desktop:w-82"
           />
         </div>
       </section>

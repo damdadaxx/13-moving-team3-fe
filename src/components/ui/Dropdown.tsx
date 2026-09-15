@@ -39,7 +39,7 @@ interface DropdownProps<T extends string> {
   'aria-label'?: string;
   /** 보이는 라벨이 있을 때 그 요소의 id. aria-label보다 우선한다 */
   'aria-labelledby'?: string;
-  /** 너비는 지정하지 않는다. 필요하면 여기로 w-* 를 넘긴다 */
+  /** 너비는 라벨 길이에 맞춰 늘어난다(최소 mobile·tablet 78px / desktop 160px). 고정이 필요하면 w-* 를 넘긴다 */
   className?: string;
 }
 
@@ -271,7 +271,10 @@ export default function Dropdown<T extends string>({
     <div
       ref={containerRef}
       onKeyDown={handleKeyDown}
-      className={cn('relative inline-block', className)}
+      className={cn(
+        'relative inline-block min-w-[78px] desktop:min-w-40',
+        className,
+      )}
     >
       <button
         ref={triggerRef}

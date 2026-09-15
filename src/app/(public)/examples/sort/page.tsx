@@ -11,8 +11,6 @@
 
 import { useState } from 'react';
 
-import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
-
 import Sort, { type SortOption } from '@/components/ui/Sort';
 
 const SORT_OPTIONS: SortOption<string>[] = [
@@ -26,12 +24,6 @@ export default function SortExamplePage() {
   const [sm, setSm] = useState('reviewCount');
   const [md, setMd] = useState('reviewCount');
   const [responsive, setResponsive] = useState('reviewCount');
-  // 기사님 찾기 페이지: mobile·tablet은 sm, desktop은 md (Figma 기사님 찾기/비회원)
-  const responsiveSize = useBreakpointValue({
-    mobile: 'sm',
-    tablet: 'sm',
-    desktop: 'md',
-  } as const);
 
   return (
     <div className="flex flex-col gap-10 p-6">
@@ -53,13 +45,14 @@ export default function SortExamplePage() {
         <p className="text-md-regular text-gray-500">선택: {md}</p>
       </section>
 
+      {/* 기사님 찾기 페이지: mobile·tablet은 sm, desktop은 md (Figma 기사님 찾기/비회원) */}
       <section className="flex flex-col gap-4">
         <h2 className="text-lg-semibold">
           반응형 (mobile·tablet sm / desktop md)
         </h2>
         <div className="flex items-start gap-6">
           <Sort
-            size={responsiveSize}
+            size="responsive"
             options={SORT_OPTIONS}
             value={responsive}
             onChange={setResponsive}

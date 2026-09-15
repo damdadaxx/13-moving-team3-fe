@@ -20,7 +20,11 @@ import { cn } from '@/utils/cn';
 - Dropdown과 달리 트리거에 테두리가 없고, 목록에도 그림자가 없다
 - 트리거 그림자: Figma 컴포넌트 md에는 있지만 실제 페이지(기사님 찾기, 받은 요청)
   인스턴스는 전부 그림자를 끈 상태라 페이지 기준으로 넣지 않는다
-- 페이지에서는 mobile·tablet sm / desktop md로 쓴다 (useBreakpointValue로 size를 넘긴다)
+- 페이지에서는 mobile·tablet sm / desktop md로 쓴다 → size="responsive"
+  (useBreakpointValue는 마운트 전까지 mobile 값을 줘서 데스크톱 첫 화면이 sm→md로 튄다.
+  CSS 브레이크포인트는 첫 화면부터 맞는 크기로 그린다)
+- responsive에서 sm은 pl/pr, md는 px라 속성이 다르다. 같은 속성(desktop:pl/pr)으로 덮어써야
+  CSS 출력 순서와 상관없이 md 값이 확실히 적용된다
 - 글자가 상태에 따라 굵기·색이 바뀐다: 닫힘 semibold/black-400, 열림 medium/gray-400
 - 목록 위치(top)는 트리거 높이 + 간격. sm 32+6=38, md 40+8=48 (Figma 값)
 */
@@ -32,6 +36,8 @@ const sortTriggerVariants = cva(
       size: {
         sm: 'gap-0.5 py-1.5 pl-2 pr-1.5',
         md: 'gap-2.5 px-2.5 py-2',
+        responsive:
+          'gap-0.5 py-1.5 pl-2 pr-1.5 desktop:gap-2.5 desktop:py-2 desktop:pl-2.5 desktop:pr-2.5',
       },
       isOpen: {
         true: 'text-gray-400',
@@ -43,6 +49,16 @@ const sortTriggerVariants = cva(
       { size: 'sm', isOpen: true, className: 'text-xs-medium' },
       { size: 'md', isOpen: false, className: 'text-md-semibold' },
       { size: 'md', isOpen: true, className: 'text-md-medium' },
+      {
+        size: 'responsive',
+        isOpen: false,
+        className: 'text-xs-semibold desktop:text-md-semibold',
+      },
+      {
+        size: 'responsive',
+        isOpen: true,
+        className: 'text-xs-medium desktop:text-md-medium',
+      },
     ],
     defaultVariants: {
       size: 'sm',
@@ -58,6 +74,7 @@ const sortListVariants = cva(
       size: {
         sm: 'mt-1.5',
         md: 'mt-2',
+        responsive: 'mt-1.5 desktop:mt-2',
       },
     },
     defaultVariants: {
@@ -74,6 +91,8 @@ const sortItemVariants = cva(
       size: {
         sm: 'h-8 py-1.5 pl-2.5 pr-1.5 text-xs-medium',
         md: 'px-3 py-2 text-md-medium',
+        responsive:
+          'h-8 py-1.5 pl-2.5 pr-1.5 text-xs-medium desktop:h-auto desktop:py-2 desktop:pl-3 desktop:pr-3 desktop:text-md-medium',
       },
     },
     defaultVariants: {
@@ -89,6 +108,37 @@ const CHEVRON_CLOSED = {
   sm: IcChevronDownGray200,
   md: IcChevronDownGray300,
 } as const;
+
+const CHEVRON_CLASS = 'size-5 shrink-0';
+
+interface SortChevronProps {
+  size: SortSize;
+  isOpen: boolean;
+}
+
+/*
+@ 화살표 아이콘
+- 열림은 사이즈와 무관하게 gray-200 하나
+- 닫힘은 색이 SVG에 박혀 있어 className으로 바꿀 수 없다.
+  그래서 responsive는 두 개를 렌더하고 CSS로 하나만 보이게 한다
+*/
+function SortChevron({ size, isOpen }: SortChevronProps) {
+  if (isOpen) return <IcChevronUpGray200 className={CHEVRON_CLASS} />;
+
+  if (size === 'responsive') {
+    return (
+      <>
+        <IcChevronDownGray200 className={cn(CHEVRON_CLASS, 'desktop:hidden')} />
+        <IcChevronDownGray300
+          className={cn(CHEVRON_CLASS, 'hidden desktop:block')}
+        />
+      </>
+    );
+  }
+
+  const ClosedIcon = CHEVRON_CLOSED[size];
+  return <ClosedIcon className={CHEVRON_CLASS} />;
+}
 
 export interface SortOption<T extends string> {
   value: T;
@@ -135,7 +185,6 @@ export default function Sort<T extends string>({
     optionRefs.current[activeIndex]?.focus();
   }, [isOpen, activeIndex]);
 
-  const ChevronIcon = isOpen ? IcChevronUpGray200 : CHEVRON_CLOSED[size];
   const selectedIndex = options.findIndex((option) => option.value === value);
   const selectedLabel = options[selectedIndex]?.label ?? '';
 
@@ -218,7 +267,7 @@ export default function Sort<T extends string>({
         className={sortTriggerVariants({ size, isOpen })}
       >
         <span className="whitespace-nowrap">{selectedLabel}</span>
-        <ChevronIcon className="size-5 shrink-0" />
+        <SortChevron size={size} isOpen={isOpen} />
       </button>
 
       {isOpen && (

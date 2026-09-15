@@ -89,26 +89,39 @@ const LIST_CONTAINER_CLASS = cn(
 
 /*
 @ 스크롤바
-- 디자인의 회색 둥근 thumb 재현용. 표준 scrollbar-width를 같이 주면
-  Chrome이 ::-webkit-scrollbar 스타일을 무시하므로 webkit 쪽만 쓴다 (Firefox는 기본 스크롤바)
-- TODO: 디자인과 아직 다르다(thumb 여백·길이 등). 네이티브 스크롤바로는 맞추기 까다로워 추후 정리 예정
+- 네이티브 스크롤바는 숨기고 absolute thumb를 직접 그린다
+  - 네이티브는 thumb 길이를 고정할 수 없고(콘텐츠 비율로 정해짐), 트랙 폭만큼
+    목록 너비가 늘어나 트리거보다 넓어진다
+- thumb 위치는 스크롤 비율에 맞춰 syncScrollThumb에서 translateY로 옮긴다
+- mobile·tablet(sm): 4px × 49px, 오른쪽 4px / desktop(md): 6px × 194px, 오른쪽 8px (Figma, 1열·2열 공통)
 */
-const listboxVariants = cva(
-  [
-    'overflow-y-auto overflow-x-hidden',
-    '[&::-webkit-scrollbar]:w-0.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-clip-padding',
-    'desktop:[&::-webkit-scrollbar]:w-1',
-  ],
-  {
-    variants: {
-      columns: {
-        1: 'max-h-40 desktop:max-h-60',
-        2: 'grid max-h-45 grid-cols-[repeat(2,minmax(75px,1fr))] desktop:max-h-80 desktop:grid-cols-[repeat(2,minmax(164px,1fr))]',
-      },
-    },
-    defaultVariants: { columns: 1 },
-  },
+const LISTBOX_BASE_CLASS =
+  'overflow-y-auto overflow-x-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden';
+
+const SCROLL_THUMB_CLASS = cn(
+  'pointer-events-none absolute right-1 top-0 h-[49px] w-1 rounded-full bg-gray-200',
+  'desktop:right-2 desktop:h-[194px] desktop:w-1.5',
 );
+
+/** 스크롤 위치에 맞춰 thumb를 옮긴다. 스크롤할 게 없으면 숨긴다 */
+function syncScrollThumb(list: HTMLElement | null, thumb: HTMLElement | null) {
+  if (!list || !thumb) return;
+  const maxScroll = list.scrollHeight - list.clientHeight;
+  thumb.hidden = maxScroll <= 0;
+  if (thumb.hidden) return;
+  const maxOffset = Math.max(list.clientHeight - thumb.offsetHeight, 0);
+  thumb.style.transform = `translateY(${(list.scrollTop / maxScroll) * maxOffset}px)`;
+}
+
+const listboxVariants = cva(LISTBOX_BASE_CLASS, {
+  variants: {
+    columns: {
+      1: 'max-h-40 desktop:max-h-60',
+      2: 'grid max-h-45 grid-cols-[repeat(2,minmax(75px,1fr))] desktop:max-h-80 desktop:grid-cols-[repeat(2,minmax(164px,1fr))]',
+    },
+  },
+  defaultVariants: { columns: 1 },
+});
 
 const optionVariants = cva(
   // 디자인에 focus 상태가 없어 hover와 같은 배경으로 키보드 위치를 표시한다
@@ -147,6 +160,8 @@ export default function Dropdown<T extends string>({
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const listboxRef = useRef<HTMLUListElement>(null);
+  const scrollThumbRef = useRef<HTMLDivElement>(null);
 
   const generatedId = useId();
   const triggerId = id ?? `${generatedId}-trigger`;
@@ -166,6 +181,17 @@ export default function Dropdown<T extends string>({
     if (!isOpen || activeIndex < 0) return;
     optionRefs.current[activeIndex]?.focus();
   }, [isOpen, activeIndex]);
+
+  // 열릴 때 thumb 초기 위치를 잡고, 목록 크기가 바뀌면(브레이크포인트 전환 등) 다시 맞춘다
+  useEffect(() => {
+    const list = listboxRef.current;
+    if (!isOpen || !list) return;
+    const sync = () => syncScrollThumb(list, scrollThumbRef.current);
+    sync();
+    const observer = new ResizeObserver(sync);
+    observer.observe(list);
+    return () => observer.disconnect();
+  }, [isOpen]);
 
   const selectedIndex = options.findIndex((option) => option.value === value);
   const selectedLabel = options[selectedIndex]?.label;
@@ -264,40 +290,42 @@ export default function Dropdown<T extends string>({
         className={triggerVariants({ isOpen })}
       >
         <span className="truncate">{selectedLabel ?? placeholder}</span>
-        {/* 아이콘 크기가 sm 20px / md 36px 로 달라 두 개를 두고 desktop에서 교체한다 */}
-        {isOpen ? (
-          <>
-            <IcChevronUp20
-              aria-hidden="true"
-              className="size-5 shrink-0 desktop:hidden"
-            />
-            <IcChevronUp36
-              aria-hidden="true"
-              className="hidden size-9 shrink-0 desktop:block"
-            />
-          </>
-        ) : (
-          <>
-            <IcChevronDown20
-              aria-hidden="true"
-              className="size-5 shrink-0 desktop:hidden"
-            />
-            <IcChevronDown36
-              aria-hidden="true"
-              className="hidden size-9 shrink-0 desktop:block"
-            />
-          </>
-        )}
+        {/*
+        아이콘 크기가 sm 20px / md 36px 로 달라 두 개를 두고 desktop에서 교체한다.
+        svg 파일에 인라인 style="display: block"이 있어 svg에 hidden을 주면 무시되므로
+        span으로 감싸 span에서 보이기/숨기기를 처리한다
+        */}
+        <span aria-hidden="true" className="size-5 shrink-0 desktop:hidden">
+          {isOpen ? (
+            <IcChevronUp20 className="size-full" />
+          ) : (
+            <IcChevronDown20 className="size-full" />
+          )}
+        </span>
+        <span
+          aria-hidden="true"
+          className="hidden size-9 shrink-0 desktop:block"
+        >
+          {isOpen ? (
+            <IcChevronUp36 className="size-full" />
+          ) : (
+            <IcChevronDown36 className="size-full" />
+          )}
+        </span>
       </button>
 
       {isOpen && (
         <div className={LIST_CONTAINER_CLASS}>
           <ul
+            ref={listboxRef}
             id={listboxId}
             role="listbox"
             aria-label={ariaLabelledBy ? undefined : ariaLabel}
             aria-labelledby={
               ariaLabelledBy ?? (ariaLabel ? undefined : triggerId)
+            }
+            onScroll={() =>
+              syncScrollThumb(listboxRef.current, scrollThumbRef.current)
             }
             className={listboxVariants({ columns })}
           >
@@ -324,6 +352,12 @@ export default function Dropdown<T extends string>({
               </li>
             ))}
           </ul>
+          <div
+            ref={scrollThumbRef}
+            aria-hidden="true"
+            hidden
+            className={SCROLL_THUMB_CLASS}
+          />
         </div>
       )}
     </div>

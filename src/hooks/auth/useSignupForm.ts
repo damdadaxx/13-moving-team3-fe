@@ -21,6 +21,7 @@ export function useSignupForm() {
       name: '',
       phoneNumber: '',
     },
-    mode: 'onBlur',
+    // onTouched: 첫 blur 이후부터 입력마다 검증 → isValid로 버튼 활성화를 바로 반영
+    mode: 'onTouched',
   });
 }

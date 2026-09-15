@@ -33,7 +33,7 @@ function MovingDateDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [date, setDate] = useState<Date | null>(null);
   /* useOutsideClick이 RefObject<HTMLElement>를 받아서 null! 로 초기화한다 */
-  const ref = useRef<HTMLDivElement>(null!);
+  const ref = useRef<HTMLDivElement>(null);
 
   useOutsideClick(ref, () => setIsOpen(false), {
     enabled: isOpen,

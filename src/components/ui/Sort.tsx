@@ -61,7 +61,7 @@ const sortTriggerVariants = cva(
       },
     ],
     defaultVariants: {
-      size: 'sm',
+      size: 'responsive',
       isOpen: false,
     },
   },
@@ -78,7 +78,7 @@ const sortListVariants = cva(
       },
     },
     defaultVariants: {
-      size: 'sm',
+      size: 'responsive',
     },
   },
 );
@@ -96,7 +96,7 @@ const sortItemVariants = cva(
       },
     },
     defaultVariants: {
-      size: 'sm',
+      size: 'responsive',
     },
   },
 );
@@ -159,7 +159,7 @@ export default function Sort<T extends string>({
   options,
   value,
   onChange,
-  size = 'sm',
+  size = 'responsive',
   disabled = false,
   className,
 }: SortProps<T>) {

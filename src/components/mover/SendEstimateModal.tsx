@@ -45,6 +45,7 @@ export default function SendEstimateModal({
 }: SendEstimateModalProps) {
   const [price, setPrice] = useState('');
   const [comment, setComment] = useState('');
+  const controlSize = useBreakpointValue('sm', 'sm', 'md');
 
   const isValid = price !== '' && comment.length >= MIN_COMMENT_LENGTH;
 
@@ -65,11 +66,7 @@ export default function SendEstimateModal({
       title="견적 보내기"
       variant="sheet"
       buttons={
-        <Button
-          size={useBreakpointValue('sm', 'sm', 'md')}
-          disabled={!isValid}
-          onClick={handleSubmit}
-        >
+        <Button size={controlSize} disabled={!isValid} onClick={handleSubmit}>
           견적 보내기
         </Button>
       }
@@ -123,6 +120,7 @@ export default function SendEstimateModal({
         <InputBase
           label="견적가를 입력해 주세요"
           labelVariant="modal"
+          size={controlSize}
           type="password"
           inputMode="numeric"
           value={price}

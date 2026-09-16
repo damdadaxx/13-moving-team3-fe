@@ -1,4 +1,4 @@
-// 공통 둥근 사각 아이콘 버튼 (Figma: Button > etc)
+// 공통 아이콘 버튼 (Figma: Button > etc)
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import IcClip from '@/assets/icons/ic_clip.svg';
@@ -10,7 +10,7 @@ import { cn } from '@/utils/cn';
 
 import ButtonElement, { type ButtonElementProps } from './ButtonElement';
 
-const buttonRoundedSquareVariants = cva(
+const buttonIconVariants = cva(
   [
     'inline-flex shrink-0 items-center justify-center transition',
     'size-[40px] rounded-[8px]',
@@ -61,16 +61,14 @@ const VARIANT_CONFIG = {
   },
 } as const;
 
-type ButtonRoundedSquareOwnProps = VariantProps<
-  typeof buttonRoundedSquareVariants
-> & {
+type ButtonIconOwnProps = VariantProps<typeof buttonIconVariants> & {
   onClick?: React.MouseEventHandler<HTMLButtonElement | HTMLAnchorElement>;
 };
 
-type ButtonRoundedSquareProps = ButtonRoundedSquareOwnProps &
+type ButtonIconProps = ButtonIconOwnProps &
   Omit<ButtonElementProps, 'children'>;
 
-export default function ButtonRoundedSquare({
+export default function ButtonIcon({
   variant = 'like',
   className,
   disabled,
@@ -79,7 +77,7 @@ export default function ButtonRoundedSquare({
   type = 'button',
   'aria-label': ariaLabel,
   ...props
-}: ButtonRoundedSquareProps) {
+}: ButtonIconProps) {
   const resolvedVariant = variant ?? 'like';
   const {
     Icon,
@@ -96,7 +94,7 @@ export default function ButtonRoundedSquare({
       onClick={onClick}
       aria-label={ariaLabel ?? variantAriaLabel}
       className={cn(
-        buttonRoundedSquareVariants({ variant: resolvedVariant }),
+        buttonIconVariants({ variant: resolvedVariant }),
         className,
       )}
     >

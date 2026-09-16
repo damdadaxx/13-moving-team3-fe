@@ -7,6 +7,8 @@ import { useState } from 'react';
 
 import IcWriting from '@/assets/icons/ic_writing.svg';
 
+import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+
 import Button from '@/components/ui/Button/Button';
 
 export default function ButtonExamplePage() {
@@ -29,7 +31,16 @@ export default function ButtonExamplePage() {
           있으면 <code>next/link</code>의 <code>&lt;Link&gt;</code>, 비활성
           링크면 <code>href</code> 없는 <code>&lt;a&gt;</code>로 렌더됩니다.{' '}
           <code>disabled</code>·<code>isLoading</code>·<code>onClick</code>{' '}
-          처리도 거기서 공통으로 담당합니다.
+          처리도 거기서 공통으로 담당합니다. <code>size</code>는 <code>sm</code>
+          (54px) / <code>md</code>(60px) / <code>lg</code>
+          (64px) 고정이고,{' '}
+          <span className="font-bold text-orange-400">
+            반응형은 컴포넌트가 처리하지 않습니다.
+          </span>{' '}
+          페이지마다 크기가 다르므로 사용처에서{' '}
+          <span className="font-bold text-orange-400">
+            <code>useBreakpointValue</code>로 <code>size</code>를 넘깁니다.
+          </span>
         </p>
       </div>
 
@@ -65,7 +76,12 @@ export default function ButtonExamplePage() {
           </h3>
           <p className="text-md-regular text-gray-500">
             sm은 16px semibold에 모서리 12px, md와 lg는 18px semibold에 모서리
-            16px입니다. 기본값은 <code>md</code>입니다.
+            16px입니다. 기본값은 <code>md</code>입니다. 반응형은 Chip처럼
+            사용처에서{' '}
+            <code>
+              useBreakpointValue(&apos;sm&apos;, &apos;md&apos;, &apos;lg&apos;)
+            </code>
+            로 넘깁니다.
           </p>
           <div className="w-[327px] max-w-full">
             <Button size="sm">Primary CTA 버튼</Button>
@@ -83,6 +99,14 @@ export default function ButtonExamplePage() {
           </div>
           <div className="w-[640px] max-w-full">
             <Button variant="outlined" size="lg">
+              Primary CTA 버튼
+            </Button>
+          </div>
+          <p className="text-sm-medium text-gray-500">
+            반응형 예시 — 모바일 sm / 태블릿 md / 데스크톱 lg
+          </p>
+          <div className="w-[640px] max-w-full">
+            <Button size={useBreakpointValue('sm', 'md', 'lg')}>
               Primary CTA 버튼
             </Button>
           </div>

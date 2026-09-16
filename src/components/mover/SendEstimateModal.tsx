@@ -6,6 +6,8 @@ import IcArrowRight from '@/assets/icons/ic_arrow_right.svg';
 import IcSolidBox from '@/assets/icons/ic_solid_box.svg';
 import IcSolidDocument from '@/assets/icons/ic_solid_document.svg';
 
+import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+
 import Button from '@/components/ui/Button/Button';
 import InputBase from '@/components/ui/Form/InputBase';
 import Label from '@/components/ui/Form/Label';
@@ -63,7 +65,11 @@ export default function SendEstimateModal({
       title="견적 보내기"
       variant="sheet"
       buttons={
-        <Button size="sm" disabled={!isValid} onClick={handleSubmit}>
+        <Button
+          size={useBreakpointValue('sm', 'sm', 'md')}
+          disabled={!isValid}
+          onClick={handleSubmit}
+        >
           견적 보내기
         </Button>
       }

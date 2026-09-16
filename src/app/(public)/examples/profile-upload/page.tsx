@@ -91,7 +91,7 @@ export default function ProfileUploadExamplePage() {
             <Button
               type="submit"
               variant="solid"
-              size="xs"
+              size="sm"
               className="w-[140px]"
             >
               선택 확인
@@ -99,7 +99,7 @@ export default function ProfileUploadExamplePage() {
             <Button
               type="button"
               variant="outlined"
-              size="xs"
+              size="sm"
               onClick={handleProfileReset}
               className="w-[140px]"
             >

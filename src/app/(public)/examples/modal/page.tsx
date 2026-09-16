@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useModal } from '@/hooks/modal/useModal';
 
 import SendEstimateModal from '@/components/mover/SendEstimateModal';
@@ -10,6 +11,7 @@ import Button from '@/components/ui/Button/Button';
 export default function ModalExamplePage() {
   const { openModal, closeModal } = useModal();
   const [isSendEstimateOpen, setIsSendEstimateOpen] = useState(false);
+  const modalButtonSize = useBreakpointValue('sm', 'sm', 'md');
 
   function handleOpenPopup() {
     openModal(
@@ -20,7 +22,7 @@ export default function ModalExamplePage() {
         title: '지정 견적 요청하기',
         variant: 'popup',
         buttons: (
-          <Button size="sm" onClick={closeModal}>
+          <Button size={modalButtonSize} onClick={closeModal}>
             일반 견적 요청 하기
           </Button>
         ),
@@ -45,7 +47,7 @@ export default function ModalExamplePage() {
         title: '필터',
         variant: 'sheet',
         buttons: (
-          <Button size="sm" onClick={closeModal}>
+          <Button size={modalButtonSize} onClick={closeModal}>
             조회하기
           </Button>
         ),

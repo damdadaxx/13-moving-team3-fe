@@ -57,17 +57,21 @@ const searchbarVariants = cva(
 type InputSearchbarProps = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
   'size' | 'type'
-> &
-  Pick<VariantProps<typeof searchbarVariants>, 'size'> & {
-    /** input이 아니라 바깥 컨테이너에 붙는다 (폭 조절용) */
-    className?: string;
-    /** ⓧ로 값을 지운 뒤 호출된다 */
-    onClear?: () => void;
-    /** 검색 아이콘 클릭 또는 Enter로 검색할 때 현재 값과 함께 호출된다.
-     *  넘기지 않으면 아이콘은 장식으로만 남고 포커스도 받지 않는다 */
-    onSearch?: (value: string) => void;
-    ref?: React.Ref<HTMLInputElement>;
-  };
+> & {
+  /** sm 52px / md 64px / responsive는 desktop에서 md로 전환.
+   *  cva의 VariantProps는 null까지 허용하는데, null을 넘기면 cva가
+   *  defaultVariants마저 건너뛰어 높이·패딩·폰트가 전부 빠진 검색바가 되고
+   *  아이콘도 md로 굳는다. 그래서 null만 잘라낸다 */
+  size?: NonNullable<VariantProps<typeof searchbarVariants>['size']>;
+  /** input이 아니라 바깥 컨테이너에 붙는다 (폭 조절용) */
+  className?: string;
+  /** ⓧ로 값을 지운 뒤 호출된다 */
+  onClear?: () => void;
+  /** 검색 아이콘 클릭 또는 Enter로 검색할 때 현재 값과 함께 호출된다.
+   *  넘기지 않으면 아이콘은 장식으로만 남고 포커스도 받지 않는다 */
+  onSearch?: (value: string) => void;
+  ref?: React.Ref<HTMLInputElement>;
+};
 
 export default function InputSearchbar({
   size = 'responsive',

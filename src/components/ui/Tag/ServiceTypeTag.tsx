@@ -9,7 +9,7 @@ import IcSolidHome from '@/assets/icons/ic_solid_home.svg';
 import { cn } from '@/utils/cn';
 
 export type ServiceTypeTagVariant = 'service' | 'designatedEstimate';
-export type ServiceTypeTagSize = 'sm' | 'md' | 'sm-tablet-md' | 'sm-desktop-md';
+export type ServiceTypeTagSize = 'sm' | 'md';
 
 type ServiceTypeTagContent = ServiceType | 'DESIGNATED_ESTIMATE';
 
@@ -21,7 +21,7 @@ interface ServiceTypeTagConfig {
 /*
 @ 표시 태그 콘텐츠 설정
 - 아이콘과 라벨처럼 CSS로 표현할 수 없는 콘텐츠만 설정 객체에서 관리합니다.
-- 크기, 너비, 색상과 반응형 스타일은 serviceTypeTagVariants에서 관리합니다.
+- 색상은 variant, 간격·높이·여백은 size에서 관리합니다.
 */
 const SERVICE_TYPE_TAG_CONFIG: Record<
   ServiceTypeTagContent,
@@ -47,53 +47,32 @@ const SERVICE_TYPE_TAG_CONFIG: Record<
 
 /*
 @ 표시 태그 CVA
-- 공통 레이아웃, variant별 색상, 콘텐츠별 너비와 반응형 크기를 한 곳에서 관리합니다.
-- content variant는 서비스 종류별 sm/md 너비를 CSS 변수로 제공합니다.
-- size variant는 해당 CSS 변수를 사용해 고정 크기 또는 breakpoint별 크기를 적용합니다.
+- size는 sm(26px) / md(32px) 고정 크기만 제공합니다.
+- 너비는 padding으로 라벨 길이에 맞춥니다.
+- gap은 sm 2px, md 4px입니다. 서비스 타입과 지정 견적 모두 동일합니다.
+- 반응형은 컴포넌트가 처리하지 않습니다. 사용처에서 useBreakpointValue로 size를 넘깁니다.
 */
 export const serviceTypeTagVariants = cva(
   [
-    'inline-flex shrink-0 items-center justify-center whitespace-nowrap',
+    'inline-flex shrink-0 items-center justify-center whitespace-nowrap inline-flex w-fit',
     'drop-shadow-[4px_4px_4px_rgba(217,217,217,0.1)]',
   ],
   {
     variants: {
       variant: {
-        service: 'gap-[2px] bg-orange-100 text-orange-400',
-        designatedEstimate: 'gap-0 bg-red-100 text-red-200',
-      },
-      content: {
-        SMALL_MOVE: '[--tag-sm-width:78px] [--tag-md-width:85px]',
-        HOME_MOVE: '[--tag-sm-width:78px] [--tag-md-width:85px]',
-        OFFICE_MOVE: '[--tag-sm-width:90px] [--tag-md-width:97px]',
-        DESIGNATED_ESTIMATE: '[--tag-sm-width:105px] [--tag-md-width:116px]',
+        service: 'bg-orange-100 text-orange-400',
+        designatedEstimate: 'bg-red-100 text-red-200',
       },
       size: {
         sm: [
-          'h-[26px] w-[var(--tag-sm-width)]',
-          'rounded-[4px] py-[2px] pr-[7px] pl-[4px]',
+          'h-[26px] gap-[2px]',
+          'rounded-[4px] py-[2px] px-[4px_7px]',
           'text-sm-semibold',
         ],
         md: [
-          'h-[32px] w-[var(--tag-md-width)] gap-[4px]',
-          'rounded-[6px] py-[4px] pr-[7px] pl-[5px]',
+          'h-[32px] gap-[4px]',
+          'rounded-[6px] py-[4px] px-[5px_7px]',
           'text-md-semibold',
-        ],
-        'sm-tablet-md': [
-          'h-[26px] w-[var(--tag-sm-width)]',
-          'rounded-[4px] py-[2px] pr-[7px] pl-[4px]',
-          'text-sm-semibold',
-          'tablet:h-[32px] tablet:w-[var(--tag-md-width)] tablet:gap-[4px]',
-          'tablet:rounded-[6px] tablet:py-[4px] tablet:pr-[7px] tablet:pl-[5px]',
-          'tablet:text-md-semibold',
-        ],
-        'sm-desktop-md': [
-          'h-[26px] w-[var(--tag-sm-width)]',
-          'rounded-[4px] py-[2px] pr-[7px] pl-[4px]',
-          'text-sm-semibold',
-          'desktop:h-[32px] desktop:w-[var(--tag-md-width)] desktop:gap-[4px]',
-          'desktop:rounded-[6px] desktop:py-[4px] desktop:pr-[7px] desktop:pl-[5px]',
-          'desktop:text-md-semibold',
         ],
       },
     },
@@ -120,30 +99,40 @@ interface DesignatedEstimateVariantProps extends ServiceTypeTagBaseProps {
   serviceType?: never;
 }
 
-type ServiceTypeTagProps = ServiceVariantProps | DesignatedEstimateVariantProps;
+export type ServiceTypeTagProps =
+  ServiceVariantProps | DesignatedEstimateVariantProps;
 
 /*
 @ 표시 태그 사용 방법
 - 서비스 타입과 지정 견적 요청을 한 컴포넌트의 variant로 제공합니다.
 - variant="service"일 때는 serviceType을 반드시 전달합니다.
 - variant="designatedEstimate"일 때는 serviceType을 전달하지 않습니다.
+- size는 sm(26px) / md(32px) 고정 크기만 제공합니다. 기본값은 sm입니다.
+- 반응형은 사용처에서 useBreakpointValue로 size를 바꿔 전달합니다.
 - 아이콘은 옆의 라벨과 같은 의미이므로 스크린 리더에서 숨깁니다.
 
-@ size별 반응형 조합
-- sm: mobile 26px / tablet 26px / desktop 26px
-- md: mobile 32px / tablet 32px / desktop 32px
-- sm-tablet-md: mobile 26px / tablet 32px / desktop 32px
-- sm-desktop-md: mobile 26px / tablet 26px / desktop 32px
+@ 페이지별 크기 조합 (height · sm: 26px, md: 32px)
+- 26 / 32 / 32: { mobile: 'sm', tablet: 'md', desktop: 'md' }
+  사용처: 내 견적 관리의 받았던 견적, 받았던 견적 상세, 기사님 찾기
+- 26 / 26 / 32: { mobile: 'sm', tablet: 'sm', desktop: 'md' }
+  사용처: 작성 가능한 리뷰, 리뷰 쓰기 모달
+- 26 / 26 / 26: size="sm"
+  사용처: 내가 작성한 리뷰
+- 32 / 32 / 32: size="md"
+  사용처: 내 견적 관리의 확정 견적 상세
 
 @ 최소 사용 예시
-// 서비스 타입: tablet부터 md 크기로 변경
+const size = useBreakpointValue({
+  mobile: 'sm',
+  tablet: 'md',
+  desktop: 'md',
+});
+
 <ServiceTypeTag
   variant="service"
   serviceType="SMALL_MOVE"
-  size="sm-tablet-md"
+  size={size}
 />
-
-// 지정 견적 요청: 모든 화면에서 md 크기 사용
 <ServiceTypeTag variant="designatedEstimate" size="md" />
 */
 export default function ServiceTypeTag({
@@ -161,10 +150,7 @@ export default function ServiceTypeTag({
   return (
     <span
       {...props}
-      className={cn(
-        serviceTypeTagVariants({ variant, content, size }),
-        className,
-      )}
+      className={cn(serviceTypeTagVariants({ variant, size }), className)}
     >
       <Icon
         aria-hidden="true"

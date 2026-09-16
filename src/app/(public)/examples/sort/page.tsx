@@ -52,7 +52,6 @@ export default function SortExamplePage() {
         </h2>
         <div className="flex items-start gap-6">
           <Sort
-            size="responsive"
             options={SORT_OPTIONS}
             value={responsive}
             onChange={setResponsive}

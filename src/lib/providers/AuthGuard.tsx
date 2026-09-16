@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-import type { Role } from '@/types/role';
+import type { AuthVariant } from '@/types/role';
 import { usePathname, useRouter } from 'next/navigation';
 
 import {
@@ -21,11 +21,9 @@ import LoadingDisplay from '@/components/ui/LoadingDisplay';
 - customer / mover: 해당 역할 로그인 필요. 비로그인 → 역할별 signin, 다른 역할 → 본인 home
 - (public)은 가드하지 않는다
 */
-export type AuthGuardAllow = 'guest' | Role;
-
 interface AuthGuardProps {
   children: React.ReactNode;
-  allow: AuthGuardAllow;
+  allow: AuthVariant;
 }
 
 export default function AuthGuard({ children, allow }: AuthGuardProps) {

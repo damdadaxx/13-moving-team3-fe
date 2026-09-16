@@ -1,17 +1,40 @@
 import type { Role } from '@/types/role';
 
 /*
-@ 인증 관련 경로
-- 로그인 후 기본 랜딩 / 가드 리다이렉트에 사용
-- (auth) 페이지는 역할별 signin, 보호 페이지는 역할별 home
+@ 앱 경로
+- 헤더 GNB·프로필 메뉴·가드 리다이렉트에서 사용
+- (auth)는 역할별 signin/signup, 보호 페이지는 역할별 home
+- *Root 는 하위 탭·상세까지 묶는 prefix (메뉴 활성/비활성 판정)
 */
 export const ROUTES = {
-  customerHome: '/customer/estimate-request',
-  moverHome: '/mover/requests',
-  customerSignin: '/customer/signin',
-  customerSignup: '/customer/signup',
-  moverSignin: '/mover/signin',
-  moverSignup: '/mover/signup',
+  /* 인증 */
+  customerSignin: '/customer/signin', // 일반 유저 로그인
+  customerSignup: '/customer/signup', // 일반 유저 회원가입
+  moverSignin: '/mover/signin', // 기사님 로그인
+  moverSignup: '/mover/signup', // 기사님 회원가입
+
+  /* 공개 */
+  moverList: '/mover', // 기사님 찾기(목록). /mover/[id] 상세 포함
+
+  /* 일반 유저 GNB */
+  customerHome: '/customer/estimate-request', // 견적 요청
+  customerEstimatesRoot: '/customer/estimates', // 내 견적 관리 (받은/대기 견적)
+  customerEstimates: '/customer/estimates/received', // 내 견적 관리 > 받은 견적
+
+  /* 기사님 GNB */
+  moverHome: '/mover/requests', // 받은 요청
+  moverEstimatesRoot: '/mover/estimates', // 내 견적 관리 (보낸/반려 견적)
+  moverEstimates: '/mover/estimates/sent', // 내 견적 관리 > 보낸 견적
+
+  /* 일반 유저 프로필 메뉴 */
+  customerProfileRoot: '/customer/profile', // 프로필 (등록/수정)
+  customerProfileEdit: '/customer/profile/edit', // 프로필 수정
+  customerLikedMovers: '/customer/liked-movers', // 찜한 기사님
+  customerReviewsRoot: '/customer/reviews', // 이사 리뷰 (작성대기/작성한 리뷰)
+  customerReviewsPending: '/customer/reviews/pending', // 이사 리뷰 > 작성 대기
+
+  /* 기사님 프로필 메뉴 */
+  moverMypage: '/mover/mypage', // 마이페이지 (계정·프로필 수정 포함)
 } as const;
 
 export function getHomePath(role: Role): string {
@@ -24,6 +47,15 @@ export function getSigninPath(role: Role): string {
 
 export function getSignupPath(role: Role): string {
   return role === 'customer' ? ROUTES.customerSignup : ROUTES.moverSignup;
+}
+
+/*
+@ 비회원 헤더 로그인
+- 공개 GNB(기사님 찾기)는 고객 플로우가 기본이라 고객 로그인으로 보낸다
+- 기사님은 /mover/signin, 로그인·회원가입 폼에서 역할 전환
+*/
+export function getGuestSigninPath(): string {
+  return ROUTES.customerSignin;
 }
 
 /*
@@ -48,6 +80,19 @@ function isPublicPath(pathname: string): boolean {
   if (segments.length === 2) return !MOVER_PROTECTED_SEGMENTS.has(segments[1]); // '/mover/{id}'
 
   return false;
+}
+
+/*
+@ 로그인해야 볼 수 있는 경로인지 판정
+- signin/signup 은 비로그인 전용이므로 제외
+- 공개 페이지('/', '/mover', '/mover/{id}')는 제외
+- 그 외 /customer/*, /mover/requests|mypage|estimates 는 세션이 있다고 본다
+*/
+export function isProtectedPath(pathname: string): boolean {
+  if (pathname.includes('/signin') || pathname.includes('/signup')) {
+    return false;
+  }
+  return !isPublicPath(pathname);
 }
 
 /*

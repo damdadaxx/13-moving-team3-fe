@@ -1,14 +1,42 @@
-// 공용 버튼 컴포넌트
 import { cn } from '@/utils/cn';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
-}
+import ButtonElement, { type ButtonElementProps } from './ButtonElement';
+import { buttonVariants, type ButtonVariantProps } from './ButtonStyles';
 
-export default function Button({ children, className, ...props }: ButtonProps) {
+type ButtonProps = ButtonElementProps &
+  ButtonVariantProps & {
+    icon?: React.ReactNode;
+  };
+
+export default function Button({
+  variant,
+  size,
+  icon,
+  className,
+  children,
+  disabled,
+  isLoading = false,
+  ...props
+}: ButtonProps) {
+  const isDisabled = Boolean(disabled) || isLoading;
+
   return (
-    <button className={cn(className)} {...props}>
+    <ButtonElement
+      {...props}
+      disabled={disabled}
+      isLoading={isLoading}
+      aria-disabled={isDisabled || undefined}
+      className={cn(buttonVariants({ variant, size }), className)}
+    >
       {children}
-    </button>
+      {icon && (
+        <span
+          aria-hidden="true"
+          className="flex size-6 shrink-0 items-center justify-center"
+        >
+          {icon}
+        </span>
+      )}
+    </ButtonElement>
   );
 }

@@ -25,6 +25,16 @@ interface CalendarProps {
   onConfirm?: (date: Date) => void;
   /** 선택완료 버튼 문구 */
   confirmLabel?: string;
+  /**
+   * sm: 카드에 담긴 팝업용 달력 (Figma Date picker-Calendar/sm, 341x426)
+   * md: 카드 없이 화면에 그대로 놓는 모바일 인라인 달력 (Date picker-Calendar/md, 336x352)
+   */
+  size?: 'sm' | 'md';
+  /**
+   * 선택완료 버튼 노출 여부. 기본값은 size를 따른다(sm만 노출).
+   * md는 화면 하단의 "이전/다음"이 확정을 맡아서 Figma에도 버튼이 없다.
+   */
+  showConfirm?: boolean;
   minDate?: Date;
   maxDate?: Date;
   className?: string;
@@ -35,12 +45,17 @@ export default function Calendar({
   onChange,
   onConfirm,
   confirmLabel = '선택완료',
+  size = 'sm',
+  showConfirm,
   minDate,
   maxDate,
   className,
 }: CalendarProps) {
   const [internalValue, setInternalValue] = useState<Date | null>(null);
   const selected = value !== undefined ? value : internalValue;
+
+  const isMd = size === 'md';
+  const shouldShowConfirm = showConfirm ?? !isMd;
 
   const handleChange = (next: unknown) => {
     const date = Array.isArray(next) ? next[0] : next;
@@ -53,12 +68,15 @@ export default function Calendar({
   return (
     <div
       className={cn(
-        'flex w-[343px] max-w-full flex-col items-center gap-4 overflow-clip rounded-[16px] border border-gray-300 bg-gray-50 px-4 pt-5 pb-7 shadow-[2px_2px_10px_0_rgba(224,224,224,0.2)]',
+        'flex max-w-full flex-col items-center',
+        isMd
+          ? 'w-[336px] gap-8'
+          : 'w-[343px] gap-4 overflow-clip rounded-[16px] border border-gray-100 bg-gray-50 px-4 py-8 shadow-[2px_2px_10px_0_rgba(224,224,224,0.2)]',
         className,
       )}
     >
       <ReactCalendar
-        className={styles.calendar}
+        className={cn(styles.calendar, isMd && styles.md)}
         value={selected}
         onChange={handleChange}
         minDate={minDate}
@@ -99,7 +117,7 @@ export default function Calendar({
         tileClassName={({ date, view, activeStartDate }) => {
           /* 월/연/연대 세 뷰가 공유하는 칸 모양 */
           const tileBase =
-            'flex cursor-pointer items-center justify-center rounded-[12px] border-0 bg-transparent p-0 transition-colors disabled:cursor-not-allowed disabled:text-gray-300';
+            'flex cursor-pointer items-center justify-center rounded-[12px] border-0 bg-transparent p-0 transition-colors disabled:cursor-not-allowed disabled:text-gray-100';
           const selectedTile = 'bg-orange-400 text-gray-50';
           const idleTile = 'text-black-500 enabled:hover:bg-background-200';
 
@@ -109,22 +127,33 @@ export default function Calendar({
             const isNeighboringMonth =
               date.getMonth() !== activeStartDate.getMonth();
 
-            /* 세로 간격: Figma는 42px 행 + 2px 갭 = 44px 피치에 칸 높이 38px.
-               38 + 3*2 = 44로 맞춘다 */
+            /* 세로 간격
+               - sm: Figma가 42px 행 + 2px 갭 = 44px 피치에 칸 높이 38px. 38 + 3*2 = 44로 맞춘다
+               - md: 48px 칸이 행 간격 없이 그대로 붙는다 (요일 48 + 48*5 = 288) */
             return cn(
               tileBase,
-              'my-[3px] h-[38px] text-md-medium',
-              isSelected && cn(selectedTile, 'text-md-semibold'),
-              !isSelected && isNeighboringMonth && 'text-gray-300',
+              isMd
+                ? 'h-[48px] text-lg-medium'
+                : 'my-[3px] h-[38px] text-md-medium',
+              isSelected &&
+                cn(
+                  selectedTile,
+                  isMd ? 'text-lg-semibold' : 'text-md-semibold',
+                ),
+              !isSelected && isNeighboringMonth && 'text-gray-100',
               !isSelected && !isNeighboringMonth && idleTile,
             );
           }
 
           /* 연/연대 뷰는 3열 고정(react-calendar TileGroup count=3)이라 4줄이 된다.
-             52 + 6*2 = 64px 피치 * 4줄 = 256px. 5주차 달의 월 뷰(요일 38 + 44*5 = 258px)와
-             맞춰서 드릴업할 때 팝업 높이가 튀지 않게 한다.
-             월 뷰 높이를 min-height로 고정하면 5주차 달에 46px 빈 공간이 생겨서 그건 쓰지 않는다 */
-          const wideTile = 'my-[6px] h-[52px] text-lg-medium';
+             드릴업할 때 높이가 튀지 않게 5주차 달의 월 뷰 그리드 높이에 맞춘다.
+             - sm: 52 + 6*2 = 64px 피치 * 4줄 = 256px ≈ 월 뷰 258px(요일 38 + 44*5)
+             - md: 52 + 10*2 = 72px 피치 * 4줄 = 288px = 월 뷰 288px(요일 48 + 48*5)
+             월 뷰 높이를 min-height로 고정하면 5주차 달에 빈 공간이 생겨서 그건 쓰지 않는다 */
+          const wideTile = cn(
+            'h-[52px] text-lg-medium',
+            isMd ? 'my-[10px]' : 'my-[6px]',
+          );
 
           if (view === 'year') {
             const isSelected =
@@ -156,15 +185,17 @@ export default function Calendar({
 
       {/* Figma상 Button/solid/CTA 인스턴스. 달력은 고정 폭 팝업이라 브레이크포인트로
           크기가 변하지 않는 xs(54px)를 쓴다 */}
-      <Button
-        variant="solid"
-        size="xs"
-        disabled={!selected}
-        onClick={() => selected && onConfirm?.(selected)}
-        className="w-[279px] max-w-full"
-      >
-        {confirmLabel}
-      </Button>
+      {shouldShowConfirm && (
+        <Button
+          variant="solid"
+          size="xs"
+          disabled={!selected}
+          onClick={() => selected && onConfirm?.(selected)}
+          className="w-[279px] max-w-full"
+        >
+          {confirmLabel}
+        </Button>
+      )}
     </div>
   );
 }

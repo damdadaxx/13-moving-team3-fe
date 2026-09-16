@@ -9,7 +9,6 @@ import { useForm } from 'react-hook-form';
 import ImgProfileExample from '@/assets/images/img_profile_example.png';
 
 import Button from '@/components/ui/Button/Button';
-import Label from '@/components/ui/Form/Label';
 import ProfileUpload from '@/components/ui/ProfileUpload/ProfileUpload';
 
 interface ProfileUploadFormValues {
@@ -63,24 +62,22 @@ export default function ProfileUploadExamplePage() {
         {/*
         @ React Hook Form 사용 예시
         - register의 ref, name, onChange, onBlur가 실제 file input까지 전달된다.
-        - 파일 형식 같은 업무 검증과 에러 메시지는 컴포넌트 밖의 폼에서 관리한다.
+        - 파일 형식 같은 업무 검증은 React Hook Form에서 관리한다.
+        - 검증 결과의 error를 전달하면 ProfileUpload가 오류 메시지와 aria 속성을 함께 처리한다.
+        - label, labelVariant와 required를 전달하면 공용 Label과 필수 표시가 자동으로 연결된다.
         */}
         <form
           noValidate
           onSubmit={handleSubmit(handleProfileSubmit)}
           className="flex flex-col items-start"
         >
-          <Label htmlFor="profileImage" variant="profile" required>
-            프로필 이미지
-          </Label>
           <ProfileUpload
             key={profileUploadKey}
             id="profileImage"
-            aria-required="true"
-            aria-invalid={Boolean(errors.profileImage)}
-            aria-errormessage={
-              errors.profileImage ? 'profileImage-error' : undefined
-            }
+            label="프로필 이미지"
+            labelVariant="profile"
+            required
+            error={errors.profileImage?.message}
             {...register('profileImage', {
               required: '프로필 이미지를 선택해 주세요.',
               validate: (files) =>
@@ -89,16 +86,6 @@ export default function ProfileUploadExamplePage() {
                 '이미지 파일만 선택할 수 있습니다.',
             })}
           />
-
-          {errors.profileImage?.message && (
-            <p
-              id="profileImage-error"
-              role="alert"
-              className="mt-[8px] text-sm-medium text-red-200"
-            >
-              {errors.profileImage.message}
-            </p>
-          )}
 
           <div className="mt-[24px] flex gap-[12px]">
             <Button
@@ -134,12 +121,11 @@ export default function ProfileUploadExamplePage() {
         <h2 className="mb-[20px] text-xl-semibold text-black-300">
           서버 이미지가 있는 상태
         </h2>
-        <Label htmlFor="savedProfileImage" variant="profile">
-          등록된 프로필 이미지
-        </Label>
         <ProfileUpload
           id="savedProfileImage"
           name="savedProfileImage"
+          label="등록된 프로필 이미지"
+          labelVariant="profile"
           imageUrl={ImgProfileExample.src}
           aria-label="등록된 프로필 이미지 변경"
         />

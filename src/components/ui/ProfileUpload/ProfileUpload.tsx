@@ -5,13 +5,15 @@
   이 컴포넌트는 native file input의 동작과 미리보기만 담당한다.
 - imageUrl이 있으면 서버에 저장된 이미지를 먼저 보여주고, 새 파일을 선택하면
   브라우저가 만든 임시 URL을 사용해 선택한 이미지로 미리보기를 교체한다.
+- label과 error를 전달하면 공용 Label, 오류 메시지와 접근성 속성을 함께 처리한다.
 
 @ 최소 사용 예시
-<Label htmlFor="profileImage" variant="profile">
-  프로필 이미지
-</Label>
 <ProfileUpload
   id="profileImage"
+  label="프로필 이미지"
+  labelVariant="profile"
+  required
+  error={errors.profileImage?.message}
   imageUrl={profileImageUrl}
   {...register('profileImage')}
 />
@@ -21,38 +23,26 @@
 
 import { useEffect, useId, useState } from 'react';
 
-import { cva } from 'class-variance-authority';
 import Image from 'next/image';
 
 import IcGallery from '@/assets/icons/ic_gallery.svg';
 
 import { cn } from '@/utils/cn';
 
-/*
-@ Figma 상태별 스타일
-- default: background-200 배경과 Gallery 아이콘을 표시한다.
-- filled: black-400 배경 위에 선택한 파일 또는 서버 이미지를 표시한다.
-- 상태는 외부 문자열 prop이 아니라 실제 표시할 이미지의 존재 여부로 결정한다.
-*/
-const profileUploadVariants = cva(
-  'relative flex size-full items-center justify-center overflow-hidden rounded-[6px]',
-  {
-    variants: {
-      hasImage: {
-        true: 'bg-black-400',
-        false: 'bg-background-200',
-      },
-    },
-    defaultVariants: {
-      hasImage: false,
-    },
-  },
-);
+import Label, { type LabelVariant } from '@/components/ui/Form/Label';
 
 interface ProfileUploadProps extends Omit<
   React.ComponentPropsWithRef<'input'>,
   'className' | 'defaultValue' | 'multiple' | 'type' | 'value'
 > {
+  /** 업로드 영역 위에 표시할 공용 Label 문구 */
+  label?: string;
+  /** 사용 화면에 맞는 공용 Label 스타일. 기본값은 profile이다. */
+  labelVariant?: LabelVariant;
+  /** Label의 필수 표시(*)와 file input의 aria-required에 사용한다. */
+  required?: boolean;
+  /** 업로드 영역 아래에 표시하고 file input과 연결할 오류 메시지 */
+  error?: string;
   /** 서버 또는 S3에서 불러온 기존 프로필 이미지 URL */
   imageUrl?: string;
   /** 미리보기 이미지의 대체 텍스트. 장식 이미지라면 기본값인 빈 문자열을 사용한다. */
@@ -62,6 +52,10 @@ interface ProfileUploadProps extends Omit<
 }
 
 export default function ProfileUpload({
+  label,
+  labelVariant = 'profile',
+  required,
+  error,
   imageUrl,
   previewAlt = '',
   className,
@@ -70,7 +64,10 @@ export default function ProfileUpload({
   disabled,
   onChange,
   ref,
-  'aria-label': ariaLabel = '프로필 이미지 선택',
+  'aria-describedby': ariaDescribedBy,
+  'aria-invalid': ariaInvalid,
+  'aria-required': ariaRequired,
+  'aria-label': ariaLabel,
   ...inputProps
 }: ProfileUploadProps) {
   const generatedId = useId();
@@ -78,6 +75,11 @@ export default function ProfileUpload({
   const [localPreviewUrl, setLocalPreviewUrl] = useState<string>();
   const previewUrl = localPreviewUrl ?? imageUrl;
   const hasImage = Boolean(previewUrl);
+  const hasError = Boolean(error);
+  const errorId = hasError ? `${inputId}-error` : undefined;
+  const describedBy = [ariaDescribedBy, errorId].filter(Boolean).join(' ');
+  const accessibleLabel =
+    ariaLabel ?? (label ? undefined : '프로필 이미지 선택');
 
   /*
   @ Object URL 정리
@@ -104,45 +106,74 @@ export default function ProfileUpload({
   };
 
   return (
-    <div className={cn('relative size-[100px] tablet:size-[160px]', className)}>
-      <input
-        {...inputProps}
-        ref={ref}
-        id={inputId}
-        type="file"
-        accept={accept}
-        disabled={disabled}
-        aria-label={ariaLabel}
-        onChange={handleChange}
-        className="peer sr-only"
-      />
+    <div className="flex flex-col items-start">
+      {label && (
+        <Label htmlFor={inputId} variant={labelVariant} required={required}>
+          {label}
+        </Label>
+      )}
 
-      <label
-        htmlFor={inputId}
-        aria-disabled={disabled || undefined}
-        className={cn(
-          profileUploadVariants({ hasImage }),
-          'peer-focus-visible:ring-2 peer-focus-visible:ring-orange-400 peer-focus-visible:ring-offset-2',
-          disabled ? 'cursor-not-allowed' : 'cursor-pointer',
-        )}
+      {/*
+      @ 실제 파일 선택 영역
+      - 크기와 className은 오류 메시지를 포함한 바깥 컨테이너가 아니라 이 영역에 적용한다.
+      - 숨긴 native input을 유지해 React Hook Form의 ref, name, onChange와 onBlur를 그대로 전달한다.
+      */}
+      <div
+        className={cn('relative size-[100px] tablet:size-[160px]', className)}
       >
-        {previewUrl ? (
-          <Image
-            fill
-            unoptimized
-            src={previewUrl}
-            alt={previewAlt}
-            sizes="(min-width: 744px) 160px, 100px"
-            className="pointer-events-none object-cover"
-          />
-        ) : (
-          <IcGallery
-            aria-hidden="true"
-            focusable="false"
-            className="size-[32px] shrink-0 tablet:size-[40px]"
-          />
-        )}
-      </label>
+        <input
+          {...inputProps}
+          ref={ref}
+          id={inputId}
+          type="file"
+          accept={accept}
+          disabled={disabled}
+          aria-label={accessibleLabel}
+          aria-describedby={describedBy || undefined}
+          aria-invalid={ariaInvalid ?? hasError}
+          aria-required={ariaRequired ?? required}
+          onChange={handleChange}
+          className="peer sr-only"
+        />
+
+        <label
+          htmlFor={inputId}
+          aria-disabled={disabled || undefined}
+          className={cn(
+            'relative flex size-full items-center justify-center overflow-hidden rounded-[6px]',
+            hasImage ? 'bg-black-400' : 'bg-background-200',
+            'peer-focus-visible:ring-2 peer-focus-visible:ring-orange-400 peer-focus-visible:ring-offset-2',
+            disabled ? 'cursor-not-allowed' : 'cursor-pointer',
+          )}
+        >
+          {previewUrl ? (
+            <Image
+              fill
+              unoptimized
+              src={previewUrl}
+              alt={previewAlt}
+              sizes="(min-width: 744px) 160px, 100px"
+              className="pointer-events-none object-cover"
+            />
+          ) : (
+            <IcGallery
+              aria-hidden="true"
+              focusable="false"
+              className="size-[32px] shrink-0 tablet:size-[40px]"
+            />
+          )}
+        </label>
+      </div>
+
+      {error && (
+        <p
+          id={errorId}
+          role="alert"
+          className="mt-[8px] text-sm-medium text-red-200"
+        >
+          {error}
+        </p>
+      )}
     </div>
   );
 }

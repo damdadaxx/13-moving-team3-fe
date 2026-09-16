@@ -29,7 +29,7 @@ export default function AuthLinkText({
       <Link
         href={href}
         className={cn(
-          'text-xs-semibold text-orange-400 underline',
+          'text-xs-semibold text-orange-400 underline underline-offset-[3px]',
           'tablet:text-xl-semibold',
         )}
       >

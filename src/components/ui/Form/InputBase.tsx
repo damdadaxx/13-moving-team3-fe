@@ -50,7 +50,17 @@ const inputBoxVariants = cva(
 );
 
 const inputFieldVariants = cva(
-  'min-w-0 flex-1 bg-transparent text-black-400 outline-none placeholder:text-gray-400',
+  [
+    'min-w-0 flex-1 bg-transparent text-black-400 outline-none placeholder:text-gray-400',
+    /*
+    @ 브라우저 자동완성(autofill) 배경 지우기
+    - 크롬은 저장된 계정을 채우면 input 배경을 파랗게(노랗게) 칠한다. background-color 로는 못 지운다
+    - 안쪽 그림자로 배경을 덮고, 글자색·커서색을 우리 색으로 되돌린다
+    */
+    'autofill:shadow-[inset_0_0_0_1000px_var(--color-gray-50)]',
+    'autofill:[-webkit-text-fill-color:var(--color-black-400)]',
+    'autofill:[caret-color:var(--color-black-400)]',
+  ],
   {
     variants: {
       size: {

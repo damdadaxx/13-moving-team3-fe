@@ -103,6 +103,8 @@ export default function AuthPageLayout({
           src={config.illustration}
           alt=""
           aria-hidden
+          // 첫 화면에 바로 보이는 이미지라 lazy 로딩하지 않는다 (LCP 개선)
+          priority
           sizes="(min-width: 1024px) 392px, 240px"
           className={cn(
             'pointer-events-none absolute hidden object-contain tablet:block',

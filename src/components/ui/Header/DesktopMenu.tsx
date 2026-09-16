@@ -20,13 +20,32 @@ const headerMenuItem = cva(
   {
     variants: {
       tone: {
-        default: 'text-gray-400',
         active: 'text-black-500',
         inactive: 'text-gray-400',
       },
     },
+    defaultVariants: {
+      tone: 'inactive',
+    },
   },
 );
+
+/*
+@ GNB를 전부 비활성(회색)으로 둘 경로
+- 랜딩 `/`
+- 로그인·회원가입
+- 프로필 메뉴 하위(프로필 수정·찜한 기사님·이사 리뷰·마이페이지)
+*/
+const INACTIVE_MENU_PATH_PREFIXES = [
+  ROUTES.customerSignin,
+  ROUTES.customerSignup,
+  ROUTES.moverSignin,
+  ROUTES.moverSignup,
+  ROUTES.customerProfileRoot,
+  ROUTES.customerLikedMovers,
+  ROUTES.customerReviewsRoot,
+  ROUTES.moverMypage,
+] as const;
 
 /**
  * 메뉴 활성 접두사 조회
@@ -47,6 +66,21 @@ function isAuthPath(pathname: string) {
 }
 
 /**
+ * 랜딩·프로필 메뉴 페이지인지 조회
+ * @param pathname - 현재 경로
+ * @returns 메뉴 전체 비활성 여부
+ */
+function isInactiveMenuPath(pathname: string) {
+  if (pathname === '/') {
+    return true;
+  }
+
+  return INACTIVE_MENU_PATH_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+  );
+}
+
+/**
  * 메뉴 활성 여부 조회
  * @param pathname - 현재 경로
  * @param item - 메뉴 아이템
@@ -58,6 +92,10 @@ function isMenuActive(
   item: HeaderMenuItem,
   menus: HeaderMenuItem[],
 ) {
+  if (isInactiveMenuPath(pathname)) {
+    return false;
+  }
+
   if (isAuthPath(pathname) && item.href === ROUTES.moverList) {
     return true;
   }
@@ -73,28 +111,12 @@ function isMenuActive(
 }
 
 /**
- * 메뉴 톤 조회
- * @param isActive - 메뉴 활성 여부
- * @param hasActiveMenu - 활성 메뉴 여부
- * @returns 메뉴 톤
- */
-function getMenuTone(isActive: boolean, hasActiveMenu: boolean) {
-  if (!hasActiveMenu) {
-    return 'default';
-  }
-  return isActive ? 'active' : 'inactive';
-}
-
-/**
  * Desktop 메뉴
  * @param menus - 메뉴 목록
  * @returns Desktop 메뉴 컴포넌트
  */
 export default function DesktopMenu({ menus }: DesktopMenuProps) {
   const pathname = usePathname();
-  const hasActiveMenu = menus.some((item) =>
-    isMenuActive(pathname, item, menus),
-  );
 
   return (
     <nav className={cn('hidden', 'desktop:block')}>
@@ -106,7 +128,7 @@ export default function DesktopMenu({ menus }: DesktopMenuProps) {
             <li
               key={item.menu}
               className={headerMenuItem({
-                tone: getMenuTone(isActive, hasActiveMenu),
+                tone: isActive ? 'active' : 'inactive',
               })}
             >
               <Link

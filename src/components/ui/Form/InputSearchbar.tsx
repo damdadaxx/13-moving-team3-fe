@@ -31,6 +31,8 @@ const searchbarVariants = cva(
       size: {
         sm: 'h-[52px] px-4 text-md-regular',
         md: 'h-[64px] px-6 text-2lg-regular',
+        responsive:
+          'h-[52px] px-4 text-md-regular desktop:h-[64px] desktop:px-6 desktop:text-2lg-regular',
       },
       isTyping: {
         true: '',
@@ -40,11 +42,13 @@ const searchbarVariants = cva(
     compoundVariants: [
       { size: 'sm', isTyping: false, class: 'gap-[6px]' },
       { size: 'md', isTyping: false, class: 'gap-2' },
+      { size: 'responsive', isTyping: false, class: 'gap-[6px] desktop:gap-2' },
       { size: 'sm', isTyping: true, class: 'gap-3' },
       { size: 'md', isTyping: true, class: 'gap-4' },
+      { size: 'responsive', isTyping: true, class: 'gap-3 desktop:gap-4' },
     ],
     defaultVariants: {
-      size: 'md',
+      size: 'responsive',
       isTyping: false,
     },
   },
@@ -66,7 +70,7 @@ type InputSearchbarProps = Omit<
   };
 
 export default function InputSearchbar({
-  size = 'md',
+  size = 'responsive',
   className,
   onClear,
   onSearch,

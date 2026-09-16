@@ -74,11 +74,7 @@ export default function Header({ hasSessionCookie = false }: HeaderProps) {
   */
   const isLoggedInHint =
     Boolean(user?.name) || hasSessionCookie || isProtectedPath(pathname);
-  const isDesktop = useBreakpointValue({
-    mobile: false,
-    tablet: false,
-    desktop: true,
-  });
+  const isDesktop = useBreakpointValue(false, false, true);
 
   /** 데스크탑이면 모바일 메뉴 상태를 렌더 중에 닫기*/
   if (isDesktop && openPanel === 'mobile') {

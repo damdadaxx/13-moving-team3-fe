@@ -77,24 +77,12 @@ export default function PaginationExamplePage() {
       <section className="flex flex-col gap-3">
         <p className="text-md-regular text-gray-500">현재 페이지: {page}</p>
         <h2 className="text-lg-semibold">size=sm (34px)</h2>
-        <Pagination
-          currentPage={page}
-          totalPages={9}
-          visiblePages={6}
-          size="sm"
-          onClick={setPage}
-        />
+        <Pagination currentPage={page} totalPages={9} onClick={setPage} />
       </section>
 
       <section className="flex flex-col gap-3">
         <h2 className="text-lg-semibold">size=lg (48px)</h2>
-        <Pagination
-          currentPage={page}
-          totalPages={9}
-          visiblePages={6}
-          size="lg"
-          onClick={setPage}
-        />
+        <Pagination currentPage={page} totalPages={9} onClick={setPage} />
       </section>
 
       <section className="flex flex-col gap-3">
@@ -102,7 +90,6 @@ export default function PaginationExamplePage() {
         <Pagination
           currentPage={smallPage}
           totalPages={3}
-          visiblePages={3}
           onClick={setSmallPage}
         />
       </section>

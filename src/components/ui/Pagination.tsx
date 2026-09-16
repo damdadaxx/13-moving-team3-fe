@@ -1,22 +1,34 @@
 'use client';
 
+import { useSyncExternalStore } from 'react';
+
+import { cva, type VariantProps } from 'class-variance-authority';
+
 import IcChevronLeft from '@/assets/icons/ic_chevron_left.svg';
 import IcChevronRight from '@/assets/icons/ic_chevron_right.svg';
 import IcMore from '@/assets/icons/ic_more.svg';
 
 import { cn } from '@/utils/cn';
 
-type PaginationSize = 'sm' | 'lg';
+type PaginationSize = NonNullable<VariantProps<typeof paginationCell>['size']>;
 
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
-  visiblePages: number;
   onClick?: (page: number) => void;
   size?: PaginationSize;
+  className?: string;
 }
 
-type PageItem = number | 'ellipsis';
+type PageItem = number | 'ellipsisStart' | 'ellipsisEnd';
+
+function getPageRange(from: number, to: number): number[] {
+  const pages: number[] = [];
+  for (let page = from; page <= to; page += 1) {
+    pages.push(page);
+  }
+  return pages;
+}
 
 function getPageItems(
   currentPage: number,
@@ -25,78 +37,184 @@ function getPageItems(
 ): PageItem[] {
   if (totalPages <= 0) return [];
 
-  // 마지막 페이지까지 포함해 visiblePages개 이하면 전부 표시한다.
   if (totalPages <= visiblePages) {
-    return Array.from({ length: totalPages }, (_, index) => index + 1);
+    return getPageRange(1, totalPages);
   }
 
-  // 마지막 번호를 넣을 자리를 위해 -1을 한다.
-  const visibleSize = Math.max(1, visiblePages - 1);
-  const start = Math.max(1, Math.min(currentPage, totalPages - visibleSize));
-  const end = start + visibleSize - 1;
-  const items: PageItem[] = [];
+  /*
+  - 첫,끝 페이지 번호는 고정
+  - 가운데 숫자는 visiblePages - 4개 (7칸이면 4 5 6)
+  */
+  const sideCount = visiblePages - 2;
+  const middleCount = Math.max(1, visiblePages - 4);
+  const middleStart = currentPage - Math.floor((middleCount - 1) / 2);
+  const middleEnd = middleStart + middleCount - 1;
 
-  for (let page = start; page <= end; page += 1) {
-    items.push(page);
+  // 앞에 페이지 번호 처리 ex: (1 2 3 4 5 ... 9)
+  if (middleStart <= 2) {
+    return [...getPageRange(1, sideCount), 'ellipsisEnd', totalPages];
   }
 
-  // more 버튼을 붙일지 판단한다.
-  if (end < totalPages - 1) {
-    items.push('ellipsis');
-    items.push(totalPages);
-  } else if (end < totalPages) {
-    items.push(totalPages);
+  // 뒤에 페이지 번호 처리 ex: (1 ... 5 6 7 8 9)
+  if (middleEnd >= totalPages - 1) {
+    return [
+      1,
+      'ellipsisStart',
+      ...getPageRange(totalPages - sideCount + 1, totalPages),
+    ];
   }
 
-  return items;
+  // 가운데 페이지 번호 처리 ex: (1 ... 4 5 6 ... 9)
+  return [
+    1,
+    'ellipsisStart',
+    ...getPageRange(middleStart, middleEnd),
+    'ellipsisEnd',
+    totalPages,
+  ];
 }
 
-const CELL_SIZE_CLASS: Record<PaginationSize, string> = {
-  sm: 'size-[34px] rounded-[6px]',
-  lg: 'size-[48px] rounded-[8px]',
-};
+const paginationCell = cva(
+  'flex shrink-0 items-center justify-center bg-background-100',
+  {
+    variants: {
+      size: {
+        sm: 'size-[34px] rounded-[6px]',
+        lg: 'size-[48px] rounded-[8px]',
+        responsive:
+          'size-[34px] rounded-[6px] desktop:size-[48px] desktop:rounded-[8px]',
+      },
+    },
+    defaultVariants: {
+      size: 'responsive',
+    },
+  },
+);
 
-const NUMBER_CLASS: Record<
-  PaginationSize,
-  { default: string; active: string }
-> = {
-  sm: {
-    default: 'text-lg-regular text-gray-200',
-    active: 'text-lg-semibold text-black-400',
+const paginationNumber = cva('cursor-pointer', {
+  variants: {
+    size: {
+      sm: '',
+      lg: '',
+      responsive: '',
+    },
+    active: {
+      true: '',
+      false: '',
+    },
   },
-  lg: {
-    default: 'text-2lg-medium text-gray-200',
-    active: 'text-2lg-semibold text-black-400',
+  compoundVariants: [
+    {
+      size: 'sm',
+      active: false,
+      class: 'text-lg-regular text-gray-200',
+    },
+    {
+      size: 'sm',
+      active: true,
+      class: 'text-lg-semibold text-black-400',
+    },
+    {
+      size: 'lg',
+      active: false,
+      class: 'text-2lg-medium text-gray-200',
+    },
+    {
+      size: 'lg',
+      active: true,
+      class: 'text-2lg-semibold text-black-400',
+    },
+    {
+      size: 'responsive',
+      active: false,
+      class: 'text-lg-regular text-gray-200 desktop:text-2lg-medium',
+    },
+    {
+      size: 'responsive',
+      active: true,
+      class: 'text-lg-semibold text-black-400 desktop:text-2lg-semibold',
+    },
+  ],
+  defaultVariants: {
+    size: 'responsive',
+    active: false,
   },
-};
+});
 
 const ICON_CLASS = 'block size-[24px]';
 const MORE_CLASS = 'block h-[3px] w-[13px] text-gray-200';
 
-export default function Pagination({
-  currentPage,
-  totalPages,
-  visiblePages,
-  onClick,
-  size,
-}: PaginationProps) {
-  const cellSize = size ?? 'sm';
+//반응형에 따라 보여줄 칸 개수 (...포함)
+const VISIBLE_PAGES = {
+  mobile: 5,
+  tablet: 5,
+  desktop: 7,
+} as const;
 
-  //네모 박스에 대한 클래스
-  const cellClass = cn(
-    'flex shrink-0 items-center justify-center bg-gray-50',
-    CELL_SIZE_CLASS[cellSize],
+//usebreakpointvalue를 사용하려고 했지만 하이드레이션 에러가 났다.
+//그래서 useSyncExternalStore를 사용해 윈도우 사이즈의 변경 이벤트를 감지하고 보여줄 개수 페이지를 반환한다.
+const TABLET_MEDIA_QUERY = '(min-width: 744px)';
+const DESKTOP_MEDIA_QUERY = '(min-width: 1024px)';
+
+//윈도우 변경 사항을 확인하기위한 이벤트 등록.
+function subscribeVisiblePages(onChange: () => void) {
+  const tabletQuery = window.matchMedia(TABLET_MEDIA_QUERY);
+  const desktopQuery = window.matchMedia(DESKTOP_MEDIA_QUERY);
+
+  tabletQuery.addEventListener('change', onChange);
+  desktopQuery.addEventListener('change', onChange);
+
+  return () => {
+    tabletQuery.removeEventListener('change', onChange);
+    desktopQuery.removeEventListener('change', onChange);
+  };
+}
+
+//윈도우 변경 사항을 확인하고 보여줄 개수 페이지를 반환한다.
+function getVisiblePages() {
+  if (window.matchMedia(DESKTOP_MEDIA_QUERY).matches) {
+    return VISIBLE_PAGES.desktop;
+  }
+  if (window.matchMedia(TABLET_MEDIA_QUERY).matches) {
+    return VISIBLE_PAGES.tablet;
+  }
+  return VISIBLE_PAGES.mobile;
+}
+
+export default function Pagination({
+  currentPage: initCurrentPage,
+  totalPages,
+  onClick,
+  size = 'responsive',
+  className,
+}: PaginationProps) {
+  //네모 박스에 대한 클래스.
+  const cellClass = paginationCell({ size });
+  //변경사항 감지, 보여줄 개수 페이지 반환, 서버 hydration 때 쓰는 기본값
+  const resolvedVisiblePages = useSyncExternalStore(
+    subscribeVisiblePages,
+    getVisiblePages,
+    () => VISIBLE_PAGES.mobile,
   );
-  const pageItems = getPageItems(currentPage, totalPages, visiblePages);
+
+  //현재 페이지가 유효한 범위를 벗어나면 첫 페이지 또는 마지막 페이지로 설정한다.
+  let currentPage = initCurrentPage;
+  if (currentPage < 0) currentPage = 1;
+  if (currentPage > totalPages) currentPage = totalPages;
+
+  const pageItems = getPageItems(currentPage, totalPages, resolvedVisiblePages);
   const isFirstPage = currentPage <= 1;
   const isLastPage = currentPage >= totalPages;
 
   return (
-    <div
+    <nav
       aria-label="페이지네이션"
       className={cn(
         'flex items-center',
-        size === 'sm' ? 'gap-[8px]' : 'gap-[10px]',
+        size === 'sm' && 'gap-[8px]',
+        size === 'lg' && 'gap-[10px]',
+        size === 'responsive' && 'gap-[8px] desktop:gap-[10px]',
+        className,
       )}
     >
       <button
@@ -116,7 +234,7 @@ export default function Pagination({
 
       <div className="flex items-center gap-[4px]">
         {pageItems.map((item) => {
-          if (item === 'ellipsis') {
+          if (item === 'ellipsisEnd' || item === 'ellipsisStart') {
             return (
               <span key={item} aria-hidden="true" className={cellClass}>
                 <IcMore className={MORE_CLASS} />
@@ -134,10 +252,7 @@ export default function Pagination({
               aria-current={isActive ? 'page' : undefined}
               className={cn(
                 cellClass,
-                'cursor-pointer',
-                isActive
-                  ? NUMBER_CLASS[cellSize].active
-                  : NUMBER_CLASS[cellSize].default,
+                paginationNumber({ size, active: isActive }),
               )}
               onClick={() => onClick?.(item)}
             >
@@ -161,6 +276,6 @@ export default function Pagination({
       >
         <IcChevronRight className={ICON_CLASS} />
       </button>
-    </div>
+    </nav>
   );
 }

@@ -1,12 +1,12 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
-
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import IcChevronLeft from '@/assets/icons/ic_chevron_left.svg';
 import IcChevronRight from '@/assets/icons/ic_chevron_right.svg';
 import IcMore from '@/assets/icons/ic_more.svg';
+
+import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
 import { cn } from '@/utils/cn';
 
@@ -144,43 +144,6 @@ const paginationNumber = cva('cursor-pointer', {
 const ICON_CLASS = 'block size-[24px]';
 const MORE_CLASS = 'block h-[3px] w-[13px] text-gray-200';
 
-//반응형에 따라 보여줄 칸 개수 (...포함)
-const VISIBLE_PAGES = {
-  mobile: 5,
-  tablet: 5,
-  desktop: 7,
-} as const;
-
-//usebreakpointvalue를 사용하려고 했지만 하이드레이션 에러가 났다.
-//그래서 useSyncExternalStore를 사용해 윈도우 사이즈의 변경 이벤트를 감지하고 보여줄 개수 페이지를 반환한다.
-const TABLET_MEDIA_QUERY = '(min-width: 744px)';
-const DESKTOP_MEDIA_QUERY = '(min-width: 1024px)';
-
-//윈도우 변경 사항을 확인하기위한 이벤트 등록.
-function subscribeVisiblePages(onChange: () => void) {
-  const tabletQuery = window.matchMedia(TABLET_MEDIA_QUERY);
-  const desktopQuery = window.matchMedia(DESKTOP_MEDIA_QUERY);
-
-  tabletQuery.addEventListener('change', onChange);
-  desktopQuery.addEventListener('change', onChange);
-
-  return () => {
-    tabletQuery.removeEventListener('change', onChange);
-    desktopQuery.removeEventListener('change', onChange);
-  };
-}
-
-//윈도우 변경 사항을 확인하고 보여줄 개수 페이지를 반환한다.
-function getVisiblePages() {
-  if (window.matchMedia(DESKTOP_MEDIA_QUERY).matches) {
-    return VISIBLE_PAGES.desktop;
-  }
-  if (window.matchMedia(TABLET_MEDIA_QUERY).matches) {
-    return VISIBLE_PAGES.tablet;
-  }
-  return VISIBLE_PAGES.mobile;
-}
-
 export default function Pagination({
   currentPage: initCurrentPage,
   totalPages,
@@ -190,19 +153,20 @@ export default function Pagination({
 }: PaginationProps) {
   //네모 박스에 대한 클래스.
   const cellClass = paginationCell({ size });
-  //변경사항 감지, 보여줄 개수 페이지 반환, 서버 hydration 때 쓰는 기본값
-  const resolvedVisiblePages = useSyncExternalStore(
-    subscribeVisiblePages,
-    getVisiblePages,
-    () => VISIBLE_PAGES.mobile,
-  );
+
+  //반응형에 따라 보여줄 칸 개수 (...포함)
+  const visiblePages = useBreakpointValue({
+    mobile: 5,
+    tablet: 5,
+    desktop: 7,
+  });
 
   //현재 페이지가 유효한 범위를 벗어나면 첫 페이지 또는 마지막 페이지로 설정한다.
   let currentPage = initCurrentPage;
   if (currentPage < 0) currentPage = 1;
   if (currentPage > totalPages) currentPage = totalPages;
 
-  const pageItems = getPageItems(currentPage, totalPages, resolvedVisiblePages);
+  const pageItems = getPageItems(currentPage, totalPages, visiblePages);
   const isFirstPage = currentPage <= 1;
   const isLastPage = currentPage >= totalPages;
 

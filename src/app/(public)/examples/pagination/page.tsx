@@ -16,7 +16,9 @@ export default function PaginationExamplePage() {
       <div>
         <h1 className="text-xl-bold">Pagination 예시</h1>
         <p className="mt-2 text-md-regular text-gray-500">
-          size를 생략하면 sm(34px)입니다. size=&quot;lg&quot;면 48px입니다.
+          size 기본값은 responsive입니다. 칸은 34px이고 desktop(1024px)부터
+          48px입니다. 보이는 칸 수는 …을 포함해 모바일·태블릿 5, 데스크톱
+          7입니다. 예: 1 2 3 … 9 / 1 … 4 5 6 … 9 / 1 … 7 8 9
         </p>
       </div>
 
@@ -47,15 +49,6 @@ export default function PaginationExamplePage() {
             </tr>
             <tr className="border-b align-top">
               <td className="py-2 pr-3">
-                <code>visiblePages</code>
-              </td>
-              <td className="py-2 pr-3">O</td>
-              <td className="py-2">
-                마지막 페이지를 포함한 숫자 칸 개수. 3이면 1 2 … 9
-              </td>
-            </tr>
-            <tr className="border-b align-top">
-              <td className="py-2 pr-3">
                 <code>onClick</code>
               </td>
               <td className="py-2 pr-3">X</td>
@@ -68,7 +61,17 @@ export default function PaginationExamplePage() {
                 <code>size</code>
               </td>
               <td className="py-2 pr-3">X</td>
-              <td className="py-2">칸 크기. sm은 34px, lg는 48px. 기본 sm</td>
+              <td className="py-2">
+                칸 크기. sm 34px, lg 48px, responsive는 34px에서 desktop부터
+                48px. 기본값 responsive
+              </td>
+            </tr>
+            <tr className="border-b align-top">
+              <td className="py-2 pr-3">
+                <code>className</code>
+              </td>
+              <td className="py-2 pr-3">X</td>
+              <td className="py-2">루트 nav에 붙는 추가 클래스</td>
             </tr>
           </tbody>
         </table>
@@ -76,13 +79,28 @@ export default function PaginationExamplePage() {
 
       <section className="flex flex-col gap-3">
         <p className="text-md-regular text-gray-500">현재 페이지: {page}</p>
-        <h2 className="text-lg-semibold">size=sm (34px)</h2>
+        <h2 className="text-lg-semibold">size=responsive (기본)</h2>
         <Pagination currentPage={page} totalPages={9} onClick={setPage} />
       </section>
 
       <section className="flex flex-col gap-3">
+        <h2 className="text-lg-semibold">size=sm (34px)</h2>
+        <Pagination
+          currentPage={page}
+          totalPages={9}
+          size="sm"
+          onClick={setPage}
+        />
+      </section>
+
+      <section className="flex flex-col gap-3">
         <h2 className="text-lg-semibold">size=lg (48px)</h2>
-        <Pagination currentPage={page} totalPages={9} onClick={setPage} />
+        <Pagination
+          currentPage={page}
+          totalPages={9}
+          size="lg"
+          onClick={setPage}
+        />
       </section>
 
       <section className="flex flex-col gap-3">

@@ -82,19 +82,43 @@ export default function InputSearchbar({
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isTyping, setIsTyping] = useState(false);
 
-  const SearchIcon = size === 'sm' ? IcSearchSm : IcSearchMd;
-  const XCircleIcon = size === 'sm' ? IcXCircleSm : IcXCircleMd;
-  const iconSizeClass = size === 'sm' ? 'size-6' : 'size-9';
+  const isSm = size === 'sm';
+  const isResponsive = size === 'responsive';
 
-  /* 검색 아이콘 색이 Figma에서 sm은 gray-300, md는 gray-400으로 서로 다르다.
+  /* 아이콘 박스는 sm 24 / md 36. responsive는 컨테이너와 같이 desktop에서 넘어간다 */
+  const iconSizeClass = isSm
+    ? 'size-6'
+    : isResponsive
+      ? 'size-6 desktop:size-9'
+      : 'size-9';
+
+  /* sm과 md는 크기만 다른 게 아니라 SVG 파일 자체가 달라서(선 두께·비율) 크기
+     클래스만으로는 못 바꾼다. responsive는 두 벌을 렌더해 desktop에서 교체한다.
+     Dropdown은 같은 상황에서 span으로 감쌌지만, 검색 아이콘 SVG에는 인라인
+     display가 없어 svg에 바로 hidden을 줄 수 있다.
+
+     검색 아이콘 색이 Figma에서 sm은 gray-300, md는 gray-400으로 서로 다르다.
      의도인지 확인 전이라 원본을 그대로 따른다 */
-  const searchIcon = (
-    <SearchIcon
-      className={cn(
-        'size-full',
-        size === 'sm' ? 'text-gray-300' : 'text-gray-400',
-      )}
-    />
+  const searchIcon = isResponsive ? (
+    <>
+      <IcSearchSm className="size-full text-gray-300 desktop:hidden" />
+      <IcSearchMd className="hidden size-full text-gray-400 desktop:block" />
+    </>
+  ) : isSm ? (
+    <IcSearchSm className="size-full text-gray-300" />
+  ) : (
+    <IcSearchMd className="size-full text-gray-400" />
+  );
+
+  const clearIcon = isResponsive ? (
+    <>
+      <IcXCircleSm className="size-full desktop:hidden" />
+      <IcXCircleMd className="hidden size-full desktop:block" />
+    </>
+  ) : isSm ? (
+    <IcXCircleSm className="size-full" />
+  ) : (
+    <IcXCircleMd className="size-full" />
   );
 
   /* 바깥에서 넘어온 ref(react-hook-form의 register 등)와 내부 ref를 같이 채운다 */
@@ -178,8 +202,15 @@ export default function InputSearchbar({
         className="order-2 min-w-0 flex-1 bg-transparent text-black-400 outline-none placeholder:text-gray-400 [&::-webkit-search-cancel-button]:appearance-none"
         onKeyDown={(event) => {
           /* onSearch를 받은 경우에만 Enter를 가로챈다. 안 그러면 form 안에서
-             기본 submit을 막아버린다 */
-          if (event.key === 'Enter' && onSearch) {
+             기본 submit을 막아버린다.
+             한글은 조합을 확정하는 Enter에도 keydown이 오기 때문에(isComposing)
+             그건 흘려보낸다. 안 그러면 글자를 확정하려고 누른 첫 Enter가 검색까지
+             실행하고, 이어서 누른 Enter가 같은 검색을 한 번 더 보낸다 */
+          if (
+            event.key === 'Enter' &&
+            !event.nativeEvent.isComposing &&
+            onSearch
+          ) {
             event.preventDefault();
             handleSearch();
           }
@@ -197,7 +228,7 @@ export default function InputSearchbar({
           onClick={handleClear}
           className={cn('order-3 flex shrink-0 cursor-pointer', iconSizeClass)}
         >
-          <XCircleIcon className="size-full" />
+          {clearIcon}
         </button>
       )}
     </div>

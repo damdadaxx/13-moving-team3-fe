@@ -27,8 +27,9 @@ export default function SearchbarExamplePage() {
       <section className="flex flex-col gap-3">
         <h2 className="text-lg-semibold">1. size — sm (52px) / md (64px)</h2>
         <p className="text-md-regular text-gray-500">
-          기본값은 <code>md</code>입니다. sm은 14px 본문에 아이콘 24px, md는
-          18px에 아이콘 36px입니다.
+          sm은 14px 본문에 아이콘 24px, md는 18px에 아이콘 36px입니다. 기본값은{' '}
+          <code>responsive</code>로, 시안대로 모바일·태블릿에서 sm, 데스크톱에서
+          md가 됩니다(아래 2~5번이 그 경우입니다).
         </p>
         <InputSearchbar size="sm" />
         <InputSearchbar size="md" />

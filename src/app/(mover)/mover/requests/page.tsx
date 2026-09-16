@@ -15,6 +15,7 @@ import ReceivedRequestCard from '@/components/mover/ReceivedRequestCard';
 import Button from '@/components/ui/Button/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import ServiceTypeSelector from '@/components/ui/Chip/ServiceTypeSelector';
+import InputSearchbar from '@/components/ui/Form/InputSearchbar';
 import Modal from '@/components/ui/Modal/Modal';
 import Sort, { type SortOption } from '@/components/ui/Sort';
 
@@ -107,6 +108,9 @@ export default function MoverEstimateRequestPage() {
   return (
     <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-[40px] px-[24px] py-[32px] tablet:px-[40px] desktop:px-0">
       <div className="flex flex-col gap-[24px]">
+        {/* 퍼블리싱만: 검색 기능은 아직 연결하지 않는다 */}
+        <InputSearchbar placeholder="어떤 고객님을 찾고 계세요?" />
+
         <ServiceTypeSelector
           selectedServiceTypes={selectedServiceTypes}
           onChange={handleServiceTypesChange}

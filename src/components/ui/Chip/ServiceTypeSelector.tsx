@@ -26,20 +26,14 @@ interface ServiceTypeSelectorProps extends Omit<
 - selectedServiceTypes에 현재 선택된 값 배열을 전달합니다.
 - 선택이 변경되면 onChange로 새로운 ServiceType 배열을 전달합니다.
 - size는 sm / md 고정 크기만 제공합니다. 기본값은 sm입니다.
-- 너비는 SelectableChip padding으로 라벨 길이에 맞춥니다.
+- 너비는 SelectableChip 기본 variant가 라벨 길이에 맞춥니다.
 - 반응형은 사용처에서 useBreakpointValue로 size를 바꿔 전달합니다.
 
 @ 최소 사용 예시
-const size = useBreakpointValue({
-  mobile: 'sm',
-  tablet: 'md',
-  desktop: 'md',
-});
-
 <ServiceTypeSelector
   selectedServiceTypes={selectedServiceTypes}
   onChange={setSelectedServiceTypes}
-  size={size}
+  size={useBreakpointValue('sm', 'md', 'md')}
 />
 */
 export default function ServiceTypeSelector({

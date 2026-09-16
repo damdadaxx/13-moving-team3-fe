@@ -7,7 +7,6 @@ import { useState } from 'react';
 
 import { SERVICE_TYPES, type ServiceType } from '@/types/serviceType';
 
-import DesignatedEstimateTag from '@/components/ui/Chip/DesignatedEstimateTag';
 import RegionChip from '@/components/ui/Chip/RegionChip';
 import RegionChipGroup, {
   type Region,
@@ -68,6 +67,7 @@ export default function ChipsExamplePage() {
         <RegionChipGroup
           selectedRegions={[selectedRegion]}
           onRegionClick={setSelectedRegion}
+          size="sm-tablet-md"
         />
 
         <p className="text-md-regular text-black-100">
@@ -81,6 +81,7 @@ export default function ChipsExamplePage() {
         <RegionChipGroup
           selectedRegions={selectedRegions}
           onRegionClick={handleMultipleRegionClick}
+          size="sm-desktop-md"
         />
 
         <p className="text-md-regular text-black-100">
@@ -99,6 +100,7 @@ export default function ChipsExamplePage() {
         <ServiceTypeSelector
           selectedServiceTypes={selectedServiceTypes}
           onChange={setSelectedServiceTypes}
+          size="sm-tablet-md"
         />
 
         <p className="text-md-regular text-black-100">
@@ -118,6 +120,7 @@ export default function ChipsExamplePage() {
           {SERVICE_TYPES.map((serviceType) => (
             <ServiceTypeTag
               key={`sm-${serviceType}`}
+              variant="service"
               serviceType={serviceType}
               size="sm"
             />
@@ -128,6 +131,7 @@ export default function ChipsExamplePage() {
           {SERVICE_TYPES.map((serviceType) => (
             <ServiceTypeTag
               key={`md-${serviceType}`}
+              variant="service"
               serviceType={serviceType}
               size="md"
             />
@@ -138,8 +142,8 @@ export default function ChipsExamplePage() {
           <h3 className="text-md-semibold">지정 견적 요청 태그</h3>
 
           <div className="flex flex-wrap items-center gap-[12px]">
-            <DesignatedEstimateTag size="sm" />
-            <DesignatedEstimateTag size="md" />
+            <ServiceTypeTag variant="designatedEstimate" size="sm" />
+            <ServiceTypeTag variant="designatedEstimate" size="md" />
           </div>
         </div>
 
@@ -148,17 +152,25 @@ export default function ChipsExamplePage() {
 
           <div className="flex flex-wrap items-center gap-[12px]">
             <ServiceTypeTag
+              variant="service"
               serviceType="SMALL_MOVE"
-              size="sm"
-              className="tablet:h-[32px] tablet:w-[85px] tablet:gap-[4px] tablet:rounded-[6px] tablet:py-[4px] tablet:pl-[5px] tablet:text-md-semibold"
+              size="sm-tablet-md"
             />
             <ServiceTypeTag
+              variant="service"
               serviceType="HOME_MOVE"
-              size="sm"
-              className="desktop:h-[32px] desktop:w-[85px] desktop:gap-[4px] desktop:rounded-[6px] desktop:py-[4px] desktop:pl-[5px] desktop:text-md-semibold"
+              size="sm-desktop-md"
             />
-            <ServiceTypeTag serviceType="OFFICE_MOVE" size="sm" />
-            <ServiceTypeTag serviceType="SMALL_MOVE" size="md" />
+            <ServiceTypeTag
+              variant="service"
+              serviceType="OFFICE_MOVE"
+              size="sm"
+            />
+            <ServiceTypeTag
+              variant="service"
+              serviceType="SMALL_MOVE"
+              size="md"
+            />
           </div>
 
           <p className="text-sm-medium text-black-100">

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import type { Role } from '@/types/role';
 
 import { HttpError } from '@/lib/api/errors';
-import { getSigninPath, getSignupPath } from '@/lib/constants/routes';
+import { getSignupPath } from '@/lib/constants/routes';
 import type { LoginFormValues } from '@/lib/validations/authValidation';
 
 import { useAuth } from '@/hooks/auth/useAuth';
@@ -25,7 +25,6 @@ interface SigninFormProps {
 
 export default function SigninForm({ role }: SigninFormProps) {
   const { login } = useAuth();
-  const otherRole: Role = role === 'customer' ? 'mover' : 'customer';
   const {
     register,
     handleSubmit,

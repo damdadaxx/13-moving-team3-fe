@@ -17,10 +17,11 @@ interface ButtonVariantProps extends VariantProps<typeof buttonVariants> {}
 
 /*
 @ Button CVA
-- size는 sm(54px) / md(60px) / lg(64px) 고정 크기만 제공합니다. 기본값은 md입니다.
+- size는 sm(54px) / md(60px) / lg(64px) 고정 크기만 제공합니다. 기본값은 sm입니다.
 - 💡 반응형은 컴포넌트가 처리하지 않습니다. 사용처에서 useBreakpointValue로 size를 넘깁니다.
 
 @ 최소 사용 예시
+<Button>견적 요청하기</Button>
 <Button size={useBreakpointValue('sm', 'md', 'lg')}>견적 요청하기</Button>
 */
 const buttonVariants = cva(BUTTON_BASE_CLASS, {
@@ -39,13 +40,13 @@ const buttonVariants = cva(BUTTON_BASE_CLASS, {
   },
   defaultVariants: {
     variant: 'solid',
-    size: 'md',
+    size: 'sm',
   },
 });
 
 export default function Button({
   variant,
-  size = 'md',
+  size = 'sm',
   icon,
   className,
   children,

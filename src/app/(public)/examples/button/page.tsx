@@ -32,7 +32,7 @@ export default function ButtonExamplePage() {
         <h1 className="text-xl-bold">Button 컴포넌트 예시</h1>
         <p className="mt-2 text-md-regular text-gray-500">
           <code>size</code>는 <code>sm</code>(54px) / <code>md</code>(60px) /{' '}
-          <code>lg</code>(64px) 고정이고,{' '}
+          <code>lg</code>(64px) 고정이고, 기본값은 <code>sm</code>입니다.{' '}
           <span className="font-bold text-orange-400">
             반응형은 컴포넌트가 처리하지 않습니다.
           </span>{' '}
@@ -68,9 +68,9 @@ export default function ButtonExamplePage() {
         <section className="flex flex-col gap-3">
           <h3 className="text-lg-semibold">1. variant — solid / outlined</h3>
           <p className="text-md-regular text-gray-500">
-            기본값은 <code>solid</code>입니다. outlined는 배경이 없고 orange-400
-            테두리에 같은 색 글씨, 그림자(4px 4px 10px rgba(195,217,242,0.2))가
-            붙습니다.
+            기본값은 <code>solid</code>입니다. <code>size</code>를 생략하면{' '}
+            <code>sm</code>입니다. outlined는 배경이 없고 orange-400 테두리에
+            같은 색 글씨, 그림자(4px 4px 10px rgba(195,217,242,0.2))가 붙습니다.
           </p>
           <div className="w-[640px] max-w-full">
             <Button variant="solid">Primary CTA 버튼</Button>
@@ -86,7 +86,7 @@ export default function ButtonExamplePage() {
           </h3>
           <p className="text-md-regular text-gray-500">
             sm은 16px semibold에 모서리 12px, md와 lg는 18px semibold에 모서리
-            16px입니다. 기본값은 <code>md</code>입니다. 반응형은 Chip처럼
+            16px입니다. 기본값은 <code>sm</code>입니다. 반응형은 Chip처럼
             사용처에서{' '}
             <code>
               useBreakpointValue(&apos;sm&apos;, &apos;md&apos;, &apos;lg&apos;)
@@ -116,7 +116,7 @@ export default function ButtonExamplePage() {
 
         <section className="flex flex-col gap-3">
           <h3 className="text-lg-semibold">
-            3. 반응형 예시(기본값) — 모바일 sm / 태블릿 md / 데스크톱 lg
+            3. 반응형 예시 — 모바일 sm / 태블릿 md / 데스크톱 lg
           </h3>
           <div className="w-[640px] max-w-full">
             <Button size={useBreakpointValue('sm', 'md', 'lg')}>

@@ -30,7 +30,7 @@ const EXAMPLE_GROUPS: readonly ExampleGroup[] = [
   {
     title: '2. size는 고정, 사용처에서 useBreakpointValue',
     description:
-      '컴포넌트는 sm/md(Button은 lg)만 그립니다. 페이지마다 크기가 다르므로 사용처에서 size를 넘깁니다.',
+      '컴포넌트는 sm/md(Button은 lg)만 그립니다. Button 기본값은 sm입니다. 페이지마다 크기가 다르므로 사용처에서 size를 넘깁니다.',
     pages: [
       { href: '/examples/button', label: 'Button' },
       { href: '/examples/input', label: 'Label / InputBase' },

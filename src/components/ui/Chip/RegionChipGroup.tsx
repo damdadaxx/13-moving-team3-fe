@@ -2,15 +2,22 @@
 
 import { cn } from '@/utils/cn';
 
-import RegionChip from './RegionChip';
-import type { SelectableChipSize } from './SelectableChip';
+import RegionChip, { type RegionChipSize } from './RegionChip';
 
 /*
 @ 서비스 지역 선택 사용 방법
 - REGION_OPTIONS의 전체 지역을 선택형 Chip으로 표시합니다.
 - selectedRegions에는 현재 선택된 Region 값 배열을 전달합니다.
 - onRegionClick에서 단일 선택 또는 복수 선택 로직을 부모가 결정합니다.
-- size를 생략하면 모바일은 sm, tablet 이상은 md가 적용됩니다.
+- size를 생략하면 모든 화면에서 sm 크기가 적용됩니다.
+- 반응형이 필요하면 sm-tablet-md 또는 sm-desktop-md를 전달합니다.
+
+@ 최소 사용 예시
+<RegionChipGroup
+  selectedRegions={selectedRegions}
+  onRegionClick={handleRegionClick}
+  size="sm-tablet-md"
+/>
 */
 
 export const REGION_OPTIONS = [
@@ -41,13 +48,13 @@ interface RegionChipGroupProps extends Omit<
 > {
   selectedRegions: readonly Region[];
   onRegionClick: (region: Region) => void;
-  size?: SelectableChipSize;
+  size?: RegionChipSize;
 }
 
 export default function RegionChipGroup({
   selectedRegions,
   onRegionClick,
-  size = 'responsive',
+  size = 'sm',
   className,
   ...props
 }: RegionChipGroupProps) {

@@ -27,7 +27,19 @@ export default function SortExamplePage() {
 
   return (
     <div className="flex flex-col gap-10 p-6">
-      <h1 className="text-xl-bold">Sort</h1>
+      <div>
+        <h1 className="text-xl-bold">Sort</h1>
+        <p className="mt-2 text-md-regular text-gray-500">
+          <code>size</code>는 <code>sm</code> / <code>md</code> /{' '}
+          <code>responsive</code>입니다.{' '}
+          <span className="font-bold text-orange-400">
+            반응형은 컴포넌트가 처리합니다.
+          </span>{' '}
+          기본값 <code>responsive</code>는 모바일·태블릿 sm, 데스크톱 md입니다.
+          데스크톱 첫 화면이 sm→md로 튀지 않도록 CSS <code>desktop:</code>을
+          쓰고, <code>useBreakpointValue</code>는 넘기지 않습니다.
+        </p>
+      </div>
 
       <section className="flex flex-col gap-4">
         <h2 className="text-lg-semibold">size=sm</h2>
@@ -48,8 +60,12 @@ export default function SortExamplePage() {
       {/* 기사님 찾기 페이지: mobile·tablet은 sm, desktop은 md (Figma 기사님 찾기/비회원) */}
       <section className="flex flex-col gap-4">
         <h2 className="text-lg-semibold">
-          반응형 (mobile·tablet sm / desktop md)
+          반응형 (기본값 size=&quot;responsive&quot;)
         </h2>
+        <p className="text-md-regular text-gray-500">
+          size를 생략하면 모바일·태블릿 sm / 데스크톱 md입니다. 기사님 찾기
+          페이지와 같은 조합입니다.
+        </p>
         <div className="flex items-start gap-6">
           <Sort
             options={SORT_OPTIONS}

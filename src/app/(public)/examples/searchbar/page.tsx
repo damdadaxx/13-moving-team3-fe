@@ -17,22 +17,40 @@ export default function SearchbarExamplePage() {
       <div>
         <h1 className="text-xl-bold">InputSearchbar 예시</h1>
         <p className="mt-2 text-md-regular text-gray-500">
-          Figma <code>input/searchbar</code>를 옮긴 컴포넌트입니다. Figma의{' '}
-          <code>state</code>(default / filled / typing)는 prop이 아니라 포커스와
-          값에서 파생됩니다. 포커스가 들어가면 검색 아이콘이 오른쪽으로 옮겨가고
-          왼쪽에 ⓧ가 붙습니다 — <b>입력창을 클릭해 보세요.</b>
+          Figma <code>input/searchbar</code>를 옮긴 컴포넌트입니다.{' '}
+          <code>size</code>는 <code>sm</code>(52px) / <code>md</code>(64px) /{' '}
+          <code>responsive</code>입니다.{' '}
+          <span className="font-bold text-orange-400">
+            반응형은 컴포넌트가 처리합니다.
+          </span>{' '}
+          기본값 <code>responsive</code>는 모바일·태블릿 sm, 데스크톱 md입니다.
+          데스크톱 첫 화면이 깜빡이지 않도록 CSS <code>desktop:</code>을 쓰고,{' '}
+          <code>useBreakpointValue</code>는 넘기지 않습니다.
+        </p>
+        <p className="mt-2 text-md-regular text-gray-500">
+          Figma의 <code>state</code>(default / filled / typing)는 prop이 아니라
+          포커스와 값에서 파생됩니다. 포커스가 들어가면 검색 아이콘이 오른쪽으로
+          옮겨가고 왼쪽에 ⓧ가 붙습니다 — <b>입력창을 클릭해 보세요.</b>
         </p>
       </div>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-lg-semibold">1. size — sm (52px) / md (64px)</h2>
+        <h2 className="text-lg-semibold">
+          1. size — sm (52px) / md (64px) / responsive
+        </h2>
         <p className="text-md-regular text-gray-500">
-          sm은 14px 본문에 아이콘 24px, md는 18px에 아이콘 36px입니다. 기본값은{' '}
-          <code>responsive</code>로, 시안대로 모바일·태블릿에서 sm, 데스크톱에서
-          md가 됩니다(아래 2~5번이 그 경우입니다).
+          sm은 14px 본문에 아이콘 24px, md는 18px에 아이콘 36px입니다. 기본값{' '}
+          <code>responsive</code>는 모바일·태블릿 sm, 데스크톱 md입니다. 창
+          너비를 바꿔 보면 아래 세 번째만 크기가 바뀝니다.
         </p>
+        <p className="text-sm-medium text-gray-500">size=&quot;sm&quot;</p>
         <InputSearchbar size="sm" />
+        <p className="text-sm-medium text-gray-500">size=&quot;md&quot;</p>
         <InputSearchbar size="md" />
+        <p className="text-sm-medium text-gray-500">
+          size=&quot;responsive&quot; (기본값)
+        </p>
+        <InputSearchbar />
       </section>
 
       <section className="flex flex-col gap-3">

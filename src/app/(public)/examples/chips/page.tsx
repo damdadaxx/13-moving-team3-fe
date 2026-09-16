@@ -53,12 +53,12 @@ export default function ChipsExamplePage() {
         <p className="text-md-regular text-gray-500">
           <code>Chip</code>은 클릭해서 고르는 버튼입니다(
           <code>src/components/ui/Chip</code>). <code>size</code>는{' '}
-          <code>sm</code> / <code>md</code>만 있고,
-          <span className="text-orange-400 font-bold">
+          <code>sm</code> / <code>md</code>만 있고,{' '}
+          <span className="font-bold text-orange-400">
             반응형은 컴포넌트가 처리하지 않습니다.
-          </span>
+          </span>{' '}
           페이지마다 크기가 다르므로 사용처에서{' '}
-          <span className="text-orange-400 font-bold">
+          <span className="font-bold text-orange-400">
             <code>useBreakpointValue</code>로 <code>size</code>를 넘깁니다.
           </span>
         </p>

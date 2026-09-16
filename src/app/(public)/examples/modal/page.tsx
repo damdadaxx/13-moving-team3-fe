@@ -57,7 +57,16 @@ export default function ModalExamplePage() {
 
   return (
     <div className="mx-auto flex max-w-[720px] flex-col gap-10 p-[24px]">
-      <h1 className="text-xl-bold">Modal 예시</h1>
+      <div>
+        <h1 className="text-xl-bold">Modal 예시</h1>
+        <p className="mt-2 text-md-regular text-gray-500">
+          모달 셸은 레이아웃만 CSS로 맞춥니다. 안의 <code>Button</code>·
+          <code>InputBase</code>는 size가 고정이므로 사용처에서{' '}
+          <span className="font-bold text-orange-400">
+            <code>useBreakpointValue</code>로 size를 넘깁니다.
+          </span>
+        </p>
+      </div>
 
       <section className="flex flex-col gap-3">
         <h2 className="text-lg-semibold">popup (지정 견적 요청 확인)</h2>

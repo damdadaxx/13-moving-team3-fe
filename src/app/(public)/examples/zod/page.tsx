@@ -49,7 +49,9 @@ export default function ZodExamplePage() {
         <p className="mt-2 text-md-regular text-gray-500">
           스키마는 <code>src/lib/validations</code>, 폼 연결은{' '}
           <code>hooks</code> + react-hook-form, API 응답은{' '}
-          <code>safeParse</code>로 검사합니다.
+          <code>safeParse</code>로 검사합니다. 아래 Input은 Chip과 같이
+          사용처에서 <code>useBreakpointValue({`'sm', 'md', 'md'`})</code>로
+          size를 넘깁니다.
         </p>
       </div>
 

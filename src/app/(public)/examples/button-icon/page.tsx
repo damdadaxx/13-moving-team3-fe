@@ -18,10 +18,19 @@ export default function ButtonIconExamplePage() {
       <div>
         <h1 className="text-xl-bold">ButtonIcon 컴포넌트 예시</h1>
         <p className="mt-2 text-md-regular text-gray-500">
-          Button, ButtonIcon 두 컴포넌트 모두 <code>ButtonElement</code> 위에
-          얹혀 있습니다. <code>href</code>가 없으면 <code>&lt;button&gt;</code>,
-          있으면 <code>next/link</code>의 <code>&lt;Link&gt;</code>, 비활성
-          링크면 <code>href</code> 없는 <code>&lt;a&gt;</code>로 렌더됩니다.{' '}
+          <code>size</code> prop이 없습니다.{' '}
+          <span className="font-bold text-orange-400">
+            반응형은 컴포넌트가 처리합니다.
+          </span>{' '}
+          버튼은 모바일 40px / 태블릿 54px / 데스크톱 64px, 아이콘은 24px →
+          데스크톱 36px입니다. <code>useBreakpointValue</code>는 넘기지
+          않습니다.
+        </p>
+        <p className="mt-2 text-md-regular text-gray-500">
+          Button과 같이 <code>ButtonElement</code> 위에 얹혀 있습니다.{' '}
+          <code>href</code>가 없으면 <code>&lt;button&gt;</code>, 있으면{' '}
+          <code>next/link</code>의 <code>&lt;Link&gt;</code>, 비활성 링크면{' '}
+          <code>href</code> 없는 <code>&lt;a&gt;</code>로 렌더됩니다.{' '}
           <code>disabled</code>·<code>isLoading</code>·<code>onClick</code>{' '}
           처리도 거기서 공통으로 담당합니다.
         </p>
@@ -29,11 +38,10 @@ export default function ButtonIconExamplePage() {
 
       <div className="flex flex-col gap-8">
         <div>
-          <h2 className="text-xl-bold">B. ButtonIcon — 아이콘 버튼</h2>
+          <h2 className="text-xl-bold">ButtonIcon — 아이콘 버튼</h2>
           <p className="mt-2 text-md-regular text-gray-500">
             Figma Button &gt; etc의 찜·복사·공유 아이콘 버튼입니다.{' '}
-            <code>variant</code>로 아이콘과 색이 정해지고, 크기는
-            반응형입니다(모바일 40px / 태블릿 54px / 데스크톱 64px).{' '}
+            <code>variant</code>로 아이콘과 색이 정해집니다.{' '}
             <code>aria-label</code>은 variant별 기본값이 들어가므로 따로 넘기지
             않아도 됩니다.
           </p>

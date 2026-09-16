@@ -45,7 +45,18 @@ export default function DropdownExamplePage() {
 
   return (
     <div className="flex flex-col gap-10 p-6">
-      <h1 className="text-xl-bold">Dropdown</h1>
+      <div>
+        <h1 className="text-xl-bold">Dropdown</h1>
+        <p className="mt-2 text-md-regular text-gray-500">
+          <code>size</code> prop이 없습니다.{' '}
+          <span className="font-bold text-orange-400">
+            반응형은 컴포넌트가 처리합니다.
+          </span>{' '}
+          사용처가 전부 모바일·태블릿 sm / 데스크톱 md라서 CSS{' '}
+          <code>desktop:</code>으로 고정합니다. <code>useBreakpointValue</code>
+          는 넘기지 않습니다.
+        </p>
+      </div>
 
       <section className="flex flex-col gap-4">
         <h2 className="text-lg-semibold">mobile·tablet: sm / desktop: md</h2>

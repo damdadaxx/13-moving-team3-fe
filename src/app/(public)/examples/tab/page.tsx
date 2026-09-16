@@ -25,8 +25,9 @@ export default function TabExamplePage() {
         <div>
           <h1 className="text-xl-bold">Tab 예시</h1>
           <p className="mt-2 text-md-regular text-gray-500">
-            페이지 상단 탭 바입니다. <code>href</code>로 이동하고, 지금 URL과
-            같으면 활성 밑줄이 붙습니다.
+            페이지 상단 탭 바입니다. size prop이 없고, 레이아웃만 CSS로
+            맞춥니다. <code>href</code>로 이동하고, 지금 URL과 같으면 활성
+            밑줄이 붙습니다.
           </p>
         </div>
 

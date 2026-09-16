@@ -1,6 +1,9 @@
 import type { NextRequest } from 'next/server';
 
-import { ACCESS_TOKEN_COOKIE } from '@/lib/constants/auth';
+import {
+  ACCESS_TOKEN_COOKIE,
+  REFRESH_TOKEN_COOKIE,
+} from '@/lib/constants/auth';
 
 /** API 프록시 엔드포인트 */
 const API_BASE_URL = process.env.API_BASE_URL;
@@ -87,7 +90,8 @@ async function proxy(request: NextRequest, { params }: RouteContext) {
     request.method === 'GET' &&
     pathname === 'auth/me' &&
     response.status === 401 &&
-    !request.cookies.get(ACCESS_TOKEN_COOKIE)
+    !request.cookies.get(ACCESS_TOKEN_COOKIE) &&
+    !request.cookies.get(REFRESH_TOKEN_COOKIE)
   ) {
     return Response.json({ success: true, data: null }, { status: 200 });
   }

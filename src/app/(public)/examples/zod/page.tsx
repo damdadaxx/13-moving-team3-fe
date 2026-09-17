@@ -11,6 +11,7 @@ import {
 } from '@/lib/validations/authValidation';
 
 import { useSignupForm } from '@/hooks/auth/useSignupForm';
+import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
 import InputBase from '@/components/ui/Form/InputBase';
 
@@ -22,6 +23,7 @@ export default function ZodExamplePage() {
   } = useSignupForm();
   const [submitted, setSubmitted] = useState<SignupFormValues | null>(null);
   const [apiParseMessage, setApiParseMessage] = useState('');
+  const inputSize = useBreakpointValue('sm', 'md', 'md');
 
   function onSubmit(data: SignupFormValues) {
     setSubmitted(data);
@@ -47,7 +49,9 @@ export default function ZodExamplePage() {
         <p className="mt-2 text-md-regular text-gray-500">
           스키마는 <code>src/lib/validations</code>, 폼 연결은{' '}
           <code>hooks</code> + react-hook-form, API 응답은{' '}
-          <code>safeParse</code>로 검사합니다.
+          <code>safeParse</code>로 검사합니다. 아래 Input은 Chip과 같이
+          사용처에서 <code>useBreakpointValue({`'sm', 'md', 'md'`})</code>로
+          size를 넘깁니다.
         </p>
       </div>
 
@@ -80,30 +84,35 @@ export default function ZodExamplePage() {
           <InputBase
             label="이름"
             type="text"
+            size={inputSize}
             error={errors.name?.message}
             {...register('name')}
           />
           <InputBase
             label="이메일"
             type="email"
+            size={inputSize}
             error={errors.email?.message}
             {...register('email')}
           />
           <InputBase
             label="전화번호"
             type="tel"
+            size={inputSize}
             error={errors.phoneNumber?.message}
             {...register('phoneNumber')}
           />
           <InputBase
             label="비밀번호"
             type="password"
+            size={inputSize}
             error={errors.password?.message}
             {...register('password')}
           />
           <InputBase
             label="비밀번호 확인"
             type="password"
+            size={inputSize}
             error={errors.passwordConfirm?.message}
             {...register('passwordConfirm')}
           />

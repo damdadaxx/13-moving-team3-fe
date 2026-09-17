@@ -38,8 +38,14 @@ export default function TextareaExamplePage() {
         <h1 className="text-xl-bold text-black-400">Textarea 공통 컴포넌트</h1>
 
         <p className="text-md-regular text-black-100">
-          부모 컨테이너의 너비를 따르는 one-size 반응형 Textarea의 오류,
-          스크롤과 포커스 상태를 확인합니다.
+          <code>size</code> prop이 없습니다.{' '}
+          <span className="font-bold text-orange-400">
+            반응형은 컴포넌트가 처리합니다.
+          </span>{' '}
+          모바일 스타일에서 시작해 tablet부터 padding이 커집니다. 너비는{' '}
+          <code>w-full</code>이라 부모가 정합니다. <code>labelVariant</code>는
+          공용 Label 스타일만 고릅니다. <code>useBreakpointValue</code>는 넘기지
+          않습니다.
         </p>
       </header>
 

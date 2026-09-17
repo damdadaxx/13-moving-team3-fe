@@ -1,5 +1,5 @@
 // [메뉴] 예시
-// [페이지] 공용 버튼 컴포넌트 사용법 (Button / ButtonRoundedSquare)
+// [페이지] 공용 버튼 컴포넌트 사용법 (Button / ButtonIcon)
 
 'use client';
 
@@ -7,41 +7,53 @@ import { useState } from 'react';
 
 import IcWriting from '@/assets/icons/ic_writing.svg';
 
+import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+
 import Button from '@/components/ui/Button/Button';
-import ButtonRoundedSquare from '@/components/ui/Button/ButtonRoundedSquare';
 
 export default function ButtonExamplePage() {
   /* isLoading 확인용. 실제로는 mutation의 isPending을 그대로 넘기면 된다.
      두 컴포넌트가 한꺼번에 스피너로 바뀌면 헷갈려서 상태를 따로 둔다 */
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSharing, setIsSharing] = useState(false);
-  const [message, setMessage] = useState('');
+  const currentBreakpoint = useBreakpointValue(
+    'mobile (744px 미만)',
+    'tablet (744px ~ 1023px)',
+    'desktop (1024px 이상)',
+  );
 
   const handleSubmit = () => {
     setIsSubmitting(true);
     setTimeout(() => setIsSubmitting(false), 2000);
   };
 
-  const handleShare = () => {
-    setIsSharing(true);
-    setTimeout(() => setIsSharing(false), 2000);
-  };
-
   return (
     <div className="mx-auto flex max-w-[720px] flex-col gap-12 p-[24px]">
       <div>
-        <h1 className="text-xl-bold">버튼 컴포넌트 예시</h1>
+        <h1 className="text-xl-bold">Button 컴포넌트 예시</h1>
         <p className="mt-2 text-md-regular text-gray-500">
-          두 컴포넌트 모두 <code>ButtonElement</code> 위에 얹혀 있습니다.{' '}
+          <code>size</code>는 <code>sm</code>(54px) / <code>md</code>(60px) /{' '}
+          <code>lg</code>(64px) 고정이고, 기본값은 <code>sm</code>입니다.{' '}
+          <span className="font-bold text-orange-400">
+            반응형은 컴포넌트가 처리하지 않습니다.
+          </span>{' '}
+          페이지마다 크기가 다르므로 사용처에서{' '}
+          <span className="font-bold text-orange-400">
+            <code>useBreakpointValue</code>로 <code>size</code>를 넘깁니다.
+          </span>{' '}
+          아이콘 전용은 <code>ButtonIcon</code> 예시를 보세요.
+        </p>
+        <p className="mt-2 text-md-regular text-gray-500">
           <code>href</code>가 없으면 <code>&lt;button&gt;</code>, 있으면{' '}
           <code>next/link</code>의 <code>&lt;Link&gt;</code>, 비활성 링크면{' '}
           <code>href</code> 없는 <code>&lt;a&gt;</code>로 렌더됩니다.{' '}
-          <code>disabled</code>·<code>isLoading</code>·<code>onClick</code>{' '}
-          처리도 거기서 공통으로 담당합니다.
+          <code>disabled</code>·<code>isLoading</code>·<code>onClick</code>은{' '}
+          <code>ButtonElement</code>에서 공통 처리합니다.
+        </p>
+        <p className="mt-1 text-md-medium text-orange-400">
+          현재 뷰포트: {currentBreakpoint}
         </p>
       </div>
 
-      {/* ---------------------------- A. Button ---------------------------- */}
       <div className="flex flex-col gap-8">
         <div>
           <h2 className="text-xl-bold">A. Button — CTA 버튼</h2>
@@ -56,9 +68,9 @@ export default function ButtonExamplePage() {
         <section className="flex flex-col gap-3">
           <h3 className="text-lg-semibold">1. variant — solid / outlined</h3>
           <p className="text-md-regular text-gray-500">
-            기본값은 <code>solid</code>입니다. outlined는 배경이 없고 orange-400
-            테두리에 같은 색 글씨, 그림자(4px 4px 10px rgba(195,217,242,0.2))가
-            붙습니다.
+            기본값은 <code>solid</code>입니다. <code>size</code>를 생략하면{' '}
+            <code>sm</code>입니다. outlined는 배경이 없고 orange-400 테두리에
+            같은 색 글씨, 그림자(4px 4px 10px rgba(195,217,242,0.2))가 붙습니다.
           </p>
           <div className="w-[640px] max-w-full">
             <Button variant="solid">Primary CTA 버튼</Button>
@@ -74,7 +86,12 @@ export default function ButtonExamplePage() {
           </h3>
           <p className="text-md-regular text-gray-500">
             sm은 16px semibold에 모서리 12px, md와 lg는 18px semibold에 모서리
-            16px입니다. 기본값은 <code>md</code>입니다.
+            16px입니다. 기본값은 <code>sm</code>입니다. 반응형은 Chip처럼
+            사용처에서{' '}
+            <code>
+              useBreakpointValue(&apos;sm&apos;, &apos;md&apos;, &apos;lg&apos;)
+            </code>
+            로 넘깁니다.
           </p>
           <div className="w-[327px] max-w-full">
             <Button size="sm">Primary CTA 버튼</Button>
@@ -98,7 +115,18 @@ export default function ButtonExamplePage() {
         </section>
 
         <section className="flex flex-col gap-3">
-          <h3 className="text-lg-semibold">3. hover — 마우스를 올려보세요</h3>
+          <h3 className="text-lg-semibold">
+            3. 반응형 예시 — 모바일 sm / 태블릿 md / 데스크톱 lg
+          </h3>
+          <div className="w-[640px] max-w-full">
+            <Button size={useBreakpointValue('sm', 'md', 'lg')}>
+              Primary CTA 버튼
+            </Button>
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-3">
+          <h3 className="text-lg-semibold">4. hover — 마우스를 올려보세요</h3>
           <p className="text-md-regular text-gray-500">
             hover는 prop이 아니라 CSS 상태입니다. solid는 배경이
             orange-400(#F9502E) → orange-500(#E04829)으로, outlined는 배경이
@@ -115,7 +143,7 @@ export default function ButtonExamplePage() {
         </section>
 
         <section className="flex flex-col gap-3">
-          <h3 className="text-lg-semibold">4. disabled</h3>
+          <h3 className="text-lg-semibold">5. disabled</h3>
           <p className="text-md-regular text-gray-500">
             <code>disabled</code>를 넘기면 네이티브 속성과 함께{' '}
             <code>aria-disabled</code>가 붙고, 상태 스타일은 이 값을 봅니다.
@@ -144,7 +172,7 @@ export default function ButtonExamplePage() {
 
         <section className="flex flex-col gap-3">
           <h3 className="text-lg-semibold">
-            5. icon — 텍스트 오른쪽 24px 아이콘
+            6. icon — 텍스트 오른쪽 24px 아이콘
           </h3>
           <p className="text-md-regular text-gray-500">
             Figma의 <code>solid-icon</code> 변형입니다. 별도 variant가 아니라{' '}
@@ -176,7 +204,7 @@ export default function ButtonExamplePage() {
         </section>
 
         <section className="flex flex-col gap-3">
-          <h3 className="text-lg-semibold">6. isLoading — 눌러보세요 (2초)</h3>
+          <h3 className="text-lg-semibold">7. isLoading — 눌러보세요 (2초)</h3>
           <p className="text-md-regular text-gray-500">
             로딩 중에는 스피너만 남고 클릭이 막힙니다(텍스트와 아이콘이 모두
             사라집니다). Figma에 로딩 상태 디자인이 없어서 색은 각 variant의
@@ -201,7 +229,7 @@ export default function ButtonExamplePage() {
         </section>
 
         <section className="flex flex-col gap-3">
-          <h3 className="text-lg-semibold">7. 폭 조절</h3>
+          <h3 className="text-lg-semibold">8. 폭 조절</h3>
           <p className="text-md-regular text-gray-500">
             기본이 <code>w-full</code>이므로 부모 폭으로 조절하거나,{' '}
             <code>className</code>으로 덮어씁니다.
@@ -217,7 +245,7 @@ export default function ButtonExamplePage() {
         </section>
 
         <section className="flex flex-col gap-3">
-          <h3 className="text-lg-semibold">8. href — 링크로 쓰기</h3>
+          <h3 className="text-lg-semibold">9. href — 링크로 쓰기</h3>
           <p className="text-md-regular text-gray-500">
             <code>href</code>를 넘기면 같은 <code>Button</code>이{' '}
             <code>&lt;Link&gt;</code>로 렌더됩니다. 모양은 그대로고
@@ -253,109 +281,6 @@ export default function ButtonExamplePage() {
             <Button variant="outlined" href="/examples/zod" disabled>
               아직 이동할 수 없음
             </Button>
-          </div>
-        </section>
-      </div>
-
-      {/* ---------------------- B. ButtonRoundedSquare ---------------------- */}
-      <div className="flex flex-col gap-8">
-        <div>
-          <h2 className="text-xl-bold">B. ButtonRoundedSquare — 아이콘 버튼</h2>
-          <p className="mt-2 text-md-regular text-gray-500">
-            Figma Button &gt; etc의 둥근 사각 아이콘 버튼입니다.{' '}
-            <code>variant</code>로 아이콘과 색이 정해지고, 크기는
-            반응형입니다(모바일 40px / 태블릿 54px / 데스크톱 64px).{' '}
-            <code>aria-label</code>은 variant별 기본값이 들어가므로 따로 넘기지
-            않아도 됩니다.
-          </p>
-        </div>
-
-        <section className="flex flex-col gap-3">
-          <h3 className="text-lg-semibold">1. variant — like / clip</h3>
-          <div className="flex items-end gap-3">
-            <ButtonRoundedSquare variant="like" />
-            <ButtonRoundedSquare variant="clip" />
-          </div>
-        </section>
-
-        <section className="flex flex-col gap-3">
-          <h3 className="text-lg-semibold">2. variant — kakao / facebook</h3>
-          <div className="flex items-end gap-3">
-            <ButtonRoundedSquare variant="kakao" />
-            <ButtonRoundedSquare variant="facebook" />
-          </div>
-        </section>
-
-        <section className="flex flex-col gap-3">
-          <h3 className="text-lg-semibold">3. onClick</h3>
-          <p className="text-md-regular text-gray-500">
-            <code>onClick</code>은 <code>button</code>과 <code>Link</code>{' '}
-            모두에 붙습니다. disabled면 호출되지 않습니다.
-          </p>
-          <div className="flex items-end gap-3">
-            <ButtonRoundedSquare
-              variant="like"
-              onClick={() => setMessage('찜하기를 눌렀습니다')}
-            />
-            <ButtonRoundedSquare
-              variant="clip"
-              onClick={() => setMessage('링크를 복사했습니다')}
-            />
-            <ButtonRoundedSquare
-              variant="like"
-              disabled
-              onClick={() => setMessage('호출되면 안 됩니다')}
-            />
-          </div>
-          {message && (
-            <p className="text-md-medium text-orange-400">{message}</p>
-          )}
-        </section>
-
-        <section className="flex flex-col gap-3">
-          <h3 className="text-lg-semibold">4. href — Link로 쓰기</h3>
-          <p className="text-md-regular text-gray-500">
-            <code>href</code>를 넘기면 <code>next/link</code>로 렌더됩니다.
-            비활성 링크는 <code>href</code> 없는 <code>&lt;a&gt;</code>로
-            내려갑니다.
-          </p>
-          <div className="flex items-end gap-3">
-            <ButtonRoundedSquare variant="kakao" href="/examples/zod" />
-            <ButtonRoundedSquare variant="facebook" href="/examples/skeleton" />
-            <ButtonRoundedSquare
-              variant="kakao"
-              href="/examples/zod"
-              disabled
-            />
-          </div>
-        </section>
-
-        <section className="flex flex-col gap-3">
-          <h3 className="text-lg-semibold">5. disabled</h3>
-          <div className="flex items-end gap-3">
-            <ButtonRoundedSquare variant="like" disabled />
-            <ButtonRoundedSquare variant="kakao" disabled />
-          </div>
-        </section>
-
-        <section className="flex flex-col gap-3">
-          <h3 className="text-lg-semibold">6. isLoading — 눌러보세요 (2초)</h3>
-          <p className="text-md-regular text-gray-500">
-            로딩 중에는 스피너만 남고 클릭이 막힙니다. <code>isLoading</code>은{' '}
-            <code>disabled</code>와 같이 공통으로 처리됩니다.
-          </p>
-          <div className="flex items-end gap-3">
-            <ButtonRoundedSquare
-              variant="like"
-              isLoading={isSharing}
-              onClick={handleShare}
-            />
-            <ButtonRoundedSquare
-              variant="kakao"
-              isLoading={isSharing}
-              onClick={handleShare}
-            />
-            <ButtonRoundedSquare variant="facebook" isLoading />
           </div>
         </section>
       </div>

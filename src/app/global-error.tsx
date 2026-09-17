@@ -1,21 +1,37 @@
+'use client';
+
+import { useEffect } from 'react';
+
 // root layout 에러 최후 보루
 // app/layout.tsx 자체가 에러났을 때만 동작
-
-'use client';
 
 import { pretendard } from '@/lib/constants/fonts';
 
 import { cn } from '@/utils/cn';
 
+import EmptyState from '@/components/ui/EmptyState';
+
 import './globals.css';
 
-export default function GlobalError({ reset }: { reset: () => void }) {
+interface GlobalErrorProps {
+  error: Error & { digest?: string };
+  reset: () => void;
+}
+
+export default function GlobalError({ error, reset }: GlobalErrorProps) {
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
+
   return (
     <html lang="ko" className={cn(pretendard.variable, 'h-full antialiased')}>
-      <body>
-        <p>앱에 심각한 오류가 발생했습니다.</p>
-        {/* TODO: 버튼 컴포넌트 작업 후 변경 */}
-        <button onClick={reset}>새로고침</button>
+      <body className="h-full">
+        <EmptyState
+          message="앱에 오류가 발생했어요!"
+          buttonLabel="새로고침"
+          onClick={reset}
+          isFullViewport
+        />
       </body>
     </html>
   );

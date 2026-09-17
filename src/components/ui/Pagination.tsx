@@ -6,8 +6,6 @@ import IcChevronLeft from '@/assets/icons/ic_chevron_left.svg';
 import IcChevronRight from '@/assets/icons/ic_chevron_right.svg';
 import IcMore from '@/assets/icons/ic_more.svg';
 
-import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
-
 import { cn } from '@/utils/cn';
 
 type PaginationSize = NonNullable<VariantProps<typeof paginationCell>['size']>;
@@ -144,6 +142,11 @@ const paginationNumber = cva('cursor-pointer', {
 const ICON_CLASS = 'block size-[24px]';
 const MORE_CLASS = 'block h-[3px] w-[13px] text-gray-200';
 
+//모바일 태블릿에서 사용하는 페이지 번호 개수
+const VISIBLE_PAGES = 5;
+//데스크탑일 때 사용하는 페이지 번호 개수
+const VISIBLE_PAGES_DESKTOP = 7;
+
 export default function Pagination({
   currentPage: initCurrentPage,
   totalPages,
@@ -154,21 +157,49 @@ export default function Pagination({
   //네모 박스에 대한 클래스.
   const cellClass = paginationCell({ size });
 
-  //반응형에 따라 보여줄 칸 개수 (...포함)
-  const visiblePages = useBreakpointValue({
-    mobile: 5,
-    tablet: 5,
-    desktop: 7,
-  });
-
   //현재 페이지가 유효한 범위를 벗어나면 첫 페이지 또는 마지막 페이지로 설정한다.
   let currentPage = initCurrentPage;
-  if (currentPage < 0) currentPage = 1;
+  if (currentPage < 1) currentPage = 1;
   if (currentPage > totalPages) currentPage = totalPages;
 
-  const pageItems = getPageItems(currentPage, totalPages, visiblePages);
+  const mobilePageItems = getPageItems(currentPage, totalPages, VISIBLE_PAGES);
+  const desktopPageItems = getPageItems(
+    currentPage,
+    totalPages,
+    VISIBLE_PAGES_DESKTOP,
+  );
   const isFirstPage = currentPage <= 1;
   const isLastPage = currentPage >= totalPages;
+
+  //페이지 번호 렌더링
+  function renderPageItems(items: PageItem[]) {
+    return items.map((item) => {
+      if (item === 'ellipsisEnd' || item === 'ellipsisStart') {
+        return (
+          <span key={item} aria-hidden="true" className={cellClass}>
+            <IcMore className={MORE_CLASS} />
+          </span>
+        );
+      }
+
+      const isActive = item === currentPage;
+
+      return (
+        <button
+          key={item}
+          type="button"
+          aria-current={isActive ? 'page' : undefined}
+          className={cn(
+            cellClass,
+            paginationNumber({ size, active: isActive }),
+          )}
+          onClick={() => onClick?.(item)}
+        >
+          {item}
+        </button>
+      );
+    });
+  }
 
   return (
     <nav
@@ -196,34 +227,13 @@ export default function Pagination({
         <IcChevronLeft className={ICON_CLASS} />
       </button>
 
-      <div className="flex items-center gap-[4px]">
-        {pageItems.map((item) => {
-          if (item === 'ellipsisEnd' || item === 'ellipsisStart') {
-            return (
-              <span key={item} aria-hidden="true" className={cellClass}>
-                <IcMore className={MORE_CLASS} />
-              </span>
-            );
-          }
-
-          //선택된 페이지이면 active클래스를 붙인다.
-          const isActive = item === currentPage;
-
-          return (
-            <button
-              key={item}
-              type="button"
-              aria-current={isActive ? 'page' : undefined}
-              className={cn(
-                cellClass,
-                paginationNumber({ size, active: isActive }),
-              )}
-              onClick={() => onClick?.(item)}
-            >
-              {item}
-            </button>
-          );
-        })}
+      {/* css로 모바일 태블릿에서 사용하는 페이지 번호 렌더링. 데스크탑일 때는 숨김 */}
+      <div className="flex items-center gap-[4px] desktop:hidden">
+        {renderPageItems(mobilePageItems)}
+      </div>
+      {/* css로 데스크탑에서 사용하는 페이지 번호 렌더링. 모바일 태블릿일 때는 숨김 */}
+      <div className="hidden items-center gap-[4px] desktop:flex">
+        {renderPageItems(desktopPageItems)}
       </div>
 
       <button

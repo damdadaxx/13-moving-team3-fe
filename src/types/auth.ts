@@ -38,10 +38,3 @@ export interface SignupInput {
   phoneNumber: string;
   role: Role;
 }
-
-export interface SocialLoginInput {
-  code: string;
-  redirectUri: string;
-  state?: string;
-  role: Role;
-}

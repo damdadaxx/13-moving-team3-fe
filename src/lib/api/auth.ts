@@ -1,4 +1,4 @@
-// 인증 API 호출 함수
+// 인증 API 호출 함수 + 소셜 로그인 흐름
 // 브라우저는 프록시(/api)만 사용. 쿠키는 clientFetch credentials: same-origin 으로 전달
 import type {
   AuthProviderName,
@@ -6,7 +6,6 @@ import type {
   BackendRole,
   LoginInput,
   SignupInput,
-  SocialLoginInput,
   SocialProvider,
 } from '@/types/auth';
 import type { Role } from '@/types/role';
@@ -105,22 +104,19 @@ export async function logout(): Promise<void> {
   });
 }
 
-export async function socialLogin(
-  provider: SocialProvider,
-  input: SocialLoginInput,
-): Promise<AuthUser> {
-  const user = await clientFetch<AuthUserResponse>(
-    ENDPOINTS.auth.social(provider),
-    {
-      method: 'POST',
-      body: JSON.stringify({
-        code: input.code,
-        redirectUri: input.redirectUri,
-        state: input.state,
-        role: toBackendRole(input.role),
-      }),
-    },
-  );
+/*=================================================
+소셜 로그인 (Passport, 백엔드 주도)
+1) 버튼 → /api/auth/social/{provider}?role=... 로 전체 페이지 이동 (getSocialLoginUrl)
+2) 백엔드가 state 쿠키 → 프로바이더 인가 → code 교환 → 로그인 쿠키 설정
+3) 백엔드가 /auth/callback?callbackUrl=... (실패: ?error=CODE&role=ROLE) 로 302
+=================================================*/
 
-  return toAuthUser(user);
+export function getSocialLoginUrl(
+  provider: SocialProvider,
+  role: Role,
+  callbackUrl: string | null,
+): string {
+  const params = new URLSearchParams({ role: toBackendRole(role) });
+  if (callbackUrl) params.set('callbackUrl', callbackUrl);
+  return `${ENDPOINTS.auth.social(provider)}?${params}`;
 }

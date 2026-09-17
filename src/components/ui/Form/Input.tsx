@@ -14,7 +14,7 @@ import { cn } from '@/utils/cn';
 
 import Label, { type LabelVariant } from '@/components/ui/Form/Label';
 
-export type InputBaseSize = 'sm' | 'md';
+export type InputSize = 'sm' | 'md';
 
 /*
 @ 상태별 스타일 (Figma state 변형)
@@ -50,7 +50,17 @@ const inputBoxVariants = cva(
 );
 
 const inputFieldVariants = cva(
-  'min-w-0 flex-1 bg-transparent text-black-400 outline-none placeholder:text-gray-400',
+  [
+    'min-w-0 flex-1 bg-transparent text-black-400 outline-none placeholder:text-gray-400',
+    /*
+    @ 브라우저 자동완성(autofill) 배경 지우기
+    - 크롬은 저장된 계정을 채우면 input 배경을 파랗게(노랗게) 칠한다. background-color 로는 못 지운다
+    - 안쪽 그림자로 배경을 덮고, 글자색·커서색을 우리 색으로 되돌린다
+    */
+    'autofill:shadow-[inset_0_0_0_1000px_var(--color-gray-50)]',
+    'autofill:[-webkit-text-fill-color:var(--color-black-400)]',
+    'autofill:[caret-color:var(--color-black-400)]',
+  ],
   {
     variants: {
       size: {
@@ -85,19 +95,19 @@ const inputErrorVariants = cva('text-red-200', {
 - required는 Label의 *와 aria-required만 적용한다. 검증은 폼 스키마에서 처리한다
 
 @ 최소 사용 예시
-<InputBase
+<Input
   label="이메일"
   labelVariant="auth"
   size={useBreakpointValue('sm', 'md', 'md')}
 />
-<InputBase
+<Input
   label="이름"
   labelVariant="profile"
   size="sm"
   readOnly
 />
 */
-interface InputBaseProps
+interface InputProps
   extends
     Omit<React.ComponentProps<'input'>, 'size'>,
     Omit<VariantProps<typeof inputBoxVariants>, 'hasError'> {
@@ -106,8 +116,7 @@ interface InputBaseProps
   error?: string;
 }
 
-// TODO: 나중에 네이밍 Input으로 수정 논의해보기 (확장성이 없으므로 Base보다는 Input이 더 적합할 수 있음)
-export default function InputBase({
+export default function Input({
   label,
   labelVariant = 'auth',
   error,
@@ -117,7 +126,7 @@ export default function InputBase({
   className,
   id,
   ...props
-}: InputBaseProps) {
+}: InputProps) {
   const generatedId = useId();
   const inputId = id ?? generatedId;
   const hasError = Boolean(error);

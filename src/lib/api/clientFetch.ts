@@ -4,6 +4,31 @@ import { HttpError } from '@/lib/api/errors';
 // 토큰 갱신 중복 요청 방지용 싱글톤 프로미스
 let refreshPromise: Promise<Response> | null = null;
 
+/*
+@ 토큰 갱신을 시도하지 않는 경로 (로그인 전 요청)
+- 백엔드는 로그인 실패(비밀번호 틀림)도 401 UNAUTHORIZED로 내려준다
+- 이때 refresh를 시도하면 refresh도 401이라, 사용자에게는 원래 실패 사유 대신
+  "세션 갱신에 실패했습니다"가 보인다 → 로그인 전 요청은 401을 그대로 넘긴다
+*/
+const NO_REFRESH_PATHS: string[] = [
+  ENDPOINTS.auth.login,
+  ENDPOINTS.auth.signUp,
+  ENDPOINTS.auth.refresh,
+  // 소셜은 프로바이더별 경로라 공통 앞부분('/api/auth/social')만 본다
+  ENDPOINTS.auth.social('google').replace(/\/google$/, ''),
+];
+
+function skipsRefresh(input: RequestInfo | URL): boolean {
+  const url =
+    typeof input === 'string'
+      ? input
+      : input instanceof URL
+        ? input.pathname
+        : input.url;
+
+  return NO_REFRESH_PATHS.some((path) => url.includes(path));
+}
+
 // _retried: 토큰 갱신 후 재시도 여부 추적 (무한 루프 방지)
 interface ClientFetchInit extends RequestInit {
   _retried?: boolean;
@@ -58,7 +83,9 @@ export default async function clientFetch<T = unknown>(
     // 백엔드 에러 code는 { error: { code } }로 감싸져 온다 (한 단계 아래)
     const code = errorBody?.error?.code ?? errorBody?.code;
     // 백엔드는 만료/미인증 모두 UNAUTHORIZED. TOKEN_EXPIRED가 오면 그것도 갱신.
-    const shouldRefresh = code === 'TOKEN_EXPIRED' || code === 'UNAUTHORIZED';
+    const shouldRefresh =
+      (code === 'TOKEN_EXPIRED' || code === 'UNAUTHORIZED') &&
+      !skipsRefresh(input);
 
     if (shouldRefresh && !init._retried) {
       let refreshResponse: Response;

@@ -9,7 +9,7 @@ import IcSolidDocument from '@/assets/icons/ic_solid_document.svg';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
 import Button from '@/components/ui/Button/Button';
-import InputBase from '@/components/ui/Form/InputBase';
+import Input from '@/components/ui/Form/Input';
 import Label from '@/components/ui/Form/Label';
 import Modal from '@/components/ui/Modal/Modal';
 
@@ -117,7 +117,7 @@ export default function SendEstimateModal({
           <div className="h-px w-full bg-line-100" />
         </div>
 
-        <InputBase
+        <Input
           label="견적가를 입력해 주세요"
           labelVariant="modal"
           size={controlSize}

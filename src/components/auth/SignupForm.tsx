@@ -17,7 +17,7 @@ import { cn } from '@/utils/cn';
 import AuthLinkText from '@/components/auth/AuthLinkText';
 import AuthPageLayout from '@/components/auth/AuthPageLayout';
 import AuthSubmitButton from '@/components/auth/AuthSubmitButton';
-import InputBase from '@/components/ui/Form/InputBase';
+import Input from '@/components/ui/Form/Input';
 
 interface SignupFormProps {
   role: Role;
@@ -62,44 +62,49 @@ export default function SignupForm({ role }: SignupFormProps) {
       >
         <div className={cn('flex flex-col gap-8', 'tablet:gap-14')}>
           <div className={cn('flex flex-col gap-4', 'tablet:gap-8')}>
-            <InputBase
+            <Input
               label="이름"
               type="text"
               autoComplete="name"
               placeholder="성함을 입력해 주세요"
+              size={inputSize}
               error={errors.name?.message}
               {...register('name')}
             />
-            <InputBase
+            <Input
               label="이메일"
               type="email"
               autoComplete="email"
               placeholder="이메일을 입력해 주세요"
+              size={inputSize}
               error={errors.email?.message}
               {...register('email')}
             />
-            <InputBase
+            <Input
               label="전화번호"
               type="tel"
               inputMode="numeric"
               autoComplete="tel"
               placeholder="숫자만 입력해 주세요"
+              size={inputSize}
               error={errors.phoneNumber?.message}
               {...register('phoneNumber')}
             />
-            <InputBase
+            <Input
               label="비밀번호"
               type="password"
               autoComplete="new-password"
               placeholder="비밀번호를 입력해 주세요"
+              size={inputSize}
               error={errors.password?.message}
               {...register('password')}
             />
-            <InputBase
+            <Input
               label="비밀번호 확인"
               type="password"
               autoComplete="new-password"
               placeholder="비밀번호 다시 한번 입력해 주세요"
+              size={inputSize}
               error={errors.passwordConfirm?.message}
               {...register('passwordConfirm')}
             />

@@ -17,7 +17,7 @@ import { cn } from '@/utils/cn';
 import AuthLinkText from '@/components/auth/AuthLinkText';
 import AuthPageLayout from '@/components/auth/AuthPageLayout';
 import AuthSubmitButton from '@/components/auth/AuthSubmitButton';
-import InputBase from '@/components/ui/Form/InputBase';
+import Input from '@/components/ui/Form/Input';
 
 interface SigninFormProps {
   role: Role;
@@ -56,19 +56,21 @@ export default function SigninForm({ role }: SigninFormProps) {
       >
         <div className={cn('flex flex-col gap-8', 'tablet:gap-14')}>
           <div className={cn('flex flex-col gap-4', 'tablet:gap-8')}>
-            <InputBase
+            <Input
               label="이메일"
               type="email"
               autoComplete="email"
               placeholder="이메일을 입력해 주세요"
+              size={inputSize}
               error={errors.email?.message}
               {...register('email')}
             />
-            <InputBase
+            <Input
               label="비밀번호"
               type="password"
               autoComplete="current-password"
               placeholder="비밀번호를 입력해 주세요"
+              size={inputSize}
               error={errors.password?.message}
               {...register('password')}
             />

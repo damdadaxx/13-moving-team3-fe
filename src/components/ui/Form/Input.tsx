@@ -14,7 +14,7 @@ import { cn } from '@/utils/cn';
 
 import Label, { type LabelVariant } from '@/components/ui/Form/Label';
 
-export type InputBaseSize = 'sm' | 'md';
+export type InputSize = 'sm' | 'md';
 
 /*
 @ 상태별 스타일 (Figma state 변형)
@@ -95,19 +95,19 @@ const inputErrorVariants = cva('text-red-200', {
 - required는 Label의 *와 aria-required만 적용한다. 검증은 폼 스키마에서 처리한다
 
 @ 최소 사용 예시
-<InputBase
+<Input
   label="이메일"
   labelVariant="auth"
   size={useBreakpointValue('sm', 'md', 'md')}
 />
-<InputBase
+<Input
   label="이름"
   labelVariant="profile"
   size="sm"
   readOnly
 />
 */
-interface InputBaseProps
+interface InputProps
   extends
     Omit<React.ComponentProps<'input'>, 'size'>,
     Omit<VariantProps<typeof inputBoxVariants>, 'hasError'> {
@@ -116,8 +116,7 @@ interface InputBaseProps
   error?: string;
 }
 
-// TODO: 나중에 네이밍 Input으로 수정 논의해보기 (확장성이 없으므로 Base보다는 Input이 더 적합할 수 있음)
-export default function InputBase({
+export default function Input({
   label,
   labelVariant = 'auth',
   error,
@@ -127,7 +126,7 @@ export default function InputBase({
   className,
   id,
   ...props
-}: InputBaseProps) {
+}: InputProps) {
   const generatedId = useId();
   const inputId = id ?? generatedId;
   const hasError = Boolean(error);

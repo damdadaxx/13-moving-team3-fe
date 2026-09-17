@@ -13,7 +13,7 @@ import {
 import { useSignupForm } from '@/hooks/auth/useSignupForm';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
-import InputBase from '@/components/ui/Form/InputBase';
+import Input from '@/components/ui/Form/Input';
 
 export default function ZodExamplePage() {
   const {
@@ -81,35 +81,35 @@ export default function ZodExamplePage() {
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-4 rounded-[8px] border border-line-200 p-[16px]"
         >
-          <InputBase
+          <Input
             label="이름"
             type="text"
             size={inputSize}
             error={errors.name?.message}
             {...register('name')}
           />
-          <InputBase
+          <Input
             label="이메일"
             type="email"
             size={inputSize}
             error={errors.email?.message}
             {...register('email')}
           />
-          <InputBase
+          <Input
             label="전화번호"
             type="tel"
             size={inputSize}
             error={errors.phoneNumber?.message}
             {...register('phoneNumber')}
           />
-          <InputBase
+          <Input
             label="비밀번호"
             type="password"
             size={inputSize}
             error={errors.password?.message}
             {...register('password')}
           />
-          <InputBase
+          <Input
             label="비밀번호 확인"
             type="password"
             size={inputSize}

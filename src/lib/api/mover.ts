@@ -1,0 +1,82 @@
+// 기사님 / 찜 API 호출 함수
+import type {
+  CursorPage,
+  MoverListItem,
+  MoverListParams,
+  ServiceType,
+} from '@/types/mover';
+
+import clientFetch from '@/lib/api/clientFetch';
+import { ENDPOINTS } from '@/lib/api/endpoints';
+
+/** undefined / 빈 문자열은 빼고 쿼리스트링을 만든다 */
+function toQueryString(params: Record<string, string | number | undefined>) {
+  const searchParams = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === undefined || value === '') return;
+    searchParams.set(key, String(value));
+  });
+
+  const query = searchParams.toString();
+  return query ? `?${query}` : '';
+}
+
+/*
+@ GET /mover
+- 비로그인 가능. 별명 검색(keyword), 지역·서비스 필터, 정렬, 커서 페이지네이션
+- 검색어/필터/정렬이 바뀌면 cursor 없이 첫 페이지부터 다시 요청해야 한다 (쿼리 키로 처리)
+*/
+export function getMovers(
+  params: MoverListParams,
+): Promise<CursorPage<MoverListItem>> {
+  return clientFetch<CursorPage<MoverListItem>>(
+    `${ENDPOINTS.mover.list}${toQueryString({ ...params })}`,
+  );
+}
+
+/*
+@ GET /likes/me 응답 항목
+- 기사님 목록(GET /mover)과 필드 이름이 달라서 카드용 MoverListItem으로 변환한다
+*/
+interface LikedMoverResponse {
+  moverId: string;
+  mover: {
+    userId: string;
+    imgUrl: string | null;
+    nickname: string;
+    careerMonths: number;
+    shortIntro: string;
+    serviceTypes: ServiceType[];
+  };
+  ratingCount: number;
+  ratingAvg: number;
+  acceptedEstimateCount: number;
+  likeCount: number;
+}
+
+/** GET /likes/me - 고객 로그인 필요 */
+export async function getLikedMovers(params: {
+  cursor?: string;
+  size?: number;
+}): Promise<CursorPage<MoverListItem>> {
+  const page = await clientFetch<CursorPage<LikedMoverResponse>>(
+    `${ENDPOINTS.like.mine}${toQueryString(params)}`,
+  );
+
+  return {
+    ...page,
+    list: page.list.map((item) => ({
+      id: item.moverId,
+      imgUrl: item.mover.imgUrl,
+      nickname: item.mover.nickname,
+      careerMonths: item.mover.careerMonths,
+      shortIntro: item.mover.shortIntro,
+      serviceTypes: item.mover.serviceTypes,
+      averageRating: item.ratingAvg,
+      reviewCount: item.ratingCount,
+      confirmedCount: item.acceptedEstimateCount,
+      likeCount: item.likeCount,
+    })),
+  };
+}

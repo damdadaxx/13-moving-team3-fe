@@ -41,9 +41,16 @@ async function proxy(request: NextRequest, { params }: RouteContext) {
   const targetUrl = new URL(`${API_BASE_URL}/${pathname}`);
   targetUrl.search = request.nextUrl.searchParams.toString();
 
-  /** GET 외 method면 body 전달 */
-  const rawBody = request.method === 'GET' ? '' : await request.text();
-  const body = rawBody || undefined;
+  /*
+  @ body / Content-Type 전달
+  - JSON: application/json 그대로 전달
+  - FormData(이미지 업로드): multipart/form-data; boundary=... 와 바이너리 body 를 그대로 전달
+    text()로 읽거나 Content-Type 을 json 으로 덮으면 파일이 깨진다
+  */
+  const contentType = request.headers.get('content-type');
+  const canHaveBody = request.method !== 'GET' && request.method !== 'HEAD';
+  const rawBody = canHaveBody ? await request.arrayBuffer() : undefined;
+  const body = rawBody && rawBody.byteLength > 0 ? rawBody : undefined;
   const clientIp = getClientIp(request);
 
   let response: Response;
@@ -52,7 +59,7 @@ async function proxy(request: NextRequest, { params }: RouteContext) {
     response = await fetch(targetUrl, {
       method: request.method,
       headers: {
-        'Content-Type': 'application/json',
+        ...(contentType && { 'Content-Type': contentType }),
         cookie: request.headers.get('cookie') ?? '',
         ...(clientIp && { 'X-Client-IP': clientIp }),
         ...(PROXY_SECRET && { 'X-Proxy-Secret': PROXY_SECRET }),
@@ -66,8 +73,10 @@ async function proxy(request: NextRequest, { params }: RouteContext) {
     return Response.json(
       {
         success: false,
-        message: '백엔드 서버에 연결할 수 없습니다.',
-        code: 'BACKEND_UNREACHABLE',
+        error: {
+          code: 'BACKEND_UNREACHABLE',
+          message: '백엔드 서버에 연결할 수 없습니다.',
+        },
       },
       { status: 502 },
     );

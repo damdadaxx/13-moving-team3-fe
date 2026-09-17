@@ -28,8 +28,7 @@ const EXAMPLE_GROUPS: readonly ExampleGroup[] = [
       { href: '/examples/modal', label: 'Modal' },
       { href: '/examples/toast', label: 'Toast' },
       { href: '/examples/tab', label: 'Tab' },
-      // TODO: Pagination 예시 추가
-      // { href: '/examples/pagination', label: 'Pagination' },
+      { href: '/examples/pagination', label: 'Pagination' },
     ],
   },
   {

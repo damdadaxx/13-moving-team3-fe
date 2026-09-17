@@ -25,6 +25,11 @@ const EXAMPLE_GROUPS: readonly ExampleGroup[] = [
       { href: '/examples/button-icon', label: 'ButtonIcon' },
       { href: '/examples/profile-upload', label: 'ProfileUpload' },
       { href: '/examples/textarea', label: 'Textarea' },
+      { href: '/examples/modal', label: 'Modal' },
+      { href: '/examples/toast', label: 'Toast' },
+      { href: '/examples/tab', label: 'Tab' },
+      // TODO: Pagination 예시 추가
+      // { href: '/examples/pagination', label: 'Pagination' },
     ],
   },
   {
@@ -47,12 +52,8 @@ const EXAMPLE_GROUPS: readonly ExampleGroup[] = [
   {
     title: '기타',
     description:
-      '레이아웃만 반응형이거나, 폼 검증·로딩처럼 크기 API와 무관한 예시입니다.',
+      '폼 검증·로딩처럼 브레이크포인트 size API와 무관한 예시입니다.',
     pages: [
-      { href: '/examples/modal', label: 'Modal' },
-      { href: '/examples/toast', label: 'Toast' },
-      { href: '/examples/tab', label: 'Tab' },
-      { href: '/examples/pagination', label: 'Pagination' },
       { href: '/examples/skeleton', label: 'Skeleton' },
       { href: '/examples/loading', label: 'Loading' },
       { href: '/examples/zod', label: 'Zod' },

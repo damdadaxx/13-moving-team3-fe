@@ -17,16 +17,22 @@ export default function SearchBar({ className, ...props }: SearchBarProps) {
       )}
     >
       {/* 아이콘은 사이즈별 선 두께가 달라(1.5 / 2) 크기만 키우지 않고 따로 쓴다 */}
-      <IcSearch24 aria-hidden className="size-6 shrink-0 desktop:hidden" />
+      <IcSearch24
+        aria-hidden
+        className={cn('size-6 shrink-0', 'desktop:hidden')}
+      />
       <IcSearch36
         aria-hidden
-        className="hidden size-9 shrink-0 desktop:block"
+        className={cn('hidden size-9 shrink-0', 'desktop:block')}
       />
       <input
         type="text"
         inputMode="search"
         enterKeyHint="search"
-        className="min-w-0 flex-1 bg-transparent text-md-regular text-black-400 outline-none placeholder:text-gray-400 desktop:text-2lg-regular"
+        className={cn(
+          'min-w-0 flex-1 bg-transparent text-md-regular text-black-400 outline-none placeholder:text-gray-400',
+          'desktop:text-2lg-regular',
+        )}
         {...props}
       />
     </label>

@@ -72,7 +72,8 @@ export default function MoverFilterBar({
 
   return (
     <div className={cn('flex items-center justify-between gap-3', className)}>
-      <div className="flex items-center gap-2 desktop:gap-3">
+      {/* 드롭다운 간격: 모바일 8px / 태블릿·데스크톱 12px */}
+      <div className={cn('flex items-center gap-2', 'tablet:gap-3')}>
         <Dropdown
           size={dropdownSize}
           columns={2}
@@ -94,10 +95,14 @@ export default function MoverFilterBar({
           }
           className="desktop:w-40"
         />
+        {/* Figma: 두 번째 드롭다운 끝에서 25px (gap 12 + 13), 드롭다운 가운데보다 2px 아래 (mt 4px) */}
         <button
           type="button"
           onClick={onReset}
-          className="ml-3 hidden cursor-pointer text-lg-medium text-gray-300 hover:text-gray-500 desktop:block"
+          className={cn(
+            'mt-1 ml-[13px] hidden cursor-pointer text-lg-medium text-gray-300 hover:text-gray-500',
+            'desktop:block',
+          )}
         >
           초기화
         </button>

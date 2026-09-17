@@ -125,7 +125,10 @@ export default function MoverCard({ mover, variant = 'list' }: MoverCardProps) {
 
   if (variant === 'compact') {
     return (
-      <Link href={href} className={cn(CARD_BASE, 'flex flex-col gap-3')}>
+      <Link
+        href={href}
+        className={cn(CARD_BASE, 'flex flex-col gap-3 p-[20px]')}
+      >
         <div className="flex flex-wrap gap-2">
           {mover.serviceTypes.map((serviceType) => (
             <ServiceTypeChip key={serviceType} serviceType={serviceType} />
@@ -172,7 +175,12 @@ export default function MoverCard({ mover, variant = 'list' }: MoverCardProps) {
         'tablet:grid-cols-[134px_minmax(0,1fr)] tablet:gap-x-5 tablet:rounded-[20px] tablet:px-7 tablet:py-6',
       )}
     >
-      <div className="col-span-2 flex flex-wrap items-center gap-2 tablet:min-h-[34px]">
+      <div
+        className={cn(
+          'col-span-2 flex flex-wrap items-center gap-2',
+          'tablet:min-h-[34px]',
+        )}
+      >
         {mover.serviceTypes.map((serviceType) => (
           <ServiceTypeChip
             key={serviceType}
@@ -182,32 +190,58 @@ export default function MoverCard({ mover, variant = 'list' }: MoverCardProps) {
         ))}
       </div>
 
-      <p className="col-span-2 mt-2 text-lg-semibold text-black-300 tablet:col-span-1 tablet:col-start-2 tablet:row-start-2 tablet:mt-3 tablet:truncate tablet:pt-1 tablet:text-xl-semibold">
+      <p
+        className={cn(
+          'col-span-2 mt-2 text-lg-semibold text-black-300',
+          'tablet:col-span-1 tablet:col-start-2 tablet:row-start-2 tablet:mt-3 tablet:truncate tablet:pt-1 tablet:text-xl-semibold',
+        )}
+      >
         {mover.shortIntro}
       </p>
 
-      <hr className="col-span-2 mt-4 border-line-100 tablet:hidden" />
+      <hr className={cn('col-span-2 mt-4 border-line-100', 'tablet:hidden')} />
 
       <MoverProfileImage
         imgUrl={mover.imgUrl}
         nickname={mover.nickname}
-        className="mt-4 size-[50px] tablet:col-start-1 tablet:row-span-2 tablet:row-start-2 tablet:mt-3 tablet:size-[134px]"
+        className={cn(
+          'mt-4 size-[50px]',
+          'tablet:col-start-1 tablet:row-span-2 tablet:row-start-2 tablet:mt-3 tablet:size-[134px]',
+        )}
         defaultImageClassName="size-[150%] left-[-25%] top-[-14%] tablet:size-[143%] tablet:left-[-21.6%] tablet:top-[-12%]"
       />
 
-      <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-y-1 self-center tablet:col-start-2 tablet:row-start-3 tablet:mt-5 tablet:self-end tablet:pb-1">
+      <div
+        className={cn(
+          'mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-y-1 self-center',
+          'tablet:col-start-2 tablet:row-start-3 tablet:mt-5 tablet:self-end tablet:pb-1',
+        )}
+      >
         <div className="flex min-w-0 items-center gap-1">
           <IcMoverBadge aria-hidden className="h-[23px] w-5 shrink-0" />
-          <p className="truncate text-md-semibold text-black-300 tablet:text-lg-semibold">
+          <p
+            className={cn(
+              'truncate text-md-semibold text-black-300',
+              'tablet:text-lg-semibold',
+            )}
+          >
             {mover.nickname} 기사님
           </p>
         </div>
-        <p className="flex items-center gap-0.5 text-md-regular text-gray-500 tablet:row-span-2 tablet:self-end">
+        <p
+          className={cn(
+            'flex items-center gap-0.5 text-md-regular text-gray-500',
+            'tablet:row-span-2 tablet:self-end',
+          )}
+        >
           <IcLikeActive aria-hidden className="size-6 shrink-0" />
           <span className="sr-only">찜</span>
           {mover.likeCount}
         </p>
-        <MoverStats mover={mover} className="col-span-2 tablet:col-span-1" />
+        <MoverStats
+          mover={mover}
+          className={cn('col-span-2', 'tablet:col-span-1')}
+        />
       </div>
     </Link>
   );

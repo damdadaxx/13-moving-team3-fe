@@ -15,11 +15,14 @@ import MoverList from '@/components/public/MoverList';
 import SearchBar from '@/components/ui/Form/SearchBar';
 
 /*
-@ 레이아웃 (Figma 기사님 찾기/비회원, Mobile First)
-- 모바일: 좌우 24px, 검색 → 필터(위아래 16px) → 목록(12px 아래)
-- 태블릿: 좌우 72px (콘텐츠 600px), 목록은 필터 24px 아래
-- 데스크톱: 1200px 가운데 정렬, 페이지 제목 + [검색·필터·목록 | 찜한 기사님 327px] 2열
-  찜한 기사님은 목록과 같은 줄에서 시작한다 (grid 3번째 행)
+@ 레이아웃 (Figma 기사님 찾기, Mobile First) — 값은 전부 Figma 좌표 기준
+- 모바일: 좌우 24px / 검색 위아래 6px / 필터 위아래 16px / 목록 위 12px / 카드 간격 24px
+- 태블릿: 좌우 72px(콘텐츠 600px) / 검색 위아래 10px / 필터 위아래 16px / 목록 위 24px / 카드 간격 24px
+- 데스크톱: 1200px 가운데 정렬
+  제목 영역 위아래 32px(좌우 8px) / 검색 위 3px / 필터 위 38px / 목록·찜한 기사님 위 37px / 카드 간격 20px
+  [검색·필터·목록 819px | 54px | 찜한 기사님 327px]. 찜한 기사님은 목록과 같은 줄에서 시작 (grid 3번째 행)
+- 하단 여백: Figma 아트보드 마지막 카드 아래 여백 (모바일 46px / 데스크톱 193px).
+  태블릿 아트보드는 카드 4장에 맞춰 잘려 있어(10px) 모바일 값을 따른다
 */
 export default function MoverFindContent() {
   const [keyword, setKeyword] = useState('');
@@ -36,12 +39,17 @@ export default function MoverFindContent() {
   return (
     <div
       className={cn(
-        'mx-auto w-full px-6 pb-10',
+        'mx-auto w-full px-6 pb-[46px]',
         'tablet:px-[72px]',
-        'desktop:max-w-[1248px] desktop:px-6 desktop:pb-20',
+        'desktop:max-w-[1248px] desktop:px-6 desktop:pb-[193px]',
       )}
     >
-      <h1 className="sr-only desktop:not-sr-only desktop:block desktop:px-2 desktop:py-8 desktop:text-2xl-semibold desktop:text-black-500">
+      <h1
+        className={cn(
+          'sr-only',
+          'desktop:not-sr-only desktop:block desktop:px-2 desktop:py-8 desktop:text-2xl-semibold desktop:text-black-500',
+        )}
+      >
         기사님 찾기
       </h1>
 
@@ -51,7 +59,11 @@ export default function MoverFindContent() {
           onChange={(event) => setKeyword(event.target.value)}
           placeholder="텍스트를 입력해 주세요."
           aria-label="기사님 별명 검색"
-          className="mt-1.5 tablet:mt-2.5 desktop:col-start-1 desktop:mt-0"
+          className={cn(
+            'my-1.5',
+            'tablet:my-2.5',
+            'desktop:col-start-1 desktop:mt-[3px] desktop:mb-0',
+          )}
         />
 
         <MoverFilterBar
@@ -62,7 +74,10 @@ export default function MoverFindContent() {
           onServiceTypeChange={setServiceType}
           onSortChange={setSortBy}
           onReset={handleReset}
-          className="py-4 desktop:col-start-1 desktop:mt-[38px] desktop:py-0"
+          className={cn(
+            'py-4',
+            'desktop:col-start-1 desktop:mt-[38px] desktop:py-0',
+          )}
         />
 
         <MoverList
@@ -72,7 +87,11 @@ export default function MoverFindContent() {
             serviceType,
             sortBy,
           }}
-          className="mt-3 tablet:mt-6 desktop:col-start-1 desktop:mt-[37px]"
+          className={cn(
+            'mt-3',
+            'tablet:mt-6',
+            'desktop:col-start-1 desktop:mt-[37px]',
+          )}
         />
 
         <LikedMoverSection className="desktop:col-start-2 desktop:row-start-3 desktop:mt-[37px] desktop:self-start" />

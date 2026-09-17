@@ -1,13 +1,13 @@
 // [메뉴] 예시
-// [페이지] InputBase 상태/사이즈 확인용
+// [페이지] Input 상태/사이즈 확인용
 // 너비를 px로 고정한 것은 Figma 아트보드 값(sm 327 / md 640)과 나란히 비교하기 위함이다.
-// InputBase 자체는 w-full이라 실제 화면에서는 부모가 너비를 결정한다.
+// Input 자체는 w-full이라 실제 화면에서는 부모가 너비를 결정한다.
 
 'use client';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
-import InputBase from '@/components/ui/Form/InputBase';
+import Input from '@/components/ui/Form/Input';
 
 export default function InputExamplePage() {
   const currentBreakpoint = useBreakpointValue(
@@ -21,7 +21,7 @@ export default function InputExamplePage() {
   return (
     <div className="mx-auto flex max-w-[720px] flex-col gap-12 p-[24px]">
       <div>
-        <h1 className="text-xl-bold">InputBase 컴포넌트 예시</h1>
+        <h1 className="text-xl-bold">Input 컴포넌트 예시</h1>
         <p className="mt-2 text-md-regular text-gray-500">
           <code>label</code>을 넘기면 공용 Label을 안에서 그립니다.{' '}
           <code>labelVariant</code>는 Label 스타일만 고르고, Input 박스와는
@@ -52,13 +52,13 @@ export default function InputExamplePage() {
         <section className="flex flex-col gap-3">
           <h3 className="text-lg-semibold">1. sm (54px)</h3>
           <div className="flex w-[327px] max-w-full flex-col gap-4">
-            <InputBase
+            <Input
               size="sm"
               label="이메일"
               required
               placeholder="codeit@email.com"
             />
-            <InputBase
+            <Input
               size="sm"
               label="이메일"
               defaultValue="codeit@email.com"
@@ -70,13 +70,13 @@ export default function InputExamplePage() {
         <section className="flex flex-col gap-3">
           <h3 className="text-lg-semibold">2. md (64px)</h3>
           <div className="flex w-[640px] max-w-full flex-col gap-4">
-            <InputBase
+            <Input
               size="md"
               label="한줄 소개"
               labelVariant="profile"
               defaultValue="안전하고 신속한 이사를 약속드립니다."
             />
-            <InputBase
+            <Input
               size="md"
               label="한줄 소개"
               labelVariant="profile"
@@ -97,13 +97,13 @@ export default function InputExamplePage() {
             로 넘깁니다.
           </p>
           <div className="flex w-[327px] max-w-full flex-col gap-4">
-            <InputBase
+            <Input
               label="이메일"
               required
               placeholder="codeit@email.com"
               size={authSize}
             />
-            <InputBase
+            <Input
               label="비밀번호"
               required
               type="password"
@@ -127,15 +127,11 @@ export default function InputExamplePage() {
         <section className="flex w-[327px] max-w-full flex-col gap-6">
           <div className="flex flex-col gap-3">
             <h3 className="text-lg-semibold">1. auth (기본값)</h3>
-            <InputBase
-              size="sm"
-              label="이메일"
-              placeholder="codeit@email.com"
-            />
+            <Input size="sm" label="이메일" placeholder="codeit@email.com" />
           </div>
           <div className="flex flex-col gap-3">
             <h3 className="text-lg-semibold">2. profile</h3>
-            <InputBase
+            <Input
               size="sm"
               label="이름"
               labelVariant="profile"
@@ -144,7 +140,7 @@ export default function InputExamplePage() {
           </div>
           <div className="flex flex-col gap-3">
             <h3 className="text-lg-semibold">3. modal</h3>
-            <InputBase
+            <Input
               size="sm"
               label="견적가를 입력해 주세요"
               labelVariant="modal"
@@ -168,21 +164,21 @@ export default function InputExamplePage() {
             이름·이메일은 sm 고정, 전화번호는 데스크톱부터 md입니다.
           </p>
           <div className="flex w-[327px] max-w-full flex-col gap-4">
-            <InputBase
+            <Input
               label="이름"
               labelVariant="profile"
               size="sm"
               defaultValue="김코드"
               readOnly
             />
-            <InputBase
+            <Input
               label="이메일"
               labelVariant="profile"
               size="sm"
               defaultValue="codeit@email.com"
               readOnly
             />
-            <InputBase
+            <Input
               label="전화번호"
               labelVariant="profile"
               size={desktopSize}
@@ -198,7 +194,7 @@ export default function InputExamplePage() {
             md입니다.
           </p>
           <div className="flex w-[327px] max-w-full flex-col gap-4">
-            <InputBase
+            <Input
               label="견적가를 입력해 주세요"
               labelVariant="modal"
               size={desktopSize}

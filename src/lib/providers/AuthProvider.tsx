@@ -5,20 +5,14 @@
 
 import { createContext, useMemo } from 'react';
 
-import type {
-  AuthUser,
-  LoginInput,
-  SignupInput,
-  SocialLoginInput,
-  SocialProvider,
-} from '@/types/auth';
+import type { AuthUser, LoginInput, SignupInput } from '@/types/auth';
 import type { Role } from '@/types/role';
 
 import {
   useLoginMutation,
   useLogoutMutation,
   useSignupMutation,
-  useSocialLoginMutation,
+  useSyncSessionMutation,
 } from '@/hooks/queries/auth/mutations';
 import { useMeQuery } from '@/hooks/queries/auth/queries';
 
@@ -30,10 +24,8 @@ export interface AuthContextValue {
   login: (input: LoginInput) => Promise<AuthUser>;
   signup: (input: SignupInput) => Promise<AuthUser>;
   logout: () => Promise<void>;
-  socialLogin: (
-    provider: SocialProvider,
-    input: SocialLoginInput,
-  ) => Promise<AuthUser>;
+  /** 소셜 로그인 리다이렉트 후 쿠키 기준으로 로그인 사용자를 다시 읽는다 */
+  syncSession: () => Promise<AuthUser | null>;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
@@ -47,7 +39,7 @@ export default function AuthProvider({
   const loginMutation = useLoginMutation();
   const signupMutation = useSignupMutation();
   const logoutMutation = useLogoutMutation();
-  const socialLoginMutation = useSocialLoginMutation();
+  const syncSessionMutation = useSyncSessionMutation();
 
   const value = useMemo<AuthContextValue>(
     () => ({
@@ -58,8 +50,7 @@ export default function AuthProvider({
       login: (input) => loginMutation.mutateAsync(input),
       signup: (input) => signupMutation.mutateAsync(input),
       logout: () => logoutMutation.mutateAsync(),
-      socialLogin: (provider, input) =>
-        socialLoginMutation.mutateAsync({ provider, ...input }),
+      syncSession: () => syncSessionMutation.mutateAsync(),
     }),
     [
       user,
@@ -67,7 +58,7 @@ export default function AuthProvider({
       loginMutation,
       signupMutation,
       logoutMutation,
-      socialLoginMutation,
+      syncSessionMutation,
     ],
   );
 

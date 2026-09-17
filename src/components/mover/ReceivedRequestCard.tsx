@@ -35,7 +35,7 @@ export default function ReceivedRequestCard({
 
   return (
     <>
-      <Card className="desktop:w-[588px]">
+      <Card>
         <EstimateRequestSummary
           variant="card"
           serviceType={request.serviceType}

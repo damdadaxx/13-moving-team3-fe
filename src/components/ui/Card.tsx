@@ -14,6 +14,7 @@ export default function Card({ children, className }: CardProps) {
       className={cn(
         'flex w-full flex-col gap-[24px] rounded-[20px] border-[0.5px] border-line-100 bg-gray-50 px-[20px] py-[24px]',
         'shadow-[-2px_-2px_10px_0_rgba(220,220,220,0.2),2px_2px_10px_0_rgba(220,220,220,0.2)]',
+        'tablet:px-[40px] tablet:py-[32px]',
         'desktop:gap-[32px] desktop:px-[40px] desktop:py-[32px]',
         className,
       )}

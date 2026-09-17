@@ -3,6 +3,8 @@ import { useState } from 'react';
 
 import type { ServiceType } from '@/types/serviceType';
 
+import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+
 import Button from '@/components/ui/Button/Button';
 import Label from '@/components/ui/Form/Label';
 import Modal from '@/components/ui/Modal/Modal';
@@ -36,6 +38,7 @@ export default function RejectRequestModal({
   onSuccess,
 }: RejectRequestModalProps) {
   const [rejectReason, setRejectReason] = useState('');
+  const controlSize = useBreakpointValue('sm', 'sm', 'md');
 
   const isValid = rejectReason.length >= MIN_REASON_LENGTH;
 
@@ -54,7 +57,7 @@ export default function RejectRequestModal({
       title="반려요청"
       variant="sheet"
       buttons={
-        <Button size="sm" disabled={!isValid} onClick={handleSubmit}>
+        <Button size={controlSize} disabled={!isValid} onClick={handleSubmit}>
           반려하기
         </Button>
       }

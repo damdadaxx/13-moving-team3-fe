@@ -54,7 +54,7 @@ export default function ReceivedRequestCard({
         <div className="flex w-full flex-col gap-[11px] tablet:flex-row desktop:flex-row">
           <Button
             variant="solid"
-            size="xs"
+            size="sm"
             className="desktop:order-2 desktop:flex-1"
             icon={<IcWriting className="size-[24px]" />}
             onClick={() => setIsModalOpen(true)}
@@ -63,7 +63,7 @@ export default function ReceivedRequestCard({
           </Button>
           <Button
             variant="outlined"
-            size="xs"
+            size="sm"
             className="desktop:order-1 desktop:flex-1"
             onClick={() => setIsRejectModalOpen(true)}
           >

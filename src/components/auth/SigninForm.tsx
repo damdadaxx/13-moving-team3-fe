@@ -31,7 +31,8 @@ export default function SigninForm({ role }: SigninFormProps) {
     formState: { errors, isSubmitting, isValid },
   } = useLoginForm();
   const [submitError, setSubmitError] = useState('');
-  const inputSize = useBreakpointValue('sm', 'md', 'md');
+  // 에러일 때만 커진다 (Figma: 모바일은 54px 유지, 태블릿부터 64px)
+  const errorSize = useBreakpointValue('sm', 'md', 'md');
 
   async function onSubmit(data: LoginFormValues) {
     setSubmitError('');
@@ -61,7 +62,7 @@ export default function SigninForm({ role }: SigninFormProps) {
               type="email"
               autoComplete="email"
               placeholder="이메일을 입력해 주세요"
-              size={inputSize}
+              size={errors.email ? errorSize : 'sm'}
               error={errors.email?.message}
               {...register('email')}
             />
@@ -70,7 +71,7 @@ export default function SigninForm({ role }: SigninFormProps) {
               type="password"
               autoComplete="current-password"
               placeholder="비밀번호를 입력해 주세요"
-              size={inputSize}
+              size={errors.password ? errorSize : 'sm'}
               error={errors.password?.message}
               {...register('password')}
             />

@@ -31,7 +31,8 @@ export default function SignupForm({ role }: SignupFormProps) {
     formState: { errors, isSubmitting, isValid },
   } = useSignupForm();
   const [submitError, setSubmitError] = useState('');
-  const inputSize = useBreakpointValue('sm', 'md', 'md');
+  // 에러일 때만 커진다 (Figma: 모바일은 54px 유지, 태블릿부터 64px)
+  const errorSize = useBreakpointValue('sm', 'md', 'md');
 
   async function onSubmit(data: SignupFormValues) {
     setSubmitError('');
@@ -67,7 +68,7 @@ export default function SignupForm({ role }: SignupFormProps) {
               type="text"
               autoComplete="name"
               placeholder="성함을 입력해 주세요"
-              size={inputSize}
+              size={errors.name ? errorSize : 'sm'}
               error={errors.name?.message}
               {...register('name')}
             />
@@ -76,7 +77,7 @@ export default function SignupForm({ role }: SignupFormProps) {
               type="email"
               autoComplete="email"
               placeholder="이메일을 입력해 주세요"
-              size={inputSize}
+              size={errors.email ? errorSize : 'sm'}
               error={errors.email?.message}
               {...register('email')}
             />
@@ -86,7 +87,7 @@ export default function SignupForm({ role }: SignupFormProps) {
               inputMode="numeric"
               autoComplete="tel"
               placeholder="숫자만 입력해 주세요"
-              size={inputSize}
+              size={errors.phoneNumber ? errorSize : 'sm'}
               error={errors.phoneNumber?.message}
               {...register('phoneNumber')}
             />
@@ -95,7 +96,7 @@ export default function SignupForm({ role }: SignupFormProps) {
               type="password"
               autoComplete="new-password"
               placeholder="비밀번호를 입력해 주세요"
-              size={inputSize}
+              size={errors.password ? errorSize : 'sm'}
               error={errors.password?.message}
               {...register('password')}
             />
@@ -104,7 +105,7 @@ export default function SignupForm({ role }: SignupFormProps) {
               type="password"
               autoComplete="new-password"
               placeholder="비밀번호 다시 한번 입력해 주세요"
-              size={inputSize}
+              size={errors.passwordConfirm ? errorSize : 'sm'}
               error={errors.passwordConfirm?.message}
               {...register('passwordConfirm')}
             />

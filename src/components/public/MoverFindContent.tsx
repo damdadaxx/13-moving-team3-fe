@@ -12,7 +12,7 @@ import { cn } from '@/utils/cn';
 import LikedMoverSection from '@/components/public/LikedMoverSection';
 import MoverFilterBar from '@/components/public/MoverFilterBar';
 import MoverList from '@/components/public/MoverList';
-import SearchBar from '@/components/ui/Form/SearchBar';
+import InputSearchbar from '@/components/ui/Form/InputSearchbar';
 
 /*
 @ 레이아웃 (Figma 기사님 찾기, Mobile First) — 값은 전부 Figma 좌표 기준
@@ -54,7 +54,7 @@ export default function MoverFindContent() {
       </h1>
 
       <div className="desktop:grid desktop:grid-cols-[minmax(0,1fr)_327px] desktop:gap-x-[54px]">
-        <SearchBar
+        <InputSearchbar
           value={keyword}
           onChange={(event) => setKeyword(event.target.value)}
           placeholder="텍스트를 입력해 주세요."

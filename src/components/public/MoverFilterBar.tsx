@@ -9,8 +9,6 @@ import {
   SERVICE_TYPE_LABEL,
 } from '@/lib/constants/mover';
 
-import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
-
 import { cn } from '@/utils/cn';
 
 import Dropdown, { type DropdownOption } from '@/components/ui/Dropdown';
@@ -64,18 +62,11 @@ export default function MoverFilterBar({
   onReset,
   className,
 }: MoverFilterBarProps) {
-  const dropdownSize = useBreakpointValue<'sm' | 'md'>({
-    mobile: 'sm',
-    tablet: 'sm',
-    desktop: 'md',
-  });
-
   return (
     <div className={cn('flex items-center justify-between gap-3', className)}>
       {/* 드롭다운 간격: 모바일 8px / 태블릿·데스크톱 12px */}
       <div className={cn('flex items-center gap-2', 'tablet:gap-3')}>
         <Dropdown
-          size={dropdownSize}
           columns={2}
           options={REGION_OPTIONS}
           value={region}
@@ -86,7 +77,6 @@ export default function MoverFilterBar({
           className="desktop:w-40"
         />
         <Dropdown
-          size={dropdownSize}
           options={SERVICE_OPTIONS}
           value={serviceType}
           placeholder="서비스"
@@ -107,12 +97,7 @@ export default function MoverFilterBar({
           초기화
         </button>
       </div>
-      <Sort
-        size={dropdownSize}
-        options={SORT_OPTIONS}
-        value={sortBy}
-        onChange={onSortChange}
-      />
+      <Sort options={SORT_OPTIONS} value={sortBy} onChange={onSortChange} />
     </div>
   );
 }

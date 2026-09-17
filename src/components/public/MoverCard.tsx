@@ -10,9 +10,11 @@ import IcMoverBadge from '@/assets/icons/ic_mover_badge.svg';
 import IcStarActive from '@/assets/icons/ic_star_active.svg';
 import ImgProfileDefault from '@/assets/images/img_profile_default.png';
 
+import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+
 import { cn } from '@/utils/cn';
 
-import ServiceTypeChip from '@/components/ui/ServiceTypeChip';
+import ServiceTypeTag from '@/components/ui/Tag/ServiceTypeTag';
 
 /*
 @ variant
@@ -122,6 +124,8 @@ function MoverStats({
 
 export default function MoverCard({ mover, variant = 'list' }: MoverCardProps) {
   const href = `/mover/${mover.id}`;
+  // 기사님 찾기 카드 태그: 26 / 32 / 32 (ServiceTypeTag 주석의 페이지별 조합)
+  const tagSize = useBreakpointValue<'sm' | 'md'>('sm', 'md', 'md');
 
   if (variant === 'compact') {
     return (
@@ -131,7 +135,12 @@ export default function MoverCard({ mover, variant = 'list' }: MoverCardProps) {
       >
         <div className="flex flex-wrap gap-2">
           {mover.serviceTypes.map((serviceType) => (
-            <ServiceTypeChip key={serviceType} serviceType={serviceType} />
+            <ServiceTypeTag
+              key={serviceType}
+              variant="service"
+              serviceType={serviceType}
+              size="sm"
+            />
           ))}
         </div>
         <div className="flex flex-col gap-4">
@@ -182,10 +191,11 @@ export default function MoverCard({ mover, variant = 'list' }: MoverCardProps) {
         )}
       >
         {mover.serviceTypes.map((serviceType) => (
-          <ServiceTypeChip
+          <ServiceTypeTag
             key={serviceType}
+            variant="service"
             serviceType={serviceType}
-            size="responsive"
+            size={tagSize}
           />
         ))}
       </div>

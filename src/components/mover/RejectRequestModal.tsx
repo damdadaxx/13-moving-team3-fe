@@ -1,7 +1,4 @@
 'use client';
-
-// [게시용] 이번 브랜치는 퍼블리싱까지만 진행한다. API 연동 없이 UI 상태만 다룬다.
-// SendEstimateModal 참고해서 구현. Figma: 반려요청 (node 1:11274)
 import { useState } from 'react';
 
 import type { ServiceType } from '@/types/serviceType';

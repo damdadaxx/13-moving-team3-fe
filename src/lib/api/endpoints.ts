@@ -18,6 +18,13 @@ export const ENDPOINTS = {
     social: (provider: SocialProvider) => api(`/auth/social/${provider}`), // [POST] 비로그인 (프론트 릴레이)
   },
 
+  // --- Address(주소 검색) ---
+  // 백엔드가 아니라 Next Route Handler(app/api/address-search)다.
+  // 카카오 REST 키를 서버에 두려고 프론트에서 직접 받는다
+  address: {
+    search: api('/address-search'), // [GET] 비로그인 - 카카오 로컬 주소 검색
+  },
+
   // --- Mover(기사) ---
   mover: {
     profile: api('/mover/profile'), // [POST/GET/PATCH] 로그인
@@ -32,7 +39,8 @@ export const ENDPOINTS = {
 
   // --- Estimate(견적) ---
   estimate: {
-    request: api('/estimate-request'), // [POST] 로그인 - 견적 요청
+    request: api('/estimate-requests'), // [POST] 로그인 - 견적 요청
+    activeRequest: api('/estimate-requests/active'), // [GET] 로그인 - 진행 중인 견적 요청(없으면 null)
     estimates: (estimateRequestId: number | string) =>
       api(`/estimate-requests/${estimateRequestId}/estimates`), // [POST/GET] 로그인 - 지정 견적목록
     list: api('/estimates'), // [GET] 로그인 - 내 견적 목록

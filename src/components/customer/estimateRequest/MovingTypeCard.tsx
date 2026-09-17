@@ -37,8 +37,10 @@ export default function MovingTypeCard({
       onClick={onSelect}
       aria-pressed={selected}
       className={cn(
-        'flex cursor-pointer items-start justify-end gap-[8px] rounded-[16px] border-2 px-[16px] py-[20px] text-left transition',
-        'tablet:flex-1 tablet:flex-col tablet:items-end tablet:gap-[16px] tablet:pb-[16px]',
+        /* 높이는 시안 고정값이다. 테두리를 항상 2px 두기 때문에
+           내용에 맡기면 선택 여부와 무관하게 시안보다 4px 커진다 */
+        'flex h-[160px] cursor-pointer items-start justify-end gap-[8px] rounded-[16px] border-2 px-[16px] py-[20px] text-left transition',
+        'tablet:h-[222px] tablet:flex-1 tablet:flex-col tablet:items-end tablet:gap-[16px] tablet:pb-[16px]',
         selected
           ? 'border-orange-400 bg-orange-100'
           : 'border-transparent bg-background-200',

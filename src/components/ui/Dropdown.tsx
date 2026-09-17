@@ -136,8 +136,12 @@ const listboxVariants = cva(LISTBOX_BASE_CLASS, {
 });
 
 const optionVariants = cva(
-  // 디자인에 focus 상태가 없어 hover와 같은 배경으로 키보드 위치를 표시한다
-  'flex w-full cursor-pointer items-center whitespace-nowrap text-left text-black-400 hover:bg-background-200 focus:bg-background-200',
+  /*
+  디자인에 focus 상태가 없어 배경으로 위치를 표시한다
+  - 키보드 이동 중인 항목은 hover보다 한 단계 진한 background-300
+  - 기본 포커스 테두리는 지운다 (배경만으로 위치가 보인다)
+  */
+  'flex w-full cursor-pointer items-center whitespace-nowrap text-left text-black-400 outline-none hover:bg-background-200 focus:bg-background-300',
   {
     variants: {
       columns: {

@@ -5,17 +5,22 @@
 import { useMemo, useState } from 'react';
 
 import type { ServiceType } from '@/types/serviceType';
+import Image from 'next/image';
 
 import IcFilter from '@/assets/icons/ic_filter.svg';
+import ImgEmptyBeaver from '@/assets/images/img_empty_beaver.png';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import useInfiniteScroll from '@/hooks/common/useInfiniteScroll';
+
+import { cn } from '@/utils/cn';
 
 import ReceivedRequestCard from '@/components/mover/ReceivedRequestCard';
 import Button from '@/components/ui/Button/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import ServiceTypeSelector from '@/components/ui/Chip/ServiceTypeSelector';
 import InputSearchbar from '@/components/ui/Form/InputSearchbar';
+import Label from '@/components/ui/Form/Label';
 import Modal from '@/components/ui/Modal/Modal';
 import Sort, { type SortOption } from '@/components/ui/Sort';
 
@@ -106,52 +111,176 @@ export default function MoverEstimateRequestPage() {
   });
 
   return (
-    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-[40px] px-[24px] py-[32px] tablet:px-[40px] desktop:px-0">
-      <div className="flex flex-col gap-[24px]">
-        {/* 퍼블리싱만: 검색 기능은 아직 연결하지 않는다 */}
-        <InputSearchbar placeholder="어떤 고객님을 찾고 계세요?" />
+    <div
+      className={cn(
+        'mx-auto flex w-full flex-col gap-[40px] px-[30px] py-[12px_74px] bg-gray-50',
+        'tablet:px-[72px]',
+      )}
+    >
+      <div
+        className={cn(
+          'flex flex-col',
+          'desktop:mx-auto desktop:w-full desktop:max-w-[1200px]',
+        )}
+      >
+        {/* 검색바 */}
+        <div className="flex flex-col gap-[24px] max-w-[1200px]">
+          {/* 퍼블리싱만: 검색 기능은 아직 연결하지 않는다 */}
+          <InputSearchbar placeholder="어떤 고객님을 찾고 계세요?" />
 
-        <ServiceTypeSelector
-          selectedServiceTypes={selectedServiceTypes}
-          onChange={handleServiceTypesChange}
-          size={filterChipSize}
-        />
-      </div>
-
-      <div className="flex flex-col gap-[16px] desktop:gap-[24px]">
-        {/* mobile·tablet: 카운트 + 정렬 + 필터 아이콘이 한 줄 */}
-        <div className="flex items-center justify-between desktop:hidden">
-          <p className="flex items-center gap-1 text-black-400">
-            <span className="text-sm-medium">전체</span>
-            <span className="text-sm-semibold">
-              {filteredRequests.length}건
-            </span>
-          </p>
-          <div className="flex items-center gap-1">
-            <Sort
-              options={SORT_OPTIONS}
-              value={sortValue}
-              onChange={setSortValue}
-            />
-            <button
-              type="button"
-              onClick={() => setIsFilterSheetOpen(true)}
-              aria-label="필터"
-              className="flex shrink-0 items-center justify-center rounded-lg border border-gray-500 bg-gray-50 p-1 shadow-[4px_4px_5px_rgba(238,238,238,0.1)]"
-            >
-              <IcFilter className="size-6" />
-            </button>
-          </div>
+          <ServiceTypeSelector
+            selectedServiceTypes={selectedServiceTypes}
+            onChange={handleServiceTypesChange}
+            size={filterChipSize}
+            className={cn('hidden desktop:flex')}
+          />
         </div>
 
-        {/* desktop: 카운트 별도 줄, 체크박스 + 정렬이 같은 줄 */}
-        <div className="hidden desktop:flex desktop:flex-col desktop:gap-[24px]">
-          <p className="flex items-center gap-[4px] text-2lg-semibold text-black-400">
-            전체 {filteredRequests.length}건
-          </p>
+        <div
+          className={cn(
+            'flex flex-col gap-[16px] mt-[16px]',
+            'tablet:mt-[24px] tablet:gap-[20px]',
+            'desktop:gap-[24px] desktop:mt-[40px]',
+          )}
+        >
+          {/* mobile·tablet: 카운트 + 정렬 + 필터 아이콘이 한 줄 */}
+          <div
+            className={cn(
+              'flex items-center justify-between',
+              'desktop:hidden',
+            )}
+          >
+            <p className="flex items-center gap-1 text-black-400">
+              <span className="text-sm-medium">전체</span>
+              <span className="text-sm-semibold">
+                {filteredRequests.length}건
+              </span>
+            </p>
+            <div className="flex items-center gap-1">
+              <Sort
+                options={SORT_OPTIONS}
+                value={sortValue}
+                onChange={setSortValue}
+              />
+              <button
+                type="button"
+                onClick={() => setIsFilterSheetOpen(true)}
+                aria-label="필터"
+                className={cn('cursor-pointer')}
+              >
+                <IcFilter className="size-[32px]" />
+              </button>
+            </div>
+          </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex flex-wrap items-center gap-[12px]">
+          {/* desktop: 카운트 별도 줄, 체크박스 + 정렬이 같은 줄 */}
+          <div className="hidden desktop:flex desktop:flex-col desktop:gap-[24px]">
+            <p className="flex items-center gap-[4px] text-2lg-semibold text-black-400">
+              전체 {filteredRequests.length}건
+            </p>
+
+            <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-center gap-[12px]">
+                <Checkbox
+                  checked={designatedOnly}
+                  onChange={(checked) => {
+                    setDesignatedOnly(checked);
+                    setVisibleCount(PAGE_SIZE);
+                  }}
+                  label="지정 견적 요청"
+                />
+                <Checkbox
+                  checked={regionAvailableOnly}
+                  onChange={(checked) => {
+                    setRegionAvailableOnly(checked);
+                    setVisibleCount(PAGE_SIZE);
+                  }}
+                  label="서비스 가능 지역"
+                />
+              </div>
+
+              <Sort
+                options={SORT_OPTIONS}
+                value={sortValue}
+                onChange={setSortValue}
+              />
+            </div>
+          </div>
+
+          {visibleRequests.length > 0 && (
+            <div className="grid grid-cols-1 gap-[24px] desktop:grid-cols-2">
+              {visibleRequests.map((request) => (
+                <ReceivedRequestCard
+                  key={request.id}
+                  request={request}
+                  onRejectSuccess={removeRequest}
+                  onSendSuccess={removeRequest}
+                />
+              ))}
+            </div>
+          )}
+
+          {requests.length === 0 ? (
+            <div
+              className={cn(
+                'flex flex-col items-center pt-[80px]',
+                'desktop:gap-[32px] desktop:pt-[180px]',
+              )}
+            >
+              <Image
+                src={ImgEmptyBeaver}
+                alt=""
+                width={240}
+                height={240}
+                className="size-[240px] object-contain"
+                aria-hidden
+                loading="eager"
+                priority
+              />
+              <p className="text-lg-regular text-gray-400 desktop:text-xl-regular">
+                아직 받은 요청이 없어요!
+              </p>
+            </div>
+          ) : (
+            visibleRequests.length === 0 && (
+              <p className="py-[40px] text-center text-lg-regular text-gray-400">
+                조건에 맞는 요청이 없어요.
+              </p>
+            )
+          )}
+
+          {hasMore && <div ref={sentinelRef} className="h-[1px] w-full" />}
+        </div>
+
+        <Modal
+          isOpen={isFilterSheetOpen}
+          onClose={() => setIsFilterSheetOpen(false)}
+          title="필터"
+          variant="sheet"
+          buttons={
+            <Button size="sm" onClick={() => setIsFilterSheetOpen(false)}>
+              확인
+            </Button>
+          }
+          className={cn('py-[24px_32px] px-[24px]')}
+        >
+          <div>
+            <Label variant="modal" className={cn('mb-[8px]')}>
+              이사 유형
+            </Label>
+            <ServiceTypeSelector
+              selectedServiceTypes={selectedServiceTypes}
+              onChange={handleServiceTypesChange}
+              size="sm"
+              className={cn('mb-[28px]')}
+            />
+          </div>
+
+          <div>
+            <Label variant="modal" className={cn('mb-[8px]')}>
+              지역 및 견적
+            </Label>
+            <div className="flex flex-col gap-[12px]">
               <Checkbox
                 checked={designatedOnly}
                 onChange={(checked) => {
@@ -169,65 +298,9 @@ export default function MoverEstimateRequestPage() {
                 label="서비스 가능 지역"
               />
             </div>
-
-            <Sort
-              options={SORT_OPTIONS}
-              value={sortValue}
-              onChange={setSortValue}
-            />
           </div>
-        </div>
-
-        <div className="grid grid-cols-1 gap-[24px] desktop:grid-cols-2">
-          {visibleRequests.map((request) => (
-            <ReceivedRequestCard
-              key={request.id}
-              request={request}
-              onRejectSuccess={removeRequest}
-              onSendSuccess={removeRequest}
-            />
-          ))}
-        </div>
-
-        {visibleRequests.length === 0 && (
-          <p className="py-[40px] text-center text-lg-regular text-gray-400">
-            조건에 맞는 요청이 없어요.
-          </p>
-        )}
-
-        {hasMore && <div ref={sentinelRef} className="h-[1px] w-full" />}
+        </Modal>
       </div>
-
-      <Modal
-        isOpen={isFilterSheetOpen}
-        onClose={() => setIsFilterSheetOpen(false)}
-        title="필터"
-        variant="sheet"
-        buttons={
-          <Button size="sm" onClick={() => setIsFilterSheetOpen(false)}>
-            확인
-          </Button>
-        }
-      >
-        <div className="flex flex-col gap-[16px]">
-          <Checkbox
-            checked={designatedOnly}
-            onChange={(checked) => {
-              setDesignatedOnly(checked);
-              setVisibleCount(PAGE_SIZE);
-            }}
-            label="지정 견적 요청"
-          />
-          <Checkbox
-            checked={regionAvailableOnly}
-            onChange={(checked) => {
-              setRegionAvailableOnly(checked);
-              setVisibleCount(PAGE_SIZE);
-            }}
-            label="서비스 가능 지역"
-          />
-        </div>
-      </Modal>
     </div>
   );
 }

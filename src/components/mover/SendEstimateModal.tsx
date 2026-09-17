@@ -90,7 +90,6 @@ export default function SendEstimateModal({
           label="견적가를 입력해 주세요"
           labelVariant="modal"
           size={controlSize}
-          type="password"
           inputMode="numeric"
           value={price}
           onChange={handlePriceChange}

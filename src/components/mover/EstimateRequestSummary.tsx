@@ -69,7 +69,7 @@ export default function EstimateRequestSummary({
     : 'text-md-medium text-black-500 desktop:text-lg-medium';
 
   return (
-    <div className="flex flex-col gap-[16px] desktop:gap-[20px]">
+    <div className="flex flex-col gap-[16px] desktop:gap-[24px]">
       {isCard ? (
         <div className="flex min-h-[34px] items-center justify-between">
           {chips}

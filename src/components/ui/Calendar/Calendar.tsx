@@ -184,11 +184,11 @@ export default function Calendar({
       />
 
       {/* Figma상 Button/solid/CTA 인스턴스. 달력은 고정 폭 팝업이라 브레이크포인트로
-          크기가 변하지 않는 xs(54px)를 쓴다 */}
+          크기가 변하지 않는 sm(54px)을 쓴다 */}
       {shouldShowConfirm && (
         <Button
           variant="solid"
-          size="xs"
+          size="sm"
           disabled={!selected}
           onClick={() => selected && onConfirm?.(selected)}
           className="w-[279px] max-w-full"

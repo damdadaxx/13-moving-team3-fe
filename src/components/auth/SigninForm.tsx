@@ -11,6 +11,7 @@ import type { LoginFormValues } from '@/lib/validations/authValidation';
 
 import { useAuth } from '@/hooks/auth/useAuth';
 import { useLoginForm } from '@/hooks/auth/useLoginForm';
+import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
 import InputBase from '@/components/ui/Form/InputBase';
 
@@ -32,6 +33,7 @@ export default function SigninForm({ role }: SigninFormProps) {
     formState: { errors, isSubmitting },
   } = useLoginForm();
   const [submitError, setSubmitError] = useState('');
+  const inputSize = useBreakpointValue('sm', 'md', 'md');
 
   async function onSubmit(data: LoginFormValues) {
     setSubmitError('');
@@ -55,6 +57,7 @@ export default function SigninForm({ role }: SigninFormProps) {
           label="이메일"
           type="email"
           autoComplete="email"
+          size={inputSize}
           error={errors.email?.message}
           {...register('email')}
         />
@@ -62,6 +65,7 @@ export default function SigninForm({ role }: SigninFormProps) {
           label="비밀번호"
           type="password"
           autoComplete="current-password"
+          size={inputSize}
           error={errors.password?.message}
           {...register('password')}
         />

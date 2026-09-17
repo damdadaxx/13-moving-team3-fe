@@ -11,6 +11,7 @@ import type { SignupFormValues } from '@/lib/validations/authValidation';
 
 import { useAuth } from '@/hooks/auth/useAuth';
 import { useSignupForm } from '@/hooks/auth/useSignupForm';
+import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
 import InputBase from '@/components/ui/Form/InputBase';
 
@@ -32,6 +33,7 @@ export default function SignupForm({ role }: SignupFormProps) {
     formState: { errors, isSubmitting },
   } = useSignupForm();
   const [submitError, setSubmitError] = useState('');
+  const inputSize = useBreakpointValue('sm', 'md', 'md');
 
   async function onSubmit(data: SignupFormValues) {
     setSubmitError('');
@@ -61,6 +63,7 @@ export default function SignupForm({ role }: SignupFormProps) {
           label="이름"
           type="text"
           autoComplete="name"
+          size={inputSize}
           error={errors.name?.message}
           {...register('name')}
         />
@@ -68,6 +71,7 @@ export default function SignupForm({ role }: SignupFormProps) {
           label="이메일"
           type="email"
           autoComplete="email"
+          size={inputSize}
           error={errors.email?.message}
           {...register('email')}
         />
@@ -76,6 +80,7 @@ export default function SignupForm({ role }: SignupFormProps) {
           type="tel"
           autoComplete="tel"
           placeholder="01012345678"
+          size={inputSize}
           error={errors.phoneNumber?.message}
           {...register('phoneNumber')}
         />
@@ -83,6 +88,7 @@ export default function SignupForm({ role }: SignupFormProps) {
           label="비밀번호"
           type="password"
           autoComplete="new-password"
+          size={inputSize}
           error={errors.password?.message}
           {...register('password')}
         />
@@ -90,6 +96,7 @@ export default function SignupForm({ role }: SignupFormProps) {
           label="비밀번호 확인"
           type="password"
           autoComplete="new-password"
+          size={inputSize}
           error={errors.passwordConfirm?.message}
           {...register('passwordConfirm')}
         />

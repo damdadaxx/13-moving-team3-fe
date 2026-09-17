@@ -112,9 +112,9 @@ export type ServiceTypeTagProps =
 - 아이콘은 옆의 라벨과 같은 의미이므로 스크린 리더에서 숨깁니다.
 
 @ 페이지별 크기 조합 (height · sm: 26px, md: 32px)
-- 26 / 32 / 32: { mobile: 'sm', tablet: 'md', desktop: 'md' }
+- 26 / 32 / 32: useBreakpointValue('sm', 'md', 'md')
   사용처: 내 견적 관리의 받았던 견적, 받았던 견적 상세, 기사님 찾기
-- 26 / 26 / 32: { mobile: 'sm', tablet: 'sm', desktop: 'md' }
+- 26 / 26 / 32: useBreakpointValue('sm', 'sm', 'md')
   사용처: 작성 가능한 리뷰, 리뷰 쓰기 모달
 - 26 / 26 / 26: size="sm"
   사용처: 내가 작성한 리뷰
@@ -122,16 +122,10 @@ export type ServiceTypeTagProps =
   사용처: 내 견적 관리의 확정 견적 상세
 
 @ 최소 사용 예시
-const size = useBreakpointValue({
-  mobile: 'sm',
-  tablet: 'md',
-  desktop: 'md',
-});
-
 <ServiceTypeTag
   variant="service"
   serviceType="SMALL_MOVE"
-  size={size}
+  size={useBreakpointValue('sm', 'md', 'md')}
 />
 <ServiceTypeTag variant="designatedEstimate" size="md" />
 */

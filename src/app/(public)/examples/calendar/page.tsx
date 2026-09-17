@@ -23,12 +23,20 @@ export default function CalendarExamplePage() {
       <div>
         <h1 className="text-xl-bold">Calendar · DateDropdown 예시</h1>
         <p className="mt-2 text-md-regular text-gray-500">
-          Figma <code>Date picker</code>를 옮긴 컴포넌트입니다. 날짜 선택 로직은
-          프로젝트에 이미 설치돼 있는 <code>react-calendar</code>를 쓰고,
-          스타일만 Tailwind로 입혔습니다. 트리거 + 팝업 형태가 필요하면{' '}
+          Figma <code>Date picker</code>를 옮긴 컴포넌트입니다.{' '}
+          <span className="font-bold text-orange-400">
+            Calendar의 size는 브레이크포인트가 아닙니다.
+          </span>{' '}
+          <code>sm</code>은 팝업 카드, <code>md</code>는 모바일 인라인
+          레이아웃입니다. <code>DateDropdown</code>은 size가 없고, 안쪽 달력은{' '}
+          <code>sm</code>입니다. <code>useBreakpointValue</code>로 size를 바꾸지
+          않습니다.
+        </p>
+        <p className="mt-2 text-md-regular text-gray-500">
+          날짜 선택 로직은 <code>react-calendar</code>를 쓰고, 스타일만
+          Tailwind로 입혔습니다. 트리거 + 팝업이 필요하면{' '}
           <code>DateDropdown</code>을, 달력만 필요하면 <code>Calendar</code>를
-          씁니다. <code>Calendar</code>는 팝업용 <code>sm</code>과 모바일
-          인라인용 <code>md</code> 두 사이즈가 있습니다.
+          씁니다.
         </p>
       </div>
 

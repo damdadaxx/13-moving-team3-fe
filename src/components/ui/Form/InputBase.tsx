@@ -14,6 +14,8 @@ import { cn } from '@/utils/cn';
 
 import Label, { type LabelVariant } from '@/components/ui/Form/Label';
 
+export type InputBaseSize = 'sm' | 'md';
+
 /*
 @ 상태별 스타일 (Figma state 변형)
 - default: line-200 테두리, gray-50 배경
@@ -21,31 +23,14 @@ import Label, { type LabelVariant } from '@/components/ui/Form/Label';
 - typing: focus-within 시 orange-400 테두리 + 주황 그림자. hover여도 테두리는 주황 유지
 - done: 값이 입력된 상태 — 테두리는 default와 같고 텍스트 색만 달라 별도 분기 불필요
 - error: red-200 테두리 + 하단 메시지. hover 시 배경은 gray-50, 테두리는 red-200 유지
-
-@ size=sm은 화면이 커지면 Figma size=md 모양(18px 텍스트, 오른쪽 24px, 16px 에러)으로 바뀐다
-- 바뀌는 시점이 페이지마다 달라서 labelVariant로 분기한다
-- auth(회원가입): tablet부터 / modal(받은 요청 모달), profile(기사님 기본정보 수정): desktop부터
-
-@ profile은 desktop에서 수정 가능 여부로 높이를 나눈다 (Figma 기본정보 수정_기사님)
-- 수정 가능한 칸: 64px / readOnly·disabled 칸(이름, 이메일): 54px
-- 입력값이 아니라 readOnly·disabled로만 분기하므로 입력 중에 높이가 바뀌지 않는다
 */
 const inputBoxVariants = cva(
-  'flex items-center gap-2 rounded-2xl border bg-gray-50 px-3.5 transition-colors hover:bg-gray-50 hover:border-gray-100',
+  'flex items-center gap-2 rounded-2xl border bg-gray-50 transition-colors hover:bg-gray-50 hover:border-gray-100',
   {
     variants: {
       size: {
-        sm: 'h-[54px]',
-        md: 'h-[54px] pr-[24px] desktop:h-[64px]',
-      },
-      labelVariant: {
-        auth: '',
-        profile: '',
-        modal: '',
-      },
-      isEditable: {
-        true: '',
-        false: '',
+        sm: 'h-[54px] px-3.5',
+        md: 'h-[64px] pl-3.5 pr-[24px]',
       },
       hasError: {
         true: 'border-red-200 hover:border-red-200',
@@ -57,28 +42,8 @@ const inputBoxVariants = cva(
         ],
       },
     },
-    compoundVariants: [
-      {
-        size: 'sm',
-        labelVariant: 'auth',
-        className: 'tablet:pr-[24px]',
-      },
-      {
-        size: 'sm',
-        labelVariant: 'profile',
-        isEditable: true,
-        className: 'desktop:h-[64px]',
-      },
-      {
-        size: 'sm',
-        labelVariant: ['profile', 'modal'],
-        className: 'desktop:pr-[24px]',
-      },
-    ],
     defaultVariants: {
       size: 'sm',
-      labelVariant: 'auth',
-      isEditable: true,
       hasError: false,
     },
   },
@@ -92,27 +57,9 @@ const inputFieldVariants = cva(
         sm: 'text-lg-regular',
         md: 'text-2lg-regular',
       },
-      labelVariant: {
-        auth: '',
-        profile: '',
-        modal: '',
-      },
     },
-    compoundVariants: [
-      {
-        size: 'sm',
-        labelVariant: 'auth',
-        className: 'tablet:text-2lg-regular',
-      },
-      {
-        size: 'sm',
-        labelVariant: ['profile', 'modal'],
-        className: 'desktop:text-2lg-regular',
-      },
-    ],
     defaultVariants: {
       size: 'sm',
-      labelVariant: 'auth',
     },
   },
 );
@@ -123,50 +70,43 @@ const inputErrorVariants = cva('text-red-200', {
       sm: 'mt-1 text-sm-medium',
       md: 'mt-2 text-lg-medium',
     },
-    labelVariant: {
-      auth: '',
-      profile: '',
-      modal: '',
-    },
   },
-  compoundVariants: [
-    {
-      size: 'sm',
-      labelVariant: 'auth',
-      className: 'tablet:mt-2 tablet:text-lg-medium',
-    },
-    {
-      size: 'sm',
-      labelVariant: ['profile', 'modal'],
-      className: 'desktop:mt-2 desktop:text-lg-medium',
-    },
-  ],
   defaultVariants: {
     size: 'sm',
-    labelVariant: 'auth',
   },
 });
 
 /*
 @ size는 native input의 size 속성(number)과 충돌하므로 Omit 후 재정의한다
-- sm: 로그인/회원가입, 받은 요청 모달, 기사님 기본 정보 수정 — 높이 54px
-- md: 프로필 등록/수정 — 18px/26px 텍스트, 높이 54px → desktop 64px
-@ labelVariant: 사용 페이지에 맞춰 Label 타이포/간격과 input이 커지는 시점을 고른다 (auth | profile | modal)
-@ required: native required를 넘기면 브라우저 기본 검증 팝업이 떠서 zod 검증과 겹친다.
-  Label의 * 표시 + aria-required로만 쓰고 실제 검증은 폼 스키마에서 처리한다
+- sm: 높이 54px, 16px 글자
+- md: 높이 64px, 18px 글자, 오른쪽 padding 24px
+- 반응형은 컴포넌트가 처리하지 않는다. 사용처에서 useBreakpointValue로 size를 넘긴다
+- label을 넘기면 공용 Label을 안에서 그린다. labelVariant는 Label 스타일만 고른다
+- required는 Label의 *와 aria-required만 적용한다. 검증은 폼 스키마에서 처리한다
+
+@ 최소 사용 예시
+<InputBase
+  label="이메일"
+  labelVariant="auth"
+  size={useBreakpointValue('sm', 'md', 'md')}
+/>
+<InputBase
+  label="이름"
+  labelVariant="profile"
+  size="sm"
+  readOnly
+/>
 */
 interface InputBaseProps
   extends
     Omit<React.ComponentProps<'input'>, 'size'>,
-    Omit<
-      VariantProps<typeof inputBoxVariants>,
-      'hasError' | 'labelVariant' | 'isEditable'
-    > {
+    Omit<VariantProps<typeof inputBoxVariants>, 'hasError'> {
   label?: string;
   labelVariant?: LabelVariant;
   error?: string;
 }
 
+// TODO: 나중에 네이밍 Input으로 수정 논의해보기 (확장성이 없으므로 Base보다는 Input이 더 적합할 수 있음)
 export default function InputBase({
   label,
   labelVariant = 'auth',
@@ -181,7 +121,6 @@ export default function InputBase({
   const generatedId = useId();
   const inputId = id ?? generatedId;
   const hasError = Boolean(error);
-  const isEditable = !props.readOnly && !props.disabled;
 
   // password 타입일 때만 눈 아이콘을 노출하고, 토글에 따라 실제 type을 바꾼다
   const isPassword = type === 'password';
@@ -196,21 +135,14 @@ export default function InputBase({
         </Label>
       )}
 
-      <div
-        className={inputBoxVariants({
-          size,
-          labelVariant,
-          isEditable,
-          hasError,
-        })}
-      >
+      <div className={cn(inputBoxVariants({ size, hasError }))}>
         <input
           id={inputId}
           type={isPassword && isPasswordVisible ? 'text' : type}
           aria-invalid={hasError}
           aria-required={required}
           aria-errormessage={hasError ? `${inputId}-error` : undefined}
-          className={cn(inputFieldVariants({ size, labelVariant }), className)}
+          className={cn(inputFieldVariants({ size }), className)}
           {...props}
         />
 
@@ -228,10 +160,7 @@ export default function InputBase({
       </div>
 
       {error && (
-        <p
-          id={`${inputId}-error`}
-          className={inputErrorVariants({ size, labelVariant })}
-        >
+        <p id={`${inputId}-error`} className={inputErrorVariants({ size })}>
           {error}
         </p>
       )}

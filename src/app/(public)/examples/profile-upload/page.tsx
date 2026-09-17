@@ -48,9 +48,13 @@ export default function ProfileUploadExamplePage() {
       <header>
         <h1 className="text-2xl-bold text-black-300">ProfileUpload</h1>
         <p className="mt-[8px] text-md-regular text-gray-500">
-          파일 선택, 미리보기, 서버 이미지 표시와 React Hook Form 연동을
-          확인하는 페이지입니다. 화면 너비 744px부터 업로드 영역이 100px에서
-          160px로 변경됩니다.
+          <code>size</code> prop이 없습니다.{' '}
+          <span className="font-bold text-orange-400">
+            반응형은 컴포넌트가 처리합니다.
+          </span>{' '}
+          업로드 영역은 모바일 100px, 태블릿부터 160px입니다.{' '}
+          <code>useBreakpointValue</code>는 넘기지 않습니다.{' '}
+          <code>labelVariant</code>는 공용 Label 스타일만 고릅니다.
         </p>
       </header>
 
@@ -91,7 +95,7 @@ export default function ProfileUploadExamplePage() {
             <Button
               type="submit"
               variant="solid"
-              size="xs"
+              size="sm"
               className="w-[140px]"
             >
               선택 확인
@@ -99,7 +103,7 @@ export default function ProfileUploadExamplePage() {
             <Button
               type="button"
               variant="outlined"
-              size="xs"
+              size="sm"
               onClick={handleProfileReset}
               className="w-[140px]"
             >

@@ -171,7 +171,7 @@ export default function Dropdown<T extends string>({
   const [activeIndex, setActiveIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const optionRefs = useRef<(HTMLLIElement | null)[]>([]);
   const listboxRef = useRef<HTMLUListElement>(null);
   const scrollThumbRef = useRef<HTMLDivElement>(null);
 
@@ -265,6 +265,14 @@ export default function Dropdown<T extends string>({
         setActiveIndex(event.key === 'Home' ? 0 : options.length - 1);
         return;
       }
+      case 'Enter':
+      case ' ': {
+        // li 는 button 이 아니라서 선택 키를 직접 처리한다
+        if (!isOpen || activeIndex < 0) return;
+        event.preventDefault();
+        handleSelect(options[activeIndex].value);
+        return;
+      }
       case 'Escape': {
         if (!isOpen) return;
         event.preventDefault();
@@ -345,25 +353,28 @@ export default function Dropdown<T extends string>({
             className={listboxVariants({ columns })}
           >
             {options.map((option, index) => (
-              <li key={option.value} role="none">
-                <button
-                  ref={(node) => {
-                    optionRefs.current[index] = node;
-                  }}
-                  id={`${listboxId}-option-${index}`}
-                  type="button"
-                  role="option"
-                  // roving focus: 포커스는 키보드 이동으로만 옮기고 Tab 순서에서는 뺀다
-                  tabIndex={-1}
-                  aria-selected={option.value === value}
-                  onClick={() => handleSelect(option.value)}
-                  className={optionVariants({
-                    columns,
-                    hasColumnDivider: columns === 2 && index % 2 === 0,
-                  })}
-                >
-                  {option.label}
-                </button>
+              /*
+              li 가 직접 option 역할을 맡는다. button 에 role="option" 을 덮으면
+              버튼 역할과 겹쳐 Enter/Space 기본 동작이 보장되지 않는다.
+              선택 키(Enter/Space)는 handleKeyDown 에서 처리한다.
+              */
+              <li
+                key={option.value}
+                ref={(node) => {
+                  optionRefs.current[index] = node;
+                }}
+                id={`${listboxId}-option-${index}`}
+                role="option"
+                // roving focus: 포커스는 키보드 이동으로만 옮기고 Tab 순서에서는 뺀다
+                tabIndex={-1}
+                aria-selected={option.value === value}
+                onClick={() => handleSelect(option.value)}
+                className={optionVariants({
+                  columns,
+                  hasColumnDivider: columns === 2 && index % 2 === 0,
+                })}
+              >
+                {option.label}
               </li>
             ))}
           </ul>

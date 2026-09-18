@@ -108,7 +108,8 @@ async function proxy(request: NextRequest, { params }: RouteContext) {
   /*
   @ 프록시 응답 생성
   - 리다이렉트(소셜 로그인 시작·콜백): Location 만 넘겨 브라우저가 이동하게 한다
-  - 그 외: 백엔드 응답 body 를 그대로 반환
+  - 그 외: 백엔드 응답 body 를 바이너리 그대로 반환
+    text()로 읽으면 JSON은 되지만 이미지(JPEG/PNG)가 UTF-8 디코딩으로 깨진다
   */
   const location = response.headers.get('Location');
   const isRedirect =
@@ -119,7 +120,7 @@ async function proxy(request: NextRequest, { params }: RouteContext) {
         status: response.status,
         headers: { Location: location },
       })
-    : new Response(await response.text(), {
+    : new Response(await response.arrayBuffer(), {
         status: response.status,
         headers: {
           'Content-Type':

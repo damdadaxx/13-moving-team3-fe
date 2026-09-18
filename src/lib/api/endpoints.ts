@@ -35,7 +35,7 @@ export const ENDPOINTS = {
     request: api('/estimate-request'), // [POST] 로그인 - 견적 요청
     estimates: (estimateRequestId: number | string) =>
       api(`/estimate-requests/${estimateRequestId}/estimates`), // [POST/GET] 로그인 - 지정 견적목록
-    list: api('/estimates'), // [GET] 로그인 - 내 견적 목록
+    list: api('/estimates'), // [GET/POST] 로그인 - 내 견적 목록 / 견적 보내기(지정 없이)
     detail: (estimateId: number | string) => api(`/estimates/${estimateId}`), // [GET] 로그인 - 견적 상세
     update: (estimateId: number | string) => api(`/estimates/${estimateId}`), // [PATCH] 로그인 - 견적 수정
   },

@@ -146,7 +146,7 @@ export default function Modal({
           <div
             className={cn(
               'mt-[24px] flex w-full shrink-0 items-center gap-[8px]',
-              isSheet ? 'mt-[32px] desktop:mt-[40px]' : 'tablet:mt-[40px]',
+              isSheet ? 'mt-[26px] desktop:mt-[40px]' : 'tablet:mt-[40px]',
             )}
           >
             {buttons}

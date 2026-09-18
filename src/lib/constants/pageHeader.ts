@@ -11,4 +11,5 @@ export const PAGE_HEADER_DATA: PageHeaderItem[] = [
   { path: '/customer/liked-movers', title: '찜한 기사님' },
   { path: '/mover/estimates/sent/:id', title: '견적 상세' },
   { path: '/mover/mypage', title: '마이페이지' },
+  { path: '/mover/requests', title: '받은 요청' },
 ];

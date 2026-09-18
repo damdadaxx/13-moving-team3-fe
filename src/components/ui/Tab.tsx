@@ -48,12 +48,17 @@ export default function Tab({ tabs }: { tabs: Tabs[] }) {
     <nav
       role="tablist"
       className={cn(
-        'flex w-full items-stretch border-b-[1px] border-line-100 bg-gray-50 h-[54px] px-[24px]',
+        'flex w-full items-stretch border-b border-line-100 bg-gray-50 h-[54px] px-[24px]',
         'tablet:px-[72px] tablet:shadow-[0px_2px_10px_rgba(248,248,248,0.2)]',
         'desktop:h-[80px] desktop:gap-[32px] desktop:shadow-[0px_2px_1px_rgba(248,248,248,0.1)]',
       )}
     >
-      <div className="flex h-full flex-1 items-stretch gap-[24px] max-w-[1200px] mx-auto">
+      <div
+        className={cn(
+          'flex h-full w-full items-stretch gap-[24px]',
+          'desktop:mx-auto desktop:max-w-[1600px] desktop:pl-[196px]',
+        )}
+      >
         {tabs.map((tab) => {
           const isActive = tab.href === currentPath;
 

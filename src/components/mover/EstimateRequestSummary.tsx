@@ -98,7 +98,7 @@ export default function EstimateRequestSummary({
         <div
           className={
             isCard
-              ? 'flex items-end gap-[12px]'
+              ? 'flex items-start gap-[12px]'
               : 'flex items-center gap-[12px]'
           }
         >
@@ -112,7 +112,13 @@ export default function EstimateRequestSummary({
             <span className="text-md-regular text-gray-500">출발지</span>
             <span className={detailValueClassName}>{fromRegion}</span>
           </div>
-          <IcArrowRight className="h-[23px] w-[17px] shrink-0" />
+          <IcArrowRight
+            className={
+              isCard
+                ? 'h-[23px] w-[17px] shrink-0 self-center'
+                : 'h-[23px] w-[17px] shrink-0'
+            }
+          />
           <div
             className={
               isCard

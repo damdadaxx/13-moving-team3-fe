@@ -31,7 +31,7 @@ const MIN_COMMENT_LENGTH = 10;
 
 function formatPrice(rawDigits: string): string {
   if (!rawDigits) return '';
-  return Number(rawDigits).toLocaleString('ko-KR');
+  return `${Number(rawDigits).toLocaleString('ko-KR')}원`;
 }
 
 export default function SendEstimateModal({

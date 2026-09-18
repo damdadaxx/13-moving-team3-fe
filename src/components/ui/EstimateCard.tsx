@@ -1,14 +1,20 @@
-// 공용 카드 틀 (Card-list 계열이 공통으로 쓰는 프레임)
-// Figma: Card-list/받은 요청 등 여러 "Card-list/*" 컴포넌트가 이 틀을 공유한다.
+// 견적/요청 카드 계열 공통 틀 (Card-list/받은 요청 등)
+// Figma: Card-list/받은 요청. 받은 요청·기사님 찾기 결과·확정 견적처럼 견적 관련
+// 카드가 이 틀을 공유할 것으로 보여 분리했다.
+// 찜한 기사님·리뷰 카드는 padding·gap·radius가 달라 이 컴포넌트 범위가 아니다 —
+// 실제로 그 화면을 만들 때 수치가 다르면 별도 컴포넌트로 둔다.
 // 내용(칩, 제목, 본문, 버튼 등)은 페이지·도메인마다 달라 children으로 받는다.
 import { cn } from '@/utils/cn';
 
-interface CardProps {
+interface EstimateCardProps {
   children: React.ReactNode;
   className?: string;
 }
 
-export default function Card({ children, className }: CardProps) {
+export default function EstimateCard({
+  children,
+  className,
+}: EstimateCardProps) {
   return (
     <div
       className={cn(

@@ -13,7 +13,7 @@ import IcWriting from '@/assets/icons/ic_writing.svg';
 import type { ReceivedRequestMock } from '@/app/(mover)/mover/requests/mockData';
 
 import Button from '@/components/ui/Button/Button';
-import Card from '@/components/ui/Card';
+import EstimateCard from '@/components/ui/EstimateCard';
 
 import EstimateRequestSummary from './EstimateRequestSummary';
 import RejectRequestModal from './RejectRequestModal';
@@ -35,7 +35,7 @@ export default function ReceivedRequestCard({
 
   return (
     <>
-      <Card>
+      <EstimateCard>
         <EstimateRequestSummary
           variant="card"
           serviceType={request.serviceType}
@@ -70,7 +70,7 @@ export default function ReceivedRequestCard({
             반려하기
           </Button>
         </div>
-      </Card>
+      </EstimateCard>
 
       <SendEstimateModal
         isOpen={isModalOpen}

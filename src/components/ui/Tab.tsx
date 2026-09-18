@@ -53,7 +53,7 @@ export default function Tab({ tabs }: { tabs: Tabs[] }) {
         'desktop:h-[80px] desktop:gap-[32px] desktop:shadow-[0px_2px_1px_rgba(248,248,248,0.1)]',
       )}
     >
-      <div className="flex h-full flex-1 items-stretch gap-[24px] max-w-[1600px] mx-auto">
+      <div className="flex h-full flex-1 items-stretch gap-[24px] max-w-[1200px] mx-auto">
         {tabs.map((tab) => {
           const isActive = tab.href === currentPath;
 

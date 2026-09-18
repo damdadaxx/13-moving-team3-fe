@@ -26,10 +26,9 @@ import Sort, { type SortOption } from '@/components/ui/Sort';
 
 import { MOCK_RECEIVED_REQUESTS, type ReceivedRequestMock } from './mockData';
 
-type SortValue = 'rating' | 'moveDateAsc' | 'requestedAtAsc';
+type SortValue = 'moveDateAsc' | 'requestedAtAsc';
 
 const SORT_OPTIONS: SortOption<SortValue>[] = [
-  { value: 'rating', label: '평점 높은순' },
   { value: 'moveDateAsc', label: '이사 빠른순' },
   { value: 'requestedAtAsc', label: '요청일 빠른순' },
 ];
@@ -48,7 +47,6 @@ function sortRequests(
       return [...list].sort((a, b) =>
         a.requestedAt.localeCompare(b.requestedAt),
       );
-    case 'rating':
     default:
       return list;
   }
@@ -60,7 +58,7 @@ export default function MoverEstimateRequestPage() {
   >([]);
   const [designatedOnly, setDesignatedOnly] = useState(true);
   const [regionAvailableOnly, setRegionAvailableOnly] = useState(true);
-  const [sortValue, setSortValue] = useState<SortValue>('rating');
+  const [sortValue, setSortValue] = useState<SortValue>('moveDateAsc');
   const [requests, setRequests] = useState(MOCK_RECEIVED_REQUESTS);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);

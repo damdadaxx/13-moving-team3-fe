@@ -1,5 +1,11 @@
 import { ENDPOINTS } from '@/lib/api/endpoints';
 import { HttpError } from '@/lib/api/errors';
+import {
+  getApiErrorCode,
+  parseApiError,
+  readJsonBody,
+  unwrapApiData,
+} from '@/lib/api/parseApi';
 
 // 토큰 갱신 중복 요청 방지용 싱글톤 프로미스
 let refreshPromise: Promise<Response> | null = null;
@@ -51,6 +57,9 @@ async function requestRefresh(): Promise<Response> {
  * - credentials: same-origin
  *   프록시(app/api/[...path]/route.ts)를 통해 항상 같은 도메인으로만 요청이 나가는 구조라 same-origin으로 충분
  *   include 대신 same-origin을 쓰는 이유: 실수로 외부 절대 URL이 들어와도 쿠키가 새어나가지 않도록 방어
+ * - FormData(이미지 업로드 등): Content-Type 을 넣지 않는다
+ *   브라우저가 boundary 포함 multipart/form-data 를 직접 붙여야 파싱이 된다
+ *
  */
 export default async function clientFetch<T = unknown>(
   input: RequestInfo | URL,
@@ -58,14 +67,20 @@ export default async function clientFetch<T = unknown>(
 ): Promise<T> {
   let response: Response;
 
+  const headers = new Headers(init.headers);
+  const isFormData = init.body instanceof FormData;
+
+  if (isFormData) {
+    headers.delete('Content-Type');
+  } else if (!headers.has('Content-Type')) {
+    headers.set('Content-Type', 'application/json');
+  }
+
   try {
     response = await fetch(input, {
       ...init,
       credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json',
-        ...init.headers,
-      },
+      headers,
     });
   } catch {
     throw new HttpError(
@@ -74,16 +89,12 @@ export default async function clientFetch<T = unknown>(
     );
   }
 
-  if (response.status === 401) {
-    const errorBody = await response
-      .clone()
-      .json()
-      .catch(() => null);
-
-    // 백엔드 에러 code는 { error: { code } }로 감싸져 온다 (한 단계 아래)
-    const code = errorBody?.error?.code ?? errorBody?.code;
+  if (!response.ok) {
+    const errorBody = await readJsonBody(response);
+    const code = getApiErrorCode(errorBody);
     // 백엔드는 만료/미인증 모두 UNAUTHORIZED. TOKEN_EXPIRED가 오면 그것도 갱신.
     const shouldRefresh =
+      response.status === 401 &&
       (code === 'TOKEN_EXPIRED' || code === 'UNAUTHORIZED') &&
       !skipsRefresh(input);
 
@@ -109,30 +120,10 @@ export default async function clientFetch<T = unknown>(
         401,
       );
     }
+
+    throw parseApiError(errorBody, response.status);
   }
 
-  if (!response.ok) {
-    const errorBody = await response.json().catch(() => null);
-    throw new HttpError(
-      errorBody?.error?.message ??
-        errorBody?.message ??
-        '요청 처리 중 오류가 발생했습니다.',
-      errorBody?.error?.code ?? errorBody?.code ?? 'UNKNOWN_ERROR',
-      response.status,
-    );
-  }
-
-  // { success: true, data }면 data만 반환
-  const body = (await response.json()) as unknown;
-  if (
-    body &&
-    typeof body === 'object' &&
-    'success' in body &&
-    body.success === true &&
-    'data' in body
-  ) {
-    return (body as { data: T }).data;
-  }
-
-  return body as T;
+  // 백엔드 성공 응답 { success: true, data }에서 data만 반환 (이미지 URL 포함)
+  return unwrapApiData<T>(await readJsonBody(response));
 }

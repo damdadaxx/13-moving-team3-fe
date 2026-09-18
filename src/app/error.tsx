@@ -1,6 +1,9 @@
-// root 레벨 공통 에러 UI
-
 'use client';
+
+// root 레벨 공통 에러 UI
+import { useEffect } from 'react';
+
+import EmptyState from '@/components/ui/EmptyState';
 
 interface ErrorProps {
   // Next.js App Router는 서버 에러 추적용 digest를 Error에 주입
@@ -8,12 +11,16 @@ interface ErrorProps {
   reset: () => void;
 }
 
-export default function Error({ error: _error, reset }: ErrorProps) {
+export default function Error({ error, reset }: ErrorProps) {
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
+
   return (
-    <div>
-      <p>오류가 발생했습니다.</p>
-      {/* TODO: 버튼 컴포넌트 작업 후 변경 */}
-      <button onClick={reset}>다시 시도</button>
-    </div>
+    <EmptyState
+      message="오류가 발생했어요!"
+      buttonLabel="다시 시도"
+      onClick={reset}
+    />
   );
 }

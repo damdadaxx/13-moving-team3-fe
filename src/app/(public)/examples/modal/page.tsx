@@ -86,8 +86,8 @@ export default function ModalExamplePage() {
       <SendEstimateModal
         isOpen={isSendEstimateOpen}
         onClose={() => setIsSendEstimateOpen(false)}
-        moveType="소형이사"
-        isDesignatedRequest
+        isDesignated
+        serviceType="SMALL_MOVE"
         customerName="김인서"
         fromRegion="서울시 중구"
         toRegion="경기도 수원시"

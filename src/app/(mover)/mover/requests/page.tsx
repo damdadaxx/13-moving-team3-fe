@@ -1,9 +1,17 @@
 // [메뉴] 받은 요청 메뉴
 // [페이지] 받은 요청
+// API: GET /estimate-requests/received (커서 기반 무한 스크롤)
+//
+// 지정 견적 요청: 견적 보내기(PATCH status=PROPOSED) + 반려하기(PATCH status=REJECTED)
+// 지정이 아닌 요청: 견적 보내기(POST /estimates)만 있다 — 반려 API 자체가 없다
+//
+// 지정 건 액션에 필요한 PATCH /estimates/{estimateId}의 estimateId는 목록 응답에
+// 항목별로 같이 내려온다 (지정이 아니면 null)
 'use client';
 
 import { useMemo, useState } from 'react';
 
+import type { ReceivedRequestSortBy } from '@/types/estimate';
 import type { ServiceType } from '@/types/serviceType';
 import Image from 'next/image';
 
@@ -12,6 +20,9 @@ import ImgEmptyBeaver from '@/assets/images/img_empty_beaver.png';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import useInfiniteScroll from '@/hooks/common/useInfiniteScroll';
+import useSearchInput from '@/hooks/common/useSearchInput';
+import { useReceivedRequestsQuery } from '@/hooks/queries/estimate/queries';
+import { useMoverProfileQuery } from '@/hooks/queries/mover/queries';
 
 import { cn } from '@/utils/cn';
 
@@ -21,47 +32,38 @@ import Checkbox from '@/components/ui/Checkbox';
 import ServiceTypeSelector from '@/components/ui/Chip/ServiceTypeSelector';
 import InputSearchbar from '@/components/ui/Form/InputSearchbar';
 import Label from '@/components/ui/Form/Label';
+import LoadingDisplay from '@/components/ui/LoadingDisplay';
 import Modal from '@/components/ui/Modal/Modal';
 import Sort, { type SortOption } from '@/components/ui/Sort';
 
-import { MOCK_RECEIVED_REQUESTS, type ReceivedRequestMock } from './mockData';
-
-type SortValue = 'moveDateAsc' | 'requestedAtAsc';
-
-const SORT_OPTIONS: SortOption<SortValue>[] = [
-  { value: 'moveDateAsc', label: '이사 빠른순' },
-  { value: 'requestedAtAsc', label: '요청일 빠른순' },
+const SORT_OPTIONS: SortOption<ReceivedRequestSortBy>[] = [
+  { value: 'moveDate', label: '이사 빠른순' },
+  { value: 'createdAt', label: '요청일 빠른순' },
 ];
 
-const PAGE_SIZE = 4;
-
-//MockData용 추후 BE 연결시 삭제 예정
-function sortRequests(
-  list: ReceivedRequestMock[],
-  sortValue: SortValue,
-): ReceivedRequestMock[] {
-  switch (sortValue) {
-    case 'moveDateAsc':
-      return [...list].sort((a, b) => a.moveDate.localeCompare(b.moveDate));
-    case 'requestedAtAsc':
-      return [...list].sort((a, b) =>
-        a.requestedAt.localeCompare(b.requestedAt),
-      );
-    default:
-      return list;
-  }
-}
+const PAGE_SIZE = 10;
 
 export default function MoverEstimateRequestPage() {
   const [selectedServiceTypes, setSelectedServiceTypes] = useState<
     ServiceType[]
   >([]);
   const [designatedOnly, setDesignatedOnly] = useState(true);
+  // "서비스 가능 지역" 체크박스: 자격이 있는(지정이 아닌) 건은 서버가 이미
+  // 내 서비스 지역으로만 걸러서 내려준다. 지정 건은 자격과 무관하게 보이므로,
+  // 이 체크박스를 켰을 때만 내 프로필의 serviceRegions를 regions 필터로 보내
+  // "내 서비스 지역 밖의 지정 건"을 걸러낸다
   const [regionAvailableOnly, setRegionAvailableOnly] = useState(true);
-  const [sortValue, setSortValue] = useState<SortValue>('moveDateAsc');
-  const [requests, setRequests] = useState(MOCK_RECEIVED_REQUESTS);
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [sortValue, setSortValue] = useState<ReceivedRequestSortBy>('moveDate');
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
+  const [hiddenRequestIds, setHiddenRequestIds] = useState<Set<string>>(
+    new Set(),
+  );
+  const {
+    value: keyword,
+    debouncedValue: debouncedKeyword,
+    onChange: setKeyword,
+  } = useSearchInput();
+
   const filterChipSize = useBreakpointValue({
     mobile: 'sm' as const,
     tablet: 'md' as const,
@@ -79,42 +81,64 @@ export default function MoverEstimateRequestPage() {
 
   function handleServiceTypesChange(next: ServiceType[]) {
     setSelectedServiceTypes(next);
-    setVisibleCount(PAGE_SIZE);
   }
 
-  function removeRequest(id: string) {
-    setRequests((prev) => prev.filter((request) => request.id !== id));
+  function hideRequest(estimateRequestId: string) {
+    setHiddenRequestIds((prev) => new Set(prev).add(estimateRequestId));
   }
 
-  const filteredRequests = useMemo(() => {
-    const filtered = requests.filter((request) => {
-      const matchesServiceType =
-        selectedServiceTypes.length === 0 ||
-        selectedServiceTypes.includes(request.serviceType);
-      const matchesDesignated = !designatedOnly || request.isDesignated;
-      const matchesRegion = !regionAvailableOnly || request.isRegionAvailable;
+  const { data: moverProfile } = useMoverProfileQuery();
+  const serviceRegions = moverProfile?.serviceRegions;
 
-      return matchesServiceType && matchesDesignated && matchesRegion;
-    });
+  const query = useMemo(
+    () => ({
+      sortBy: sortValue,
+      serviceTypes:
+        selectedServiceTypes.length > 0 ? selectedServiceTypes : undefined,
+      regions:
+        regionAvailableOnly && serviceRegions?.length
+          ? serviceRegions
+          : undefined,
+      keyword: debouncedKeyword.trim() || undefined,
+      isDesignated: designatedOnly ? true : undefined,
+      size: PAGE_SIZE,
+    }),
+    [
+      sortValue,
+      selectedServiceTypes,
+      regionAvailableOnly,
+      serviceRegions,
+      debouncedKeyword,
+      designatedOnly,
+    ],
+  );
 
-    return sortRequests(filtered, sortValue);
-  }, [
-    requests,
-    selectedServiceTypes,
-    designatedOnly,
-    regionAvailableOnly,
-    sortValue,
-  ]);
+  const {
+    data,
+    isPending,
+    isError,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useReceivedRequestsQuery(query);
 
-  const visibleRequests = filteredRequests.slice(0, visibleCount);
-  const hasMore = visibleCount < filteredRequests.length;
+  const requests = useMemo(
+    () => data?.pages.flatMap((page) => page.list) ?? [],
+    [data],
+  );
+  const visibleRequests = useMemo(
+    () =>
+      requests.filter(
+        (request) => !hiddenRequestIds.has(request.estimateRequestId),
+      ),
+    [requests, hiddenRequestIds],
+  );
+  const totalCount = data?.pages[0]?.totalCount ?? 0;
 
   const sentinelRef = useInfiniteScroll<HTMLDivElement>({
-    onIntersect: () =>
-      setVisibleCount((prev) =>
-        Math.min(prev + PAGE_SIZE, filteredRequests.length),
-      ),
-    enabled: hasMore,
+    onIntersect: () => fetchNextPage(),
+    enabled: Boolean(hasNextPage) && !isFetchingNextPage,
   });
 
   return (
@@ -132,8 +156,11 @@ export default function MoverEstimateRequestPage() {
       >
         {/* 검색바 */}
         <div className="flex flex-col gap-[24px] max-w-[1200px]">
-          {/* 퍼블리싱만: 검색 기능은 아직 연결하지 않는다 */}
-          <InputSearchbar placeholder="어떤 고객님을 찾고 계세요?" />
+          <InputSearchbar
+            placeholder="어떤 고객님을 찾고 계세요?"
+            value={keyword}
+            onChange={(event) => setKeyword(event.target.value)}
+          />
 
           <ServiceTypeSelector
             selectedServiceTypes={selectedServiceTypes}
@@ -159,9 +186,7 @@ export default function MoverEstimateRequestPage() {
           >
             <p className="flex items-center gap-1 text-black-400">
               <span className="text-sm-medium">전체</span>
-              <span className="text-sm-semibold">
-                {filteredRequests.length}건
-              </span>
+              <span className="text-sm-semibold">{totalCount}건</span>
             </p>
             <div className="flex items-center gap-1">
               <Sort
@@ -183,25 +208,19 @@ export default function MoverEstimateRequestPage() {
           {/* desktop: 카운트 별도 줄, 체크박스 + 정렬이 같은 줄 */}
           <div className="hidden desktop:flex desktop:flex-col desktop:gap-[24px]">
             <p className="flex items-center gap-[4px] text-2lg-semibold text-black-400">
-              전체 {filteredRequests.length}건
+              전체 {totalCount}건
             </p>
 
             <div className="flex items-center justify-between">
               <div className="flex flex-wrap items-center gap-[12px]">
                 <Checkbox
                   checked={designatedOnly}
-                  onChange={(checked) => {
-                    setDesignatedOnly(checked);
-                    setVisibleCount(PAGE_SIZE);
-                  }}
+                  onChange={setDesignatedOnly}
                   label="지정 견적 요청"
                 />
                 <Checkbox
                   checked={regionAvailableOnly}
-                  onChange={(checked) => {
-                    setRegionAvailableOnly(checked);
-                    setVisibleCount(PAGE_SIZE);
-                  }}
+                  onChange={setRegionAvailableOnly}
                   label="서비스 가능 지역"
                 />
               </div>
@@ -214,20 +233,29 @@ export default function MoverEstimateRequestPage() {
             </div>
           </div>
 
-          {visibleRequests.length > 0 && (
+          {isPending && <LoadingDisplay />}
+
+          {isError && (
+            <p className="py-[40px] text-center text-lg-regular text-red-200">
+              {error.message}
+            </p>
+          )}
+
+          {!isPending && !isError && visibleRequests.length > 0 && (
             <div className="grid grid-cols-1 gap-[24px] desktop:grid-cols-2">
               {visibleRequests.map((request) => (
                 <ReceivedRequestCard
-                  key={request.id}
+                  key={request.estimateRequestId}
                   request={request}
-                  onRejectSuccess={removeRequest}
-                  onSendSuccess={removeRequest}
+                  estimateId={request.estimateId ?? undefined}
+                  onRejectSuccess={hideRequest}
+                  onSendSuccess={hideRequest}
                 />
               ))}
             </div>
           )}
 
-          {requests.length === 0 ? (
+          {!isPending && !isError && visibleRequests.length === 0 && (
             <div
               className={cn(
                 'flex flex-col items-center pt-[80px]',
@@ -245,18 +273,14 @@ export default function MoverEstimateRequestPage() {
                 priority
               />
               <p className="text-lg-regular text-gray-400 desktop:text-xl-regular">
-                아직 받은 요청이 없어요!
+                {totalCount === 0
+                  ? '아직 받은 요청이 없어요!'
+                  : '조건에 맞는 요청이 없어요.'}
               </p>
             </div>
-          ) : (
-            visibleRequests.length === 0 && (
-              <p className="py-[40px] text-center text-lg-regular text-gray-400">
-                조건에 맞는 요청이 없어요.
-              </p>
-            )
           )}
 
-          {hasMore && <div ref={sentinelRef} className="h-[1px] w-full" />}
+          {hasNextPage && <div ref={sentinelRef} className="h-[1px] w-full" />}
         </div>
 
         <Modal
@@ -290,18 +314,12 @@ export default function MoverEstimateRequestPage() {
             <div className="flex flex-col gap-[12px]">
               <Checkbox
                 checked={designatedOnly}
-                onChange={(checked) => {
-                  setDesignatedOnly(checked);
-                  setVisibleCount(PAGE_SIZE);
-                }}
+                onChange={setDesignatedOnly}
                 label="지정 견적 요청"
               />
               <Checkbox
                 checked={regionAvailableOnly}
-                onChange={(checked) => {
-                  setRegionAvailableOnly(checked);
-                  setVisibleCount(PAGE_SIZE);
-                }}
+                onChange={setRegionAvailableOnly}
                 label="서비스 가능 지역"
               />
             </div>

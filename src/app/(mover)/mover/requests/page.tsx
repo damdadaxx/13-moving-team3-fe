@@ -67,6 +67,15 @@ export default function MoverEstimateRequestPage() {
     tablet: 'md' as const,
     desktop: 'md' as const,
   });
+  const isDesktop = useBreakpointValue(false, false, true);
+  const [wasDesktop, setWasDesktop] = useState(isDesktop);
+
+  // 모바일·태블릿 전용 필터 시트가 열린 채로 데스크톱 크기가 되면 닫는다
+  // (렌더 중 상태를 조정하는 React 권장 패턴: effect에서 setState하지 않는다)
+  if (isDesktop !== wasDesktop) {
+    setWasDesktop(isDesktop);
+    if (isDesktop) setIsFilterSheetOpen(false);
+  }
 
   function handleServiceTypesChange(next: ServiceType[]) {
     setSelectedServiceTypes(next);

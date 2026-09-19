@@ -7,6 +7,8 @@
 
 import { useState } from 'react';
 
+import { REGION_OPTIONS } from '@/types/region';
+
 import Dropdown, { type DropdownOption } from '@/components/ui/Dropdown';
 
 /** 백엔드 ServiceType + '전체' = 4개. Figma 1-line이 스크롤 없이 보여주는 개수와 같다 */
@@ -18,25 +20,9 @@ const SERVICE_OPTIONS: DropdownOption<string>[] = [
 ];
 
 /** 백엔드 Region(17개) + '전체' = 18개 → 2열이면 9행이라 스크롤된다 */
-const REGION_OPTIONS: DropdownOption<string>[] = [
+const REGION_DROPDOWN_OPTIONS: DropdownOption<string>[] = [
   { value: 'ALL', label: '전체' },
-  { value: 'SEOUL', label: '서울' },
-  { value: 'GYEONGGI', label: '경기' },
-  { value: 'INCHEON', label: '인천' },
-  { value: 'GANGWON', label: '강원' },
-  { value: 'CHUNGBUK', label: '충북' },
-  { value: 'CHUNGNAM', label: '충남' },
-  { value: 'SEJONG', label: '세종' },
-  { value: 'DAEJEON', label: '대전' },
-  { value: 'JEONBUK', label: '전북' },
-  { value: 'JEONNAM', label: '전남' },
-  { value: 'GWANGJU', label: '광주' },
-  { value: 'GYEONGBUK', label: '경북' },
-  { value: 'GYEONGNAM', label: '경남' },
-  { value: 'DAEGU', label: '대구' },
-  { value: 'ULSAN', label: '울산' },
-  { value: 'BUSAN', label: '부산' },
-  { value: 'JEJU', label: '제주' },
+  ...REGION_OPTIONS,
 ];
 
 export default function DropdownExamplePage() {
@@ -69,7 +55,7 @@ export default function DropdownExamplePage() {
             aria-label="서비스 종류"
           />
           <Dropdown
-            options={REGION_OPTIONS}
+            options={REGION_DROPDOWN_OPTIONS}
             value={region}
             onChange={setRegion}
             placeholder="지역"

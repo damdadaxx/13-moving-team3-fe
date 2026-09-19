@@ -7,6 +7,7 @@ import Providers from '@/app/providers';
 
 import { ACCESS_TOKEN_COOKIE } from '@/lib/constants/auth';
 import { pretendard } from '@/lib/constants/fonts';
+import KakaoScript from '@/lib/providers/KakaoScript';
 
 import { cn } from '@/utils/cn';
 
@@ -33,6 +34,7 @@ export default async function RootLayout({
     <html lang="ko" className={cn(pretendard.variable, 'h-full antialiased')}>
       <body className={cn('h-full pt-[54px]', 'desktop:pt-[88px]')}>
         <Providers>
+          <KakaoScript />
           <Header hasSessionCookie={hasSessionCookie} />
           <PageHeader />
           {children}

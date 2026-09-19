@@ -17,6 +17,8 @@ declare global {
       title: string;
       description: string;
       imageUrl: string;
+      imageWidth?: number;
+      imageHeight?: number;
       link: KakaoShareLink;
     };
     buttons?: Array<{

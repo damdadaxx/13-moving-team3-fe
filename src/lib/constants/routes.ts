@@ -20,6 +20,7 @@ export const ROUTES = {
   customerHome: '/customer/estimate-request', // 견적 요청
   customerEstimatesRoot: '/customer/estimates', // 내 견적 관리 (받은/대기 견적)
   customerEstimates: '/customer/estimates/received', // 내 견적 관리 > 받은 견적
+  customerEstimatesPending: '/customer/estimates/pending', // 내 견적 관리 > 대기 중인 견적
 
   /* 기사님 GNB */
   moverHome: '/mover/requests', // 받은 요청
@@ -28,6 +29,7 @@ export const ROUTES = {
 
   /* 일반 유저 프로필 메뉴 */
   customerProfileRoot: '/customer/profile', // 프로필 (등록/수정)
+  customerProfileNew: '/customer/profile/new', // 프로필 최초 등록
   customerProfileEdit: '/customer/profile/edit', // 프로필 수정
   customerLikedMovers: '/customer/liked-movers', // 찜한 기사님
   customerReviewsRoot: '/customer/reviews', // 이사 리뷰 (작성대기/작성한 리뷰)

@@ -296,7 +296,7 @@ export default function EstimateRequestForm() {
                 onChange={setMoveDate}
                 onConfirm={setMoveDate}
                 placeholder="이사 예정일 선택하기"
-                confirmLabel="이사일 선택완료"
+                confirmLabel="선택완료"
                 minDate={minMoveDate}
                 aria-label="이사 예정일"
                 className="w-[400px]"

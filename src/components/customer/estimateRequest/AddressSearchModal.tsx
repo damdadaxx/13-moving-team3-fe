@@ -126,7 +126,7 @@ export default function AddressSearchModal({
                   : 'border-line-200 bg-gray-50 hover:border-orange-400',
               )}
             >
-              <span className="text-lg-semibold text-black-400">
+              <span className="text-md-semibold tablet:text-lg-semibold text-black-400">
                 {item.zoneCode}
               </span>
               <span className="flex flex-col gap-[16px]">
@@ -134,7 +134,7 @@ export default function AddressSearchModal({
                 {item.roadAddress && (
                   <span className="flex items-start gap-[8px]">
                     <AddressChip>도로명</AddressChip>
-                    <span className="text-lg-regular flex-1 text-black-400">
+                    <span className="text-md-regular flex-1 text-black-400 tablet:text-lg-regular">
                       {item.roadAddress}
                     </span>
                   </span>
@@ -144,7 +144,7 @@ export default function AddressSearchModal({
                   item.jibunAddress !== item.roadAddress && (
                     <span className="flex items-start gap-[8px]">
                       <AddressChip>지번</AddressChip>
-                      <span className="text-lg-regular flex-1 text-black-400">
+                      <span className="text-md-regular flex-1 text-black-400 tablet:text-lg-regular">
                         {item.jibunAddress}
                       </span>
                     </span>
@@ -174,7 +174,8 @@ export default function AddressSearchModal({
 
         {!isLoading && !error && results === null && (
           <p className="text-lg-regular py-[24px] text-center text-gray-400">
-            주소를 검색해 주세요.
+            검색 결과가 없습니다. <br />
+            건물번호까지 입력해 보세요.
           </p>
         )}
       </div>
@@ -184,7 +185,7 @@ export default function AddressSearchModal({
 
 function AddressChip({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-md-semibold flex w-[54px] shrink-0 items-center justify-center rounded-[16px] bg-orange-100 px-[4px] py-[2px] text-orange-400">
+    <span className="text-xs-semibold flex w-[54px] shrink-0 items-center justify-center rounded-[16px] bg-orange-100 px-[4px] py-[2px] text-orange-400 tablet:text-md-semibold">
       {children}
     </span>
   );

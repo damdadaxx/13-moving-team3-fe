@@ -271,7 +271,9 @@ export default function EstimateRequestForm() {
       <div
         className={cn(
           'mx-auto hidden w-full max-w-[894px] rounded-[40px] bg-gray-50 px-[40px] pt-[79px] pb-[49px] tablet:block',
-          'desktop:px-[47px] desktop:pt-[89px] desktop:pb-[107px]',
+          'desktop:px-[47px] desktop:pt-[89px]',
+          // CTA가 카드 밖으로 나가는 1600px 초과에서만 시안의 아래 여백을 준다
+          'min-[1601px]:pb-[107px]',
         )}
       >
         <div className="flex flex-col items-center gap-[8px] whitespace-nowrap">
@@ -315,8 +317,9 @@ export default function EstimateRequestForm() {
           </div>
         </div>
 
-        {/* tablet에서는 카드 내부 우측 하단 CTA (desktop CTA는 화면 우측 하단 고정) */}
-        <div className="mt-[57px] flex flex-col items-end gap-[12px] desktop:hidden">
+        {/* 1600px 이하는 카드 내부 우측 하단 CTA
+            (그보다 넓으면 화면 우측 하단에 고정되는 아래쪽 CTA로 바뀐다) */}
+        <div className="mt-[57px] flex flex-col items-end gap-[12px] min-[1601px]:hidden">
           {submitErrorMessage}
           <Button
             size="lg"
@@ -329,7 +332,8 @@ export default function EstimateRequestForm() {
         </div>
       </div>
 
-      <div className="fixed right-[84px] bottom-[50px] hidden w-[200px] flex-col gap-[12px] desktop:flex">
+      {/* 화면 우측 하단 고정 CTA. 카드 옆에 놓을 자리가 나오는 1600px 초과에서만 쓴다 */}
+      <div className="fixed right-[84px] bottom-[50px] hidden w-[200px] flex-col gap-[12px] min-[1601px]:flex">
         {submitErrorMessage}
         <Button
           size="lg"
@@ -373,15 +377,6 @@ function AddressField({ label, address, onSelect }: AddressFieldProps) {
           {address?.roadAddress ?? `${label} 선택하기`}
         </span>
       </button>
-      {address && (
-        <button
-          type="button"
-          onClick={onSelect}
-          className="text-md-medium -mt-[4px] cursor-pointer self-end text-gray-500 underline"
-        >
-          수정하기
-        </button>
-      )}
     </div>
   );
 }

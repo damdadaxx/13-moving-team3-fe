@@ -1,6 +1,9 @@
-import ImgDefaultProfile from '@/assets/images/img_default_profile.png';
-
-import { KAKAO_JAVASCRIPT_KEY } from '@/lib/constants/kakao';
+import {
+  KAKAO_JAVASCRIPT_KEY,
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_PATH,
+  OG_IMAGE_WIDTH,
+} from '@/lib/constants/kakao';
 
 const FACEBOOK_SHARE_WINDOW_FEATURES = 'width=800,height=600';
 
@@ -15,7 +18,7 @@ function getCurrentPageUrl() {
 }
 
 function getShareImageUrl() {
-  return new URL(ImgDefaultProfile.src, window.location.origin).href;
+  return new URL(OG_IMAGE_PATH, window.location.origin).href;
 }
 
 function copyWithTextarea(text: string) {
@@ -86,6 +89,8 @@ export function shareToKakao(options: KakaoFeedShareOptions = {}) {
       description:
         options.description ?? '고객님의 물품을 안전하게 운송해 드립니다.',
       imageUrl: options.imageUrl ?? getShareImageUrl(),
+      imageWidth: OG_IMAGE_WIDTH,
+      imageHeight: OG_IMAGE_HEIGHT,
       link,
     },
     buttons: [

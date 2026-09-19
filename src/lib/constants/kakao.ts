@@ -9,3 +9,7 @@ export const KAKAO_SDK_SRC =
 
 export const KAKAO_JAVASCRIPT_KEY =
   process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY ?? '';
+
+export const OG_IMAGE_PATH = '/opengraph-image.png';
+export const OG_IMAGE_WIDTH = 1200;
+export const OG_IMAGE_HEIGHT = 630;

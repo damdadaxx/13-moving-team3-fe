@@ -6,11 +6,13 @@
 
 import { useState } from 'react';
 
-import type { AddressSearchResult } from '@/app/api/address-search/route';
+import { AddressSearchResult } from '@/types/address';
 
 import clientFetch from '@/lib/api/clientFetch';
 import { ENDPOINTS } from '@/lib/api/endpoints';
 import { HttpError } from '@/lib/api/errors';
+
+import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
 import { cn } from '@/utils/cn';
 
@@ -39,6 +41,7 @@ export default function AddressSearchModal({
   const [selected, setSelected] = useState<AddressResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const searchbarSize = useBreakpointValue('sm', 'md', 'md');
 
   function resetResults() {
     setResults(null);
@@ -102,6 +105,7 @@ export default function AddressSearchModal({
       <div className="flex flex-col gap-[24px]">
         {/* size 생략 = responsive: 모바일 52px → desktop 64px(시안 md) */}
         <InputSearchbar
+          size={searchbarSize}
           value={keyword}
           onChange={(event) => setKeyword(event.target.value)}
           onSearch={handleSearch}

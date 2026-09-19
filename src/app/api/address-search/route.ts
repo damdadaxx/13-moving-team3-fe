@@ -4,32 +4,12 @@
 // 모양으로 줄여서 내려준다.
 // app/api/[...path]는 백엔드로 넘기는 catch-all인데, Next는 정적 경로를 먼저 매칭하므로
 // 이 파일이 /api/address-search를 가져간다.
+import { AddressSearchResult, KakaoAddressDocument } from '@/types/address';
 import type { NextRequest } from 'next/server';
 
 const KAKAO_ADDRESS_URL = 'https://dapi.kakao.com/v2/local/search/address.json';
 /** 시안의 결과 카드가 스크롤 없이 보여주는 양 + 여유 */
 const PAGE_SIZE = '10';
-
-/** 카카오 응답에서 화면에 쓰는 필드만 추린 것 */
-interface KakaoAddressDocument {
-  address_name?: string;
-  road_address?: {
-    address_name?: string;
-    building_name?: string;
-    zone_no?: string;
-  } | null;
-  address?: {
-    address_name?: string;
-  } | null;
-}
-
-export interface AddressSearchResult {
-  /** 목록 key·선택 비교용. 같은 우편번호가 여러 건이라 주소를 합쳐 만든다 */
-  id: string;
-  zoneCode: string;
-  roadAddress: string;
-  jibunAddress: string;
-}
 
 function toAddressResult(
   document: KakaoAddressDocument,

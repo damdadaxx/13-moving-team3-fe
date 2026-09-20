@@ -111,6 +111,7 @@ export default function ButtonIcon({
   onClick,
   type = 'button',
   'aria-label': ariaLabel,
+  'aria-pressed': ariaPressed,
   ...props
 }: ButtonIconProps) {
   const resolvedVariant = variant ?? 'like';
@@ -120,6 +121,14 @@ export default function ButtonIcon({
     ariaLabel: variantAriaLabel,
   } = VARIANT_CONFIG[resolvedVariant];
 
+  /** 좋아요 아이콘 클래스 적용 */
+  const likeIconClassName =
+    resolvedVariant === 'like' && ariaPressed !== undefined
+      ? ariaPressed
+        ? 'text-black-500'
+        : 'text-gray-200'
+      : iconClassName;
+
   return (
     <ButtonElement
       {...(props as ButtonElementProps)}
@@ -128,13 +137,14 @@ export default function ButtonIcon({
       isLoading={isLoading}
       onClick={onClick}
       aria-label={ariaLabel ?? variantAriaLabel}
+      aria-pressed={ariaPressed}
       className={cn(
         buttonIconVariants({ variant: resolvedVariant, size }),
         className,
       )}
     >
       <span aria-hidden="true" className={buttonIconGlyphVariants({ size })}>
-        <Icon className={cn('size-full', iconClassName)} />
+        <Icon className={cn('size-full', likeIconClassName)} />
       </span>
     </ButtonElement>
   );

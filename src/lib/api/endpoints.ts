@@ -58,6 +58,7 @@ export const ENDPOINTS = {
   // --- Like(찜) ---
   like: {
     mine: api('/likes/me'), // [GET] 로그인 - 찜한 기사님 목록
+    meByMover: (moverId: number | string) => api(`/likes/me/${moverId}`), // [GET] 로그인 - 이 기사님 찜 여부
     create: api('/likes'), // [POST] 로그인 - 찜하기
     bulkDelete: api('/likes/bulk-delete'), // [POST] 로그인 - 여러 찜 취소
     delete: (id: number | string) => api(`/likes/${id}`), // [DELETE] 로그인 - 찜 취소

@@ -42,7 +42,7 @@ export const ENDPOINTS = {
     request: api('/estimate-requests'), // [POST] 로그인 - 견적 요청
     activeRequest: api('/estimate-requests/active'), // [GET] 로그인 - 진행 중인 견적 요청(없으면 null)
     estimates: (estimateRequestId: number | string) =>
-      api(`/estimate-requests/${estimateRequestId}/estimates`), // [POST/GET] 로그인 - 지정 견적목록
+      api(`/estimate-requests/${estimateRequestId}/estimates`), // [POST] 로그인 - 지정 견적 요청
     list: api('/estimates'), // [GET/POST] 로그인 - 내 견적 목록 / 견적 보내기(지정 없이)
     detail: (estimateId: number | string) => api(`/estimates/${estimateId}`), // [GET] 로그인 - 견적 상세
     update: (estimateId: number | string) => api(`/estimates/${estimateId}`), // [PATCH] 로그인 - 견적 수정

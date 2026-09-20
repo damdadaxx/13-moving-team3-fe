@@ -1,4 +1,5 @@
 // [공용] 기사님 상세 상단 섹션
+import type { MoverListItem } from '@/types/mover';
 import Image from 'next/image';
 
 import ImgBg from '@/assets/images/mover-detail/page_mover_detail.png';
@@ -9,7 +10,11 @@ import { cn } from '@/utils/cn';
 
 import ProfileImage from '@/components/ui/ProfileImage';
 
-export default function MoverDetailTopSection() {
+export default function MoverDetailTopSection({
+  imageUrl,
+}: {
+  imageUrl?: MoverListItem['imgUrl'];
+}) {
   return (
     <div
       className={cn(
@@ -57,7 +62,10 @@ export default function MoverDetailTopSection() {
         className={cn('absolute inset-0 z-10 px-[20px]', 'tablet:px-[72px]')}
       >
         <div className={cn('relative mx-auto h-full w-full max-w-[1200px]')}>
-          <ProfileImage className={cn('absolute bottom-0 l-0 z-20')} />
+          <ProfileImage
+            className={cn('absolute bottom-0 l-0 z-20')}
+            imageUrl={imageUrl ?? undefined}
+          />
         </div>
       </div>
     </div>

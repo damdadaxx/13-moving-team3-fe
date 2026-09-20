@@ -48,31 +48,35 @@ export interface EstimateRequest {
 
 /** 견적서에 딸려오는 기사님 정보 (집계값 포함) */
 export interface EstimateMover {
-  userId: string;
+  userId?: string;
   moverId?: string;
   nickname: string;
   imgUrl: string | null;
   /** 경력 개월 수 */
   careerMonths: number;
-  user: { name: string };
-  reviewCount: number;
+  user?: { name: string };
+  reviewCount?: number;
   /** 평균 평점. 리뷰가 없으면 null */
-  averageRating: number | null;
+  averageRating?: number | null;
   /** 확정(ACCEPTED)된 견적 건수 */
-  confirmedEstimateCount: number;
+  confirmedEstimateCount?: number;
+  confirmedCount?: number;
   /** 찜 받은 수 */
-  likeCount: number;
+  likeCount?: number;
+  isLiked?: boolean;
 }
 
 /** 기사님이 보낸 견적서 한 건 */
 export interface Estimate {
-  id: string;
+  id?: string;
+  estimateId?: string;
   /** DESIGNATED 상태(금액 전)는 null */
   price: number | null;
   comment: string | null;
   isDesignated: boolean;
   status: EstimateStatus;
   rejectReason: string | null;
+  createdAt?: string;
   mover: EstimateMover;
 }
 
@@ -294,3 +298,47 @@ export interface DesignatedEstimate {
     user: { name: string };
   };
 }
+
+/** 목록 응답에 실리는 견적 요청 요약 (받았던 견적) */
+export interface EstimateRequestSummary {
+  estimateRequestId: string;
+  serviceType: ServiceType;
+  /** 이용일 */
+  moveDate: string;
+  departureZipCode: string;
+  departureAddress: string;
+  arrivalZipCode: string;
+  arrivalAddress: string;
+  /** 견적 요청일 */
+  requestedAt: string;
+  status: EstimateRequestStatus;
+}
+
+/** 견적 요청 1건 + 그 요청으로 받은 견적서 목록 */
+export interface EstimateListItem {
+  estimateRequest: EstimateRequestSummary;
+  estimates: Estimate[];
+  totalCount: number;
+}
+
+export interface ReceivedEstimateListResponse {
+  list: EstimateListItem[];
+  /** 다음 페이지 커서. 더 없으면 null */
+  nextCursor: string | null;
+  /** 조건에 맞는 견적 요청 전체 수 */
+  totalCount: number;
+}
+
+export interface GetEstimatesParams {
+  status?: string;
+  serviceType?: ServiceType;
+  cursor?: string;
+  size?: number;
+}
+
+/*
+@ 견적서 상태 필터 (내 견적 관리 화면의 드롭다운)
+- 서버에 다시 묻지 않고 이미 받아온 견적서 배열만 거르는 화면 전용 값이다
+- CONFIRMED = ACCEPTED, PENDING = 그 외(NOT_SELECTED·EXPIRED)
+*/
+export type EstimateStatusFilter = 'ALL' | 'CONFIRMED' | 'PENDING';

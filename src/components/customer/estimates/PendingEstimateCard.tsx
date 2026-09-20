@@ -86,11 +86,13 @@ export default function PendingEstimateCard({
             <MoverSummary
               name={mover.nickname}
               imgUrl={mover.imgUrl}
-              likeCount={mover.likeCount}
-              averageRating={mover.averageRating}
-              reviewCount={mover.reviewCount}
+              likeCount={mover.likeCount ?? 0}
+              averageRating={mover.averageRating ?? null}
+              reviewCount={mover.reviewCount ?? 0}
               careerMonths={mover.careerMonths}
-              confirmedCount={mover.confirmedEstimateCount}
+              confirmedCount={
+                mover.confirmedEstimateCount ?? mover.confirmedCount ?? 0
+              }
             />
           </div>
         </div>
@@ -129,7 +131,7 @@ export default function PendingEstimateCard({
           size="sm"
           className="tablet:order-2"
           isLoading={isConfirming}
-          onClick={() => onConfirm(estimate.id)}
+          onClick={() => onConfirm(estimate.id ?? estimate.estimateId ?? '')}
         >
           견적 확정하기
         </Button>
@@ -137,7 +139,7 @@ export default function PendingEstimateCard({
           variant="outlined"
           size="sm"
           className="tablet:order-1"
-          href={`/customer/estimates/pending/${estimate.id}`}
+          href={`/customer/estimates/pending/${estimate.id ?? estimate.estimateId ?? ''}`}
         >
           상세보기
         </Button>

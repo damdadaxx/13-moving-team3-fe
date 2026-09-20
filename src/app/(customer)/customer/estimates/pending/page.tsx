@@ -92,14 +92,15 @@ export default function EstimatePendingPage() {
             )}
           >
             {pendingEstimates.map((estimate) => (
-              <li key={estimate.id} className="flex">
+              <li key={estimate.id ?? estimate.estimateId} className="flex">
                 <PendingEstimateCard
                   estimate={estimate}
                   serviceType={activeRequest.serviceType}
                   onConfirm={acceptEstimate.mutate}
                   isConfirming={
                     acceptEstimate.isPending &&
-                    acceptEstimate.variables === estimate.id
+                    acceptEstimate.variables ===
+                      (estimate.id ?? estimate.estimateId)
                   }
                 />
               </li>

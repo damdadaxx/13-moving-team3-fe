@@ -1,6 +1,6 @@
-import IcStarFill from '@/assets/icons/ic_star_fill.svg';
-
 import { cn } from '@/utils/cn';
+
+import StarRating from '@/components/ui/StarRating';
 
 interface RatingDistribution {
   score: number;
@@ -13,6 +13,10 @@ interface MoverReviewSummaryProps {
   distribution: readonly RatingDistribution[];
 }
 
+/**
+ * @ 리뷰 평점 바 컴포넌트
+ * - 리뷰 평점과 리뷰 개수를 표시
+ */
 function RatingBar({
   score,
   count,
@@ -54,6 +58,10 @@ function RatingBar({
   );
 }
 
+/**
+ * @ 기사님 리뷰 요약 컴포넌트
+ * - 기사님 평점과 리뷰 개수를 표시
+ */
 export default function MoverReviewSummary({
   averageRating,
   reviewCount,
@@ -73,11 +81,7 @@ export default function MoverReviewSummary({
           {averageRating.toFixed(1)}
         </p>
         <div className="flex flex-col">
-          <div className="flex" aria-hidden>
-            {Array.from({ length: 5 }, (_, index) => (
-              <IcStarFill key={index} className="h-[20px] w-[20px]" />
-            ))}
-          </div>
+          <StarRating value={averageRating} readOnly />
           <p
             className={cn(
               'text-lg-regular text-gray-500',

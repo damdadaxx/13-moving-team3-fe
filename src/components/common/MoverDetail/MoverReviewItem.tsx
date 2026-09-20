@@ -1,7 +1,7 @@
-import IcStarFill from '@/assets/icons/ic_star_fill.svg';
-
 import { cn } from '@/utils/cn';
 import formatDate from '@/utils/formatDate';
+
+import StarRating from '@/components/ui/StarRating';
 
 interface MoverReviewItemProps {
   nickname: string;
@@ -52,18 +52,7 @@ export default function MoverReviewItem({
             {formatDate(createdAt, 'review')}
           </time>
         </div>
-        <div className="flex" aria-label={`${rating}점`}>
-          {Array.from({ length: 5 }, (_, index) => (
-            <IcStarFill
-              key={index}
-              aria-hidden
-              className={cn(
-                'h-[20px] w-[20px]',
-                index >= rating && 'opacity-20',
-              )}
-            />
-          ))}
-        </div>
+        <StarRating value={rating} readOnly />
       </div>
       <p
         className={cn(

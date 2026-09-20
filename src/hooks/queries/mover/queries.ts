@@ -2,7 +2,7 @@
 import type { MoverListParams } from '@/types/mover';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
-import { getLikedMovers, getMovers } from '@/lib/api/mover';
+import { getLikedMovers, getMovers, getMyMoverProfile } from '@/lib/api/mover';
 import { MOVER_LIST_PAGE_SIZE } from '@/lib/constants/mover';
 
 import { moverKeys } from '@/hooks/queries/mover/keys';
@@ -41,5 +41,16 @@ export function useLikedMoversQuery({
     queryFn: () => getLikedMovers({ size }),
     enabled,
     meta: { name: '찜한 기사님' },
+  });
+}
+
+/*
+@ 내 기사님 프로필 - "서비스 가능 지역" 필터에 필요한 serviceRegions를 가져오는 용도로 쓴다
+*/
+export function useMoverProfileQuery() {
+  return useQuery({
+    queryKey: moverKeys.profile(),
+    queryFn: getMyMoverProfile,
+    meta: { name: '내 기사님 프로필' },
   });
 }

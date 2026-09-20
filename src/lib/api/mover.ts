@@ -1,8 +1,9 @@
-// 기사님 / 찜 API 호출 함수
+// 기사님 / 찜 / 프로필 API 호출 함수
 import type {
   CursorPage,
   MoverListItem,
   MoverListParams,
+  MoverProfile,
   ServiceType,
 } from '@/types/mover';
 
@@ -79,4 +80,11 @@ export async function getLikedMovers(params: {
       likeCount: item.likeCount,
     })),
   };
+}
+
+/*
+@ GET /mover/profile - 내 기사님 프로필 조회
+*/
+export async function getMyMoverProfile(): Promise<MoverProfile> {
+  return clientFetch<MoverProfile>(ENDPOINTS.mover.profile);
 }

@@ -6,4 +6,5 @@ export const moverKeys = {
   list: (params: Omit<MoverListParams, 'cursor'>) =>
     [...moverKeys.lists(), params] as const,
   liked: (size: number) => [...moverKeys.all, 'liked', size] as const,
+  profile: () => [...moverKeys.all, 'profile'] as const,
 };

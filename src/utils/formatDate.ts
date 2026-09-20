@@ -6,14 +6,15 @@
  * - "이용일": "YYYY. MM. DD(요일) 오전/오후 HH:MM"
  * - "리뷰": "YYYY-MM-DD"
  * - "이사일"/"견적 요청일": "YYYY년 MM월 DD일 (요일)"
+ * - "견적 요청일(짧게)": "YY. MM. DD."
  *
  * @param {Date | string | number} date - 변환할 날짜
- * @param {'usage' | 'review' | 'korean'} [type='usage'] - 포맷 타입
+ * @param {'usage' | 'review' | 'korean' | 'short'} [type='usage'] - 포맷 타입
  * @returns {string} 지정한 형식의 날짜 문자열
  */
 export default function formatDate(
   date: Date | string | number,
-  type: 'usage' | 'review' | 'korean' = 'usage',
+  type: 'usage' | 'review' | 'korean' | 'short' = 'usage',
 ): string {
   if (!date) return '';
 
@@ -40,6 +41,11 @@ export default function formatDate(
   if (type === 'review') {
     // 예: 2024-07-01
     return `${year}-${month}-${day}`;
+  }
+
+  if (type === 'short') {
+    // 예: 24. 06. 24.
+    return `${String(year).slice(-2)}. ${month}. ${day}.`;
   }
 
   // 'korean' (이사일/견적 요청일 등): 2024년 07월 01일 (월)

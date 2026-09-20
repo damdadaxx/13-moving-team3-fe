@@ -40,7 +40,7 @@ export const ENDPOINTS = {
   // --- Estimate(견적) ---
   estimate: {
     request: api('/estimate-requests'), // [POST] 로그인 - 견적 요청
-    activeRequest: api('/estimate-requests/active'), // [GET] 로그인 - 진행 중인 견적 요청(없으면 null)
+    activeRequest: api('/estimate-requests/active'), // [GET] 로그인 - 진행 중인 견적 요청 + 받은 견적 목록(없으면 null)
     estimates: (estimateRequestId: number | string) =>
       api(`/estimate-requests/${estimateRequestId}/estimates`), // [POST] 로그인 - 지정 견적 요청(고객이 기사님 지정)
     received: api('/estimate-requests/received'), // [GET] 로그인(기사님) - 받은 요청 목록(커서 무한 스크롤)

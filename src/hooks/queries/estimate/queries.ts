@@ -10,9 +10,9 @@ import {
 import { estimateKeys } from '@/hooks/queries/estimate/keys';
 
 /*
-@ 진행 중인 견적 요청
-- 있으면 견적 요청 폼 대신 "진행 중" 화면을 보여준다
-- 견적 요청을 새로 만들면 mutation이 estimateKeys.all을 무효화해 이 쿼리도 다시 받는다
+@ 진행 중인 견적 요청 + 그 요청에 들어온 견적 목록. 요청이 없으면 data가 null
+- 견적요청 페이지: 있으면 폼 대신 "진행 중" 화면을 보여준다
+- 대기 중인 견적 페이지: estimates를 그대로 목록에 쓴다
 */
 export function useActiveEstimateRequestQuery() {
   return useQuery({

@@ -3,9 +3,8 @@
 - 백엔드 Prisma enum / API 응답과 이름·단위를 그대로 맞춘다.
 - 화면 표기로 바꾸는 일은 utils(formatRegion, formatMoverStats, formatDate)가 맡는다.
 */
+import type { Region } from '@/types/region';
 import type { ServiceType } from '@/types/serviceType';
-
-import type { Region } from '@/components/ui/Chip/RegionChipGroup';
 
 /** 견적 요청의 상태 (Prisma EstimateRequestStatus) */
 export type EstimateRequestStatus =
@@ -50,6 +49,7 @@ export interface EstimateRequest {
 /** 견적서에 딸려오는 기사님 정보 (집계값 포함) */
 export interface EstimateMover {
   userId: string;
+  moverId?: string;
   nickname: string;
   imgUrl: string | null;
   /** 경력 개월 수 */
@@ -96,6 +96,13 @@ export interface ActiveEstimateRequest {
   /** 지금까지 받은 견적. 생성 직후에는 빈 배열 */
   estimates: Estimate[];
 }
+
+/*
+@ TODO: 진행 중 견적 요청 타입 이름 통일
+- EstimateRequestDetail은 ActiveEstimateRequest와 같다
+- 호출부를 한쪽으로 맞춘 뒤 별칭을 제거한다
+*/
+export type EstimateRequestDetail = ActiveEstimateRequest;
 
 /** PATCH /estimates/:estimateId 응답 (고객 확정) */
 export interface UpdateEstimateStatusResult {
@@ -272,4 +279,18 @@ export interface EstimateDetail {
   canConfirm?: boolean;
   /** MOVER 관점 - 본인 견적 + 요청 PENDING + 견적 DESIGNATED일 때만 true */
   canRespond?: boolean;
+}
+
+/*
+@ 지정 견적 생성 응답 (POST /estimate-requests/{id}/estimates)
+*/
+export interface DesignatedEstimate {
+  id: string;
+  isDesignated: boolean;
+  status: Extract<EstimateStatus, 'DESIGNATED'>;
+  mover: {
+    userId: string;
+    nickname: string;
+    user: { name: string };
+  };
 }

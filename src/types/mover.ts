@@ -1,32 +1,13 @@
-/*
-@ 백엔드 prisma enum
-- ServiceType: 제공 서비스(이사 유형)
-- Region: 서비스 가능 지역 (17개)
-*/
-export type ServiceType = 'SMALL_MOVE' | 'HOME_MOVE' | 'OFFICE_MOVE';
+import type { Region } from '@/types/region';
+import type { ServiceType } from '@/types/serviceType';
 
-export type Region =
-  | 'SEOUL'
-  | 'GYEONGGI'
-  | 'INCHEON'
-  | 'GANGWON'
-  | 'CHUNGBUK'
-  | 'CHUNGNAM'
-  | 'SEJONG'
-  | 'DAEJEON'
-  | 'JEONBUK'
-  | 'JEONNAM'
-  | 'GWANGJU'
-  | 'GYEONGBUK'
-  | 'GYEONGNAM'
-  | 'DAEGU'
-  | 'ULSAN'
-  | 'BUSAN'
-  | 'JEJU';
+export type { Region, ServiceType };
 
 /** GET /mover 정렬 기준 (백엔드 getMoverListQuerySchema.sortBy) */
 export type MoverSortBy =
   'reviewCount' | 'rating' | 'career' | 'confirmedCount';
+
+export type MoverListSortBy = MoverSortBy;
 
 /*
 @ 기사님 카드 한 장에 필요한 값 (GET /mover 목록의 list 항목)
@@ -39,6 +20,7 @@ export interface MoverListItem {
   careerMonths: number;
   shortIntro: string;
   serviceTypes: ServiceType[];
+  serviceRegions?: Region[];
   averageRating: number;
   reviewCount: number;
   confirmedCount: number;
@@ -58,6 +40,27 @@ export interface CursorPage<T> {
   list: T[];
   nextCursor: string | null;
   totalCount: number;
+}
+
+/*
+@ 기사님 상세 (GET /mover/{id})
+- 목록 아이템에 소개글·생성일 필드가 추가된다
+*/
+export interface MoverDetail extends MoverListItem {
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type MoverListData = CursorPage<MoverListItem>;
+
+export interface MoverListQuery {
+  keyword?: string;
+  region?: Region;
+  serviceType?: ServiceType;
+  sortBy?: MoverListSortBy;
+  cursor?: string;
+  size?: number;
 }
 
 /*

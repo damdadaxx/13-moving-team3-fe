@@ -58,7 +58,7 @@ export default function CalendarExamplePage() {
           <DateDropdown
             placeholder="이사 예정일을 선택해 주세요"
             aria-label="이사 예정일"
-            confirmLabel="이사일 선택완료"
+            confirmLabel="선택완료"
             minDate={new Date()}
             onConfirm={setMovingDate}
             className="w-[400px]"
@@ -129,7 +129,7 @@ export default function CalendarExamplePage() {
           <code>minDate</code>를 오늘로 두면 지난 날짜는 비활성됩니다. 이사
           예정일처럼 과거를 못 고르게 할 때 씁니다.
         </p>
-        <Calendar minDate={new Date()} confirmLabel="이사일 선택완료" />
+        <Calendar minDate={new Date()} confirmLabel="선택완료" />
       </section>
 
       <section className="flex flex-col gap-3">

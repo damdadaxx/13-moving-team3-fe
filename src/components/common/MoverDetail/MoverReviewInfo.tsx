@@ -1,6 +1,7 @@
 import IcStarFill from '@/assets/icons/ic_star_fill.svg';
 
 import { cn } from '@/utils/cn';
+import { formatCareerLabel, formatRating } from '@/utils/formatMover';
 
 const GROUP_CLASS = {
   wrap: 'flex flex-col items-center',
@@ -10,29 +11,44 @@ const GROUP_CLASS = {
     'flex items-center gap-[2px] text-lg-semibold text-black-300 tablet:text-xl-bold',
 } as const;
 
-const REVIEW_STATS = [
-  { title: '진행', value: '334건' },
-  {
-    title: '리뷰',
-    value: (
-      <>
-        <IcStarFill className="h-[20px] w-[20px]" />
-        5.0
-        <span
-          className={cn(
-            'ml-[2px] text-md-medium text-gray-300',
-            'tablet:ml-[6px] text-lg-medium ',
-          )}
-        >
-          (178)
-        </span>
-      </>
-    ),
-  },
-  { title: '총 경력', value: '7년' },
-] as const;
+interface MoverReviewInfoProps {
+  confirmedCount: number;
+  averageRating: number;
+  reviewCount: number;
+  careerMonths: number;
+}
 
-export default function MoverReviewInfo() {
+export default function MoverReviewInfo({
+  confirmedCount,
+  averageRating,
+  reviewCount,
+  careerMonths,
+}: MoverReviewInfoProps) {
+  const stats = [
+    { title: '진행', value: `${confirmedCount}건` },
+    {
+      title: '리뷰',
+      value: (
+        <>
+          <IcStarFill
+            aria-hidden
+            className="h-[20px] w-[20px] text-yellow-100"
+          />
+          {formatRating(averageRating)}
+          <span
+            className={cn(
+              'ml-[2px] text-md-medium text-gray-300',
+              'tablet:ml-[6px] text-lg-medium ',
+            )}
+          >
+            ({reviewCount})
+          </span>
+        </>
+      ),
+    },
+    { title: '총 경력', value: formatCareerLabel(careerMonths) },
+  ];
+
   return (
     <dl
       className={cn(
@@ -40,7 +56,7 @@ export default function MoverReviewInfo() {
         'tablet:h-[120px]',
       )}
     >
-      {REVIEW_STATS.map(({ title, value }) => (
+      {stats.map(({ title, value }) => (
         <div key={title} className={GROUP_CLASS.wrap}>
           <dt className={GROUP_CLASS.title}>{title}</dt>
           <dd className={GROUP_CLASS.value}>{value}</dd>

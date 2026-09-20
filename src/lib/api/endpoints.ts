@@ -18,6 +18,13 @@ export const ENDPOINTS = {
     social: (provider: SocialProvider) => api(`/auth/social/${provider}`), // [GET] 비로그인 - 소셜 로그인 시작 (브라우저 이동, ?role=&callbackUrl=)
   },
 
+  // --- Address(주소 검색) ---
+  // 백엔드가 아니라 Next Route Handler(app/api/address-search)다.
+  // 카카오 REST 키를 서버에 두려고 프론트에서 직접 받는다
+  address: {
+    search: api('/address-search'), // [GET] 비로그인 - 카카오 로컬 주소 검색
+  },
+
   // --- Mover(기사) ---
   mover: {
     profile: api('/mover/profile'), // [POST/GET/PATCH] 로그인

@@ -2,11 +2,28 @@
 // 브라우저는 프록시(/api)만 사용. 쿠키는 clientFetch가 credentials: same-origin으로 전달한다
 import type {
   ActiveEstimateRequest,
+  CreateEstimateRequestInput,
+  EstimateRequest,
   UpdateEstimateStatusResult,
 } from '@/types/estimate';
 
 import clientFetch from '@/lib/api/clientFetch';
 import { ENDPOINTS } from '@/lib/api/endpoints';
+
+/*
+@ POST /estimate-requests
+- 고객당 진행 중인 요청은 1건이라, 이미 있으면 백엔드가 409로 응답한다
+- moveDate는 Date 그대로 두면 JSON 직렬화가 ISO 문자열로 바꿔주고,
+  백엔드 z.coerce.date가 다시 Date로 받는다
+*/
+export async function createEstimateRequest(
+  input: CreateEstimateRequestInput,
+): Promise<EstimateRequest> {
+  return clientFetch<EstimateRequest>(ENDPOINTS.estimate.request, {
+    method: 'POST',
+    body: JSON.stringify(input),
+  });
+}
 
 /*
 @ GET /estimate-requests/active

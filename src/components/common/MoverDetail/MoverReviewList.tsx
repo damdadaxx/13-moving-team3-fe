@@ -1,60 +1,45 @@
+'use client';
+
+import { useState } from 'react';
+
+import type { ReviewSummary } from '@/types/review';
+
+import { useMoverReviewsQuery } from '@/hooks/queries/reviews/queries';
+
 import { cn } from '@/utils/cn';
+import {
+  formatMaskedReviewerName,
+  toRatingDistribution,
+} from '@/utils/formatReview';
 
 import MoverReviewItem from '@/components/common/MoverDetail/MoverReviewItem';
 import MoverReviewSummary from '@/components/common/MoverDetail/MoverReviewSummary';
+import LoadingDisplay from '@/components/ui/LoadingDisplay';
+import Pagination from '@/components/ui/Pagination';
 
-const REVIEW_CONTENT = `듣던대로 정말 친절하시고 물건도 잘 옮겨주셨어요!
-나중에 또 짐 옮길 일 있으면 김코드 기사님께 부탁드릴 예정입니다!!
-비 오는데 꼼꼼히 잘 해주셔서 감사드립니다 :)`;
+export default function MoverReviewList({ moverId }: { moverId: string }) {
+  const [page, setPage] = useState(1);
+  const [currentMoverId, setCurrentMoverId] = useState(moverId);
 
-// TODO: 기사님 리뷰 목록 조회
-const REVIEW_LIST = [
-  {
-    id: 1,
-    nickname: 'kim****',
-    createdAt: '2024-07-01',
-    rating: 5,
-    content: REVIEW_CONTENT,
-  },
-  {
-    id: 2,
-    nickname: 'kim****',
-    createdAt: '2024-07-01',
-    rating: 5,
-    content: REVIEW_CONTENT,
-  },
-  {
-    id: 3,
-    nickname: 'kim****',
-    createdAt: '2024-07-01',
-    rating: 5,
-    content: REVIEW_CONTENT,
-  },
-  {
-    id: 4,
-    nickname: 'kim****',
-    createdAt: '2024-07-01',
-    rating: 5,
-    content: REVIEW_CONTENT,
-  },
-  {
-    id: 5,
-    nickname: 'kim****',
-    createdAt: '2024-07-01',
-    rating: 5,
-    content: REVIEW_CONTENT,
-  },
-] as const;
+  /** 기사님 ID가 변경되면 페이지를 초기화 */
+  if (currentMoverId !== moverId) {
+    setCurrentMoverId(moverId);
+    setPage(1);
+  }
 
-const RATING_DISTRIBUTION = [
-  { score: 5, count: 170 },
-  { score: 4, count: 8 },
-  { score: 3, count: 0 },
-  { score: 2, count: 0 },
-  { score: 1, count: 0 },
-] as const;
+  const { data, isPending, isError } = useMoverReviewsQuery(moverId, page);
+  const totalPages = data?.totalPages ?? 0;
 
-export default function MoverReviewList() {
+  /** 페이지 번호가 총 페이지 수를 초과하면 총 페이지 수로 설정 */
+  if (totalPages > 0 && page > totalPages) {
+    setPage(totalPages);
+  }
+
+  const reviews: ReviewSummary[] = data?.list ?? [];
+  const reviewCount = data?.reviewCount ?? 0;
+  const distribution = toRatingDistribution(data?.ratingDistribution ?? []);
+
+  /** 리뷰 목록 렌더링 */
   return (
     <div className="flex w-full flex-col gap-[16px]">
       <div className="flex flex-col gap-[16px]">
@@ -66,29 +51,57 @@ export default function MoverReviewList() {
         >
           리뷰
         </h2>
-        <MoverReviewSummary
-          averageRating={5}
-          reviewCount={178}
-          distribution={RATING_DISTRIBUTION}
-        />
+        {data ? (
+          <MoverReviewSummary
+            averageRating={data.ratingAvg}
+            reviewCount={reviewCount}
+            distribution={distribution}
+          />
+        ) : null}
       </div>
-      <ul>
-        {REVIEW_LIST.map((review, index) => (
-          <li
-            key={review.id}
-            className={cn(
-              index < REVIEW_LIST.length - 1 && 'border-b border-line-100',
-            )}
-          >
-            <MoverReviewItem
-              nickname={review.nickname}
-              createdAt={review.createdAt}
-              rating={review.rating}
-              content={review.content}
-            />
-          </li>
-        ))}
-      </ul>
+
+      {isPending && !data ? (
+        <LoadingDisplay size={40} fullHeight={false} className="py-[40px]" />
+      ) : isError ? (
+        <p className="py-[40px] text-center text-lg-regular text-gray-400">
+          리뷰를 불러오지 못했어요.
+        </p>
+      ) : reviews.length === 0 ? (
+        <p className="py-[40px] text-center text-lg-regular text-gray-400">
+          아직 등록된 리뷰가 없어요!
+        </p>
+      ) : (
+        <ul>
+          {reviews.map((review, index) => (
+            <li
+              key={review.id}
+              className={cn(
+                index < reviews.length - 1 && 'border-b border-line-100',
+              )}
+            >
+              <MoverReviewItem
+                nickname={formatMaskedReviewerName(review.customerName)}
+                createdAt={review.createdAt}
+                rating={review.rating}
+                content={review.content}
+              />
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {totalPages > 1 ? (
+        <Pagination
+          className={cn(
+            'mt-[8px] justify-center',
+            'tablet:mt-[30px]',
+            'desktop:mt-[32px]',
+          )}
+          currentPage={page}
+          totalPages={totalPages}
+          onClick={setPage}
+        />
+      ) : null}
     </div>
   );
 }

@@ -5,15 +5,16 @@
  *
  * - "이용일": "YYYY. MM. DD(요일) 오전/오후 HH:MM"
  * - "리뷰": "YYYY-MM-DD"
- * - "이사일"/"견적 요청일": "YYYY년 MM월 DD일 (요일)"
+ * - "이사일": "YYYY년 MM월 DD일 (요일)"
+ * - "신청일": "YYYY년 M월 D일" (0 없이, 요일 없이)
  *
  * @param {Date | string | number} date - 변환할 날짜
- * @param {'usage' | 'review' | 'korean'} [type='usage'] - 포맷 타입
+ * @param {'usage' | 'review' | 'korean' | 'requested'} [type='usage'] - 포맷 타입
  * @returns {string} 지정한 형식의 날짜 문자열
  */
 export default function formatDate(
   date: Date | string | number,
-  type: 'usage' | 'review' | 'korean' = 'usage',
+  type: 'usage' | 'review' | 'korean' | 'requested' = 'usage',
 ): string {
   if (!date) return '';
 
@@ -40,6 +41,12 @@ export default function formatDate(
   if (type === 'review') {
     // 예: 2024-07-01
     return `${year}-${month}-${day}`;
+  }
+
+  if (type === 'requested') {
+    // 견적 신청일. 이사일과 달리 0을 채우지 않고 요일도 붙이지 않는다
+    // 예: 2024년 6월 24일
+    return `${year}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
   }
 
   // 'korean' (이사일/견적 요청일 등): 2024년 07월 01일 (월)

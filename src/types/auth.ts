@@ -38,3 +38,31 @@ export interface SignupInput {
   phoneNumber: string;
   role: Role;
 }
+
+/*=================================================
+회원정보 수정 요청 타입
+=================================================*/
+
+/*
+@ 이름·전화번호 수정
+- PATCH /auth/me는 두 값 중 실제로 변경된 값만 받을 수 있다.
+- 빈 객체 요청은 백엔드 validation에서 거절되므로 호출부에서 변경 여부를 먼저 확인한다.
+*/
+export interface UpdateMeInput {
+  name?: string;
+  phoneNumber?: string;
+}
+
+/*
+@ 비밀번호 수정
+- LOCAL 계정만 호출한다.
+- 새 비밀번호 확인값은 프론트 검증용이므로 API 요청에는 포함하지 않는다.
+*/
+export interface UpdatePasswordInput {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface UpdatePasswordResult {
+  message: string;
+}

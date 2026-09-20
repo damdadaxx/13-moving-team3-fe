@@ -4,10 +4,19 @@
 import { useToast } from '@/hooks/common/useToast';
 
 import { cn } from '@/utils/cn';
-import { copyPageUrl, shareToFacebook, shareToKakao } from '@/utils/share';
+import {
+  copyPageUrl,
+  isLocalShareUrl,
+  shareToFacebook,
+  shareToKakao,
+} from '@/utils/share';
 
 import ButtonIcon from '@/components/ui/Button/ButtonIcon';
 
+/**
+ * @ 기사님 공유하기 정보 컴포넌트
+ * - 기사님 공유하기 버튼을 표시
+ */
 export default function ShareMoverInfo({ className }: { className?: string }) {
   const { showToast } = useToast();
 
@@ -20,12 +29,22 @@ export default function ShareMoverInfo({ className }: { className?: string }) {
     }
   };
 
+  /** 카카오 공유 핸들러 */
   const handleKakaoShare = () => {
     try {
       shareToKakao();
     } catch {
       showToast('카카오 공유를 실행할 수 없어요');
     }
+  };
+
+  // TODO: https로 배포 후 확인 필요
+  /** 페이스북 공유 핸들러 */
+  const handleFacebookShare = () => {
+    if (isLocalShareUrl()) {
+      showToast('페이스북은 공개된 주소만 미리보기를 가져올 수 있어요');
+    }
+    shareToFacebook();
   };
 
   return (
@@ -47,7 +66,7 @@ export default function ShareMoverInfo({ className }: { className?: string }) {
       <div className={cn('flex gap-[12px]', 'tablet:gap-[16px]')}>
         <ButtonIcon variant="clip" onClick={handleCopyLink} />
         <ButtonIcon variant="kakao" onClick={handleKakaoShare} />
-        <ButtonIcon variant="facebook" onClick={shareToFacebook} />
+        <ButtonIcon variant="facebook" onClick={handleFacebookShare} />
       </div>
     </section>
   );

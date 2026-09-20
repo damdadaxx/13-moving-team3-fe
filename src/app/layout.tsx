@@ -7,6 +7,12 @@ import Providers from '@/app/providers';
 
 import { ACCESS_TOKEN_COOKIE } from '@/lib/constants/auth';
 import { pretendard } from '@/lib/constants/fonts';
+import {
+  OPEN_GRAPH_DEFAULT,
+  SITE_DESCRIPTION,
+  SITE_TITLE,
+  SITE_URL,
+} from '@/lib/constants/site';
 import KakaoScript from '@/lib/providers/KakaoScript';
 
 import { cn } from '@/utils/cn';
@@ -16,15 +22,13 @@ import PageHeader from '@/components/ui/PageHeader/PageHeader';
 
 import './globals.css';
 
-// TODO: 최적화 작업 시 변경
 export const metadata: Metadata = {
-  title: '무빙 : 이사 소비자와 이사 전문가 매칭 서비스',
-  description: '이사 소비자와 이사 전문가 매칭 서비스',
+  metadataBase: new URL(SITE_URL),
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
   openGraph: {
-    title: '무빙 : 복잡한 이사 준비, 무빙 하나면 끝!',
-    description: '이사 소비자와 이사 전문가 매칭 서비스',
-    locale: 'ko_KR',
-    type: 'website',
+    ...OPEN_GRAPH_DEFAULT,
+    url: '/',
   },
 };
 

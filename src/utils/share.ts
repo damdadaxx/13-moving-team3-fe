@@ -4,6 +4,7 @@ import {
   OG_IMAGE_PATH,
   OG_IMAGE_WIDTH,
 } from '@/lib/constants/kakao';
+import { OG_TITLE } from '@/lib/constants/site';
 
 const FACEBOOK_SHARE_WINDOW_FEATURES = 'width=800,height=600';
 
@@ -14,7 +15,21 @@ interface KakaoFeedShareOptions {
 }
 
 function getCurrentPageUrl() {
-  return window.location.href;
+  const { origin, pathname, search } = window.location;
+  return `${origin}${pathname}${search}`;
+}
+
+export function isLocalShareUrl(url = getCurrentPageUrl()) {
+  try {
+    const { hostname } = new URL(url);
+    return (
+      hostname === 'localhost' ||
+      hostname === '172.30.1.15' ||
+      hostname.endsWith('.local')
+    );
+  } catch {
+    return true;
+  }
 }
 
 function getShareImageUrl() {
@@ -104,13 +119,18 @@ export function shareToKakao(options: KakaoFeedShareOptions = {}) {
 
 /*
 @ 페이스북 공유
-- 현재 페이지 URL을 sharer.php 로 넘긴다 (로컬 주소도 가능)
-- 팝업 이름·크기는 페이스북 공유 다이얼로그 샘플과 같다
+- sharer.php 는 페이스북 서버가 u 주소를 방문해 og 태그를 읽는다
+- localhost / 사설망은 페이스북이 접근하지 못해 미리보기가 비어 있다
+- quote 는 미리보기 실패 시 본문에 넣을 보조 문구다
 */
 export function shareToFacebook() {
   const sendUrl = getCurrentPageUrl();
+  const shareUrl = new URL('https://www.facebook.com/sharer/sharer.php');
+  shareUrl.searchParams.set('u', sendUrl);
+  shareUrl.searchParams.set('quote', OG_TITLE);
+
   const popup = window.open(
-    `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(sendUrl)}`,
+    shareUrl.toString(),
     'facebook-share-dialog',
     FACEBOOK_SHARE_WINDOW_FEATURES,
   );

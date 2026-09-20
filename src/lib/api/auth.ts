@@ -7,6 +7,9 @@ import type {
   LoginInput,
   SignupInput,
   SocialProvider,
+  UpdateMeInput,
+  UpdatePasswordInput,
+  UpdatePasswordResult,
 } from '@/types/auth';
 import type { Role } from '@/types/role';
 
@@ -68,6 +71,34 @@ export async function getMe(): Promise<AuthUser | null> {
     }
     throw error;
   }
+}
+
+/*
+@ 로그인 사용자 기본정보 수정
+- 이름과 전화번호 중 실제로 변경된 필드만 PATCH /auth/me로 전달한다.
+- 백엔드 PublicUser 응답의 역할을 프론트 Role로 변환해 Auth 캐시에 바로 저장할 수 있게 한다.
+*/
+export async function updateMe(input: UpdateMeInput): Promise<AuthUser> {
+  const user = await clientFetch<AuthUserResponse>(ENDPOINTS.auth.me, {
+    method: 'PATCH',
+    body: JSON.stringify(input),
+  });
+
+  return toAuthUser(user);
+}
+
+/*
+@ LOCAL 계정 비밀번호 수정
+- 소셜 계정은 백엔드에서도 403을 반환하지만 프론트 화면에서도 호출 자체를 막는다.
+- 응답은 공개 사용자 정보가 아니라 완료 메시지만 포함하므로 Auth 캐시는 변경하지 않는다.
+*/
+export async function updatePassword(
+  input: UpdatePasswordInput,
+): Promise<UpdatePasswordResult> {
+  return clientFetch<UpdatePasswordResult>(ENDPOINTS.auth.password, {
+    method: 'PATCH',
+    body: JSON.stringify(input),
+  });
 }
 
 export async function login(input: LoginInput): Promise<AuthUser> {

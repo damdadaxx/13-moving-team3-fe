@@ -28,6 +28,7 @@ export const ROUTES = {
 
   /* 일반 유저 프로필 메뉴 */
   customerProfileRoot: '/customer/profile', // 프로필 (등록/수정)
+  customerProfileNew: '/customer/profile/new', // 프로필 최초 등록
   customerProfileEdit: '/customer/profile/edit', // 프로필 수정
   customerLikedMovers: '/customer/liked-movers', // 찜한 기사님
   customerReviewsRoot: '/customer/reviews', // 이사 리뷰 (작성대기/작성한 리뷰)

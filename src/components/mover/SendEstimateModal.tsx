@@ -1,3 +1,5 @@
+// [모달] 받은 요청 > 견적 보내기
+// Figma: Component/modal state=default, size=md, variant=견적 보내기 (1:10684)
 'use client';
 
 import { useState } from 'react';

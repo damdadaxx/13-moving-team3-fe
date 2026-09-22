@@ -1,3 +1,5 @@
+'use client';
+
 import { useQueryClient } from '@tanstack/react-query';
 import { usePathname, useRouter } from 'next/navigation';
 
@@ -5,13 +7,17 @@ import { HttpError } from '@/lib/api/errors';
 import { getGuestSigninPath, ROUTES } from '@/lib/constants/routes';
 
 import { useAuth } from '@/hooks/auth/useAuth';
+import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useToast } from '@/hooks/common/useToast';
+import { useModal } from '@/hooks/modal/useModal';
 import { likeKeys } from '@/hooks/queries/likes/keys';
 import {
   useCreateLikeMutation,
   useDeleteLikeMutation,
 } from '@/hooks/queries/likes/mutations';
 import { useLikeStatusQuery } from '@/hooks/queries/likes/queries';
+
+import Button from '@/components/ui/Button/Button';
 
 /*
 @ 기사님 찜하기
@@ -24,6 +30,8 @@ export function useMoverLike(moverId: string, initialLikeCount: number) {
   const queryClient = useQueryClient();
   const { isLoggedIn, isLoading: isAuthLoading, role } = useAuth();
   const { showToast } = useToast();
+  const { openModal, closeModal } = useModal();
+  const modalButtonSize = useBreakpointValue('sm', 'sm', 'md');
 
   const { data } = useLikeStatusQuery(moverId, isLoggedIn);
   const createLikeMutation = useCreateLikeMutation();
@@ -33,6 +41,45 @@ export function useMoverLike(moverId: string, initialLikeCount: number) {
   const likeCount = data?.likeCount ?? initialLikeCount;
   const isPending =
     createLikeMutation.isPending || deleteLikeMutation.isPending;
+
+  /*
+  @ 고객 프로필 미등록
+  - 찜 API가 프로필 없음으로 404를 주면, 없는 /customer/profile 로 보내지 않는다
+  - 확인 모달에서만 /customer/profile/new 로 이동한다
+  */
+  function openProfileRequiredModal() {
+    openModal(
+      <p className="text-2lg-medium text-black-300">
+        기사님을 찜하려면 프로필 등록이 필요해요.
+        <br />
+        프로필 등록 페이지로 이동할까요?
+      </p>,
+      {
+        title: '프로필 등록',
+        variant: 'popup',
+        buttons: (
+          <>
+            <Button
+              variant="outlined"
+              size={modalButtonSize}
+              className="flex-1"
+              onClick={closeModal}
+            >
+              취소
+            </Button>
+            <Button
+              size={modalButtonSize}
+              className="flex-1"
+              href={ROUTES.customerProfileNew}
+              onClick={closeModal}
+            >
+              프로필 등록하기
+            </Button>
+          </>
+        ),
+      },
+    );
+  }
 
   async function toggleLike() {
     /* pending 잠금: 같은 요청이 끝나기 전에는 다시 토글하지 않는다 */
@@ -67,10 +114,8 @@ export function useMoverLike(moverId: string, initialLikeCount: number) {
         return;
       }
 
-      /** 고객 프로필 미등록시 토스트 메시지 표시 후 고객 프로필 페이지로 이동 */
       if (error instanceof HttpError && error.status === 404) {
-        showToast('고객 프로필을 등록한 뒤 찜할 수 있어요.');
-        router.push(ROUTES.customerProfileRoot);
+        openProfileRequiredModal();
         return;
       }
 

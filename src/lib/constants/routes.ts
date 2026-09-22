@@ -33,7 +33,8 @@ export const ROUTES = {
   customerProfileEdit: '/customer/profile/edit', // 프로필 수정
   customerLikedMovers: '/customer/liked-movers', // 찜한 기사님
   customerReviewsRoot: '/customer/reviews', // 이사 리뷰 (작성대기/작성한 리뷰)
-  customerReviewsPending: '/customer/reviews/pending', // 이사 리뷰 > 작성 대기
+  customerReviewsPending: '/customer/reviews/pending', // 이사 리뷰 > 작성 가능한 리뷰
+  customerReviewsCompleted: '/customer/reviews/completed', // 이사 리뷰 > 내가 작성한 리뷰
 
   /* 기사님 프로필 메뉴 */
   moverMypage: '/mover/mypage', // 마이페이지 (계정·프로필 수정 포함)

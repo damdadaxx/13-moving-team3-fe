@@ -50,7 +50,7 @@ export const ENDPOINTS = {
 
   // --- Review(리뷰) ---
   review: {
-    mine: api('/reviews/me'), // [GET] 로그인 - 내가 쓴 리뷰 목록
+    mine: api('/reviews/me'), // [GET] 로그인 - 내 완료 견적 (?hasReview=false 미작성, true 작성완료)
     byMover: (id: number | string) => api(`/reviews/mover/${id}`), // [GET] 비로그인 - 기사 리뷰 목록
     create: api('/reviews'), // [POST] 로그인 - 리뷰 작성
   },

@@ -68,7 +68,7 @@ export default function EstimateRequestSummary({
 
   const detailValueClassName = isCard
     ? 'text-lg-semibold text-black-500'
-    : 'text-md-medium text-black-500 desktop:text-lg-medium';
+    : 'text-lg-medium text-black-500';
 
   const displayFromRegion = getShortAddress(fromRegion);
   const displayToRegion = getShortAddress(toRegion);
@@ -97,49 +97,21 @@ export default function EstimateRequestSummary({
         className={
           isCard
             ? 'flex flex-col gap-[16px] tablet:flex-row tablet:items-start tablet:justify-between'
-            : 'flex flex-col gap-[8px]'
+            : 'flex w-full flex-col items-start gap-[8px] desktop:flex-row desktop:gap-[48px]'
         }
       >
-        <div
-          className={
-            isCard
-              ? 'flex items-start gap-[12px]'
-              : 'flex items-center gap-[12px]'
-          }
-        >
-          <div
-            className={
-              isCard
-                ? 'flex flex-col items-start'
-                : 'flex items-center gap-[8px]'
-            }
-          >
+        <div className="flex items-end gap-[12px]">
+          <div className="flex flex-col items-start">
             <span className="text-md-regular text-gray-500">출발지</span>
             <span className={detailValueClassName}>{displayFromRegion}</span>
           </div>
-          <IcArrowRight
-            className={
-              isCard
-                ? 'h-[23px] w-[17px] shrink-0 self-center'
-                : 'h-[23px] w-[17px] shrink-0'
-            }
-          />
-          <div
-            className={
-              isCard
-                ? 'flex flex-col items-start'
-                : 'flex items-center gap-[8px]'
-            }
-          >
+          <IcArrowRight className="h-[23px] w-[17px] shrink-0 self-end" />
+          <div className="flex flex-col items-start">
             <span className="text-md-regular text-gray-500">도착지</span>
             <span className={detailValueClassName}>{displayToRegion}</span>
           </div>
         </div>
-        <div
-          className={
-            isCard ? 'flex flex-col items-start' : 'flex items-center gap-[8px]'
-          }
-        >
+        <div className="flex flex-col items-start">
           <span className="text-md-regular text-gray-500">이사일</span>
           <span className={detailValueClassName}>{moveDate}</span>
         </div>

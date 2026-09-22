@@ -3,9 +3,9 @@
 //
 // 지정 견적 요청: 견적 보내기 + 반려하기 둘 다 보인다
 // 지정이 아닌 요청: 견적 보내기만 보인다 (반려 API 자체가 없다)
-// mobile·tablet: 버튼이 세로로 쌓이고 각각 전체 너비 (견적 보내기가 위, 반려하기가 아래)
-// desktop: 버튼이 가로로 나란히 절반씩 (반려하기가 왼쪽, 견적 보내기가 오른쪽)
-// DOM 순서는 mobile 기준(견적 보내기 먼저)으로 두고 desktop만 order로 시각 순서를 뒤집는다
+// mobile: 버튼이 세로로 쌓이고 각각 전체 너비 (견적 보내기가 위, 반려하기가 아래)
+// tablet·desktop: 버튼이 가로로 나란히 절반씩 (반려하기가 왼쪽, 견적 보내기가 오른쪽)
+// DOM 순서는 mobile 기준(견적 보내기 먼저)으로 두고 tablet·desktop만 order로 시각 순서를 뒤집는다
 'use client';
 
 import { useState } from 'react';
@@ -68,7 +68,9 @@ export default function ReceivedRequestCard({
             variant="solid"
             size="sm"
             className={
-              request.isDesignated ? 'desktop:order-2 desktop:flex-1' : 'w-full'
+              request.isDesignated
+                ? 'tablet:order-2 tablet:flex-1 desktop:order-2 desktop:flex-1'
+                : 'w-full'
             }
             icon={<IcWriting className="size-[24px]" />}
             onClick={() => setIsModalOpen(true)}
@@ -79,7 +81,7 @@ export default function ReceivedRequestCard({
             <Button
               variant="outlined"
               size="sm"
-              className="desktop:order-1 desktop:flex-1"
+              className="tablet:order-1 tablet:flex-1 desktop:order-1 desktop:flex-1"
               onClick={() => setIsRejectModalOpen(true)}
             >
               반려하기

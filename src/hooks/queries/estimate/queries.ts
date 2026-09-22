@@ -1,6 +1,10 @@
 // tanstack/react-query - estimate queries
 import type { ReceivedRequestQuery } from '@/types/estimate';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useQuery,
+} from '@tanstack/react-query';
 
 import {
   getActiveEstimateRequest,
@@ -34,6 +38,7 @@ export function useReceivedRequestsQuery(query: ReceivedRequestQuery) {
       getReceivedRequests({ ...query, cursor: pageParam }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+    placeholderData: keepPreviousData,
     meta: { name: '받은 요청 목록' },
   });
 }

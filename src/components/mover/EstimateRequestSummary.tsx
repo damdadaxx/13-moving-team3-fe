@@ -8,6 +8,8 @@ import IcArrowRight from '@/assets/icons/ic_arrow_right.svg';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
+import getShortAddress from '@/utils/getShortAddress';
+
 import ServiceTypeTag from '@/components/ui/Tag/ServiceTypeTag';
 
 interface EstimateRequestSummaryProps {
@@ -68,6 +70,9 @@ export default function EstimateRequestSummary({
     ? 'text-lg-semibold text-black-500'
     : 'text-md-medium text-black-500 desktop:text-lg-medium';
 
+  const displayFromRegion = getShortAddress(fromRegion);
+  const displayToRegion = getShortAddress(toRegion);
+
   return (
     <div className="flex flex-col gap-[16px] desktop:gap-[24px]">
       {isCard ? (
@@ -92,7 +97,7 @@ export default function EstimateRequestSummary({
         className={
           isCard
             ? 'flex flex-col gap-[16px] tablet:flex-row tablet:items-start tablet:justify-between'
-            : 'flex flex-col gap-[8px] desktop:flex-row desktop:gap-[48px]'
+            : 'flex flex-col gap-[8px]'
         }
       >
         <div
@@ -110,7 +115,7 @@ export default function EstimateRequestSummary({
             }
           >
             <span className="text-md-regular text-gray-500">출발지</span>
-            <span className={detailValueClassName}>{fromRegion}</span>
+            <span className={detailValueClassName}>{displayFromRegion}</span>
           </div>
           <IcArrowRight
             className={
@@ -127,7 +132,7 @@ export default function EstimateRequestSummary({
             }
           >
             <span className="text-md-regular text-gray-500">도착지</span>
-            <span className={detailValueClassName}>{toRegion}</span>
+            <span className={detailValueClassName}>{displayToRegion}</span>
           </div>
         </div>
         <div

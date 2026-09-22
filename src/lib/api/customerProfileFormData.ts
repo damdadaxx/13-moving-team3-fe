@@ -10,10 +10,6 @@ import type { CustomerProfileFormValues } from '@/types/customerProfile';
 - serviceTypes는 배열을 JSON 문자열로 직렬화한다.
 - profileImage는 사용자가 새 파일을 선택한 경우에만 추가한다.
 - Content-Type은 이 함수와 호출부에서 직접 지정하지 않는다. 브라우저가 multipart boundary와 함께 만든다.
-
-@ 현재 사용 상태
-- 네트워크 계층 병합 전에 전송 형태만 확정하기 위한 순수 생성 함수다.
-- 실제 POST/PATCH API 함수에서는 아직 호출하지 않는다.
 */
 export function createCustomerProfileFormData(
   values: CustomerProfileFormValues,

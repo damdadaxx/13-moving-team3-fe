@@ -13,7 +13,15 @@ import RegionChipGroup from '@/components/ui/Chip/RegionChipGroup';
 import ServiceTypeSelector from '@/components/ui/Chip/ServiceTypeSelector';
 import ProfileUpload from '@/components/ui/ProfileUpload/ProfileUpload';
 
-type CustomerProfileFormMode = 'create' | 'edit';
+const FORM_COPY = {
+  create: {
+    title: '프로필 등록',
+    description: '추가 정보를 입력하여 회원가입을 완료해주세요.',
+    submitLabel: '시작하기',
+  },
+} as const;
+
+type CustomerProfileFormMode = keyof typeof FORM_COPY;
 
 interface CustomerProfileFormProps {
   mode: CustomerProfileFormMode;
@@ -24,38 +32,15 @@ interface CustomerProfileFormProps {
   onSubmit?: (values: CustomerProfileFormValues) => void | Promise<void>;
 }
 
-const FORM_COPY = {
-  create: {
-    title: '프로필 등록',
-    description: '추가 정보를 입력하여 회원가입을 완료해주세요.',
-    submitLabel: '시작하기',
-  },
-  /*
-  @ TODO(수정 화면 Figma 확정 시 확인·수정)
-  - 현재 전달받은 Figma node는 등록 화면이므로 수정 화면 전용 문구는 임시로 작성했다.
-  - 수정 화면 node가 확정되면 제목, 설명, 버튼 문구를 디자인 원문과 비교해 교체한다.
-  - 레이아웃과 입력 항목은 등록 화면과 동일한 공용 폼을 계속 재사용한다.
-  */
-  edit: {
-    title: '프로필 수정',
-    description: '프로필 정보를 수정해주세요.',
-    submitLabel: '수정하기',
-  },
-} as const;
-
 /*=================================================
-고객 프로필 등록·수정 공용 폼
+고객 프로필 등록 폼
 =================================================*/
 
 /*
-@ 웹 퍼블리싱 단계의 책임
-- 등록과 수정 페이지가 같은 레이아웃과 입력 컴포넌트를 재사용하도록 구성한다.
+@ 등록 폼의 책임
+- 고객 프로필 최초 등록에 필요한 레이아웃과 입력 컴포넌트를 구성한다.
 - API 호출은 페이지에서 전달받은 onSubmit이 담당하고 폼은 로딩과 오류 상태를 표현한다.
 - 서비스 종류와 지역은 React Hook Form이 값을 보관하고, 공용 Chip은 그 값을 화면에 표현한다.
-
-@ 수정 화면 API 연동 시 확인
-- 조회 API가 늦게 도착하는 수정 화면에서는 폼 훅의 reset()으로 응답 값을 초기값에 반영한다.
-- 등록과 수정이 이 폼을 함께 사용하므로 onSubmit은 각 페이지가 자신의 mutation을 전달한다.
 */
 export default function CustomerProfileForm({
   mode,
@@ -95,9 +80,9 @@ export default function CustomerProfileForm({
       <form
         noValidate
         onSubmit={handleFormSubmit}
-        className="mx-auto flex w-full max-w-[327px] flex-col gap-[32px] pt-[16px] pb-[40px] tablet:mt-[24px] tablet:min-h-[1050px] tablet:justify-between desktop:mt-[32px] desktop:min-h-0 desktop:max-w-[1200px] desktop:gap-[56px] desktop:rounded-[32px] desktop:px-[40px] desktop:pt-[24px]"
+        className="mx-auto flex w-full max-w-[327px] flex-col gap-[32px] pt-[16px] pb-[40px] px-[24px] tablet:pt-[40px] desktop:gap-[56px] desktop:pt-[56px] desktop:max-w-[640px]"
       >
-        <div className="mx-auto flex w-full flex-col gap-[20px] desktop:max-w-[640px] desktop:gap-[40px]">
+        <div className="mx-auto flex w-full flex-col gap-[20px]">
           {/*
           @ 페이지 안내 영역
           - 모바일/태블릿은 18px 제목, 데스크톱은 Figma의 32px/46px 제목을 사용한다.

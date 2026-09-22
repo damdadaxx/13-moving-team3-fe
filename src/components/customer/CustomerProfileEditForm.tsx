@@ -104,12 +104,16 @@ export default function CustomerProfileEditForm({
         noValidate
         onSubmit={handleFormSubmit}
         className={cn(
-          'mx-auto flex w-full max-w-[375px] flex-col gap-[32px] px-[24px] pt-[16px] pb-[24px]',
-          'tablet:max-w-[375px]',
-          'desktop:mt-[38px] desktop:max-w-[1200px] desktop:gap-[64px] desktop:rounded-[32px] desktop:px-[40px] desktop:pt-[32px] desktop:pb-[40px]',
+          'flex w-full flex-col gap-[32px] px-[24px] pt-[16px] pb-[24px]',
+          'desktop:px-[72px] desktop:mt-[38px] desktop:gap-[64px] desktop:pt-[32px] desktop:pb-[40px]',
         )}
       >
-        <div className="flex flex-col gap-[32px] desktop:gap-[40px]">
+        <div
+          className={cn(
+            'flex flex-col gap-[32px] w-full max-w[327px] mx-auto',
+            'desktop:max-w-[1200px] desktop:gap-[40px]',
+          )}
+        >
           <header className="flex items-center">
             <h1 className="text-2lg-bold leading-[26px] text-black-400 desktop:text-3xl-semibold desktop:leading-[46px]">
               프로필 수정

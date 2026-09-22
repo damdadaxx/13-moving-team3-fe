@@ -2,6 +2,8 @@ import { CUSTOMER_PROFILE_REGIONS } from '@/types/customerProfile';
 import { SERVICE_TYPES } from '@/types/serviceType';
 import { z } from 'zod';
 
+import { signupSchema } from '@/lib/validations/authValidation';
+
 /*=================================================
 고객 프로필 등록·수정 폼 검증
 =================================================*/
@@ -77,6 +79,17 @@ const customerPhoneNumberSchema = z
   .regex(/^01[016789]-?\d{3,4}-?\d{4}$/, '올바른 전화번호 형식이 아닙니다.');
 
 /*
+@ 새 비밀번호 공통 규칙
+- 회원가입 signupSchema의 password 규칙을 재사용해 화면별 검증 기준이 달라지지 않게 한다.
+- 따라서 프로필 수정에서도 8자 이상이고 숫자를 1자 이상 포함해야 한다.
+- 백엔드 비밀번호 수정 계약에 맞춰 64자 상한은 수정 화면에서 추가로 검증한다.
+*/
+const customerNewPasswordSchema = signupSchema.shape.password.max(
+  64,
+  '새 비밀번호는 64자 이하여야 합니다.',
+);
+
+/*
 @ 비밀번호 선택 검증
 - 비밀번호를 변경하지 않는 경우 세 입력값을 모두 비워둘 수 있다.
 - 새 비밀번호 또는 확인값을 입력하면 현재 비밀번호, 새 비밀번호, 확인값이 모두 필요하다.
@@ -108,17 +121,23 @@ export const customerProfileEditSchema = z
       });
     }
 
-    if (values.newPassword.length < 8) {
+    /*
+    @ 새 비밀번호 검증
+    - 비밀번호를 변경하는 경우에만 회원가입과 같은 규칙을 검사한다.
+    - safeParse를 사용해 회원가입 스키마의 규칙과 오류 메시지를 직접 재사용한다.
+    - 여러 규칙이 동시에 실패해도 사용자에게는 가장 먼저 고쳐야 할 오류 하나만 표시한다.
+    */
+    const newPasswordResult = customerNewPasswordSchema.safeParse(
+      values.newPassword,
+    );
+
+    if (!newPasswordResult.success) {
       context.addIssue({
         code: 'custom',
         path: ['newPassword'],
-        message: '새 비밀번호는 8자 이상이어야 합니다.',
-      });
-    } else if (values.newPassword.length > 64) {
-      context.addIssue({
-        code: 'custom',
-        path: ['newPassword'],
-        message: '새 비밀번호는 64자 이하여야 합니다.',
+        message:
+          newPasswordResult.error.issues[0]?.message ??
+          '새 비밀번호 형식을 확인해주세요.',
       });
     }
 

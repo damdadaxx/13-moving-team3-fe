@@ -71,43 +71,73 @@ export default function ProfileEditPage() {
     updateProfileMutation.isPending;
 
   /*
-  @ 수정 계획에 포함된 영역만 저장
+  @ 변경된 영역을 안전한 순서로 저장
   - 폼 버튼과 페이지가 동일한 CustomerProfileEditPlan을 사용해 변경 판단 불일치를 막는다.
-  - account/password/profile 중 값이 있는 영역의 API만 호출한다.
-  - 서로 다른 API는 한 트랜잭션이 아니므로 allSettled로 모든 결과를 확인한다.
-    하나라도 실패하면 화면에 남고, 성공한 요청의 Query 캐시는 mutation이 이미 갱신한다.
+  - account/profile/password 중 값이 있는 영역의 API만 호출한다.
+  - 기본 정보 → 고객 프로필 → 비밀번호 순서로 하나씩 요청한다.
+  - 비밀번호는 성공하면 기존 currentPassword가 더 이상 유효하지 않으므로
+    뒤의 다른 요청이 실패한 후 이전 비밀번호를 다시 보내지 않도록 항상 마지막에 요청한다.
   - 요청이 0개면 성공 토스트와 페이지 이동을 실행하지 않는다.
   */
   const handleSubmit = async (plan: CustomerProfileEditPlan) => {
-    const requests: Promise<unknown>[] = [];
+    const completedSections: string[] = [];
 
-    if (plan.account) {
-      requests.push(updateMeMutation.mutateAsync(plan.account));
-    }
-
-    if (plan.password) {
-      requests.push(updatePasswordMutation.mutateAsync(plan.password));
-    }
-
-    if (plan.profile) {
-      requests.push(updateProfileMutation.mutateAsync(plan.profile));
-    }
-
-    if (requests.length === 0) {
+    if (!plan.account && !plan.profile && !plan.password) {
       throw new Error('변경된 정보가 없어 수정 요청을 보내지 않았습니다.');
     }
 
-    const results = await Promise.allSettled(requests);
-    const failedResult = results.find((result) => result.status === 'rejected');
+    try {
+      /*
+      @ 1. 기본 정보 수정
+      - 이름 또는 전화번호가 변경된 경우에만 PATCH /auth/me를 요청한다.
+      - 성공하면 mutation이 Auth Query 캐시도 최신 응답으로 갱신한다.
+      */
+      if (plan.account) {
+        await updateMeMutation.mutateAsync(plan.account);
+        completedSections.push('기본 정보');
+      }
 
-    if (failedResult?.status === 'rejected') {
-      throw failedResult.reason;
+      /*
+      @ 2. 고객 프로필 수정
+      - 프로필 이미지·지역·서비스 중 변경된 값이 있을 때만 PATCH /customer/profile을 요청한다.
+      - 비밀번호보다 먼저 실행해 비밀번호 변경 후 다른 요청이 실패하는 상황을 막는다.
+      */
+      if (plan.profile) {
+        await updateProfileMutation.mutateAsync(plan.profile);
+        completedSections.push('프로필');
+      }
+
+      /*
+      @ 3. 비밀번호 수정
+      - 비밀번호가 성공적으로 변경되면 기존 currentPassword를 다시 사용할 수 없다.
+      - 따라서 더 이상 뒤에서 실패할 수정 요청이 없도록 항상 마지막에 실행한다.
+      */
+      if (plan.password) {
+        await updatePasswordMutation.mutateAsync(plan.password);
+        completedSections.push('비밀번호');
+      }
+    } catch (error) {
+      /*
+      @ 부분 성공 안내
+      - 앞선 요청이 성공한 뒤 다음 요청이 실패할 수 있다.
+      - 이미 저장된 영역을 사용자에게 알려 전체 수정이 모두 실패한 것으로 오해하지 않게 한다.
+      - 원래 오류는 다시 throw해 폼 훅이 서버 validation 오류를 해당 입력란에 표시하게 한다.
+      */
+      if (completedSections.length > 0) {
+        showToast(
+          `${completedSections.join('·')} 수정은 저장되었지만 나머지 수정은 완료되지 않았습니다.`,
+        );
+      }
+
+      throw error;
     }
 
     /*
     @ 성공 후 서버 상태 재확인
-    - mutation 응답으로 캐시는 이미 갱신되지만 실제 저장값을 다시 조회해 다음 진입의 초기값을 확정한다.
-    - 이름·전화번호가 바뀌면 Customer Profile 응답에도 같은 사용자 정보가 포함되므로 두 캐시를 동기화한다.
+    - mutation 성공 응답으로 관련 Query 캐시는 이미 갱신된 상태다.
+    - invalidateQueries는 서버에 저장된 최종 값을 다시 확인하기 위한 후속 작업이다.
+    - 이 재조회만 실패해도 이미 성공한 저장을 실패로 처리하지 않도록 allSettled를 사용한다.
+    - 특히 비밀번호 저장 후 재조회 실패 때문에 예전 currentPassword를 다시 전송하는 문제를 막는다.
     */
     const refetches: Promise<unknown>[] = [];
 
@@ -125,7 +155,7 @@ export default function ProfileEditPage() {
       );
     }
 
-    await Promise.all(refetches);
+    await Promise.allSettled(refetches);
 
     showToast('프로필 수정이 완료되었습니다.');
     router.replace(ROUTES.customerHome);

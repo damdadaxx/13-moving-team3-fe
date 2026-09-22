@@ -18,13 +18,14 @@ export default function ButtonIconExamplePage() {
       <div>
         <h1 className="text-xl-bold">ButtonIcon 컴포넌트 예시</h1>
         <p className="mt-2 text-md-regular text-gray-500">
-          <code>size</code> prop이 없습니다.{' '}
+          <code>size</code>는 <code>sm</code>(40px) / <code>md</code>(54px) /{' '}
+          <code>lg</code>(64px) / <code>responsive</code>입니다.{' '}
           <span className="font-bold text-orange-400">
             반응형은 컴포넌트가 처리합니다.
           </span>{' '}
-          버튼은 모바일 40px / 태블릿 54px / 데스크톱 64px, 아이콘은 24px →
-          데스크톱 36px입니다. <code>useBreakpointValue</code>는 넘기지
-          않습니다.
+          기본값 <code>responsive</code>는 모바일 40px, 태블릿 54px, 데스크톱
+          64px입니다. 아이콘은 24px이고 데스크톱만 36px입니다.{' '}
+          <code>useBreakpointValue</code>는 넘기지 않습니다.
         </p>
         <p className="mt-2 text-md-regular text-gray-500">
           Button과 같이 <code>ButtonElement</code> 위에 얹혀 있습니다.{' '}
@@ -48,7 +49,48 @@ export default function ButtonIconExamplePage() {
         </div>
 
         <section className="flex flex-col gap-3">
-          <h3 className="text-lg-semibold">1. variant — like / clip</h3>
+          <h3 className="text-lg-semibold">
+            1. size — sm (40px) / md (54px) / lg (64px) / responsive
+          </h3>
+          <p className="text-md-regular text-gray-500">
+            Figma Button &gt; etc의 xs / sm / md를 프로젝트 size 이름 sm / md /
+            lg에 맞춘 값입니다. 기본값 <code>responsive</code>는 창 너비에 따라
+            40 → 54 → 64로 바뀝니다. 아래 네 번째만 크기가 바뀝니다.
+          </p>
+          <p className="text-sm-medium text-gray-500">size=&quot;sm&quot;</p>
+          <div className="flex items-end gap-3">
+            <ButtonIcon variant="like" size="sm" />
+            <ButtonIcon variant="clip" size="sm" />
+            <ButtonIcon variant="kakao" size="sm" />
+            <ButtonIcon variant="facebook" size="sm" />
+          </div>
+          <p className="text-sm-medium text-gray-500">size=&quot;md&quot;</p>
+          <div className="flex items-end gap-3">
+            <ButtonIcon variant="like" size="md" />
+            <ButtonIcon variant="clip" size="md" />
+            <ButtonIcon variant="kakao" size="md" />
+            <ButtonIcon variant="facebook" size="md" />
+          </div>
+          <p className="text-sm-medium text-gray-500">size=&quot;lg&quot;</p>
+          <div className="flex items-end gap-3">
+            <ButtonIcon variant="like" size="lg" />
+            <ButtonIcon variant="clip" size="lg" />
+            <ButtonIcon variant="kakao" size="lg" />
+            <ButtonIcon variant="facebook" size="lg" />
+          </div>
+          <p className="text-sm-medium text-gray-500">
+            size=&quot;responsive&quot; (기본값)
+          </p>
+          <div className="flex items-end gap-3">
+            <ButtonIcon variant="like" />
+            <ButtonIcon variant="clip" />
+            <ButtonIcon variant="kakao" />
+            <ButtonIcon variant="facebook" />
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-3">
+          <h3 className="text-lg-semibold">2. variant — like / clip</h3>
           <div className="flex items-end gap-3">
             <ButtonIcon variant="like" />
             <ButtonIcon variant="clip" />
@@ -56,7 +98,7 @@ export default function ButtonIconExamplePage() {
         </section>
 
         <section className="flex flex-col gap-3">
-          <h3 className="text-lg-semibold">2. variant — kakao / facebook</h3>
+          <h3 className="text-lg-semibold">3. variant — kakao / facebook</h3>
           <div className="flex items-end gap-3">
             <ButtonIcon variant="kakao" />
             <ButtonIcon variant="facebook" />
@@ -64,7 +106,7 @@ export default function ButtonIconExamplePage() {
         </section>
 
         <section className="flex flex-col gap-3">
-          <h3 className="text-lg-semibold">3. onClick</h3>
+          <h3 className="text-lg-semibold">4. onClick</h3>
           <p className="text-md-regular text-gray-500">
             <code>onClick</code>은 <code>button</code>과 <code>Link</code>{' '}
             모두에 붙습니다. disabled면 호출되지 않습니다.
@@ -90,7 +132,7 @@ export default function ButtonIconExamplePage() {
         </section>
 
         <section className="flex flex-col gap-3">
-          <h3 className="text-lg-semibold">4. href — Link로 쓰기</h3>
+          <h3 className="text-lg-semibold">5. href — Link로 쓰기</h3>
           <p className="text-md-regular text-gray-500">
             <code>href</code>를 넘기면 <code>next/link</code>로 렌더됩니다.
             비활성 링크는 <code>href</code> 없는 <code>&lt;a&gt;</code>로
@@ -104,7 +146,7 @@ export default function ButtonIconExamplePage() {
         </section>
 
         <section className="flex flex-col gap-3">
-          <h3 className="text-lg-semibold">5. disabled</h3>
+          <h3 className="text-lg-semibold">6. disabled</h3>
           <div className="flex items-end gap-3">
             <ButtonIcon variant="like" disabled />
             <ButtonIcon variant="kakao" disabled />
@@ -112,7 +154,7 @@ export default function ButtonIconExamplePage() {
         </section>
 
         <section className="flex flex-col gap-3">
-          <h3 className="text-lg-semibold">6. isLoading — 눌러보세요 (2초)</h3>
+          <h3 className="text-lg-semibold">7. isLoading — 눌러보세요 (2초)</h3>
           <p className="text-md-regular text-gray-500">
             로딩 중에는 스피너만 남고 클릭이 막힙니다. <code>isLoading</code>은{' '}
             <code>disabled</code>와 같이 공통으로 처리됩니다.

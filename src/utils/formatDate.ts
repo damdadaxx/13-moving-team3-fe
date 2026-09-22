@@ -6,14 +6,15 @@
  * - "이용일": "YYYY. MM. DD(요일) 오전/오후 HH:MM"
  * - "리뷰": "YYYY-MM-DD"
  * - "이사일"/"견적 요청일": "YYYY년 MM월 DD일 (요일)"
+ * - "상대 시간"(relative): "방금 전" / "N분 전" / "N시간 전" / "어제" / "N일 전"
  *
  * @param {Date | string | number} date - 변환할 날짜
- * @param {'usage' | 'review' | 'korean'} [type='usage'] - 포맷 타입
+ * @param {'usage' | 'review' | 'korean' | 'relative'} [type='usage'] - 포맷 타입
  * @returns {string} 지정한 형식의 날짜 문자열
  */
 export default function formatDate(
   date: Date | string | number,
-  type: 'usage' | 'review' | 'korean' = 'usage',
+  type: 'usage' | 'review' | 'korean' | 'relative' = 'usage',
 ): string {
   if (!date) return '';
 
@@ -40,6 +41,19 @@ export default function formatDate(
   if (type === 'review') {
     // 예: 2024-07-01
     return `${year}-${month}-${day}`;
+  }
+
+  if (type === 'relative') {
+    const diffMs = Date.now() - d.getTime();
+    const diffMin = Math.floor(diffMs / (60 * 1000));
+    const diffHour = Math.floor(diffMin / 60);
+    const diffDay = Math.floor(diffHour / 24);
+
+    if (diffMin < 1) return '방금 전';
+    if (diffMin < 60) return `${diffMin}분 전`;
+    if (diffHour < 24) return `${diffHour}시간 전`;
+    if (diffDay === 1) return '어제';
+    return `${diffDay}일 전`;
   }
 
   // 'korean' (이사일/견적 요청일 등): 2024년 07월 01일 (월)

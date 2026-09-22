@@ -1,11 +1,17 @@
 'use client';
 
-// [게시용] 이번 브랜치는 퍼블리싱까지만 진행한다. API 연동 없이 UI 상태만 다룬다.
 import { useState } from 'react';
 
 import type { ServiceType } from '@/types/serviceType';
 
+import { HttpError } from '@/lib/api/errors';
+
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+import { useToast } from '@/hooks/common/useToast';
+import {
+  useCreateEstimateMutation,
+  useUpdateEstimateStatusMutation,
+} from '@/hooks/queries/estimate/mutations';
 
 import Button from '@/components/ui/Button/Button';
 import Input from '@/components/ui/Form/Input';
@@ -17,13 +23,16 @@ import EstimateRequestSummary from './EstimateRequestSummary';
 interface SendEstimateModalProps {
   isOpen: boolean;
   onClose: () => void;
+  estimateRequestId: string;
+  /** 지정 건일 때만 있다. PATCH /estimates/{estimateId}에 필요하다 */
+  estimateId?: string;
   isDesignated: boolean;
   serviceType: ServiceType;
   customerName: string;
   fromRegion: string;
   toRegion: string;
   moveDate: string;
-  /** 전송 버튼 클릭(유효성 통과) 후 호출된다 */
+  /** 전송 성공 후 호출된다 */
   onSuccess?: () => void;
 }
 
@@ -31,12 +40,14 @@ const MIN_COMMENT_LENGTH = 10;
 
 function formatPrice(rawDigits: string): string {
   if (!rawDigits) return '';
-  return `${Number(rawDigits).toLocaleString('ko-KR')}원`;
+  return `${BigInt(rawDigits).toLocaleString('ko-KR')}원`;
 }
 
 export default function SendEstimateModal({
   isOpen,
   onClose,
+  estimateRequestId,
+  estimateId,
   isDesignated,
   serviceType,
   customerName,
@@ -48,6 +59,11 @@ export default function SendEstimateModal({
   const [price, setPrice] = useState('');
   const [comment, setComment] = useState('');
   const controlSize = useBreakpointValue('sm', 'sm', 'md');
+  const { showToast } = useToast();
+  const createEstimateMutation = useCreateEstimateMutation();
+  const updateEstimateStatusMutation = useUpdateEstimateStatusMutation();
+  const isPending =
+    createEstimateMutation.isPending || updateEstimateStatusMutation.isPending;
 
   const isValid = price !== '' && comment.length >= MIN_COMMENT_LENGTH;
 
@@ -55,13 +71,42 @@ export default function SendEstimateModal({
     setPrice(formatPrice(event.target.value.replace(/[^0-9]/g, '')));
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!isValid) return;
 
-    setPrice('');
-    setComment('');
-    onSuccess?.();
-    onClose();
+    if (isDesignated && !estimateId) {
+      showToast('견적 정보를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.');
+      return;
+    }
+
+    try {
+      if (isDesignated && estimateId) {
+        await updateEstimateStatusMutation.mutateAsync({
+          estimateId,
+          input: {
+            status: 'PROPOSED',
+            price: Number(price.replace(/[^0-9]/g, '')),
+            comment,
+          },
+        });
+      } else {
+        await createEstimateMutation.mutateAsync({
+          estimateRequestId,
+          price: Number(price.replace(/[^0-9]/g, '')),
+          comment,
+        });
+      }
+      setPrice('');
+      setComment('');
+      onSuccess?.();
+      onClose();
+    } catch (error) {
+      const message =
+        error instanceof HttpError
+          ? error.message
+          : '견적 전송에 실패했어요. 잠시 후 다시 시도해 주세요.';
+      showToast(message);
+    }
   }
 
   return (
@@ -71,7 +116,11 @@ export default function SendEstimateModal({
       title="견적 보내기"
       variant="sheet"
       buttons={
-        <Button size={controlSize} disabled={!isValid} onClick={handleSubmit}>
+        <Button
+          size={controlSize}
+          disabled={!isValid || isPending}
+          onClick={handleSubmit}
+        >
           견적 보내기
         </Button>
       }

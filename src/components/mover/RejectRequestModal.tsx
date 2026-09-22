@@ -3,7 +3,11 @@ import { useState } from 'react';
 
 import type { ServiceType } from '@/types/serviceType';
 
+import { HttpError } from '@/lib/api/errors';
+
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+import { useToast } from '@/hooks/common/useToast';
+import { useUpdateEstimateStatusMutation } from '@/hooks/queries/estimate/mutations';
 
 import Button from '@/components/ui/Button/Button';
 import Label from '@/components/ui/Form/Label';
@@ -14,13 +18,15 @@ import EstimateRequestSummary from './EstimateRequestSummary';
 interface RejectRequestModalProps {
   isOpen: boolean;
   onClose: () => void;
+  /** 지정 건의 estimateId. PATCH /estimates/{estimateId}에 필요하다 */
+  estimateId?: string;
   serviceType: ServiceType;
   isDesignated: boolean;
   customerName: string;
   fromRegion: string;
   toRegion: string;
   moveDate: string;
-  /** 반려 버튼 클릭(유효성 통과) 후 호출된다 */
+  /** 반려 성공 후 호출된다 */
   onSuccess?: () => void;
 }
 
@@ -29,6 +35,7 @@ const MIN_REASON_LENGTH = 10;
 export default function RejectRequestModal({
   isOpen,
   onClose,
+  estimateId,
   serviceType,
   isDesignated,
   customerName,
@@ -39,15 +46,34 @@ export default function RejectRequestModal({
 }: RejectRequestModalProps) {
   const [rejectReason, setRejectReason] = useState('');
   const controlSize = useBreakpointValue('sm', 'sm', 'md');
+  const { showToast } = useToast();
+  const updateEstimateStatusMutation = useUpdateEstimateStatusMutation();
 
   const isValid = rejectReason.length >= MIN_REASON_LENGTH;
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!isValid) return;
 
-    setRejectReason('');
-    onSuccess?.();
-    onClose();
+    if (!estimateId) {
+      showToast('견적 정보를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.');
+      return;
+    }
+
+    try {
+      await updateEstimateStatusMutation.mutateAsync({
+        estimateId,
+        input: { status: 'REJECTED', rejectReason },
+      });
+      setRejectReason('');
+      onSuccess?.();
+      onClose();
+    } catch (error) {
+      const message =
+        error instanceof HttpError
+          ? error.message
+          : '반려 처리에 실패했어요. 잠시 후 다시 시도해 주세요.';
+      showToast(message);
+    }
   }
 
   return (
@@ -57,7 +83,11 @@ export default function RejectRequestModal({
       title="반려요청"
       variant="sheet"
       buttons={
-        <Button size={controlSize} disabled={!isValid} onClick={handleSubmit}>
+        <Button
+          size={controlSize}
+          disabled={!isValid || updateEstimateStatusMutation.isPending}
+          onClick={handleSubmit}
+        >
           반려하기
         </Button>
       }

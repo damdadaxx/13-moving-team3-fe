@@ -37,21 +37,21 @@ export default function MoverDetailTopSection({
             alt="기사님 상세"
             fill
             priority
-            sizes="100vw"
+            sizes="(min-width: 744px) 1px, 100vw"
             className="object-cover tablet:hidden"
           />
           <Image
             src={ImgBgTablet}
             alt="기사님 상세"
             fill
-            sizes="100vw"
+            sizes="(min-width: 1024px) 1px, (min-width: 744px) 100vw, 1px"
             className="hidden object-cover tablet:block desktop:hidden"
           />
           <Image
             src={ImgBgDesktop}
             alt="기사님 상세"
             fill
-            sizes="100vw"
+            sizes="(min-width: 1024px) 100vw, 1px"
             className="hidden object-cover desktop:block"
           />
         </div>

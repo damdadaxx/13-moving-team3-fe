@@ -24,7 +24,7 @@ export default function ProfileImage({
         src={imageUrl || ImgDefaultProfile.src}
         alt="기사님 상세"
         fill
-        sizes="100vw"
+        sizes="(min-width: 1024px) 134px, (min-width: 744px) 100px, 64px"
         className={cn('object-cover')}
       />
     </div>

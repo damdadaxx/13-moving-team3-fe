@@ -7,27 +7,23 @@ import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { cn } from '@/utils/cn';
 
 import SelectableChip from '@/components/ui/Chip/SelectableChip';
+import SectionTitle from '@/components/ui/SectionTitle';
 
 /**
  * @ 기사님 서비스 가능 지역 목록 컴포넌트
  */
 export default function ServiceRegionList({
   serviceRegions,
+  className,
 }: {
   serviceRegions: Region[];
+  className?: string;
 }) {
   const currentBreakpoint = useBreakpointValue('sm', 'md', 'md');
 
   return (
-    <div>
-      <h2
-        className={cn(
-          'mb-[8px] text-lg-semibold text-black-400',
-          'tablet:mb-[16px] tablet:text-xl-semibold',
-        )}
-      >
-        서비스 가능 지역
-      </h2>
+    <div className={cn(className)}>
+      <SectionTitle>서비스 가능 지역</SectionTitle>
       <div
         className={cn(
           'grid grid-cols-[repeat(5,max-content)] gap-[8px]',

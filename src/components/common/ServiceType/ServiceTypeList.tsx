@@ -7,6 +7,7 @@ import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { cn } from '@/utils/cn';
 
 import SelectableChip from '@/components/ui/Chip/SelectableChip';
+import SectionTitle from '@/components/ui/SectionTitle';
 
 /**
  * @ 기사님 제공 서비스 목록 컴포넌트
@@ -20,14 +21,7 @@ export default function ServiceTypeList({
 
   return (
     <div>
-      <h2
-        className={cn(
-          'mb-[8px] text-lg-semibold text-black-400',
-          'tablet:mb-[16px] tablet:text-xl-semibold',
-        )}
-      >
-        제공 서비스
-      </h2>
+      <SectionTitle>제공 서비스</SectionTitle>
       <div className={cn('flex gap-[8px]', 'tablet:gap-[12px]')}>
         {serviceTypes.map((serviceType) => (
           <SelectableChip

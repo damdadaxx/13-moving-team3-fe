@@ -69,14 +69,22 @@ export default function ButtonExamplePage() {
           <h3 className="text-lg-semibold">1. variant — solid / outlined</h3>
           <p className="text-md-regular text-gray-500">
             기본값은 <code>solid</code>입니다. <code>size</code>를 생략하면{' '}
-            <code>sm</code>입니다. outlined는 배경이 없고 orange-400 테두리에
-            같은 색 글씨, 그림자(4px 4px 10px rgba(195,217,242,0.2))가 붙습니다.
+            <code>sm</code>입니다. outlined 기본 색은 <code>orange</code>이고,
+            배경 없이 orange-400 테두리와 같은 색 글씨, 그림자(4px 4px 10px
+            rgba(195,217,242,0.2))가 붙습니다.{' '}
+            <code>color=&quot;gray&quot;</code>면 테두리 gray-200, 글씨
+            gray-300이고 호버 배경은 background-300입니다.
           </p>
           <div className="w-[640px] max-w-full">
             <Button variant="solid">Primary CTA 버튼</Button>
           </div>
           <div className="w-[640px] max-w-full">
             <Button variant="outlined">Primary CTA 버튼</Button>
+          </div>
+          <div className="w-[640px] max-w-full">
+            <Button variant="outlined" color="gray">
+              Gray CTA 버튼
+            </Button>
           </div>
         </section>
 
@@ -129,8 +137,9 @@ export default function ButtonExamplePage() {
           <h3 className="text-lg-semibold">4. hover — 마우스를 올려보세요</h3>
           <p className="text-md-regular text-gray-500">
             hover는 prop이 아니라 CSS 상태입니다. solid는 배경이
-            orange-400(#F9502E) → orange-500(#E04829)으로, outlined는 배경이
-            투명 → orange-100(#FEEEEA)으로 채워지고 그림자가 약해집니다.
+            orange-400(#F9502E) → orange-500(#E04829)으로, outlined orange는
+            배경이 투명 → orange-100(#FEEEEA)으로 채워지고 그림자가 약해집니다.
+            outlined gray는 배경이 background-300(#EFEFEF)으로 채워집니다.
           </p>
           <div className="w-[640px] max-w-full">
             <Button size="md">Primary CTA 버튼</Button>
@@ -149,9 +158,8 @@ export default function ButtonExamplePage() {
             <code>aria-disabled</code>가 붙고, 상태 스타일은 이 값을 봅니다.
             링크로 쓸 때 <code>&lt;a&gt;</code>에는 <code>:disabled</code>가
             걸리지 않아서 기준을 aria로 맞췄습니다. hover 색은 적용되지
-            않습니다. solid는 배경이 gray-300(#ABABAB), outlined는 테두리
-            #C4C4C4 · 글씨 #808080이 되는데 이 두 색은 globals.css에 토큰이 없어
-            임의값을 쓰고 있습니다.
+            않습니다. solid는 배경이 gray-300(#ABABAB), outlined는 색과 상관없이
+            테두리 gray-200(#C4C4C4) · 글씨 gray-500(#808080)입니다.
           </p>
           <div className="w-[640px] max-w-full">
             <Button size="md" disabled>
@@ -178,8 +186,9 @@ export default function ButtonExamplePage() {
             Figma의 <code>solid-icon</code> 변형입니다. 별도 variant가 아니라{' '}
             <code>icon</code> prop에 아이콘을 넘기면 됩니다. 간격은 size가
             정합니다(md 8px / sm 4px). 아이콘은 <code>currentColor</code>라
-            outlined에서는 글씨와 같은 orange-400으로 나오고,{' '}
-            <code>aria-hidden</code>이라 보조기기에서는 읽히지 않습니다.
+            outlined orange에서는 글씨와 같은 orange-400, outlined gray에서는
+            gray-300으로 나오고, <code>aria-hidden</code>이라 보조기기에서는
+            읽히지 않습니다.
           </p>
           <div className="w-[640px] max-w-full">
             <Button size="md" icon={<IcWriting />}>

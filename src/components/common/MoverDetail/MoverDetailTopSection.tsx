@@ -1,61 +1,28 @@
 // [공용] 기사님 상세 상단 섹션
 import type { MoverListItem } from '@/types/mover';
-import Image from 'next/image';
-
-import ImgBg from '@/assets/images/mover-detail/page_mover_detail.png';
-import ImgBgDesktop from '@/assets/images/mover-detail/page_mover_detail_desktop.png';
-import ImgBgTablet from '@/assets/images/mover-detail/page_mover_detail_tablet.png';
 
 import { cn } from '@/utils/cn';
 
+import PageBanner from '@/components/ui/PageBanner';
 import ProfileImage from '@/components/ui/ProfileImage';
 
 export default function MoverDetailTopSection({
   imageUrl,
+  nickname,
 }: {
   imageUrl?: MoverListItem['imgUrl'];
+  nickname?: string;
 }) {
   return (
-    <div
+    <section
       className={cn(
         'relative pb-[22px]',
         'tablet:pb-[23px]',
         'desktop:pb-[51px]',
       )}
     >
-      <div
-        className={cn(
-          'h-[112px] w-full overflow-hidden',
-          'tablet:h-[157px]',
-          'desktop:h-[225px]',
-        )}
-      >
-        {/* 배경 이미지 */}
-        <div className="relative h-full w-full">
-          <Image
-            src={ImgBg}
-            alt="기사님 상세"
-            fill
-            priority
-            sizes="(min-width: 744px) 1px, 100vw"
-            className="object-cover tablet:hidden"
-          />
-          <Image
-            src={ImgBgTablet}
-            alt="기사님 상세"
-            fill
-            sizes="(min-width: 1024px) 1px, (min-width: 744px) 100vw, 1px"
-            className="hidden object-cover tablet:block desktop:hidden"
-          />
-          <Image
-            src={ImgBgDesktop}
-            alt="기사님 상세"
-            fill
-            sizes="(min-width: 1024px) 100vw, 1px"
-            className="hidden object-cover desktop:block"
-          />
-        </div>
-      </div>
+      {/* 배경 이미지 */}
+      <PageBanner />
 
       {/* 프로필 이미지 */}
       <div
@@ -65,9 +32,10 @@ export default function MoverDetailTopSection({
           <ProfileImage
             className={cn('absolute bottom-0 l-0 z-20')}
             imageUrl={imageUrl ?? undefined}
+            alt={nickname ? `${nickname} 프로필 사진` : ''}
           />
         </div>
       </div>
-    </div>
+    </section>
   );
 }

@@ -40,7 +40,9 @@ export default function Checkbox({
           {checked && <IcCheck className="h-[8px] w-[10px]" />}
         </span>
       </span>
-      <span className="text-lg-regular text-black-500">{label}</span>
+      <span className="text-md-regular tablet:text-lg-regular text-black-500">
+        {label}
+      </span>
     </label>
   );
 }

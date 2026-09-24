@@ -49,14 +49,14 @@ export default function LikedMoverCard({
   return (
     <article
       className={cn(
-        'flex flex-col gap-[12px] rounded-[16px] border-[0.5px] border-line-100 bg-gray-50 px-[14px] py-[16px] ',
+        'flex flex-col gap-[8px] rounded-[16px] border-[0.5px] border-line-100 bg-gray-50 p-[20px]',
         'shadow-[-2px_-2px_10px_0px_rgba(220,220,220,0.2),2px_2px_10px_0px_rgba(220,220,220,0.2)]',
-        'tablet:rounded-[20px] tablet:px-[24px] tablet:py-[20px]',
+        'tablet:gap-[13px] tablet:rounded-[20px] tablet:px-[28px] tablet:py-[24px]',
         'desktop:px-[28px] desktop:py-[24px]',
       )}
     >
       <div className="flex min-h-[34px] items-center justify-between gap-[8px]">
-        <div className="flex flex-wrap items-center gap-[4px]">
+        <div className="flex flex-wrap items-center gap-[8px]">
           {mover.serviceTypes.map((serviceType) => (
             <ServiceTypeTag
               key={serviceType}
@@ -78,14 +78,13 @@ export default function LikedMoverCard({
       {/* 카드 클릭시 기사 상세 페이지로 이동 */}
       <Link
         href={`/mover/${mover.moverId}`}
-        className="flex gap-[12px] desktop:gap-[20px]"
+        className="flex min-w-0 gap-[12px] tablet:gap-[20px]"
       >
         <div
           className={cn(
             'relative shrink-0 overflow-hidden rounded-[12px] bg-black-300',
-            'size-[46px]',
-            'tablet:size-[80px]',
-            'desktop:size-[134px]',
+            'size-[50px]',
+            'tablet:size-[134px]',
           )}
         >
           <Image
@@ -94,16 +93,16 @@ export default function LikedMoverCard({
             fill
             unoptimized={typeof profileImageSrc === 'string'}
             className="object-cover object-[center_20%]"
-            sizes="(min-width: 1024px) 134px, (min-width: 744px) 80px, 46px"
+            sizes="(min-width: 744px) 134px, 50px"
           />
         </div>
 
         <div className="flex min-w-0 flex-1 flex-col gap-[12px] py-[4px] desktop:gap-[20px]">
           <div className="flex min-w-0 flex-col">
-            <p className="text-md-semibold text-black-300 desktop:text-xl-semibold">
+            <p className="text-md-semibold text-black-300 tablet:text-xl-semibold">
               {mover.title}
             </p>
-            <p className="truncate text-xs-regular text-gray-500 desktop:text-md-regular">
+            <p className="line-clamp-2 min-w-0 w-full overflow-hidden break-words text-xs-regular text-gray-500 tablet:line-clamp-1 tablet:text-md-regular">
               {mover.description}
             </p>
           </div>
@@ -121,7 +120,7 @@ export default function LikedMoverCard({
                     className="absolute top-[calc(50%-0.5px)] left-1/2 h-[7.2px] w-[12.8px] -translate-x-1/2 -translate-y-1/2"
                   />
                 </span>
-                <p className="text-md-semibold text-black-300 desktop:text-lg-semibold">
+                <p className="text-md-semibold text-black-300 tablet:text-lg-semibold">
                   {mover.name}
                   <span> 기사님</span>
                 </p>
@@ -129,7 +128,9 @@ export default function LikedMoverCard({
 
               <div className="flex flex-wrap items-center gap-[8px]">
                 <div className="flex items-center gap-[2px]">
-                  <IcStar aria-hidden="true" className="size-[20px]" />
+                  <div className="flex items-center justify-center size-[20px]">
+                    <IcStar aria-hidden="true" className="size-[14px]" />
+                  </div>
                   <p className="text-sm-medium text-black-300">
                     {mover.rating.toFixed(1)}
                     <span className="text-gray-300">

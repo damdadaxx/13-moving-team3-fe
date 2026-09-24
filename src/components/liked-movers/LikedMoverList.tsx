@@ -129,7 +129,7 @@ export default function LikedMoverList() {
   }
 
   return (
-    <div className="flex flex-col gap-[16px] desktop:gap-[28px]">
+    <div className="flex flex-col gap-[10px] tablet:gap-[18px] desktop:gap-[28px]">
       <div className="flex items-center justify-between">
         <Checkbox
           checked={isAllSelected}
@@ -141,7 +141,7 @@ export default function LikedMoverList() {
           disabled={selectedCount === 0 || isDeleting}
           onClick={handleDeleteSelected}
           className={cn(
-            'px-[12px] text-lg-regular',
+            'px-[12px] text-md-regular tablet:text-lg-regular',
             selectedCount === 0 || isDeleting
               ? 'cursor-not-allowed text-gray-400'
               : 'cursor-pointer text-black-300',
@@ -151,7 +151,7 @@ export default function LikedMoverList() {
         </button>
       </div>
 
-      <ul className="flex flex-col gap-[20px]">
+      <ul className="flex flex-col gap-[20px] tablet:gap-[24px] desktop:gap-[20px]">
         {movers.length === 0 ? (
           <li
             className={cn(

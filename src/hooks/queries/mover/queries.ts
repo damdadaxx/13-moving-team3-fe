@@ -6,7 +6,7 @@ import {
   useQuery,
 } from '@tanstack/react-query';
 
-import { fetchMoverList, getLikedMovers } from '@/lib/api/mover';
+import { fetchMoverDetail, fetchMoverList, getLikedMovers } from '@/lib/api/mover';
 import { MOVER_LIST_PAGE_SIZE } from '@/lib/constants/mover';
 
 import { moverKeys } from '@/hooks/queries/mover/keys';
@@ -48,5 +48,15 @@ export function useLikedMoversQuery({
     queryFn: () => getLikedMovers({ size }),
     enabled,
     meta: { name: '찜한 기사님' },
+  });
+}
+
+/** @ 기사님 상세 쿼리 */
+export function useMoverDetailQuery(id: string) {
+  return useQuery({
+    queryKey: moverKeys.detail(id),
+    queryFn: () => fetchMoverDetail(id),
+    enabled: Boolean(id),
+    meta: { name: '기사님 상세' },
   });
 }

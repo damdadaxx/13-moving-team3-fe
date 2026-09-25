@@ -14,7 +14,7 @@ import { ROUTES } from '@/lib/constants/routes';
 
 import { useAuth } from '@/hooks/auth/useAuth';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
-import { useMoverDetailQuery } from '@/hooks/queries/movers/queries';
+import { useMoverDetailQuery } from '@/hooks/queries/mover/queries';
 
 import { cn } from '@/utils/cn';
 

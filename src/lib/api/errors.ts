@@ -22,3 +22,14 @@ export class HttpError extends Error {
     this.fields = fields;
   }
 }
+
+export function isUnauthorizedHttpError(error: unknown): error is HttpError {
+  if (!(error instanceof HttpError)) return false;
+
+  return (
+    error.status === 401 ||
+    error.code === 'UNAUTHORIZED' ||
+    error.code === 'TOKEN_EXPIRED' ||
+    error.code === 'REFRESH_FAILED'
+  );
+}

@@ -22,7 +22,7 @@ import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import useInfiniteScroll from '@/hooks/common/useInfiniteScroll';
 import useSearchInput from '@/hooks/common/useSearchInput';
 import { useReceivedRequestsQuery } from '@/hooks/queries/estimate/queries';
-import { useMoverProfileQuery } from '@/hooks/queries/mover/queries';
+import { useMoverProfileQuery } from '@/hooks/queries/moverProfile/queries';
 
 import { cn } from '@/utils/cn';
 

@@ -110,7 +110,7 @@ export default function EmptyState({
           <div
             className={cn(
               'flex items-center justify-center w-full',
-              'tablet:w-[140px]',
+              'tablet:min-w-[140px] tablet:w-fit',
             )}
           >
             {href ? (

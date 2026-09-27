@@ -4,7 +4,7 @@ import { useMoverDetailQuery } from '@/hooks/queries/mover/queries';
 
 import { cn } from '@/utils/cn';
 
-import MoverActionButtonGroup from '@/components/common/MoverDetail/MoverDetailButtonGroups';
+import MoverActionButtonGroup from '@/components/common/MoverDetail/MoverActionButtonGroup';
 import MoverDetailTopSection from '@/components/common/MoverDetail/MoverDetailTopSection';
 import MoverInfo from '@/components/common/MoverDetail/MoverInfo';
 import MoverStickyActionBar from '@/components/common/MoverDetail/MoverStickyActionBar';

@@ -7,30 +7,39 @@ import { useMoverLike } from '@/hooks/likes/useMoverLike';
 
 import { cn } from '@/utils/cn';
 
-interface ShareButtonGroupProps {
+import ButtonElement from '@/components/ui/Button/ButtonElement';
+import ButtonIcon from '@/components/ui/Button/ButtonIcon';
+
+interface LikeButtonProps {
   className?: string;
   moverId: string;
   likeCount: number;
-  iconFirst?: boolean; /** true: 하트 아이콘 → 개수 / false: 개수 → 하트 아이콘 */
-  readOnly?: boolean; /** true면 클릭해도 찜 토글이 안 되고, 하트도 항상 채워진 상태 노출 (예: 기사님 자기 마이페이지) */
+  /**
+   * icon: 아이콘만 있는 토글 버튼 (하단 고정 바)
+   * text: 테두리 + "기사님 찜하기" 텍스트가 있는 토글 버튼 (데스크탑 버튼 그룹)
+   * count: 찜 개수 + 아이콘 (기사님 정보 상단)
+   */
+  variant: 'icon' | 'text' | 'count';
+  iconFirst?: boolean; /** count 전용. true: 하트 아이콘 → 개수 / false: 개수 → 하트 아이콘 */
+  readOnly?: boolean; /** count 전용. true면 클릭해도 찜 토글이 안 되고, 하트도 항상 채워진 상태 노출 (예: 기사님 자기 마이페이지) */
 }
 
 /**
- * @ 기사님 찜하기 버튼 그룹 컴포넌트
- * - 기사님 찜하기 버튼과 찜 개수를 표시
+ * @ 기사님 찜하기 버튼
  * - readOnly는 useMoverLike를 아예 호출하지 않는 정적 표시로 분기
  *   (본인 마이페이지에서 자기 자신을 찜 조회할 필요가 없어서 API 호출을 없앤다)
  */
-export default function ShareButtonGroup({
+export default function LikeButton({
   className,
   moverId,
   likeCount,
+  variant,
   iconFirst = false,
   readOnly = false,
-}: ShareButtonGroupProps) {
-  if (readOnly) {
+}: LikeButtonProps) {
+  if (variant === 'count' && readOnly) {
     return (
-      <LikeCountBadge
+      <CountBadge
         className={className}
         likeCount={likeCount}
         iconFirst={iconFirst}
@@ -39,21 +48,18 @@ export default function ShareButtonGroup({
   }
 
   return (
-    <LikeToggleButton
+    <LikeToggle
       className={className}
       moverId={moverId}
       likeCount={likeCount}
+      variant={variant}
       iconFirst={iconFirst}
     />
   );
 }
 
-/**
- * @ 기사님 찜 개수 뱃지 컴포넌트
- * - 찜 개수를 표시 (클릭 액션 없음)
- * - 하트 아이콘 노출 여부에 따라 좌우 방향 조정
- */
-function LikeCountBadge({
+/** @ 찜 개수 표시 뱃지 */
+function CountBadge({
   className,
   likeCount,
   iconFirst,
@@ -81,25 +87,61 @@ function LikeCountBadge({
   );
 }
 
-/**
- * @ 기사님 찜하기 버튼 그룹 컴포넌트
- * - 찜 토글 버튼과 찜 개수를 표시 (클릭 액션 있음)
- */
-function LikeToggleButton({
+/** @ 찜 토글 버튼 */
+function LikeToggle({
   className,
   moverId,
   likeCount: initialLikeCount,
+  variant,
   iconFirst,
 }: {
   className?: string;
   moverId: string;
   likeCount: number;
+  variant: 'icon' | 'text' | 'count';
   iconFirst: boolean;
 }) {
   const { isLiked, likeCount, isPending, toggleLike } = useMoverLike(
     moverId,
     initialLikeCount,
   );
+
+  if (variant === 'icon') {
+    return (
+      <ButtonIcon
+        variant="like"
+        size="md"
+        onClick={toggleLike}
+        disabled={isPending}
+        aria-pressed={isLiked}
+        aria-label={isLiked ? '찜 취소하기' : '찜하기'}
+        className={className}
+      />
+    );
+  }
+
+  if (variant === 'text') {
+    return (
+      <ButtonElement
+        type="button"
+        disabled={isPending}
+        onClick={toggleLike}
+        aria-pressed={isLiked}
+        aria-label={isLiked ? '찜 취소하기' : '기사님 찜하기'}
+        className={cn(
+          'h-[54px] gap-[10px] rounded-[16px] border border-line-200 bg-gray-50 p-[10px] hover:bg-background-100',
+          className,
+        )}
+      >
+        {isLiked ? (
+          <IcLikeBlack aria-hidden className="h-[24px] w-[24px]" />
+        ) : (
+          <IcLikeEmpty aria-hidden className="h-[24px] w-[24px]" />
+        )}
+        <span className="text-2lg-semibold text-black-400">기사님 찜하기</span>
+      </ButtonElement>
+    );
+  }
 
   return (
     <button

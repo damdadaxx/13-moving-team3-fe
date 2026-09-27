@@ -1,6 +1,6 @@
 import { cn } from '@/utils/cn';
 
-import ShareButtonGroup from '@/components/common/MoverDetail/ShareButtonGroup';
+import LikeButton from '@/components/common/MoverDetail/LikeButton';
 import MoverNickname from '@/components/common/MoverProfile/MoverNickname';
 import MoverStatsRow from '@/components/common/MoverProfile/MoverStatsRow';
 
@@ -33,7 +33,7 @@ export default function MoverEstimateProfile({
         <MoverNickname nickname={nickname} />
 
         {/* 찜하기 */}
-        <ShareButtonGroup moverId={moverId} likeCount={likeCount} />
+        <LikeButton variant="count" moverId={moverId} likeCount={likeCount} />
       </div>
 
       {/* 기사님 통계 정보 */}

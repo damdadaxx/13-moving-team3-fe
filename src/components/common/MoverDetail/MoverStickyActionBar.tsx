@@ -1,7 +1,7 @@
 import { cn } from '@/utils/cn';
 
-import DesignatedEstimateRequestButton from '@/components/common/MoverDetail/DesignatedEstimateRequestButton';
-import MoverLikeIconButton from '@/components/common/MoverDetail/MoverLikeIconButton';
+import DesignatedEstimateRequestButton from '@/components/common/Estimate/DesignatedEstimateRequestButton';
+import LikeButton from '@/components/common/MoverDetail/LikeButton';
 
 /**
  * @ 기사님 찜하기 + 액션 버튼 하단 고정 바
@@ -30,7 +30,7 @@ export default function MoverStickyActionBar({
       )}
     >
       <div className={cn('flex items-center gap-[8px] max-w-[1200px] mx-auto')}>
-        <MoverLikeIconButton moverId={moverId} likeCount={likeCount} />
+        <LikeButton variant="icon" moverId={moverId} likeCount={likeCount} />
         {action ?? (
           /** 지정 견적 요청하기 버튼 */
           <DesignatedEstimateRequestButton

@@ -4,7 +4,7 @@ import type { MoverListItem } from '@/types/mover';
 
 import { cn } from '@/utils/cn';
 
-import ShareButtonGroup from '@/components/common/MoverDetail/ShareButtonGroup';
+import LikeButton from '@/components/common/MoverDetail/LikeButton';
 import MoverNickname from '@/components/common/MoverProfile/MoverNickname';
 import MoverReviewInfo from '@/components/common/MoverReview/MoverReviewInfo';
 import ServiceRegionList from '@/components/common/ServiceRegion/ServiceRegionList';
@@ -46,7 +46,11 @@ export default function MoverInfo({ className, mover }: MoverInfoProps) {
           <MoverNickname nickname={mover.nickname} />
 
           {/* 찜하기 */}
-          <ShareButtonGroup moverId={mover.id} likeCount={mover.likeCount} />
+          <LikeButton
+            variant="count"
+            moverId={mover.id}
+            likeCount={mover.likeCount}
+          />
         </div>
 
         <div

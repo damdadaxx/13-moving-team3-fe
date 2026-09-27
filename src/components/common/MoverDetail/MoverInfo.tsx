@@ -22,7 +22,10 @@ export default function MoverInfo({ className, mover }: MoverInfoProps) {
       {/* 기사님 이름, 경력 정보 */}
       <div className={cn('mt-[13px]', 'tablet:mt-[23px]', 'desktop:mt-[31px]')}>
         {/* 서비스 타입 태그 */}
-        <ServiceTypeTagList serviceTypes={mover.serviceTypes} />
+        <ServiceTypeTagList
+          className={cn('mb-[8px]', 'tablet:mb-[12px]')}
+          serviceTypes={mover.serviceTypes}
+        />
 
         <h1
           className={cn(

@@ -4,11 +4,10 @@ import { useMoverDetailQuery } from '@/hooks/queries/mover/queries';
 
 import { cn } from '@/utils/cn';
 
-import DesignatedEstimateRequestButton from '@/components/common/MoverDetail/DesignatedEstimateRequestButton';
 import MoverActionButtonGroup from '@/components/common/MoverDetail/MoverDetailButtonGroups';
 import MoverDetailTopSection from '@/components/common/MoverDetail/MoverDetailTopSection';
 import MoverInfo from '@/components/common/MoverDetail/MoverInfo';
-import MoverLikeIconButton from '@/components/common/MoverDetail/MoverLikeIconButton';
+import MoverStickyActionBar from '@/components/common/MoverDetail/MoverStickyActionBar';
 import ShareMoverInfo from '@/components/common/MoverDetail/ShareMoverInfo';
 import MoverReviewList from '@/components/common/MoverReview/MoverReviewList';
 import EmptyState from '@/components/ui/EmptyState';
@@ -45,20 +44,26 @@ export default function MoverDetailPageContent({
       <section
         className={cn(
           'px-[20px] pb-[134px]',
-          'tablet:pb-[150px] tablet:px-[72px]',
+          'tablet:pb-[126px] tablet:px-[72px]',
         )}
       >
         <div
           className={cn(
-            'desktop:flex desktop:gap-[140px] max-w-[1200px] mx-auto',
+            'max-w-[1200px] mx-auto',
+            'desktop:flex desktop:gap-[140px]',
           )}
         >
-          <div className={cn('min-w-0 desktop:flex-1')}>
+          <div className={cn('min-w-0', 'desktop:flex-1')}>
             {/* 기사님 정보 섹션 */}
             <MoverInfo mover={mover} />
 
             {/* 공유하기 */}
-            <ShareMoverInfo className={cn('desktop:hidden')} />
+            <ShareMoverInfo
+              className={cn(
+                'pb-[32px] mb-[32px] border-b border-line-100',
+                'desktop:hidden desktop:border-none',
+              )}
+            />
 
             {/* 리뷰섹션 */}
             <div className={cn('max-w-[1200px] mx-auto')}>
@@ -86,29 +91,10 @@ export default function MoverDetailPageContent({
           </section>
 
           {/* 모바일, 테스크탑 버튼 그룹 섹션 */}
-          <section
-            className={cn(
-              'fixed bottom-0 left-0 right-0 px-[20px] py-[28px] bg-gray-50 border-t border-line-200',
-              'tablet:px-[72px]',
-              'desktop:hidden',
-            )}
-          >
-            <div
-              className={cn(
-                'flex items-center gap-[8px] max-w-[1200px] mx-auto',
-              )}
-            >
-              <MoverLikeIconButton
-                moverId={mover.id}
-                likeCount={mover.likeCount}
-              />
-              <DesignatedEstimateRequestButton
-                moverId={mover.id}
-                size="sm"
-                className="flex-1"
-              />
-            </div>
-          </section>
+          <MoverStickyActionBar
+            moverId={mover.id}
+            likeCount={mover.likeCount}
+          />
         </div>
       </section>
     </main>

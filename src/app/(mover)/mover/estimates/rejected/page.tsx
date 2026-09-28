@@ -15,6 +15,7 @@ import { useMyEstimatesQuery } from '@/hooks/queries/estimate/queries';
 import { cn } from '@/utils/cn';
 
 import RejectedRequestCard from '@/components/mover/RejectedRequestCard';
+import Button from '@/components/ui/Button/Button';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
 const PAGE_SIZE = 10;
@@ -28,6 +29,7 @@ export default function MoverEstimateRejectedPage() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isFetchNextPageError,
   } = useMyEstimatesQuery({ status: 'REJECTED', size: PAGE_SIZE });
 
   const items = useMemo(
@@ -43,28 +45,36 @@ export default function MoverEstimateRejectedPage() {
     [data],
   );
 
+  /*
+  @ 다음 페이지 요청 실패 처리
+  - isFetchNextPageError일 때도 이미 받은 목록(items)은 유지한다
+  - sentinel observer는 재부착하지 않고(enabled: false), 재시도는 버튼으로만 한다
+    (그대로 두면 sentinel이 여전히 화면에 보이는 채로 다시 관찰을 시작해
+    fetchNextPage를 즉시 반복 호출하게 된다)
+  */
   const sentinelRef = useInfiniteScroll<HTMLDivElement>({
     onIntersect: () => fetchNextPage(),
-    enabled: Boolean(hasNextPage) && !isFetchingNextPage,
+    enabled:
+      Boolean(hasNextPage) && !isFetchingNextPage && !isFetchNextPageError,
   });
 
   return (
     <div
       className={cn(
-        'mx-auto flex w-full flex-col px-[30px] py-[40px]',
-        'tablet:px-[72px]',
-        'desktop:max-w-[1200px] desktop:py-[69px]',
+        'mx-auto flex w-full flex-col px-[24px] py-[24px]',
+        'tablet:px-[72px] py-[32px_77px]',
+        'desktop:max-w-[1200px] desktop:py-[54px_84px]',
       )}
     >
       {isPending && <LoadingDisplay />}
 
-      {isError && (
+      {isError && items.length === 0 && (
         <p className="py-[40px] text-center text-lg-regular text-red-200">
           {error.message}
         </p>
       )}
 
-      {!isPending && !isError && items.length > 0 && (
+      {!isPending && items.length > 0 && (
         <div className="grid grid-cols-1 gap-[24px] desktop:grid-cols-2">
           {items.map(({ estimateRequest, estimate }) => (
             <RejectedRequestCard
@@ -99,7 +109,25 @@ export default function MoverEstimateRejectedPage() {
         </div>
       )}
 
-      {hasNextPage && <div ref={sentinelRef} className="h-[1px] w-full" />}
+      {isFetchNextPageError && (
+        <div className="flex flex-col items-center gap-[12px] py-[24px]">
+          <p className="text-md-regular text-red-200">
+            다음 페이지를 불러오지 못했어요.
+          </p>
+          <Button
+            type="button"
+            size="sm"
+            isLoading={isFetchingNextPage}
+            onClick={() => fetchNextPage()}
+          >
+            다시 시도
+          </Button>
+        </div>
+      )}
+
+      {hasNextPage && !isFetchNextPageError && (
+        <div ref={sentinelRef} className="h-[1px] w-full" />
+      )}
     </div>
   );
 }

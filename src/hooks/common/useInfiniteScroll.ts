@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type RefObject } from 'react';
 
 interface UseInfiniteScrollOptions {
   /** sentinel이 뷰포트에 들어왔을 때 호출 (다음 페이지 로드 트리거) */
@@ -6,6 +6,8 @@ interface UseInfiniteScrollOptions {
   /** false면 관찰을 멈춘다 (예: 더 불러올 페이지가 없을 때) */
   enabled?: boolean;
   rootMargin?: string;
+  /** 지정하면 뷰포트 대신 이 요소를 스크롤 기준으로 본다 (드롭다운처럼 안쪽만 스크롤될 때) */
+  rootRef?: RefObject<Element | null>;
 }
 
 /**
@@ -24,6 +26,7 @@ export default function useInfiniteScroll<T extends HTMLElement>({
   onIntersect,
   enabled = true,
   rootMargin = '200px',
+  rootRef,
 }: UseInfiniteScrollOptions) {
   const targetRef = useRef<T>(null);
   const onIntersectRef = useRef(onIntersect);
@@ -34,18 +37,20 @@ export default function useInfiniteScroll<T extends HTMLElement>({
 
   useEffect(() => {
     const target = targetRef.current;
+    const root = rootRef?.current ?? null;
     if (!target || !enabled) return;
+    if (rootRef && !root) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) onIntersectRef.current();
       },
-      { rootMargin },
+      { root, rootMargin },
     );
 
     observer.observe(target);
     return () => observer.disconnect();
-  }, [enabled, rootMargin]);
+  }, [enabled, rootMargin, rootRef]);
 
   return targetRef;
 }

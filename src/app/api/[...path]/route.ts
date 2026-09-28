@@ -67,8 +67,16 @@ async function proxy(request: NextRequest, { params }: RouteContext) {
       body,
       // 소셜 로그인 302 를 서버에서 따라가지 않고 브라우저에 그대로 넘긴다
       redirect: 'manual',
+      // 브라우저가 끊으면 백엔드 SSE도 같이 닫는다
+      signal: request.signal,
     });
-  } catch {
+  } catch (error) {
+    if (
+      request.signal.aborted ||
+      (error instanceof Error && error.name === 'AbortError')
+    ) {
+      return new Response(null, { status: 204 });
+    }
     // 백엔드 연결 실패 시 JSON 에러 응답
     return Response.json(
       {
@@ -103,6 +111,29 @@ async function proxy(request: NextRequest, { params }: RouteContext) {
     !request.cookies.get(REFRESH_TOKEN_COOKIE)
   ) {
     return Response.json({ success: true, data: null }, { status: 200 });
+  }
+
+  /*
+  @ GET /notifications/stream
+  - 알림 SSE는 응답이 끝나지 않는다. arrayBuffer()로 읽으면 이벤트가 브라우저까지 안 간다
+  - 로컬은 이 프록시가 연결을 유지한다. 쿠키가 프론트 오리진에 있으므로 브라우저는 /api 로만 연다
+  - Vercel에 배포한 뒤에는 이 경로로 긴 연결을 두지 않는다
+  */
+  if (
+    request.method === 'GET' &&
+    pathname === 'notifications/stream' &&
+    response.ok &&
+    response.body
+  ) {
+    return new Response(response.body, {
+      status: response.status,
+      headers: {
+        'Content-Type': 'text/event-stream; charset=utf-8',
+        'Cache-Control': 'no-cache, no-transform',
+        Connection: 'keep-alive',
+        'X-Accel-Buffering': 'no',
+      },
+    });
   }
 
   /*

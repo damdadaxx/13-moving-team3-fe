@@ -69,6 +69,7 @@ export const ENDPOINTS = {
   notification: {
     list: api('/notifications'), // [GET] 로그인 - 알림 목록
     unreadCount: api('/notifications/unread-count'), // [GET] 로그인 - 안 읽은 알림수(GNB)
+    stream: api('/notifications/stream'), // [GET] 로그인 - 알림 SSE (프록시가 스트림을 그대로 넘긴다)
     read: (id: number | string) => api(`/notifications/${id}/read`), // [PATCH] 로그인 - 알림 읽음(개별)
     readAll: api('/notifications/read-all'), // [PATCH] 로그인 - 전체 읽음
   },

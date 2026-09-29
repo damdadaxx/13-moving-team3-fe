@@ -7,6 +7,19 @@ export const loginSchema = z.object({
   password: z.string().min(8, '비밀번호는 8자 이상이어야 합니다.'),
 });
 
+/*
+@ 비밀번호 규칙 (백엔드 authValidation.ts 와 동일하게 유지)
+- 8~64자, 숫자 1개 이상, 특수문자 1개 이상
+- 특수문자: 키보드 ASCII 특수문자 !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~ (공백·한글 제외)
+- 로그인은 기존 가입자도 들어와야 하므로 이 규칙을 적용하지 않는다
+*/
+const passwordSchema = z
+  .string()
+  .min(8, '비밀번호는 8자 이상이어야 합니다.')
+  .max(64, '비밀번호는 64자 이하여야 합니다.')
+  .regex(/[0-9]/, '비밀번호에 숫자를 포함해주세요.')
+  .regex(/[!-/:-@[-`{-~]/, '비밀번호에 특수문자를 포함해주세요.');
+
 const nameSchema = z
   .string()
   .trim()
@@ -30,10 +43,7 @@ const phoneNumberSchema = z
 export const signupSchema = z
   .object({
     email: z.email('이메일 형식이 아닙니다.'),
-    password: z
-      .string()
-      .min(8, '비밀번호는 8자 이상이어야 합니다.')
-      .regex(/[0-9]/, '비밀번호에 숫자를 포함해주세요.'),
+    password: passwordSchema,
     passwordConfirm: z.string().min(1, '비밀번호 확인을 입력해주세요.'),
     name: nameSchema,
     phoneNumber: phoneNumberSchema,

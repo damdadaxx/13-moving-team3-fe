@@ -3,11 +3,9 @@
 import { useState } from 'react';
 
 import type { Role } from '@/types/role';
-import { useRouter } from 'next/navigation';
 
 import { HttpError } from '@/lib/api/errors';
 import { getSigninPath } from '@/lib/constants/routes';
-import { getProfileNewPath } from '@/lib/constants/routes';
 import type { SignupFormValues } from '@/lib/validations/authValidation';
 
 import { useAuth } from '@/hooks/auth/useAuth';
@@ -37,7 +35,6 @@ const AUTH_SIDE_BUTTON_CLASS = cn(
 );
 
 export default function SignupForm({ role }: SignupFormProps) {
-  const router = useRouter();
   const { signup } = useAuth();
   const {
     register,
@@ -128,13 +125,13 @@ export default function SignupForm({ role }: SignupFormProps) {
 
   /*
   @ 회원가입 성공 후 이동
-  - 가입하면 바로 프로필 등록 화면으로 보낸다 (역할별 경로).
-  - (auth) 그룹의 AuthGuard 도 로그인 상태가 되면 이동을 시도하므로,
-    가드가 보는 callbackUrl 을 먼저 맞춰 두 경로가 같은 곳을 가리키게 한다.
+  - 이동은 가드가 처리한다. 폼은 가입 요청만 보낸다.
+    1) 로그인 상태가 되면 (auth) 그룹의 AuthGuard 가 역할 home(또는 callbackUrl)으로 보내고
+    2) 그 페이지의 ProfileGuard 가 프로필이 없으면 등록 화면으로 보낸다
+  - "프로필이 있는지"가 기준이라 가입 직후든, 나중에 다시 로그인하든 같게 동작한다.
   */
   async function onSubmit(data: SignupFormValues) {
     setSubmitError('');
-    const profileNewPath = getProfileNewPath(role);
     const verifiedToken = verification?.verifiedToken;
 
     // 버튼이 막고 있지만, 상태가 어긋난 경우에도 잘못된 요청을 보내지 않는다
@@ -144,12 +141,6 @@ export default function SignupForm({ role }: SignupFormProps) {
     }
 
     try {
-      window.history.replaceState(
-        null,
-        '',
-        `${window.location.pathname}?callbackUrl=${encodeURIComponent(profileNewPath)}`,
-      );
-
       await signup({
         email: data.email,
         password: data.password,
@@ -158,8 +149,6 @@ export default function SignupForm({ role }: SignupFormProps) {
         role,
         emailVerificationToken: verifiedToken,
       });
-
-      router.replace(profileNewPath);
     } catch (error) {
       setSubmitError(
         error instanceof HttpError

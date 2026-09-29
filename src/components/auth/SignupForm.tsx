@@ -13,7 +13,11 @@ import type { SignupFormValues } from '@/lib/validations/authValidation';
 import { useAuth } from '@/hooks/auth/useAuth';
 import { useSignupForm } from '@/hooks/auth/useSignupForm';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
-import { useCheckEmailMutation } from '@/hooks/queries/auth/mutations';
+import {
+  useCheckEmailMutation,
+  useConfirmEmailVerificationMutation,
+  useSendEmailVerificationMutation,
+} from '@/hooks/queries/auth/mutations';
 
 import { cn } from '@/utils/cn';
 import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
@@ -26,6 +30,12 @@ import Input from '@/components/ui/Form/Input';
 interface SignupFormProps {
   role: Role;
 }
+
+/** 입력칸 옆 보조 버튼 (중복 확인·인증번호) */
+const AUTH_SIDE_BUTTON_CLASS = cn(
+  'shrink-0 cursor-pointer rounded-lg border border-orange-400 px-3 py-1.5 text-sm-medium text-orange-400',
+  'disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-300',
+);
 
 export default function SignupForm({ role }: SignupFormProps) {
   const router = useRouter();
@@ -68,6 +78,70 @@ export default function SignupForm({ role }: SignupFormProps) {
       setEmailCheck({ email, isAvailable });
     } catch {
       setEmailCheck(null);
+    }
+  }
+
+  /*
+  @ 이메일 인증번호
+  - 인증을 마쳐야 회원가입이 된다 (서버도 같은 기준으로 막는다).
+  - 이메일을 고치면 발송·인증 상태를 모두 비워 옛 인증이 남지 않게 한다.
+  */
+  const sendCodeMutation = useSendEmailVerificationMutation();
+  const confirmCodeMutation = useConfirmEmailVerificationMutation();
+  const [code, setCode] = useState('');
+  const [codeError, setCodeError] = useState('');
+  const [verification, setVerification] = useState<{
+    email: string;
+    isSent: boolean;
+    isVerified: boolean;
+  } | null>(null);
+  const verificationState =
+    verification && verification.email === emailValue ? verification : null;
+  const isEmailVerified = Boolean(verificationState?.isVerified);
+
+  function resetEmailState() {
+    setEmailCheck(null);
+    setVerification(null);
+    setCode('');
+    setCodeError('');
+  }
+
+  async function handleSendCode() {
+    const email = emailValue?.trim();
+    if (!email) return;
+
+    const isEmailValid = await trigger('email');
+    if (!isEmailValid) return;
+
+    setCodeError('');
+
+    try {
+      await sendCodeMutation.mutateAsync({ email, role });
+      setVerification({ email, isSent: true, isVerified: false });
+    } catch (error) {
+      setCodeError(
+        error instanceof HttpError
+          ? error.message
+          : '인증번호 발송에 실패했습니다. 다시 시도해주세요.',
+      );
+    }
+  }
+
+  async function handleConfirmCode() {
+    const email = emailValue?.trim();
+    if (!email || code.length === 0) return;
+
+    setCodeError('');
+
+    try {
+      await confirmCodeMutation.mutateAsync({ email, role, code });
+      setVerification({ email, isSent: true, isVerified: true });
+    } catch (error) {
+      setCodeError(
+        error instanceof HttpError
+          ? error.message
+          : '인증번호 확인에 실패했습니다. 다시 시도해주세요.',
+      );
     }
   }
   // 에러일 때만 커진다 (Figma: 모바일은 54px 유지, 태블릿부터 64px)
@@ -136,8 +210,8 @@ export default function SignupForm({ role }: SignupFormProps) {
                 error={errors.email?.message}
                 {...emailField}
                 onChange={(event) => {
-                  // 이메일을 고치면 이전 확인 결과는 더 이상 유효하지 않다
-                  setEmailCheck(null);
+                  // 이메일을 고치면 이전 확인·인증 결과는 더 이상 유효하지 않다
+                  resetEmailState();
                   return emailField.onChange(event);
                 }}
               />
@@ -146,29 +220,84 @@ export default function SignupForm({ role }: SignupFormProps) {
                   role="status"
                   className={cn(
                     'text-sm-medium',
-                    emailCheckResult?.isAvailable
+                    emailCheckResult?.isAvailable || isEmailVerified
                       ? 'text-orange-400'
                       : 'text-red-200',
                   )}
                 >
-                  {emailCheckResult
-                    ? emailCheckResult.isAvailable
-                      ? '사용할 수 있는 이메일입니다.'
-                      : '이미 사용 중인 이메일입니다.'
-                    : ''}
+                  {isEmailVerified
+                    ? '이메일 인증이 완료되었습니다.'
+                    : verificationState?.isSent
+                      ? '메일로 받은 인증번호를 입력해 주세요.'
+                      : emailCheckResult
+                        ? emailCheckResult.isAvailable
+                          ? '사용할 수 있는 이메일입니다.'
+                          : '이미 사용 중인 이메일입니다.'
+                        : ''}
                 </p>
-                <button
-                  type="button"
-                  onClick={handleCheckEmail}
-                  disabled={!emailValue || checkEmailMutation.isPending}
-                  className={cn(
-                    'shrink-0 cursor-pointer rounded-lg border border-orange-400 px-3 py-1.5 text-sm-medium text-orange-400',
-                    'disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-300',
-                  )}
-                >
-                  {checkEmailMutation.isPending ? '확인 중' : '중복 확인'}
-                </button>
+                <div className="flex shrink-0 items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleCheckEmail}
+                    disabled={
+                      !emailValue ||
+                      checkEmailMutation.isPending ||
+                      isEmailVerified
+                    }
+                    className={AUTH_SIDE_BUTTON_CLASS}
+                  >
+                    {checkEmailMutation.isPending ? '확인 중' : '중복 확인'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSendCode}
+                    disabled={
+                      !emailValue ||
+                      sendCodeMutation.isPending ||
+                      isEmailVerified
+                    }
+                    className={AUTH_SIDE_BUTTON_CLASS}
+                  >
+                    {sendCodeMutation.isPending
+                      ? '발송 중'
+                      : verificationState?.isSent
+                        ? '재발송'
+                        : '인증번호 받기'}
+                  </button>
+                </div>
               </div>
+
+              {/* 인증번호 발송 후에만 입력칸을 보여준다 */}
+              {verificationState?.isSent && !isEmailVerified && (
+                <div className="flex items-start gap-2">
+                  <Input
+                    label=""
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={6}
+                    placeholder="인증번호 6자리"
+                    value={code}
+                    onChange={(event) =>
+                      setCode(event.target.value.replace(/\D/g, ''))
+                    }
+                    error={codeError}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleConfirmCode}
+                    disabled={code.length < 6 || confirmCodeMutation.isPending}
+                    className={cn(AUTH_SIDE_BUTTON_CLASS, 'h-[54px] shrink-0')}
+                  >
+                    {confirmCodeMutation.isPending ? '확인 중' : '인증 확인'}
+                  </button>
+                </div>
+              )}
+
+              {codeError && !verificationState?.isSent && (
+                <p role="alert" className="text-sm-medium text-red-200">
+                  {codeError}
+                </p>
+              )}
             </div>
             {/* 입력하는 동안 010-1234-5678 형태로 바꾸고 11자리까지만 받는다 */}
             <Input
@@ -205,8 +334,9 @@ export default function SignupForm({ role }: SignupFormProps) {
               {...register('passwordConfirm')}
             />
           </div>
+          {/* 이메일 인증을 마쳐야 가입할 수 있다 (서버도 같은 기준으로 막는다) */}
           <AuthSubmitButton
-            disabled={!isValid}
+            disabled={!isValid || !isEmailVerified}
             isLoading={isSubmitting}
             error={submitError}
           >

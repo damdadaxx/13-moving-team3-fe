@@ -122,6 +122,36 @@ export async function checkEmailAvailable(
   return isAvailable;
 }
 
+/*
+@ 회원가입 이메일 인증
+- 발송: 가입되지 않은 이메일에만 인증번호가 발송된다 (이미 가입된 이메일은 409).
+- 확인: 성공하면 서버가 인증 기록을 남기고, 회원가입에서 그 기록을 확인한다.
+*/
+export async function sendEmailVerification(
+  email: string,
+  role: Role,
+): Promise<void> {
+  await clientFetch(ENDPOINTS.auth.emailVerification, {
+    method: 'POST',
+    body: JSON.stringify({ email, role: toBackendRole(role) }),
+  });
+}
+
+export async function confirmEmailVerification(input: {
+  email: string;
+  role: Role;
+  code: string;
+}): Promise<void> {
+  await clientFetch(ENDPOINTS.auth.emailVerificationConfirm, {
+    method: 'POST',
+    body: JSON.stringify({
+      email: input.email,
+      role: toBackendRole(input.role),
+      code: input.code,
+    }),
+  });
+}
+
 export async function login(input: LoginInput): Promise<AuthUser> {
   const user = await clientFetch<AuthUserResponse>(ENDPOINTS.auth.login, {
     method: 'POST',

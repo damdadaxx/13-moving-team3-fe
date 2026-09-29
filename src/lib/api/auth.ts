@@ -1,0 +1,153 @@
+// 인증 API 호출 함수 + 소셜 로그인 흐름
+// 브라우저는 프록시(/api)만 사용. 쿠키는 clientFetch credentials: same-origin 으로 전달
+import type {
+  AuthProviderName,
+  AuthUser,
+  BackendRole,
+  LoginInput,
+  SignupInput,
+  SocialProvider,
+  UpdateMeInput,
+  UpdatePasswordInput,
+  UpdatePasswordResult,
+} from '@/types/auth';
+import type { Role } from '@/types/role';
+
+import clientFetch from '@/lib/api/clientFetch';
+import { ENDPOINTS } from '@/lib/api/endpoints';
+import { HttpError } from '@/lib/api/errors';
+
+interface AuthUserResponse {
+  id: string;
+  name: string;
+  email: string;
+  phoneNumber: string | null;
+  role: BackendRole;
+  provider: AuthProviderName;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export function toFrontendRole(role: BackendRole): Role {
+  return role === 'CUSTOMER' ? 'customer' : 'mover';
+}
+
+export function toBackendRole(role: Role): BackendRole {
+  return role === 'customer' ? 'CUSTOMER' : 'MOVER';
+}
+
+function toAuthUser(user: AuthUserResponse): AuthUser {
+  return {
+    ...user,
+    role: toFrontendRole(user.role),
+  };
+}
+
+function isUnauthenticatedError(error: unknown): boolean {
+  if (!(error instanceof HttpError)) return false;
+
+  return (
+    error.status === 401 ||
+    error.code === 'UNAUTHORIZED' ||
+    error.code === 'TOKEN_EXPIRED' ||
+    error.code === 'REFRESH_FAILED'
+  );
+}
+
+/*
+@ GET /auth/me
+- 비로그인은 에러가 아니라 null. 게스트 페이지에서 콘솔 에러가 나지 않게 한다
+  - 프록시(app/api/[...path]/route.ts)가 게스트의 /auth/me 401을 200 { data: null }로 정규화한다
+  - 그 외 경로로 401이 새어 들어와도 isUnauthenticatedError로 흡수한다
+- clientFetch가 401이면 refresh를 한 번 시도한 뒤 여기로 온다
+*/
+export async function getMe(): Promise<AuthUser | null> {
+  try {
+    const user = await clientFetch<AuthUserResponse | null>(ENDPOINTS.auth.me);
+    return user ? toAuthUser(user) : null;
+  } catch (error) {
+    if (isUnauthenticatedError(error)) {
+      return null;
+    }
+    throw error;
+  }
+}
+
+/*
+@ 로그인 사용자 기본정보 수정
+- 이름과 전화번호 중 실제로 변경된 필드만 PATCH /auth/me로 전달한다.
+- 백엔드 PublicUser 응답의 역할을 프론트 Role로 변환해 Auth 캐시에 바로 저장할 수 있게 한다.
+*/
+export async function updateMe(input: UpdateMeInput): Promise<AuthUser> {
+  const user = await clientFetch<AuthUserResponse>(ENDPOINTS.auth.me, {
+    method: 'PATCH',
+    body: JSON.stringify(input),
+  });
+
+  return toAuthUser(user);
+}
+
+/*
+@ LOCAL 계정 비밀번호 수정
+- 소셜 계정은 백엔드에서도 403을 반환하지만 프론트 화면에서도 호출 자체를 막는다.
+- 응답은 공개 사용자 정보가 아니라 완료 메시지만 포함하므로 Auth 캐시는 변경하지 않는다.
+*/
+export async function updatePassword(
+  input: UpdatePasswordInput,
+): Promise<UpdatePasswordResult> {
+  return clientFetch<UpdatePasswordResult>(ENDPOINTS.auth.password, {
+    method: 'PATCH',
+    body: JSON.stringify(input),
+  });
+}
+
+export async function login(input: LoginInput): Promise<AuthUser> {
+  const user = await clientFetch<AuthUserResponse>(ENDPOINTS.auth.login, {
+    method: 'POST',
+    body: JSON.stringify({
+      email: input.email,
+      password: input.password,
+      role: toBackendRole(input.role),
+    }),
+  });
+
+  return toAuthUser(user);
+}
+
+export async function signup(input: SignupInput): Promise<AuthUser> {
+  const user = await clientFetch<AuthUserResponse>(ENDPOINTS.auth.signUp, {
+    method: 'POST',
+    body: JSON.stringify({
+      email: input.email,
+      password: input.password,
+      name: input.name,
+      phoneNumber: input.phoneNumber,
+      role: toBackendRole(input.role),
+    }),
+  });
+
+  return toAuthUser(user);
+}
+
+export async function logout(): Promise<void> {
+  await clientFetch(ENDPOINTS.auth.logout, {
+    method: 'POST',
+  });
+}
+
+/*=================================================
+소셜 로그인 (Passport, 백엔드 주도)
+1) 버튼 → /api/auth/social/{provider}?role=... 로 전체 페이지 이동 (getSocialLoginUrl)
+2) 백엔드가 state 쿠키 → 프로바이더 인가 → code 교환 → 로그인 쿠키 설정
+3) 백엔드가 /auth/callback?callbackUrl=... (실패: ?error=CODE&role=ROLE) 로 302
+=================================================*/
+
+export function getSocialLoginUrl(
+  provider: SocialProvider,
+  role: Role,
+  callbackUrl: string | null,
+): string {
+  const params = new URLSearchParams({ role: toBackendRole(role) });
+  if (callbackUrl) params.set('callbackUrl', callbackUrl);
+  return `${ENDPOINTS.auth.social(provider)}?${params}`;
+}

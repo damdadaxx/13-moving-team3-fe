@@ -1,0 +1,135 @@
+/* react-calendar가 직접 만드는 DOM(헤더·요일 줄)은 Tailwind 임의 선택자로 잡으면
+   클래스명의 `__`가 공백으로 해석돼 이스케이프 지옥이 된다. 그 부분만 여기서 다룬다.
+   날짜 칸은 tileClassName으로 Tailwind에서 처리한다.
+
+   색·타이포 값은 globals.css의 @theme이 :root에 심어준 CSS 변수를 그대로 쓴다.
+
+   react-calendar 기본 CSS(dist/Calendar.css)는 import하지 않는다.
+   7칸 그리드는 라이브러리가 inline flex-basis로 처리하므로 레이아웃에 필요 없고,
+   기본 CSS를 넣으면 노란 오늘 날짜·파란 선택·빨간 주말 색을 전부 덮어써야 한다. */
+
+.calendar {
+  width: 309px;
+  max-width: 100%;
+}
+
+/* 헤더: 화살표 - 2025. 07 - 화살표 (h-48, 좌우 14px) */
+.calendar :global(.react-calendar__navigation) {
+  display: flex;
+  height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+}
+
+.calendar :global(.react-calendar__navigation__arrow) {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--color-gray-300);
+}
+
+.calendar :global(.react-calendar__navigation__arrow:disabled) {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* 라벨을 누르면 월 → 연 → 연대로 드릴업한다.
+   버튼에 flexGrow:1이 인라인으로 붙어 폭이 넓어서, 배경을 깔면 헤더를 가로지르는
+   띠처럼 보인다. 그래서 hover는 글자색만 바꿔 클릭 가능하다는 것만 알린다.
+   연대 뷰(minDetail)에서는 react-calendar가 이 버튼을 disabled로 렌더한다 */
+.calendar :global(.react-calendar__navigation__label) {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-size: var(--text-2lg-semibold);
+  font-weight: var(--text-2lg-semibold--font-weight);
+  line-height: var(--text-2lg-semibold--line-height);
+  color: var(--color-black-500);
+  transition: color 150ms;
+}
+
+.calendar :global(.react-calendar__navigation__label:enabled:hover) {
+  color: var(--color-orange-400);
+}
+
+.calendar :global(.react-calendar__navigation__label:disabled) {
+  cursor: default;
+}
+
+/* 날짜 영역을 7 x 40px = 280px로 고정해야 칸 하나가 정확히 40px가 된다.
+   연/연대 뷰도 같은 폭을 써야 드릴업할 때 그리드 좌우가 어긋나지 않는다 */
+.calendar :global(.react-calendar__month-view),
+.calendar :global(.react-calendar__year-view),
+.calendar :global(.react-calendar__decade-view) {
+  width: 280px;
+  margin: 0 auto;
+}
+
+.calendar :global(.react-calendar__month-view__weekdays__weekday) {
+  display: flex;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-sm-medium);
+  font-weight: var(--text-sm-medium--font-weight);
+  line-height: var(--text-sm-medium--line-height);
+  color: var(--color-gray-400);
+}
+
+/* 요일은 <abbr>로 렌더된다. 브라우저 기본 밑줄 제거 */
+.calendar :global(.react-calendar__month-view__weekdays abbr) {
+  text-decoration: none;
+}
+
+/* ============================================================
+   size=md (모바일 인라인, Figma Date picker-Calendar/md 336x352)
+   .calendar와 함께 붙어 우선순위가 높으므로 sm과 달라지는 값만 덮어쓴다.
+   카드(테두리·배경·패딩)는 md에 없어서 Calendar.tsx 쪽에서 뺀다
+   ============================================================ */
+.calendar.md {
+  /* 헤더와 그리드 사이 32px. react-calendar는 둘을 그냥 세로로 쌓기만 해서
+     여기서 flex로 바꿔 간격을 준다 (sm은 간격 없이 붙는다) */
+  display: flex;
+  width: 336px;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* 헤더: sm은 양끝 정렬이지만 md는 화살표-라벨-화살표가 gap 12로 가운데 모인다 */
+.calendar.md :global(.react-calendar__navigation) {
+  height: 32px;
+  justify-content: center;
+  gap: 12px;
+  padding: 0;
+}
+
+/* 라벨에 flex-grow:1이 인라인으로 붙어 있어 !important로만 눌린다.
+   색도 sm(black-500)과 달리 black-400이다 */
+.calendar.md :global(.react-calendar__navigation__label) {
+  flex-grow: 0 !important;
+  font-size: var(--text-xl-semibold);
+  font-weight: var(--text-xl-semibold--font-weight);
+  line-height: var(--text-xl-semibold--line-height);
+  color: var(--color-black-400);
+}
+
+/* 7 x 48px = 336px */
+.calendar.md :global(.react-calendar__month-view),
+.calendar.md :global(.react-calendar__year-view),
+.calendar.md :global(.react-calendar__decade-view) {
+  width: 336px;
+}
+
+.calendar.md :global(.react-calendar__month-view__weekdays__weekday) {
+  height: 48px;
+  font-size: var(--text-lg-medium);
+  font-weight: var(--text-lg-medium--font-weight);
+  line-height: var(--text-lg-medium--line-height);
+}

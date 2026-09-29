@@ -31,13 +31,13 @@ interface EstimateInfoSummaryProps {
 */
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex w-full items-center justify-between gap-[16px]">
+    <div className="flex w-full justify-between gap-[16px]">
       <span className="shrink-0 text-md-semibold text-orange-400 tablet:text-lg-semibold">
         {label}
       </span>
       <span
         title={value}
-        className="min-w-0 truncate text-right text-md-semibold text-black-500 tablet:text-lg-semibold"
+        className="min-w-0 text-right text-md-semibold text-black-500 tablet:text-lg-semibold"
       >
         {value}
       </span>

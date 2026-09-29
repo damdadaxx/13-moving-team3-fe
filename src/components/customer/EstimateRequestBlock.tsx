@@ -79,7 +79,7 @@ export default function EstimateRequestBlock({
         />
 
         <div className="flex min-w-px flex-1 flex-col gap-[16px] desktop:gap-[20px]">
-          <h2 className="flex items-center gap-[8px] text-2lg-semibold text-black-400 tablet:text-xl-semibold">
+          <h2 className="flex items-center gap-[8px] text-lg-semibold text-black-400 tablet:text-xl-semibold">
             견적서 목록
             <span className="text-orange-400">{visibleEstimates.length}</span>
           </h2>

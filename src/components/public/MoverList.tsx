@@ -15,7 +15,7 @@ import {
 
 import { cn } from '@/utils/cn';
 
-import MoverCard from '@/components/common/mover/MoverCard';
+import MoverCard from '@/components/public/MoverCard';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 import { Skeleton } from '@/components/ui/Skeleton';
 

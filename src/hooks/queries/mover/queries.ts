@@ -1,30 +1,15 @@
 // tanstack/react-query - mover queries
-import type { MoverListQuery } from '@/types/mover';
+import type { MoverListParams } from '@/types/mover';
 import {
   keepPreviousData,
   useInfiniteQuery,
   useQuery,
 } from '@tanstack/react-query';
 
-import {
-  fetchMoverList,
-  getLikedMovers,
-  // getMyMoverProfile,
-} from '@/lib/api/mover';
+import { fetchMoverList, getLikedMovers } from '@/lib/api/mover';
 import { MOVER_LIST_PAGE_SIZE } from '@/lib/constants/mover';
 
 import { moverKeys } from '@/hooks/queries/mover/keys';
-
-/*
-@ 내 기사님 프로필 - "서비스 가능 지역" 필터에 필요한 serviceRegions를 가져오는 용도로 쓴다
-*/
-export function useMoverProfileQuery() {
-  return useQuery({
-    queryKey: moverKeys.profile(),
-    // queryFn: getMyMoverProfile,
-    meta: { name: '내 기사님 프로필' },
-  });
-}
 
 /*
 @ 기사님 찾기 목록 (무한 스크롤)
@@ -32,7 +17,7 @@ export function useMoverProfileQuery() {
 - 그동안 목록이 비면 화면이 깜빡이므로 placeholderData로 이전 목록을 유지한다
 */
 export function useMoverListInfiniteQuery(
-  params: Omit<MoverListQuery, 'cursor' | 'size'>,
+  params: Omit<MoverListParams, 'cursor' | 'size'>,
 ) {
   const listParams = { ...params, size: MOVER_LIST_PAGE_SIZE };
 

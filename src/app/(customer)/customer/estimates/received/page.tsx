@@ -49,7 +49,7 @@ export default function EstimateReceivedPage() {
         className={cn(
           'mx-auto flex w-full flex-col',
           'tablet:gap-[16px] tablet:px-[72px] tablet:py-[32px]',
-          'desktop:max-w-[1200px] desktop:gap-[40px] desktop:px-[40px] desktop:py-[64px]',
+          'desktop:gap-[40px] desktop:py-[64px]',
         )}
       >
         {isPending && <LoadingDisplay />}

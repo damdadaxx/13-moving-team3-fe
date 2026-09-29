@@ -54,7 +54,7 @@ export interface EstimateMover {
   /** 경력 개월 수 */
   careerMonths: number;
   user: { name: string };
-  reviewCount: number;
+  reviewCount: number | null;
   /** 평균 평점. 리뷰가 없으면 null */
   averageRating: number | null;
   /** 확정(ACCEPTED)된 견적 건수 */

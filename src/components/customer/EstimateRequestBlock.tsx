@@ -50,7 +50,7 @@ export default function EstimateRequestBlock({
   return (
     <section
       className={cn(
-        'bg-gray-50 px-[24px] pt-[32px] pb-[24px]',
+        'w-full max-w-[1120px] mx-auto bg-gray-50 px-[24px] pt-[32px] pb-[24px]',
         'tablet:rounded-[16px] tablet:px-[28px] tablet:py-[32px]',
         'tablet:shadow-[-2px_-2px_10px_0_rgba(220,220,220,0.2),2px_2px_10px_0_rgba(220,220,220,0.2)]',
         'desktop:px-[40px] desktop:py-[44px]',

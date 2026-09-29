@@ -83,7 +83,7 @@ export default function ReceivedEstimateCard({
   // 값이 있는 항목만 세로 구분선으로 이어 붙인다
   const moverStats: { key: string; node: React.ReactNode }[] = [];
 
-  if (mover.averageRating !== undefined) {
+  if (mover.averageRating != undefined) {
     moverStats.push({
       key: 'rating',
       node: (

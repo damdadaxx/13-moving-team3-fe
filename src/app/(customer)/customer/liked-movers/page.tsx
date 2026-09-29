@@ -1,8 +1,16 @@
 // [메뉴] 헤더 모달 메뉴 > 찜한 기사님
 // [페이지] 찜한 기사님
-// Figma: 기사님 찾기 (로그인 일반 유저, node 1:7676) — /mover와 같은 화면. 데스크톱 오른쪽에 찜한 기사님이 붙는다
-import MoverFindContent from '@/components/common/mover/MoverFindContent';
+import LikedMoverList from '@/components/customer/liked-movers/LikedMoverList';
 
 export default function LikedMoverPage() {
-  return <MoverFindContent />;
+  return (
+    <main className="min-h-full bg-background-100">
+      <div className=" px-[24px] py-[24px] pb-[52px] tablet:px-[72px] tablet:pb-[61px] desktop:pt-[32px] desktop:pb-[95px]">
+        <div className={'mx-auto w-full max-w-[1200px] desktop:px-0'}>
+          {/* 기사 목록 컴포넌트 호출 */}
+          <LikedMoverList />
+        </div>
+      </div>
+    </main>
+  );
 }

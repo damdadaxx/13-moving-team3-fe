@@ -84,6 +84,7 @@ export default function LikedMoverList() {
 
   //기사님 체크박스 변경 시 선택된 기사님의 ID값을 업데이트한다.
   function handleToggleOne(id: string, checked: boolean) {
+    //전체선택 되었을 때 체크를 해체 하면 전체선택도 해제
     if (isSelectAll && !checked) {
       setIsSelectAll(false);
       setSelectedIds(
@@ -94,9 +95,13 @@ export default function LikedMoverList() {
       return;
     }
 
-    setSelectedIds((current) =>
-      checked ? [...current, id] : current.filter((item) => item !== id),
-    );
+    const checkIds = checked
+      ? [...selectedIds, id]
+      : selectedIds.filter((item) => item !== id);
+
+    setSelectedIds(checkIds);
+    //선택했을 때 선택된 기사님의 수가 전체 기사님의 수와 같으면 전체선택 상태를 켜준다.
+    setIsSelectAll(checked && checkIds.length === movers.length);
   }
 
   //선택한 기사님을 찜 목록에서 삭제한다.

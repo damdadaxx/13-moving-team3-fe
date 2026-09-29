@@ -3,22 +3,6 @@ import type { Region } from '@/types/region';
 import type { ServiceType } from '@/types/serviceType';
 
 /*
-@ GET /mover/profile - 내 기사님 프로필 조회
-*/
-export interface MoverProfile {
-  id: string;
-  imgUrl: string | null;
-  nickname: string;
-  careerMonths: number;
-  shortIntro: string;
-  description: string;
-  serviceTypes: ServiceType[];
-  serviceRegions: Region[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-/*
 @ 기사님 목록 아이템 (GET /mover)
 - 스웨거 MoverListItem과 동일한 필드
 - imgUrl은 프로필이 없으면 null

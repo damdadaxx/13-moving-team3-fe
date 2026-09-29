@@ -1,20 +1,8 @@
-// 기사님 프로필 API 호출 함수
-import type {
-  MoverDetail,
-  MoverListData,
-  MoverListQuery,
-  MoverProfile,
-} from '@/types/mover';
+// 공개 기사님 목록·상세 API 호출 함수
+import type { MoverDetail, MoverListData, MoverListQuery } from '@/types/mover';
 
 import clientFetch from '@/lib/api/clientFetch';
 import { ENDPOINTS } from '@/lib/api/endpoints';
-
-/*
-@ GET /mover/profile - 내 기사님 프로필 조회
-*/
-export async function getMyMoverProfile(): Promise<MoverProfile> {
-  return clientFetch<MoverProfile>(ENDPOINTS.mover.profile);
-}
 
 /** 기사님 목록 조회 쿼리 파라미터 변환
  * @param query 기사님 목록 조회 쿼리

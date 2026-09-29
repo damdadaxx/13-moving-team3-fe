@@ -3,9 +3,11 @@
 import { useState } from 'react';
 
 import type { Role } from '@/types/role';
+import { useRouter } from 'next/navigation';
 
 import { HttpError } from '@/lib/api/errors';
 import { getSigninPath } from '@/lib/constants/routes';
+import { getProfileNewPath } from '@/lib/constants/routes';
 import type { SignupFormValues } from '@/lib/validations/authValidation';
 
 import { useAuth } from '@/hooks/auth/useAuth';
@@ -26,6 +28,7 @@ interface SignupFormProps {
 }
 
 export default function SignupForm({ role }: SignupFormProps) {
+  const router = useRouter();
   const { signup } = useAuth();
   const {
     register,
@@ -70,10 +73,23 @@ export default function SignupForm({ role }: SignupFormProps) {
   // 에러일 때만 커진다 (Figma: 모바일은 54px 유지, 태블릿부터 64px)
   const errorSize = useBreakpointValue('sm', 'md', 'md');
 
+  /*
+  @ 회원가입 성공 후 이동
+  - 가입하면 바로 프로필 등록 화면으로 보낸다 (역할별 경로).
+  - (auth) 그룹의 AuthGuard 도 로그인 상태가 되면 이동을 시도하므로,
+    가드가 보는 callbackUrl 을 먼저 맞춰 두 경로가 같은 곳을 가리키게 한다.
+  */
   async function onSubmit(data: SignupFormValues) {
     setSubmitError('');
+    const profileNewPath = getProfileNewPath(role);
 
     try {
+      window.history.replaceState(
+        null,
+        '',
+        `${window.location.pathname}?callbackUrl=${encodeURIComponent(profileNewPath)}`,
+      );
+
       await signup({
         email: data.email,
         password: data.password,
@@ -81,6 +97,8 @@ export default function SignupForm({ role }: SignupFormProps) {
         phoneNumber: data.phoneNumber,
         role,
       });
+
+      router.replace(profileNewPath);
     } catch (error) {
       setSubmitError(
         error instanceof HttpError

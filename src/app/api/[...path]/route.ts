@@ -75,7 +75,8 @@ async function proxy(request: NextRequest, { params }: RouteContext) {
         success: false,
         error: {
           code: 'BACKEND_UNREACHABLE',
-          message: '백엔드 서버에 연결할 수 없습니다.',
+          // 화면에 그대로 토스트로 뜨므로 사용자용 문구로 둔다 (clientFetch NETWORK_ERROR와 동일)
+          message: '서버와 연결할 수 없습니다. 잠시 후 다시 시도해주세요.',
         },
       },
       { status: 502 },

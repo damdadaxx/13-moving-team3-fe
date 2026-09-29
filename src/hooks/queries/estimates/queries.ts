@@ -1,3 +1,5 @@
+import type { EstimateDetail } from '@/types/estimate';
+import type { MoverDetail } from '@/types/mover';
 import { useQuery } from '@tanstack/react-query';
 
 import {
@@ -6,6 +8,7 @@ import {
 } from '@/lib/api/estimate';
 
 import { estimateKeys } from '@/hooks/queries/estimates/keys';
+import { useMoverDetailQuery } from '@/hooks/queries/mover/queries';
 
 /**
  * @ 활성 견적 요청 쿼리
@@ -31,4 +34,55 @@ export function useEstimateDetailQuery(estimateId: string) {
     enabled: Boolean(estimateId),
     meta: { name: '견적 상세' },
   });
+}
+
+export type EstimateDetailWithMoverResult =
+  | { status: 'loading' }
+  | { status: 'estimate-error' }
+  | { status: 'mover-error' }
+  | { status: 'ready'; estimate: EstimateDetail; mover: MoverDetail };
+
+/*
+@ 견적 상세 + 기사님 상세
+- 견적 실패 시 기사님 쿼리는 요청되지 않은 채 isPending이 true로 남고, 견적 결과부터 본다
+*/
+export function useEstimateDetailWithMover(
+  estimateId: string,
+): EstimateDetailWithMoverResult {
+  const estimateQuery = useEstimateDetailQuery(estimateId);
+  const estimate = estimateQuery.data;
+  const moverId = estimate?.mover.moverId ?? '';
+  const moverQuery = useMoverDetailQuery(moverId);
+
+  // 견적 조회 대기
+  if (estimateQuery.isPending) {
+    return { status: 'loading' };
+  }
+
+  // 견적 조회 실패
+  if (estimateQuery.isError || !estimate) {
+    return { status: 'estimate-error' };
+  }
+
+  // 기사님 ID 없음
+  if (!moverId) {
+    return { status: 'mover-error' };
+  }
+
+  // 기사님 조회 대기
+  if (moverQuery.isPending) {
+    return { status: 'loading' };
+  }
+
+  // 기사님 조회 실패
+  if (moverQuery.isError || !moverQuery.data) {
+    return { status: 'mover-error' };
+  }
+
+  // 견적 상세 + 기사님 상세 조회 성공
+  return {
+    status: 'ready',
+    estimate,
+    mover: moverQuery.data,
+  };
 }

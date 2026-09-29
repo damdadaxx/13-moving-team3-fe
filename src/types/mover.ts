@@ -13,8 +13,12 @@ export interface MoverListItem {
   nickname: string;
   careerMonths: number;
   shortIntro: string;
+  /** 카드의 회색 설명 한 줄. 백엔드 목록 API가 함께 내려준다 */
+  description: string;
   serviceTypes: ServiceType[];
   serviceRegions: Region[];
+  /** 로그인한 고객이 이 기사님을 찜했는지. 비회원·기사님·미찜이면 없거나 false */
+  isLiked?: boolean;
   averageRating: number;
   reviewCount: number;
   confirmedCount: number;

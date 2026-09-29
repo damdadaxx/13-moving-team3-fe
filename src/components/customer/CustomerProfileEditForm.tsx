@@ -11,6 +11,7 @@ import type { CustomerProfileEditPlan } from '@/hooks/customer/customerProfileEd
 import { useCustomerProfileEditForm } from '@/hooks/customer/useCustomerProfileEditForm';
 
 import { cn } from '@/utils/cn';
+import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
 
 import Button from '@/components/ui/Button/Button';
 import RegionChipGroup from '@/components/ui/Chip/RegionChipGroup';
@@ -87,6 +88,7 @@ export default function CustomerProfileEditForm({
     handleFormSubmit,
   } = useCustomerProfileEditForm({ defaultValues, provider, onSubmit });
 
+  const phoneNumberField = register('phoneNumber');
   const isLoading = isSubmitting || isFormSubmitting;
   const areFieldsDisabled = isDisabled || isLoading;
   const isLocalAccount = provider === 'LOCAL';
@@ -175,8 +177,14 @@ export default function CustomerProfileEditForm({
                   size={responsiveInputSize}
                   disabled={areFieldsDisabled}
                   aria-required="true"
+                  maxLength={13}
                   error={errors.phoneNumber?.message}
-                  {...register('phoneNumber')}
+                  {...phoneNumberField}
+                  onChange={(event) => {
+                    // 입력하는 동안 010-1234-5678 형태로 바꾸고 11자리까지만 받는다
+                    event.target.value = formatPhoneNumber(event.target.value);
+                    return phoneNumberField.onChange(event);
+                  }}
                 />
 
                 <Divider />

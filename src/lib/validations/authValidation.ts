@@ -13,12 +13,19 @@ const nameSchema = z
   .min(2, '이름은 2자 이상이어야 합니다.')
   .max(20, '이름은 20자 이하여야 합니다.');
 
-// Figma: 전화번호는 숫자만 입력 (하이픈 없이)
+/*
+@ 전화번호
+- 화면에서는 010-1234-5678 처럼 하이픈이 붙은 값을 받는다 (formatPhoneNumber)
+- 숫자만 남겼을 때 10~11자리 휴대폰 번호인지 확인한다
+*/
 const phoneNumberSchema = z
   .string()
   .trim()
-  .regex(/^\d+$/, '숫자만 입력해주세요.')
-  .regex(/^01[016789]\d{7,8}$/, '올바른 전화번호 형식이 아닙니다.');
+  .transform((value) => value.replace(/\D/g, ''))
+  .refine(
+    (digits) => /^01[016789]\d{7,8}$/.test(digits),
+    '올바른 전화번호 형식이 아닙니다.',
+  );
 
 export const signupSchema = z
   .object({

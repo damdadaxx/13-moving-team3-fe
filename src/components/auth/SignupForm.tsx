@@ -13,6 +13,7 @@ import { useSignupForm } from '@/hooks/auth/useSignupForm';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
 import { cn } from '@/utils/cn';
+import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
 
 import AuthLinkText from '@/components/auth/AuthLinkText';
 import AuthPageLayout from '@/components/auth/AuthPageLayout';
@@ -31,6 +32,7 @@ export default function SignupForm({ role }: SignupFormProps) {
     formState: { errors, isSubmitting, isValid },
   } = useSignupForm();
   const [submitError, setSubmitError] = useState('');
+  const phoneNumberField = register('phoneNumber');
   // 에러일 때만 커진다 (Figma: 모바일은 54px 유지, 태블릿부터 64px)
   const errorSize = useBreakpointValue('sm', 'md', 'md');
 
@@ -81,15 +83,21 @@ export default function SignupForm({ role }: SignupFormProps) {
               error={errors.email?.message}
               {...register('email')}
             />
+            {/* 입력하는 동안 010-1234-5678 형태로 바꾸고 11자리까지만 받는다 */}
             <Input
               label="전화번호"
               type="tel"
               inputMode="numeric"
               autoComplete="tel"
               placeholder="숫자만 입력해 주세요"
+              maxLength={13}
               size={errors.phoneNumber ? errorSize : 'sm'}
               error={errors.phoneNumber?.message}
-              {...register('phoneNumber')}
+              {...phoneNumberField}
+              onChange={(event) => {
+                event.target.value = formatPhoneNumber(event.target.value);
+                return phoneNumberField.onChange(event);
+              }}
             />
             <Input
               label="비밀번호"

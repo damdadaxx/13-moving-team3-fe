@@ -101,6 +101,27 @@ export async function updatePassword(
   });
 }
 
+/*
+@ 이메일 중복 확인
+- 회원가입 화면의 중복 확인 버튼이 사용한다.
+- 같은 이메일이라도 역할(고객/기사님)이 다르면 가입할 수 있어 role 을 함께 보낸다.
+- 확인 시점 이후 다른 사람이 먼저 가입할 수 있으므로, 최종 판정은 회원가입 응답이다.
+*/
+export async function checkEmailAvailable(
+  email: string,
+  role: Role,
+): Promise<boolean> {
+  const { isAvailable } = await clientFetch<{ isAvailable: boolean }>(
+    ENDPOINTS.auth.checkEmail,
+    {
+      method: 'POST',
+      body: JSON.stringify({ email, role: toBackendRole(role) }),
+    },
+  );
+
+  return isAvailable;
+}
+
 export async function login(input: LoginInput): Promise<AuthUser> {
   const user = await clientFetch<AuthUserResponse>(ENDPOINTS.auth.login, {
     method: 'POST',

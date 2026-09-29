@@ -11,6 +11,7 @@ import type { SignupFormValues } from '@/lib/validations/authValidation';
 import { useAuth } from '@/hooks/auth/useAuth';
 import { useSignupForm } from '@/hooks/auth/useSignupForm';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+import { useCheckEmailMutation } from '@/hooks/queries/auth/mutations';
 
 import { cn } from '@/utils/cn';
 import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
@@ -29,10 +30,43 @@ export default function SignupForm({ role }: SignupFormProps) {
   const {
     register,
     handleSubmit,
+    watch,
+    trigger,
     formState: { errors, isSubmitting, isValid },
   } = useSignupForm();
   const [submitError, setSubmitError] = useState('');
   const phoneNumberField = register('phoneNumber');
+  const emailField = register('email');
+
+  /*
+  @ 이메일 중복 확인
+  - 버튼을 누른 이메일과 결과를 함께 들고 있어야, 이메일을 고친 뒤 옛 결과가 남지 않는다.
+  - 최종 판정은 회원가입 응답이다. 확인 이후 다른 사람이 먼저 가입할 수 있다.
+  */
+  const checkEmailMutation = useCheckEmailMutation();
+  const [emailCheck, setEmailCheck] = useState<{
+    email: string;
+    isAvailable: boolean;
+  } | null>(null);
+  const emailValue = watch('email');
+  const emailCheckResult =
+    emailCheck && emailCheck.email === emailValue ? emailCheck : null;
+
+  async function handleCheckEmail() {
+    const email = emailValue?.trim();
+    if (!email) return;
+
+    // 형식이 틀린 이메일로는 확인 요청을 보내지 않는다 (오류 문구는 trigger 가 띄운다)
+    const isEmailValid = await trigger('email');
+    if (!isEmailValid) return;
+
+    try {
+      const isAvailable = await checkEmailMutation.mutateAsync({ email, role });
+      setEmailCheck({ email, isAvailable });
+    } catch {
+      setEmailCheck(null);
+    }
+  }
   // 에러일 때만 커진다 (Figma: 모바일은 54px 유지, 태블릿부터 64px)
   const errorSize = useBreakpointValue('sm', 'md', 'md');
 
@@ -74,15 +108,50 @@ export default function SignupForm({ role }: SignupFormProps) {
               error={errors.name?.message}
               {...register('name')}
             />
-            <Input
-              label="이메일"
-              type="email"
-              autoComplete="email"
-              placeholder="이메일을 입력해 주세요"
-              size={errors.email ? errorSize : 'sm'}
-              error={errors.email?.message}
-              {...register('email')}
-            />
+            <div className="flex flex-col gap-2">
+              <Input
+                label="이메일"
+                type="email"
+                autoComplete="email"
+                placeholder="이메일을 입력해 주세요"
+                size={errors.email ? errorSize : 'sm'}
+                error={errors.email?.message}
+                {...emailField}
+                onChange={(event) => {
+                  // 이메일을 고치면 이전 확인 결과는 더 이상 유효하지 않다
+                  setEmailCheck(null);
+                  return emailField.onChange(event);
+                }}
+              />
+              <div className="flex items-center justify-between gap-2">
+                <p
+                  role="status"
+                  className={cn(
+                    'text-sm-medium',
+                    emailCheckResult?.isAvailable
+                      ? 'text-orange-400'
+                      : 'text-red-200',
+                  )}
+                >
+                  {emailCheckResult
+                    ? emailCheckResult.isAvailable
+                      ? '사용할 수 있는 이메일입니다.'
+                      : '이미 사용 중인 이메일입니다.'
+                    : ''}
+                </p>
+                <button
+                  type="button"
+                  onClick={handleCheckEmail}
+                  disabled={!emailValue || checkEmailMutation.isPending}
+                  className={cn(
+                    'shrink-0 cursor-pointer rounded-lg border border-orange-400 px-3 py-1.5 text-sm-medium text-orange-400',
+                    'disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-300',
+                  )}
+                >
+                  {checkEmailMutation.isPending ? '확인 중' : '중복 확인'}
+                </button>
+              </div>
+            </div>
             {/* 입력하는 동안 010-1234-5678 형태로 바꾸고 11자리까지만 받는다 */}
             <Input
               label="전화번호"

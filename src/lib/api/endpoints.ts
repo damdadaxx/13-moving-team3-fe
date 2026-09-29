@@ -11,8 +11,7 @@ export const ENDPOINTS = {
   auth: {
     signUp: api('/auth/signUp'), // [POST] 비로그인
     login: api('/auth/login'), // [POST] 비로그인
-    emailVerification: api('/auth/email-verification'), // [POST] 비로그인 - 인증번호 발송
-    emailVerificationConfirm: api('/auth/email-verification/confirm'), // [POST] 비로그인 - 인증번호 확인
+    checkEmail: api('/auth/check-email'), // [POST] 비로그인 - 이메일 중복 확인
     logout: api('/auth/logout'), // [POST] 로그인
     refresh: api('/auth/refresh'), // [POST] 비로그인 (refreshToken 쿠키)
     me: api('/auth/me'), // [GET/PATCH] 로그인

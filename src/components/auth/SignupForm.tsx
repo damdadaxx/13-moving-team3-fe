@@ -14,7 +14,6 @@ import { useAuth } from '@/hooks/auth/useAuth';
 import { useSignupForm } from '@/hooks/auth/useSignupForm';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import {
-  useCheckEmailMutation,
   useConfirmEmailVerificationMutation,
   useSendEmailVerificationMutation,
 } from '@/hooks/queries/auth/mutations';
@@ -52,36 +51,6 @@ export default function SignupForm({ role }: SignupFormProps) {
   const emailField = register('email');
 
   /*
-  @ 이메일 중복 확인
-  - 버튼을 누른 이메일과 결과를 함께 들고 있어야, 이메일을 고친 뒤 옛 결과가 남지 않는다.
-  - 최종 판정은 회원가입 응답이다. 확인 이후 다른 사람이 먼저 가입할 수 있다.
-  */
-  const checkEmailMutation = useCheckEmailMutation();
-  const [emailCheck, setEmailCheck] = useState<{
-    email: string;
-    isAvailable: boolean;
-  } | null>(null);
-  const emailValue = watch('email');
-  const emailCheckResult =
-    emailCheck && emailCheck.email === emailValue ? emailCheck : null;
-
-  async function handleCheckEmail() {
-    const email = emailValue?.trim();
-    if (!email) return;
-
-    // 형식이 틀린 이메일로는 확인 요청을 보내지 않는다 (오류 문구는 trigger 가 띄운다)
-    const isEmailValid = await trigger('email');
-    if (!isEmailValid) return;
-
-    try {
-      const isAvailable = await checkEmailMutation.mutateAsync({ email, role });
-      setEmailCheck({ email, isAvailable });
-    } catch {
-      setEmailCheck(null);
-    }
-  }
-
-  /*
   @ 이메일 인증번호
   - 인증을 마쳐야 회원가입이 된다 (서버도 같은 기준으로 막는다).
   - 이메일을 고치면 발송·인증 상태를 모두 비워 옛 인증이 남지 않게 한다.
@@ -90,17 +59,17 @@ export default function SignupForm({ role }: SignupFormProps) {
   const confirmCodeMutation = useConfirmEmailVerificationMutation();
   const [code, setCode] = useState('');
   const [codeError, setCodeError] = useState('');
+  const emailValue = watch('email');
   const [verification, setVerification] = useState<{
     email: string;
-    isSent: boolean;
-    isVerified: boolean;
+    challengeToken: string;
+    verifiedToken: string | null;
   } | null>(null);
   const verificationState =
     verification && verification.email === emailValue ? verification : null;
-  const isEmailVerified = Boolean(verificationState?.isVerified);
+  const isEmailVerified = Boolean(verificationState?.verifiedToken);
 
   function resetEmailState() {
-    setEmailCheck(null);
     setVerification(null);
     setCode('');
     setCodeError('');
@@ -116,8 +85,9 @@ export default function SignupForm({ role }: SignupFormProps) {
     setCodeError('');
 
     try {
-      await sendCodeMutation.mutateAsync({ email, role });
-      setVerification({ email, isSent: true, isVerified: false });
+      const { token } = await sendCodeMutation.mutateAsync({ email, role });
+      setVerification({ email, challengeToken: token, verifiedToken: null });
+      setCode('');
     } catch (error) {
       setCodeError(
         error instanceof HttpError
@@ -129,13 +99,22 @@ export default function SignupForm({ role }: SignupFormProps) {
 
   async function handleConfirmCode() {
     const email = emailValue?.trim();
-    if (!email || code.length === 0) return;
+    if (!email || code.length === 0 || !verificationState) return;
 
     setCodeError('');
 
     try {
-      await confirmCodeMutation.mutateAsync({ email, role, code });
-      setVerification({ email, isSent: true, isVerified: true });
+      const { token } = await confirmCodeMutation.mutateAsync({
+        email,
+        role,
+        code,
+        token: verificationState.challengeToken,
+      });
+      setVerification({
+        email,
+        challengeToken: verificationState.challengeToken,
+        verifiedToken: token,
+      });
     } catch (error) {
       setCodeError(
         error instanceof HttpError
@@ -156,6 +135,13 @@ export default function SignupForm({ role }: SignupFormProps) {
   async function onSubmit(data: SignupFormValues) {
     setSubmitError('');
     const profileNewPath = getProfileNewPath(role);
+    const verifiedToken = verification?.verifiedToken;
+
+    // 버튼이 막고 있지만, 상태가 어긋난 경우에도 잘못된 요청을 보내지 않는다
+    if (!verifiedToken || verification?.email !== data.email) {
+      setSubmitError('이메일 인증을 먼저 완료해주세요.');
+      return;
+    }
 
     try {
       window.history.replaceState(
@@ -170,6 +156,7 @@ export default function SignupForm({ role }: SignupFormProps) {
         name: data.name,
         phoneNumber: data.phoneNumber,
         role,
+        emailVerificationToken: verifiedToken,
       });
 
       router.replace(profileNewPath);
@@ -220,55 +207,33 @@ export default function SignupForm({ role }: SignupFormProps) {
                   role="status"
                   className={cn(
                     'text-sm-medium',
-                    emailCheckResult?.isAvailable || isEmailVerified
-                      ? 'text-orange-400'
-                      : 'text-red-200',
+                    isEmailVerified ? 'text-orange-400' : 'text-black-200',
                   )}
                 >
                   {isEmailVerified
                     ? '이메일 인증이 완료되었습니다.'
-                    : verificationState?.isSent
+                    : verificationState
                       ? '메일로 받은 인증번호를 입력해 주세요.'
-                      : emailCheckResult
-                        ? emailCheckResult.isAvailable
-                          ? '사용할 수 있는 이메일입니다.'
-                          : '이미 사용 중인 이메일입니다.'
-                        : ''}
+                      : ''}
                 </p>
-                <div className="flex shrink-0 items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handleCheckEmail}
-                    disabled={
-                      !emailValue ||
-                      checkEmailMutation.isPending ||
-                      isEmailVerified
-                    }
-                    className={AUTH_SIDE_BUTTON_CLASS}
-                  >
-                    {checkEmailMutation.isPending ? '확인 중' : '중복 확인'}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleSendCode}
-                    disabled={
-                      !emailValue ||
-                      sendCodeMutation.isPending ||
-                      isEmailVerified
-                    }
-                    className={AUTH_SIDE_BUTTON_CLASS}
-                  >
-                    {sendCodeMutation.isPending
-                      ? '발송 중'
-                      : verificationState?.isSent
-                        ? '재발송'
-                        : '인증번호 받기'}
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={handleSendCode}
+                  disabled={
+                    !emailValue || sendCodeMutation.isPending || isEmailVerified
+                  }
+                  className={AUTH_SIDE_BUTTON_CLASS}
+                >
+                  {sendCodeMutation.isPending
+                    ? '발송 중'
+                    : verificationState
+                      ? '재발송'
+                      : '인증번호 받기'}
+                </button>
               </div>
 
               {/* 인증번호 발송 후에만 입력칸을 보여준다 */}
-              {verificationState?.isSent && !isEmailVerified && (
+              {verificationState && !isEmailVerified && (
                 <div className="flex items-start gap-2">
                   <Input
                     label=""
@@ -293,7 +258,7 @@ export default function SignupForm({ role }: SignupFormProps) {
                 </div>
               )}
 
-              {codeError && !verificationState?.isSent && (
+              {codeError && !verificationState && (
                 <p role="alert" className="text-sm-medium text-red-200">
                   {codeError}
                 </p>

@@ -6,7 +6,7 @@ import {
   type QueryClient,
 } from '@tanstack/react-query';
 
-import { createLike, deleteLike } from '@/lib/api/like';
+import { createLike, deleteLike, bulkDeleteLikes } from '@/lib/api/like';
 
 import { likeKeys } from '@/hooks/queries/likes/keys';
 import { moverKeys } from '@/hooks/queries/movers/keys';
@@ -125,6 +125,18 @@ export function useDeleteLikeMutation() {
         isLiked: false,
         likeCount: data.likeCount,
       });
+    },
+  });
+}
+
+/** 좋아요 목록 삭제 뮤테이션 */
+export function useBulkDeleteLikesMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: bulkDeleteLikes,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: likeKeys.mine() });
     },
   });
 }

@@ -3,18 +3,12 @@ import type {
   MoverDetail,
   MoverListData,
   MoverListQuery,
-  MoverProfile,
+  // MoverProfile,
 } from '@/types/mover';
+import type { ServiceType } from '@/types/serviceType';
 
 import clientFetch from '@/lib/api/clientFetch';
 import { ENDPOINTS } from '@/lib/api/endpoints';
-
-/*
-@ GET /mover/profile - 내 기사님 프로필 조회
-*/
-export async function getMyMoverProfile(): Promise<MoverProfile> {
-  return clientFetch<MoverProfile>(ENDPOINTS.mover.profile);
-}
 
 /** 기사님 목록 조회 쿼리 파라미터 변환
  * @param query 기사님 목록 조회 쿼리
@@ -52,4 +46,65 @@ export function fetchMoverList(
 */
 export function fetchMoverDetail(id: string): Promise<MoverDetail> {
   return clientFetch<MoverDetail>(ENDPOINTS.mover.detail(id));
+}
+
+/*=================================================
+기사님 찾기 / 찜한 기사님
+=================================================*/
+
+/*
+@ GET /likes/me 응답 항목
+- 기사님 목록(GET /mover)과 필드 이름이 달라서 카드용 MoverListItem으로 변환한다
+*/
+interface LikedMoverResponse {
+  moverId: string;
+  mover: {
+    userId: string;
+    imgUrl: string | null;
+    nickname: string;
+    careerMonths: number;
+    shortIntro: string;
+    description: string;
+    serviceTypes: ServiceType[];
+  };
+  ratingCount: number;
+  ratingAvg: number;
+  acceptedEstimateCount: number;
+  likeCount: number;
+}
+
+interface LikedMoverPage {
+  list: LikedMoverResponse[];
+  nextCursor: string | null;
+  totalCount: number;
+}
+
+/** GET /likes/me - 고객 로그인 필요 */
+export async function getLikedMovers(params: {
+  cursor?: string;
+  size?: number;
+}): Promise<MoverListData> {
+  const page = await clientFetch<LikedMoverPage>(
+    `${ENDPOINTS.like.mine}${toSearchParams(params)}`,
+  );
+
+  return {
+    ...page,
+    list: page.list.map((item) => ({
+      id: item.moverId,
+      imgUrl: item.mover.imgUrl,
+      nickname: item.mover.nickname,
+      careerMonths: item.mover.careerMonths,
+      shortIntro: item.mover.shortIntro,
+      description: item.mover.description,
+      serviceTypes: item.mover.serviceTypes,
+      // GET /likes/me는 서비스 가능 지역을 내려주지 않는다. 카드도 쓰지 않아 빈 배열로 둔다
+      serviceRegions: [],
+      averageRating: item.ratingAvg,
+      reviewCount: item.ratingCount,
+      confirmedCount: item.acceptedEstimateCount,
+      likeCount: item.likeCount,
+      isLiked: true,
+    })),
+  };
 }

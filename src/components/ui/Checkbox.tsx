@@ -10,6 +10,7 @@ interface CheckboxProps {
   checked: boolean;
   onChange: (checked: boolean) => void;
   label: string;
+  labelClassName?: string;
   className?: string;
 }
 
@@ -17,6 +18,7 @@ export default function Checkbox({
   checked,
   onChange,
   label,
+  labelClassName,
   className,
 }: CheckboxProps) {
   return (
@@ -40,7 +42,9 @@ export default function Checkbox({
           {checked && <IcCheck className="h-[8px] w-[10px]" />}
         </span>
       </span>
-      <span className="text-lg-regular text-black-500">{label}</span>
+      <span className={cn('text-lg-regular text-black-500', labelClassName)}>
+        {label}
+      </span>
     </label>
   );
 }

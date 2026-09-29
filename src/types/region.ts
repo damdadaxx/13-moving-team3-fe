@@ -25,4 +25,7 @@ export const REGION_OPTIONS = [
   { value: 'JEJU', label: '제주' },
 ] as const;
 
+/** 라벨이 필요 없는 API 검증과 도메인 로직에서 사용하는 지역값 목록 */
+export const REGIONS = REGION_OPTIONS.map((option) => option.value);
+
 export type Region = (typeof REGION_OPTIONS)[number]['value'];

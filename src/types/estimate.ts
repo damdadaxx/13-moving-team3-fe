@@ -341,8 +341,8 @@ export interface EstimateDetailRequest {
 
 export interface EstimateDetail {
   estimateId: string;
-  price: number;
-  comment: string;
+  price: number | null;
+  comment: string | null;
   rejectReason: string | null;
   isDesignated: boolean;
   status: EstimateStatus;

@@ -11,12 +11,13 @@ export default function EstimatePriceSection({
   hidden,
   className,
 }: {
-  price: number;
+  price: number | null;
   layout: 'inline' | 'sidebar';
   hidden?: boolean;
   className?: string;
 }) {
-  const priceText = `${price.toLocaleString()}원`;
+  const priceText =
+    price === null ? '견적 대기중' : `${price.toLocaleString()}원`;
 
   if (layout === 'sidebar') {
     return (

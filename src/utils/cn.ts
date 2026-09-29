@@ -39,6 +39,7 @@ const twMerge = extendTailwindMerge({
             'md-regular',
             'sm-semibold',
             'sm-medium',
+            'sm-regular',
             'xs-semibold',
             'xs-medium',
             'xs-regular',

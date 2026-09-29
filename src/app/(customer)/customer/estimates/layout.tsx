@@ -10,7 +10,7 @@ const ESTIMATE_TABS = [
   {
     label: 'pending',
     value: '대기 중인 견적',
-    href: `${ROUTES.customerEstimatesRoot}/pending`,
+    href: ROUTES.customerEstimatesPending,
   },
   { label: 'received', value: '받았던 견적', href: ROUTES.customerEstimates },
 ];

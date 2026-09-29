@@ -14,7 +14,7 @@
 */
 'use client';
 
-import type { Estimate } from '@/types/estimate';
+import type { MyEstimateSummary } from '@/types/estimate';
 import type { ServiceType } from '@/types/serviceType';
 
 import IcCheckCircle from '@/assets/icons/ic_check_circle.svg';
@@ -33,7 +33,7 @@ import { cn } from '@/utils/cn';
 import ServiceTypeTag from '@/components/ui/Tag/ServiceTypeTag';
 
 interface ReceivedEstimateCardProps {
-  estimate: Estimate;
+  estimate: MyEstimateSummary;
   /** 견적서에는 이사 유형이 없어 요청의 값을 그대로 쓴다 */
   serviceType: ServiceType;
 }

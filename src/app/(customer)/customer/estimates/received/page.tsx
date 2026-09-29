@@ -9,14 +9,22 @@
 
 import { Fragment } from 'react';
 
+import type { MyEstimateListQuery } from '@/types/estimate';
+
 import useInfiniteScroll from '@/hooks/common/useInfiniteScroll';
-import { useReceivedEstimatesQuery } from '@/hooks/queries/estimate/queries';
+import { useMyEstimatesQuery } from '@/hooks/queries/estimate/queries';
 
 import { cn } from '@/utils/cn';
 
 import EstimateRequestBlock from '@/components/customer/EstimateRequestBlock';
 import EmptyListNotice from '@/components/ui/EmptyListNotice';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
+
+/** status=closed와 같은 범위. 백엔드 paginationSchema 기본 size에 맞춘다 */
+const RECEIVED_ESTIMATES_QUERY: MyEstimateListQuery = {
+  status: ['ACCEPTED', 'NOT_SELECTED', 'EXPIRED'],
+  size: 10,
+};
 
 export default function EstimateReceivedPage() {
   const {
@@ -26,7 +34,7 @@ export default function EstimateReceivedPage() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useReceivedEstimatesQuery();
+  } = useMyEstimatesQuery(RECEIVED_ESTIMATES_QUERY);
 
   const items = data?.pages.flatMap((page) => page.list) ?? [];
 

@@ -106,7 +106,7 @@ export default function Modal({
           'flex max-h-[90vh] flex-col items-start overflow-hidden bg-gray-50 drop-shadow-[4px_4px_5px_rgba(169,169,169,0.2)]',
           isSheet
             ? 'w-full rounded-t-[32px] px-[24px] pt-[32px] pb-[40px] tablet:w-[375px] tablet:rounded-[32px] desktop:w-[608px]'
-            : 'w-fit max-w-[calc(100vw-32px)] rounded-[24px] px-[16px] py-[24px] tablet:w-[608px] tablet:max-w-none tablet:rounded-[32px] tablet:px-[24px] tablet:pt-[32px] tablet:pb-[40px]',
+            : 'w-[min(292px,calc(100vw-32px))] rounded-[24px] px-[16px] py-[24px] tablet:w-[608px] tablet:max-w-none tablet:rounded-[32px] tablet:px-[24px] tablet:pt-[32px] tablet:pb-[40px]',
           className,
         )}
       >

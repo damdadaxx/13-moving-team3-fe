@@ -15,7 +15,7 @@
 
 import { useState } from 'react';
 
-import type { EstimateListItem, EstimateStatusFilter } from '@/types/estimate';
+import type { EstimateGroup, EstimateStatusFilter } from '@/types/estimate';
 
 import { cn } from '@/utils/cn';
 
@@ -30,7 +30,7 @@ const STATUS_FILTER_OPTIONS: DropdownOption<EstimateStatusFilter>[] = [
 ];
 
 interface EstimateRequestBlockProps {
-  item: EstimateListItem;
+  item: EstimateGroup;
 }
 
 export default function EstimateRequestBlock({

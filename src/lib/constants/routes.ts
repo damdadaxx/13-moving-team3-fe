@@ -37,6 +37,10 @@ export const ROUTES = {
 
   /* 기사님 프로필 메뉴 */
   moverMypage: '/mover/mypage', // 마이페이지 (계정·프로필 수정 포함)
+  moverProfileRoot: '/mover/mypage/profile',
+  moverProfileNew: '/mover/mypage/profile/new',
+  moverProfileEdit: '/mover/mypage/profile/edit',
+  moverAccount: '/mover/mypage/account',
 } as const;
 
 export function getHomePath(role: Role): string {

@@ -86,6 +86,7 @@ export default function ModalExamplePage() {
       <SendEstimateModal
         isOpen={isSendEstimateOpen}
         onClose={() => setIsSendEstimateOpen(false)}
+        estimateRequestId="example-estimate-request-id"
         isDesignated
         serviceType="SMALL_MOVE"
         customerName="김인서"

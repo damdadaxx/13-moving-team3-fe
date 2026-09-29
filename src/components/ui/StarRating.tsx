@@ -1,12 +1,52 @@
-// react-simple-star-rating 래퍼 컴포넌트
-// 리뷰 별점 입력/표시에 사용
+'use client';
+
+import { Rating } from 'next-flex-rating';
+
+import IcStarFill from '@/assets/icons/ic_star_fill.svg';
+
+import { cn } from '@/utils/cn';
+
+const STAR_COLOR = '#FFC149';
+const STAR_EMPTY_COLOR = 'rgba(255, 193, 73, 0.2)';
 
 interface StarRatingProps {
   value: number;
   onChange?: (value: number) => void;
-  readonly?: boolean;
+  readOnly?: boolean;
+  size?: number;
+  className?: string;
 }
 
-export default function StarRating({ value }: StarRatingProps) {
-  return <div>별점: {value}</div>;
+/**
+ * @ 별점 평가 컴포넌트
+ * - 별점을 표시하고 수정 가능
+ */
+export default function StarRating({
+  value,
+  onChange,
+  readOnly,
+  size = 20,
+  className,
+}: StarRatingProps) {
+  const isReadOnly = readOnly ?? !onChange;
+  const starIcon = <IcStarFill aria-hidden className="size-full" />;
+
+  return (
+    <div
+      className={cn('inline-flex', className)}
+      aria-label={isReadOnly ? `${value}점` : undefined}
+    >
+      <Rating
+        value={value}
+        onChange={onChange}
+        readOnly={isReadOnly}
+        size={size}
+        spacing={0}
+        color={STAR_COLOR}
+        emptyColor={STAR_EMPTY_COLOR}
+        icon={starIcon}
+        emptyIcon={starIcon}
+      />
+    </div>
+  );
 }

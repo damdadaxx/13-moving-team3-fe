@@ -42,10 +42,11 @@ export const ENDPOINTS = {
     request: api('/estimate-requests'), // [POST] 로그인 - 견적 요청
     activeRequest: api('/estimate-requests/active'), // [GET] 로그인 - 진행 중인 견적 요청 + 받은 견적 목록(없으면 null)
     estimates: (estimateRequestId: number | string) =>
-      api(`/estimate-requests/${estimateRequestId}/estimates`), // [POST/GET] 로그인 - 지정 견적목록
-    list: api('/estimates'), // [GET/POST] 로그인 - 내 견적 목록 / 견적 보내기(지정 없이)
+      api(`/estimate-requests/${estimateRequestId}/estimates`), // [POST] 로그인 - 지정 견적 요청(고객이 기사님 지정)
+    received: api('/estimate-requests/received'), // [GET] 로그인(기사님) - 받은 요청 목록(커서 무한 스크롤)
+    list: api('/estimates'), // [GET] 로그인 - 내 견적 목록(커서 무한 스크롤) / [POST] 로그인(기사님) - 견적 보내기(지정 없이)
     detail: (estimateId: number | string) => api(`/estimates/${estimateId}`), // [GET] 로그인 - 견적 상세
-    update: (estimateId: number | string) => api(`/estimates/${estimateId}`), // [PATCH] 로그인 - 견적 수정
+    update: (estimateId: number | string) => api(`/estimates/${estimateId}`), // [PATCH] 로그인 - 견적 상태 전환(발송/반려/확정)
   },
 
   // --- Review(리뷰) ---
@@ -58,6 +59,7 @@ export const ENDPOINTS = {
   // --- Like(찜) ---
   like: {
     mine: api('/likes/me'), // [GET] 로그인 - 찜한 기사님 목록
+    meByMover: (moverId: number | string) => api(`/likes/me/${moverId}`), // [GET] 로그인 - 이 기사님 찜 여부
     create: api('/likes'), // [POST] 로그인 - 찜하기
     bulkDelete: api('/likes/bulk-delete'), // [POST] 로그인 - 여러 찜 취소
     delete: (id: number | string) => api(`/likes/${id}`), // [DELETE] 로그인 - 찜 취소

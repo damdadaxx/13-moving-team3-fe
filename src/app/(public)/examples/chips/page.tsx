@@ -5,13 +5,12 @@
 
 import { useState } from 'react';
 
+import { type Region } from '@/types/region';
 import { type ServiceType } from '@/types/serviceType';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
-import RegionChipGroup, {
-  type Region,
-} from '@/components/ui/Chip/RegionChipGroup';
+import RegionChipGroup from '@/components/ui/Chip/RegionChipGroup';
 import SelectableChip from '@/components/ui/Chip/SelectableChip';
 import ServiceTypeSelector from '@/components/ui/Chip/ServiceTypeSelector';
 

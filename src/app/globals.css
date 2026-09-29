@@ -177,6 +177,10 @@
   --text-sm-medium--font-weight: 500;
   --text-sm-medium--line-height: calc(22 / 13);
   --text-sm-medium--letter-spacing: 0em;
+  --text-sm-regular: 13px;
+  --text-sm-regular--font-weight: 400;
+  --text-sm-regular--line-height: calc(20 / 13);
+  --text-sm-regular--letter-spacing: 0em;
 
   /* Text-xs: 12px, semibold만 line-height 20px / medium·regular은 18px (Figma 원본 그대로) */
   --text-xs-semibold: 12px;

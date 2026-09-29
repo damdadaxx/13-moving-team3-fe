@@ -1,5 +1,7 @@
 'use client';
 
+import { REGION_OPTIONS, type Region } from '@/types/region';
+
 import { cn } from '@/utils/cn';
 
 import SelectableChip, { type SelectableChipSize } from './SelectableChip';
@@ -19,28 +21,6 @@ import SelectableChip, { type SelectableChipSize } from './SelectableChip';
   size={useBreakpointValue('sm', 'md', 'md')}
 />
 */
-
-export const REGION_OPTIONS = [
-  { value: 'SEOUL', label: '서울' },
-  { value: 'GYEONGGI', label: '경기' },
-  { value: 'INCHEON', label: '인천' },
-  { value: 'GANGWON', label: '강원' },
-  { value: 'CHUNGBUK', label: '충북' },
-  { value: 'CHUNGNAM', label: '충남' },
-  { value: 'SEJONG', label: '세종' },
-  { value: 'DAEJEON', label: '대전' },
-  { value: 'JEONBUK', label: '전북' },
-  { value: 'JEONNAM', label: '전남' },
-  { value: 'GWANGJU', label: '광주' },
-  { value: 'GYEONGBUK', label: '경북' },
-  { value: 'GYEONGNAM', label: '경남' },
-  { value: 'DAEGU', label: '대구' },
-  { value: 'ULSAN', label: '울산' },
-  { value: 'BUSAN', label: '부산' },
-  { value: 'JEJU', label: '제주' },
-] as const;
-
-export type Region = (typeof REGION_OPTIONS)[number]['value'];
 
 interface RegionChipGroupProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,

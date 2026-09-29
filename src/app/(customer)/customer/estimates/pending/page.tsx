@@ -6,8 +6,10 @@
 // (진행 중인 요청과 거기 들어온 견적 목록을 함께 내려주는 엔드포인트)
 'use client';
 
+import { HttpError } from '@/lib/api/errors';
 import { ROUTES } from '@/lib/constants/routes';
 
+import { useToast } from '@/hooks/common/useToast';
 import { useAcceptEstimateMutation } from '@/hooks/queries/estimate/mutations';
 import { useActiveEstimateRequestQuery } from '@/hooks/queries/estimate/queries';
 
@@ -21,6 +23,23 @@ import LoadingDisplay from '@/components/ui/LoadingDisplay';
 export default function EstimatePendingPage() {
   const activeQuery = useActiveEstimateRequestQuery();
   const acceptEstimate = useAcceptEstimateMutation();
+  const { showToast } = useToast();
+
+  /*
+  @ 견적 확정
+  - 실패하면 버튼이 조용히 원래대로 돌아가 확정됐는지 알 수 없으므로 토스트로 알린다
+  */
+  function handleConfirm(estimateId: string) {
+    acceptEstimate.mutate(estimateId, {
+      onError: (error) => {
+        showToast(
+          error instanceof HttpError
+            ? error.message
+            : '견적 확정에 실패했어요. 잠시 후 다시 시도해 주세요.',
+        );
+      },
+    });
+  }
 
   if (activeQuery.isPending) return <LoadingDisplay />;
 
@@ -96,11 +115,12 @@ export default function EstimatePendingPage() {
                 <PendingEstimateCard
                   estimate={estimate}
                   serviceType={activeRequest.serviceType}
-                  onConfirm={acceptEstimate.mutate}
+                  onConfirm={handleConfirm}
                   isConfirming={
                     acceptEstimate.isPending &&
                     acceptEstimate.variables === estimate.id
                   }
+                  isDisabled={acceptEstimate.isPending}
                 />
               </li>
             ))}

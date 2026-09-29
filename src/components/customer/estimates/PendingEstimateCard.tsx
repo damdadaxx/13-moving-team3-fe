@@ -26,6 +26,8 @@ interface PendingEstimateCardProps {
   serviceType: ServiceType;
   onConfirm: (estimateId: string) => void;
   isConfirming?: boolean;
+  /** 다른 견적을 확정하는 중이면 이 카드의 확정 버튼도 잠근다 (한 요청에 확정은 1건) */
+  isDisabled?: boolean;
 }
 
 export default function PendingEstimateCard({
@@ -33,6 +35,7 @@ export default function PendingEstimateCard({
   serviceType,
   onConfirm,
   isConfirming = false,
+  isDisabled = false,
 }: PendingEstimateCardProps) {
   const tagSize = useBreakpointValue(
     'sm' as const,
@@ -129,6 +132,7 @@ export default function PendingEstimateCard({
           size="sm"
           className="tablet:order-2"
           isLoading={isConfirming}
+          disabled={isDisabled}
           onClick={() => onConfirm(estimate.id)}
         >
           견적 확정하기

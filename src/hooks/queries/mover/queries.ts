@@ -6,11 +6,7 @@ import {
   useQuery,
 } from '@tanstack/react-query';
 
-import {
-  fetchMoverList,
-  getLikedMovers,
-  getMyMoverProfile,
-} from '@/lib/api/mover';
+import { fetchMoverList, getLikedMovers } from '@/lib/api/mover';
 import { MOVER_LIST_PAGE_SIZE } from '@/lib/constants/mover';
 
 import { moverKeys } from '@/hooks/queries/mover/keys';

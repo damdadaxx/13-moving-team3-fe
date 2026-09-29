@@ -36,12 +36,16 @@ export default function LikedMoverSection({
       aria-labelledby="liked-movers-title"
       className={cn('hidden flex-col gap-4 desktop:flex', className)}
     >
-      <h2 id="liked-movers-title" className="text-xl-semibold text-black-400">
+      <h2
+        id="liked-movers-title"
+        className="shrink-0 text-xl-semibold text-black-400"
+      >
         찜한 기사님
       </h2>
-      <ul className="flex flex-col gap-4">
+      {/* 제목은 고정하고 카드만 스크롤. 영역이 뷰포트보다 길어도 sticky가 풀리지 않게 */}
+      <ul className="flex min-h-0 flex-col gap-4 overflow-y-auto scrollbar-gray-300">
         {likedMovers.map((mover) => (
-          <li key={mover.id}>
+          <li key={mover.id} className="shrink-0">
             <MoverCard mover={mover} variant="compact" />
           </li>
         ))}

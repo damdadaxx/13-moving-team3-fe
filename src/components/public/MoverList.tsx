@@ -3,7 +3,7 @@
 
 import { useEffect, useRef } from 'react';
 
-import type { MoverListParams } from '@/types/mover';
+import type { MoverListQuery } from '@/types/mover';
 
 import { LIKED_MOVER_ID_PAGE_SIZE } from '@/lib/constants/mover';
 
@@ -20,7 +20,7 @@ import LoadingDisplay from '@/components/ui/LoadingDisplay';
 import { Skeleton } from '@/components/ui/Skeleton';
 
 interface MoverListProps {
-  params: Omit<MoverListParams, 'cursor' | 'size'>;
+  params: Omit<MoverListQuery, 'cursor' | 'size'>;
   className?: string;
 }
 

@@ -52,26 +52,3 @@ export interface MoverListQuery {
   cursor?: string;
   size?: number;
 }
-
-/*=================================================
-기사님 찾기 페이지에서 쓰는 별칭 / 추가 타입
-- dev의 타입을 그대로 두고 이름만 이어 붙인다 (MoverListQuery ↔ MoverListParams 등)
-- 정리 여유가 생기면 dev 이름으로 통일하고 이 블록을 지운다
-=================================================*/
-
-// 목록 컴포넌트들이 '@/types/mover'에서 가져다 쓰므로 여기서도 내보낸다
-export type { Region } from '@/types/region';
-export type { ServiceType } from '@/types/serviceType';
-
-/** dev의 MoverListSortBy와 같은 값 */
-export type MoverSortBy = MoverListSortBy;
-
-/** 목록 훅은 정렬을 항상 지정하므로 sortBy를 필수로 좁힌다 */
-export type MoverListParams = MoverListQuery & { sortBy: MoverListSortBy };
-
-/** 커서 페이지네이션 공통 형태. 찜한 기사님 목록에도 쓴다 */
-export interface CursorPage<T> {
-  list: T[];
-  nextCursor: string | null;
-  totalCount: number;
-}

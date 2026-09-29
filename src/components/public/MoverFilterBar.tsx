@@ -1,7 +1,9 @@
 // 기사님 찾기 필터 (지역 / 서비스 / 초기화 / 정렬)
 'use client';
 
-import type { MoverSortBy, Region, ServiceType } from '@/types/mover';
+import type { MoverListSortBy } from '@/types/mover';
+import type { Region } from '@/types/region';
+import type { ServiceType } from '@/types/serviceType';
 
 import {
   MOVER_SORT_LABEL,
@@ -31,17 +33,17 @@ const SERVICE_OPTIONS: DropdownOption<ServiceType | typeof ALL>[] = [
   ),
 ];
 
-const SORT_OPTIONS: SortOption<MoverSortBy>[] = (
-  Object.entries(MOVER_SORT_LABEL) as [MoverSortBy, string][]
+const SORT_OPTIONS: SortOption<MoverListSortBy>[] = (
+  Object.entries(MOVER_SORT_LABEL) as [MoverListSortBy, string][]
 ).map(([value, label]) => ({ value, label }));
 
 interface MoverFilterBarProps {
   region?: Region;
   serviceType?: ServiceType;
-  sortBy: MoverSortBy;
+  sortBy: MoverListSortBy;
   onRegionChange: (region?: Region) => void;
   onServiceTypeChange: (serviceType?: ServiceType) => void;
-  onSortChange: (sortBy: MoverSortBy) => void;
+  onSortChange: (sortBy: MoverListSortBy) => void;
   onReset: () => void;
   className?: string;
 }

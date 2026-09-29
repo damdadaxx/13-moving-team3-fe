@@ -1,5 +1,10 @@
 // 기사님 프로필 API 호출 함수
-import type { MoverDetail, MoverListData, MoverListQuery } from '@/types/mover';
+import type {
+  MoverDetail,
+  MoverListData,
+  MoverListQuery,
+  MoverProfile,
+} from '@/types/mover';
 import type { ServiceType } from '@/types/serviceType';
 
 import clientFetch from '@/lib/api/clientFetch';

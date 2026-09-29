@@ -3,7 +3,9 @@
 
 import { useState } from 'react';
 
-import type { MoverSortBy, Region, ServiceType } from '@/types/mover';
+import type { MoverListSortBy } from '@/types/mover';
+import type { Region } from '@/types/region';
+import type { ServiceType } from '@/types/serviceType';
 
 import useDebounce from '@/hooks/common/useDebounce';
 
@@ -28,7 +30,7 @@ export default function MoverFindContent() {
   const [keyword, setKeyword] = useState('');
   const [region, setRegion] = useState<Region>();
   const [serviceType, setServiceType] = useState<ServiceType>();
-  const [sortBy, setSortBy] = useState<MoverSortBy>('reviewCount');
+  const [sortBy, setSortBy] = useState<MoverListSortBy>('reviewCount');
   const debouncedKeyword = useDebounce(keyword.trim(), 300);
 
   function handleReset() {

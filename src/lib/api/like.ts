@@ -2,6 +2,9 @@ import type {
   CreateLikeResult,
   DeleteLikeResult,
   LikeStatus,
+  BulkDeleteLikesData,
+  GetLikedMoversParams,
+  LikedMoverListData,
 } from '@/types/like';
 
 import clientFetch from '@/lib/api/clientFetch';
@@ -34,5 +37,28 @@ export function createLike(moverId: string): Promise<CreateLikeResult> {
 export function deleteLike(moverId: string): Promise<DeleteLikeResult> {
   return clientFetch<DeleteLikeResult>(ENDPOINTS.like.delete(moverId), {
     method: 'DELETE',
+  });
+}
+
+/** @ 찜한 기사님 목록 조회 (GET /likes/me) */
+function toLikedMoversUrl({ cursor, size }: GetLikedMoversParams): string {
+  const searchParams = new URLSearchParams();
+  if (cursor) searchParams.set('cursor', cursor);
+  if (size !== undefined) searchParams.set('size', String(size));
+
+  const query = searchParams.toString();
+  return query ? `${ENDPOINTS.like.mine}?${query}` : ENDPOINTS.like.mine;
+}
+
+/** @ 찜한 기사님 목록 조회 (GET /likes/me) */
+export function getLikedMovers(params: GetLikedMoversParams = {}) {
+  return clientFetch<LikedMoverListData>(toLikedMoversUrl(params));
+}
+
+/** @ 찜한 기사님 목록 삭제 (POST /likes/bulk) */
+export function bulkDeleteLikes(moverIds: string[]) {
+  return clientFetch<BulkDeleteLikesData>(ENDPOINTS.like.bulkDelete, {
+    method: 'POST',
+    body: JSON.stringify({ moverIds }),
   });
 }

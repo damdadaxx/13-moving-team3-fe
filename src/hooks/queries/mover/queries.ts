@@ -1,12 +1,16 @@
 // tanstack/react-query - mover queries
-import type { MoverListParams } from '@/types/mover';
+import type { MoverListQuery } from '@/types/mover';
 import {
   keepPreviousData,
   useInfiniteQuery,
   useQuery,
 } from '@tanstack/react-query';
 
-import { getLikedMovers, getMovers, getMyMoverProfile } from '@/lib/api/mover';
+import {
+  fetchMoverList,
+  getLikedMovers,
+  getMyMoverProfile,
+} from '@/lib/api/mover';
 import { MOVER_LIST_PAGE_SIZE } from '@/lib/constants/mover';
 
 import { moverKeys } from '@/hooks/queries/mover/keys';
@@ -28,13 +32,14 @@ export function useMoverProfileQuery() {
 - 그동안 목록이 비면 화면이 깜빡이므로 placeholderData로 이전 목록을 유지한다
 */
 export function useMoverListInfiniteQuery(
-  params: Omit<MoverListParams, 'cursor' | 'size'>,
+  params: Omit<MoverListQuery, 'cursor' | 'size'>,
 ) {
   const listParams = { ...params, size: MOVER_LIST_PAGE_SIZE };
 
   return useInfiniteQuery({
     queryKey: moverKeys.list(listParams),
-    queryFn: ({ pageParam }) => getMovers({ ...listParams, cursor: pageParam }),
+    queryFn: ({ pageParam }) =>
+      fetchMoverList({ ...listParams, cursor: pageParam }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
     placeholderData: keepPreviousData,

@@ -1,15 +1,11 @@
 // 기사님 프로필 API 호출 함수
 import type {
-  CursorPage,
   MoverDetail,
   MoverListData,
-  MoverListItem,
-  MoverListParams,
   MoverListQuery,
   MoverProfile,
-  Region,
-  ServiceType,
 } from '@/types/mover';
+import type { ServiceType } from '@/types/serviceType';
 
 import clientFetch from '@/lib/api/clientFetch';
 import { ENDPOINTS } from '@/lib/api/endpoints';
@@ -56,31 +52,6 @@ export function fetchMoverDetail(id: string): Promise<MoverDetail> {
 기사님 찾기 / 찜한 기사님
 =================================================*/
 
-/** undefined / 빈 문자열은 빼고 쿼리스트링을 만든다 */
-function toQueryString(params: Record<string, string | number | undefined>) {
-  const searchParams = new URLSearchParams();
-
-  Object.entries(params).forEach(([key, value]) => {
-    if (value === undefined || value === '') return;
-    searchParams.set(key, String(value));
-  });
-
-  const query = searchParams.toString();
-  return query ? `?${query}` : '';
-}
-
-/*
-@ GET /mover - 기사님 찾기 목록
-- 비로그인 가능. 별명 검색(keyword), 지역·서비스 필터, 정렬, 커서 페이지네이션
-- 검색어/필터/정렬이 바뀌면 cursor 없이 첫 페이지부터 다시 요청해야 한다 (쿼리 키로 처리)
-- 요청 자체는 위의 fetchMoverList와 같아서 그대로 재사용한다
-*/
-export function getMovers(
-  params: MoverListParams,
-): Promise<CursorPage<MoverListItem>> {
-  return fetchMoverList(params);
-}
-
 /*
 @ GET /likes/me 응답 항목
 - 기사님 목록(GET /mover)과 필드 이름이 달라서 카드용 MoverListItem으로 변환한다
@@ -95,7 +66,6 @@ interface LikedMoverResponse {
     shortIntro: string;
     description: string;
     serviceTypes: ServiceType[];
-    serviceRegions: Region[];
   };
   ratingCount: number;
   ratingAvg: number;
@@ -103,13 +73,19 @@ interface LikedMoverResponse {
   likeCount: number;
 }
 
+interface LikedMoverPage {
+  list: LikedMoverResponse[];
+  nextCursor: string | null;
+  totalCount: number;
+}
+
 /** GET /likes/me - 고객 로그인 필요 */
 export async function getLikedMovers(params: {
   cursor?: string;
   size?: number;
-}): Promise<CursorPage<MoverListItem>> {
-  const page = await clientFetch<CursorPage<LikedMoverResponse>>(
-    `${ENDPOINTS.like.mine}${toQueryString(params)}`,
+}): Promise<MoverListData> {
+  const page = await clientFetch<LikedMoverPage>(
+    `${ENDPOINTS.like.mine}${toSearchParams(params)}`,
   );
 
   return {
@@ -122,7 +98,8 @@ export async function getLikedMovers(params: {
       shortIntro: item.mover.shortIntro,
       description: item.mover.description,
       serviceTypes: item.mover.serviceTypes,
-      serviceRegions: item.mover.serviceRegions,
+      // GET /likes/me는 서비스 가능 지역을 내려주지 않는다. 카드도 쓰지 않아 빈 배열로 둔다
+      serviceRegions: [],
       averageRating: item.ratingAvg,
       reviewCount: item.ratingCount,
       confirmedCount: item.acceptedEstimateCount,

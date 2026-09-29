@@ -1,5 +1,7 @@
 // 기사님 관련 상수 (이사 유형 / 지역 / 정렬 라벨)
-import type { MoverSortBy, Region, ServiceType } from '@/types/mover';
+import type { MoverListSortBy } from '@/types/mover';
+import type { Region } from '@/types/region';
+import type { ServiceType } from '@/types/serviceType';
 
 export const SERVICE_TYPE_LABEL: Record<ServiceType, string> = {
   SMALL_MOVE: '소형이사',
@@ -28,7 +30,7 @@ export const REGION_LABEL: Record<Region, string> = {
   JEJU: '제주',
 };
 
-export const MOVER_SORT_LABEL: Record<MoverSortBy, string> = {
+export const MOVER_SORT_LABEL: Record<MoverListSortBy, string> = {
   reviewCount: '리뷰 많은순',
   rating: '평점 높은순',
   career: '경력 높은순',

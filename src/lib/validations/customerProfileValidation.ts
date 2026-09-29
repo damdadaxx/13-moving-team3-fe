@@ -1,46 +1,13 @@
-import { CUSTOMER_PROFILE_REGIONS } from '@/types/customerProfile';
+import { REGIONS } from '@/types/region';
 import { SERVICE_TYPES } from '@/types/serviceType';
 import { z } from 'zod';
 
 import { signupSchema } from '@/lib/validations/authValidation';
+import { optionalProfileImageSchema } from '@/lib/validations/profileImageValidation';
 
 /*=================================================
 고객 프로필 등록·수정 폼 검증
 =================================================*/
-
-export const MAX_CUSTOMER_PROFILE_IMAGE_SIZE = 5 * 1024 * 1024;
-
-export const CUSTOMER_PROFILE_IMAGE_MIME_TYPES = [
-  'image/jpeg',
-  'image/png',
-  'image/webp',
-] as const;
-
-const customerProfileImageMimeTypeSet = new Set<string>(
-  CUSTOMER_PROFILE_IMAGE_MIME_TYPES,
-);
-
-/*
-@ FileList 검증 시 주의사항
-- FileList는 브라우저 전용 객체라 서버 렌더링 환경에는 존재하지 않을 수 있다.
-- typeof FileList 검사를 먼저 하면 서버에서 모듈을 읽어도 ReferenceError가 발생하지 않는다.
-- 파일이 없는 상태는 정상이다. 백엔드 계약상 프로필 이미지는 선택 항목이다.
-*/
-const optionalProfileImageSchema = z
-  .custom<FileList | undefined>(
-    (value) =>
-      value === undefined ||
-      (typeof FileList !== 'undefined' && value instanceof FileList),
-    '프로필 이미지 값이 올바르지 않습니다.',
-  )
-  .refine((files) => {
-    const file = files?.[0];
-    return !file || customerProfileImageMimeTypeSet.has(file.type);
-  }, 'JPEG, PNG, WEBP 이미지만 업로드할 수 있습니다.')
-  .refine((files) => {
-    const file = files?.[0];
-    return !file || file.size <= MAX_CUSTOMER_PROFILE_IMAGE_SIZE;
-  }, '프로필 이미지는 5MB 이하만 업로드할 수 있습니다.');
 
 const customerProfileFields = {
   profileImage: optionalProfileImageSchema,
@@ -48,7 +15,7 @@ const customerProfileFields = {
     .array(z.enum(SERVICE_TYPES))
     .min(1, '이용 서비스를 한 개 이상 선택해주세요.'),
   region: z
-    .enum(CUSTOMER_PROFILE_REGIONS)
+    .enum(REGIONS)
     .nullable()
     .refine((region) => region !== null, '지역을 선택해주세요.'),
 };

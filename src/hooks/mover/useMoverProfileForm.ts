@@ -20,6 +20,10 @@ import {
 } from '@/lib/validations/moverProfileValidation';
 
 import {
+  normalizeCareerNumberInput,
+  normalizeCareerRemainderInput,
+} from '@/hooks/mover/moverCareerInput';
+import {
   createMoverProfileEditPlan,
   type MoverProfileEditPlan,
 } from '@/hooks/mover/moverProfileEditPlan';
@@ -152,6 +156,40 @@ export function useMoverProfileForm({
     initialValues,
     initialImageUrl,
   );
+
+  /*
+  @ 경력 입력 변경 처리
+  - 화면 컴포넌트가 경력 계산 규칙을 직접 알지 않도록 폼 훅에서 값을 정리한다.
+  - setValue 옵션을 동일하게 적용해 자동 환산된 연수와 개월도 사용자 변경으로 기록하고,
+    수정 버튼 활성화와 Zod 검증 결과가 실제 제출값과 항상 같도록 유지한다.
+  */
+  const setNormalizedCareerYears = (value: string) => {
+    form.setValue('careerYears', normalizeCareerNumberInput(value), {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  };
+
+  const setNormalizedCareerRemainderMonths = (value: string) => {
+    const normalizedCareer = normalizeCareerRemainderInput(
+      value,
+      form.getValues('careerYears'),
+    );
+
+    form.setValue('careerYears', normalizedCareer.careerYears, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+    form.setValue(
+      'careerRemainderMonths',
+      normalizedCareer.careerRemainderMonths,
+      {
+        shouldDirty: true,
+        shouldValidate: true,
+      },
+    );
+  };
+
   const hasRequiredValues = Boolean(
     (!isPhoneNumberRequired || currentValues.phoneNumber.trim()) &&
     currentValues.nickname.trim() &&
@@ -219,6 +257,8 @@ export function useMoverProfileForm({
     isFormComplete: hasRequiredValues && form.formState.isValid,
     isPhoneNumberRequired,
     submitError,
+    setNormalizedCareerYears,
+    setNormalizedCareerRemainderMonths,
     handleFormSubmit: form.handleSubmit(handleValidSubmit),
   };
 }

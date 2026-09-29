@@ -82,6 +82,8 @@ export default function MoverProfileForm({
     isFormComplete,
     isPhoneNumberRequired,
     submitError,
+    setNormalizedCareerYears,
+    setNormalizedCareerRemainderMonths,
     handleFormSubmit,
   } = useMoverProfileForm({
     mode,
@@ -97,6 +99,8 @@ export default function MoverProfileForm({
   const isSubmitDisabled =
     isDisabled || !isFormComplete || (isEditMode && !hasChanges);
   const profileImageRegistration = register('profileImage');
+  const careerYearsRegistration = register('careerYears');
+  const careerRemainderMonthsRegistration = register('careerRemainderMonths');
   const serviceTypeError = errors.serviceTypes?.message;
   const serviceRegionError = errors.serviceRegions?.message;
   const serviceTypeErrorId = serviceTypeError
@@ -238,7 +242,11 @@ export default function MoverProfileForm({
             @ 경력 년/개월 입력
             - 공용 Input은 그대로 두고, 부모 grid를 2열로 나눠 두 Input의 너비만 조절한다.
             - type=number는 e, 음수, 소수 입력과 브라우저 증감 버튼 문제가 있어
-              text + inputMode=numeric으로 숫자 키보드를 제공하고 Zod에서 최종 검증한다.
+              text + inputMode=numeric으로 숫자 키보드를 제공한다.
+            - 입력 변경 시 숫자가 아닌 문자를 제거하고 앞자리 0을 정리한다.
+            - 개월이 12 이상이면 12개월마다 1년으로 환산해 기존 연수에 더하고,
+              12개월 미만만 입력했는데 연수가 비어 있으면 연수에 0을 채운다.
+            - Zod는 직접 입력뿐 아니라 서버 기본값 등 모든 제출값을 마지막으로 검증한다.
             - 3년 6개월은 careerYears="3", careerRemainderMonths="6"으로 관리한다.
             */}
             <fieldset className="min-w-0" disabled={areFieldsDisabled}>
@@ -262,7 +270,10 @@ export default function MoverProfileForm({
                       aria-label="경력 연수"
                       disabled={areFieldsDisabled}
                       error={errors.careerYears?.message}
-                      {...register('careerYears')}
+                      {...careerYearsRegistration}
+                      onChange={(event) => {
+                        setNormalizedCareerYears(event.currentTarget.value);
+                      }}
                     />
                   </div>
                   <span
@@ -285,7 +296,12 @@ export default function MoverProfileForm({
                       aria-label="경력 개월 수"
                       disabled={areFieldsDisabled}
                       error={errors.careerRemainderMonths?.message}
-                      {...register('careerRemainderMonths')}
+                      {...careerRemainderMonthsRegistration}
+                      onChange={(event) => {
+                        setNormalizedCareerRemainderMonths(
+                          event.currentTarget.value,
+                        );
+                      }}
                     />
                   </div>
                   <span

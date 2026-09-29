@@ -1,39 +1,9 @@
+import type { Region } from '@/types/region';
 import type { ServiceType } from '@/types/serviceType';
 
 /*=================================================
 기사님 프로필 도메인 타입
 =================================================*/
-
-/*
-@ 서비스 가능 지역
-- 백엔드 Region enum과 공용 RegionChipGroup이 사용하는 값과 동일하게 유지한다.
-- mover 도메인 타입이 UI 컴포넌트를 import하지 않도록 값 목록을 도메인에서 관리한다.
-
-@ TODO(공용 Region 타입 정리 시 확인)
-- Customer 프로필과 Mover 프로필이 같은 Region 값을 사용한다.
-- 공용 타입 통합은 다른 도메인 파일도 함께 수정해야 하므로 별도 승인 후 진행한다.
-*/
-export const MOVER_PROFILE_REGIONS = [
-  'SEOUL',
-  'GYEONGGI',
-  'INCHEON',
-  'GANGWON',
-  'CHUNGBUK',
-  'CHUNGNAM',
-  'SEJONG',
-  'DAEJEON',
-  'JEONBUK',
-  'JEONNAM',
-  'GWANGJU',
-  'GYEONGBUK',
-  'GYEONGNAM',
-  'DAEGU',
-  'ULSAN',
-  'BUSAN',
-  'JEJU',
-] as const;
-
-export type MoverProfileRegion = (typeof MOVER_PROFILE_REGIONS)[number];
 
 /*
 @ 등록·수정 폼 값
@@ -52,7 +22,7 @@ export interface MoverProfileFormValues {
   shortIntro: string;
   description: string;
   serviceTypes: ServiceType[];
-  serviceRegions: MoverProfileRegion[];
+  serviceRegions: Region[];
   /** 수정 화면에서 기존 이미지를 삭제할 때만 true로 설정한다. */
   removeImage: boolean;
 }
@@ -66,7 +36,7 @@ export interface MoverProfile {
   shortIntro: string;
   description: string;
   serviceTypes: ServiceType[];
-  serviceRegions: MoverProfileRegion[];
+  serviceRegions: Region[];
   createdAt: string;
   updatedAt: string;
 }
@@ -79,7 +49,7 @@ export interface CreateMoverProfileInput {
   shortIntro: string;
   description: string;
   serviceTypes: ServiceType[];
-  serviceRegions: MoverProfileRegion[];
+  serviceRegions: Region[];
 }
 
 /** PATCH /mover/profile 요청 */
@@ -90,6 +60,6 @@ export interface UpdateMoverProfileInput {
   shortIntro?: string;
   description?: string;
   serviceTypes?: ServiceType[];
-  serviceRegions?: MoverProfileRegion[];
+  serviceRegions?: Region[];
   removeImage?: true;
 }

@@ -141,7 +141,7 @@ export default function ProfileUpload({
           aria-disabled={disabled || undefined}
           className={cn(
             'relative flex size-full items-center justify-center overflow-hidden rounded-[6px]',
-            hasImage ? 'bg-black-400' : 'bg-background-200',
+            hasImage ? 'bg-transparent' : 'bg-background-200',
             'peer-focus-visible:ring-2 peer-focus-visible:ring-orange-400 peer-focus-visible:ring-offset-2',
             disabled ? 'cursor-not-allowed' : 'cursor-pointer',
           )}

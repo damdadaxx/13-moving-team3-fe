@@ -1,44 +1,12 @@
-import { MOVER_PROFILE_REGIONS } from '@/types/moverProfile';
+import { REGIONS } from '@/types/region';
 import { SERVICE_TYPES } from '@/types/serviceType';
 import { z } from 'zod';
+
+import { optionalProfileImageSchema } from '@/lib/validations/profileImageValidation';
 
 /*=================================================
 기사님 프로필 등록·수정 폼 검증
 =================================================*/
-
-export const MAX_MOVER_PROFILE_IMAGE_SIZE = 5 * 1024 * 1024;
-
-export const MOVER_PROFILE_IMAGE_MIME_TYPES = [
-  'image/jpeg',
-  'image/png',
-  'image/webp',
-] as const;
-
-const moverProfileImageMimeTypeSet = new Set<string>(
-  MOVER_PROFILE_IMAGE_MIME_TYPES,
-);
-
-/*
-@ 선택 이미지 검증
-- 백엔드 계약과 동일하게 이미지는 선택 항목이며 JPEG, PNG, WEBP만 허용한다.
-- FileList는 브라우저 전용 객체이므로 서버에서 모듈을 읽을 때 ReferenceError가
-  발생하지 않도록 typeof FileList 검사를 먼저 수행한다.
-*/
-const optionalProfileImageSchema = z
-  .custom<FileList | undefined>(
-    (value) =>
-      value === undefined ||
-      (typeof FileList !== 'undefined' && value instanceof FileList),
-    '프로필 이미지 값이 올바르지 않습니다.',
-  )
-  .refine((files) => {
-    const file = files?.[0];
-    return !file || moverProfileImageMimeTypeSet.has(file.type);
-  }, 'JPEG, PNG, WEBP 이미지만 업로드할 수 있습니다.')
-  .refine((files) => {
-    const file = files?.[0];
-    return !file || file.size <= MAX_MOVER_PROFILE_IMAGE_SIZE;
-  }, '프로필 이미지는 5MB 이하만 업로드할 수 있습니다.');
 
 /*
 @ 경력 입력 검증
@@ -101,7 +69,7 @@ const moverProfileFields = {
       '같은 서비스를 중복해서 선택할 수 없습니다.',
     ),
   serviceRegions: z
-    .array(z.enum(MOVER_PROFILE_REGIONS))
+    .array(z.enum(REGIONS))
     .min(1, '1개 이상 선택해주세요.')
     .refine(
       (serviceRegions) =>

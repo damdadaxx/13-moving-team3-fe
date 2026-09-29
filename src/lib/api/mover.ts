@@ -3,7 +3,7 @@ import type {
   MoverDetail,
   MoverListData,
   MoverListQuery,
-  MoverProfile,
+  // MoverProfile,
 } from '@/types/mover';
 import type { ServiceType } from '@/types/serviceType';
 

@@ -9,7 +9,7 @@ import {
 import {
   fetchMoverList,
   getLikedMovers,
-  getMyMoverProfile,
+  // getMyMoverProfile,
 } from '@/lib/api/mover';
 import { MOVER_LIST_PAGE_SIZE } from '@/lib/constants/mover';
 
@@ -21,7 +21,7 @@ import { moverKeys } from '@/hooks/queries/mover/keys';
 export function useMoverProfileQuery() {
   return useQuery({
     queryKey: moverKeys.profile(),
-    queryFn: getMyMoverProfile,
+    // queryFn: getMyMoverProfile,
     meta: { name: '내 기사님 프로필' },
   });
 }

@@ -8,7 +8,7 @@ import { useLikedMoversQuery } from '@/hooks/queries/mover/queries';
 
 import { cn } from '@/utils/cn';
 
-import MoverCard from '@/components/public/MoverCard';
+import MoverCard from '@/components/common/mover/MoverCard';
 
 /*
 @ 노출 조건

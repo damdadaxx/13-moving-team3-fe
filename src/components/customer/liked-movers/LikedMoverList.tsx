@@ -44,6 +44,8 @@ export default function LikedMoverList() {
   const { showToast } = useToast();
   //삭제할 기사님의 ID값을 담는다.
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  //전체 선택 상태 관리.
+  const [isSelectAll, setIsSelectAll] = useState(false);
   const {
     data,
     isPending,
@@ -60,10 +62,8 @@ export default function LikedMoverList() {
     [data],
   );
 
-  const selectedCount = selectedIds.length;
   const totalCount = data?.pages[0]?.totalCount ?? 0;
-  //전체선택 여부 확인
-  const isAllSelected = totalCount > 0 && selectedCount === totalCount;
+  const selectedCount = isSelectAll ? movers.length : selectedIds.length;
   const isDeleting = bulkDeleteMutation.isPending;
 
   //무한 스크롤 감시자 설정
@@ -78,11 +78,22 @@ export default function LikedMoverList() {
 
   //전체선택 체크박스 변경 시 선택된 기사님의 ID값을 업데이트한다.
   function handleToggleAll(checked: boolean) {
+    setIsSelectAll(checked);
     setSelectedIds(checked ? movers.map((mover) => mover.moverId) : []);
   }
 
-  //하나의 기사님 체크박스 변경 시 선택된 기사님의 ID값을 업데이트한다.
+  //기사님 체크박스 변경 시 선택된 기사님의 ID값을 업데이트한다.
   function handleToggleOne(id: string, checked: boolean) {
+    if (isSelectAll && !checked) {
+      setIsSelectAll(false);
+      setSelectedIds(
+        movers
+          .map((mover) => mover.moverId)
+          .filter((moverId) => moverId !== id),
+      );
+      return;
+    }
+
     setSelectedIds((current) =>
       checked ? [...current, id] : current.filter((item) => item !== id),
     );
@@ -92,8 +103,13 @@ export default function LikedMoverList() {
   function handleDeleteSelected() {
     if (selectedCount === 0 || isDeleting) return;
 
-    bulkDeleteMutation.mutate(selectedIds, {
+    const idsToDelete = isSelectAll
+      ? movers.map((mover) => mover.moverId)
+      : selectedIds;
+
+    bulkDeleteMutation.mutate(idsToDelete, {
       onSuccess: () => {
+        setIsSelectAll(false);
         setSelectedIds([]);
         showToast('선택한 기사님을 찜 목록에서 삭제했어요.');
       },
@@ -132,7 +148,7 @@ export default function LikedMoverList() {
     <div className="flex flex-col gap-[10px] tablet:gap-[18px] desktop:gap-[28px]">
       <div className="flex items-center justify-between">
         <Checkbox
-          checked={isAllSelected}
+          checked={isSelectAll}
           onChange={handleToggleAll}
           label={`전체선택(${selectedCount}/${totalCount})`}
           labelClassName="text-md-regular tablet:text-lg-regular text-black-500"
@@ -179,7 +195,7 @@ export default function LikedMoverList() {
             <li key={mover.moverId}>
               <LikedMoverCard
                 mover={mover}
-                isSelected={selectedIds.includes(mover.moverId)}
+                isSelected={isSelectAll || selectedIds.includes(mover.moverId)}
                 onSelectChange={(checked) =>
                   handleToggleOne(mover.moverId, checked)
                 }

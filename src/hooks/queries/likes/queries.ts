@@ -4,7 +4,7 @@ import { fetchLikeStatus, getLikedMovers } from '@/lib/api/like';
 
 import { likeKeys } from '@/hooks/queries/likes/keys';
 
-export const LIKED_MOVERS_PAGE_SIZE = 5;
+export const LIKED_MOVERS_PAGE_SIZE = 3;
 
 /** @ 찜한 기사님 목록 쿼리 */
 export function useLikedMoversQuery() {

@@ -3,11 +3,13 @@
 'use client';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import IcWriting from '@/assets/icons/ic_writing.svg';
 import IcWritingGray from '@/assets/icons/ic_writing_gray.svg';
 import ImgDefaultProfile from '@/assets/images/img_default_profile.png';
 
+import { HttpError } from '@/lib/api/errors';
 import { ROUTES } from '@/lib/constants/routes';
 
 import { useAuth } from '@/hooks/auth/useAuth';
@@ -25,6 +27,7 @@ import ServiceTypeList from '@/components/common/ServiceType/ServiceTypeList';
 import Button from '@/components/ui/Button/Button';
 import EmptyState from '@/components/ui/EmptyState';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
+import Modal from '@/components/ui/Modal/Modal';
 import PageBanner from '@/components/ui/PageBanner';
 
 function ButtonGroup({ className }: { className?: string }) {
@@ -59,18 +62,80 @@ function ButtonGroup({ className }: { className?: string }) {
   );
 }
 
+/**
+ * @ 기사님 프로필 미등록 체크
+ * - 404면 모달로 등록 안내, 등록/취소에 따라 이동, 다른 에러는 빈 화면 유지
+ */
+function isMoverProfileNotFound(error: unknown): boolean {
+  return error instanceof HttpError && error.status === 404;
+}
+
 export default function MoverMypageContent() {
+  const router = useRouter();
+  const modalButtonSize = useBreakpointValue('sm', 'sm', 'md');
   const { user: moverUser } = useAuth();
   const {
     data: mover,
+    error,
     isPending,
     isError,
   } = useMoverDetailQuery(moverUser?.id ?? '');
+
+  const isProfileMissing = isMoverProfileNotFound(error);
+
+  function leaveMypage() {
+    router.replace(ROUTES.moverHome);
+  }
 
   if (isPending) {
     return <LoadingDisplay />;
   }
 
+  // 기사님 프로필 미등록 체크
+  if (isProfileMissing) {
+    return (
+      <>
+        <LoadingDisplay />
+        <Modal
+          isOpen
+          onClose={leaveMypage}
+          title="프로필 등록"
+          variant="popup"
+          buttons={
+            <>
+              <Button
+                variant="outlined"
+                size={modalButtonSize}
+                className="flex-1"
+                onClick={leaveMypage}
+              >
+                취소
+              </Button>
+              <Button
+                size={modalButtonSize}
+                className="flex-1"
+                onClick={() => router.replace(ROUTES.moverProfileNew)}
+              >
+                프로필 등록하기
+              </Button>
+            </>
+          }
+        >
+          <p className="text-2lg-medium text-black-300">
+            마이페이지를 이용하려면 프로필 등록이 필요해요.
+            <br />
+            프로필 등록 페이지로 이동할까요?
+          </p>
+        </Modal>
+      </>
+    );
+  }
+
+  /*
+  @ 기사님 정보 조회 실패
+  - isError는 404가 아닌 조회 실패(네트워크, 500)
+  - !mover는 프로필 유무가 아니라, 그릴 객체가 없어 mover를 좁히기 위한 조건
+  */
   if (isError || !mover) {
     return <EmptyState message="기사님 정보를 찾을 수 없어요." />;
   }
@@ -94,7 +159,7 @@ export default function MoverMypageContent() {
           )}
         >
           {/* 기사님 정보 섹션 */}
-          <div>
+          <div className="flex-1">
             {/* 프로필 이미지 + 닉네임 + 찜하기 */}
             <div className={cn('flex items-end gap-[12px] mb-[16px]')}>
               {/* 프로필 이미지 */}

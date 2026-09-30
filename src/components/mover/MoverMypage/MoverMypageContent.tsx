@@ -50,7 +50,7 @@ function ButtonGroup({ className }: { className?: string }) {
         내 프로필 수정
       </Button>
       <Button
-        href={ROUTES.moverAccountEdit}
+        href={ROUTES.moverAccount}
         icon={<IcWritingGray />}
         size={currentBreakpoint}
         variant="outlined"

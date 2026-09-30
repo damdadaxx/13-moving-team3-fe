@@ -202,6 +202,10 @@ export default function CompletedReviewCard({
             {review.content}
           </p>
         </div>
+        <div className="flex items-center justify-end gap-[6px] text-xs-regular text-gray-300">
+          <span>작성일</span>
+          <span>{writtenDate}</span>
+        </div>
       </div>
     </article>
   );

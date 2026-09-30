@@ -244,18 +244,21 @@ export interface EstimateRequestInfo {
   status: 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'EXPIRED';
 }
 
-/** 견적을 보낸 기사님 정보와 집계값 */
+/*
+@ 견적을 보낸 기사님 정보와 집계값 (백엔드 estimateMapper.toEstimateListItem + moverStatsRepository)
+- 리뷰가 없으면 averageRating은 0
+- isLiked는 고객이 조회할 때만 내려온다
+*/
 export interface MoverSummary {
   moverId: string;
   nickname: string;
   imgUrl: string | null;
   careerMonths: number;
-  userId: string;
-  user: { name: string };
   reviewCount: number;
-  averageRating: number | null;
-  confirmedEstimateCount: number;
+  averageRating: number;
+  confirmedCount: number;
   likeCount: number;
+  isLiked?: boolean;
 }
 
 export interface CustomerSummary {
@@ -309,3 +312,10 @@ export interface EstimateDetail {
   /** MOVER 관점 - 본인 견적 + 요청 PENDING + 견적 DESIGNATED일 때만 true */
   canRespond?: boolean;
 }
+
+/*
+@ 견적서 상태 필터 (내 견적 관리 화면의 드롭다운)
+- 서버에 다시 묻지 않고 이미 받아온 견적서 배열만 거르는 화면 전용 값이다
+- CONFIRMED = ACCEPTED, PENDING = 그 외(NOT_SELECTED·EXPIRED)
+*/
+export type EstimateStatusFilter = 'ALL' | 'CONFIRMED' | 'PENDING';

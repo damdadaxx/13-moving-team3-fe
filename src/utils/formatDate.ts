@@ -6,16 +6,23 @@
  * - "이용일": "YYYY. MM. DD(요일) 오전/오후 HH:MM"
  * - "리뷰": "YYYY-MM-DD"
  * - "이사일"/"견적 요청일": "YYYY년 MM월 DD일 (요일)"
+ * - "견적 요청일(짧게)": "YY. MM. DD."
  * - "신청일": "YYYY년 M월 D일" (0 없이, 요일 없이)
  * - "상대 시간"(relative): "방금 전" / "N분 전" / "N시간 전" / "어제" / "N일 전"
  *
  * @param {Date | string | number} date - 변환할 날짜
- * @param {'usage' | 'review' | 'korean' | 'requested' | 'relative'} [type='usage'] - 포맷 타입
+ * @param {'usage' | 'review' | 'korean' | 'short' | 'requested' | 'relative'} [type='usage'] - 포맷 타입
  * @returns {string} 지정한 형식의 날짜 문자열
  */
 export default function formatDate(
   date: Date | string | number,
-  type: 'usage' | 'review' | 'korean' | 'requested' | 'relative' = 'usage',
+  type:
+    | 'usage'
+    | 'review'
+    | 'korean'
+    | 'short'
+    | 'requested'
+    | 'relative' = 'usage',
 ): string {
   if (!date) return '';
 
@@ -44,6 +51,11 @@ export default function formatDate(
     return `${year}-${month}-${day}`;
   }
 
+  if (type === 'short') {
+    // 예: 24. 06. 24.
+    return `${String(year).slice(-2)}. ${month}. ${day}.`;
+  }
+
   if (type === 'requested') {
     // 견적 신청일. 이사일과 달리 0을 채우지 않고 요일도 붙이지 않는다
     // 예: 2024년 6월 24일
@@ -65,4 +77,15 @@ export default function formatDate(
 
   // 'korean' (이사일/견적 요청일 등): 2024년 07월 01일 (월)
   return `${year}년 ${month}월 ${day}일 (${dayOfWeek})`;
+}
+
+/*
+@ 기사님 경력 표시
+- API는 개월 수(careerMonths)로 내려준다
+- 12개월 미만은 N개월, 이상은 N년
+*/
+export function formatCareerLabel(careerMonths: number): string {
+  const years = Math.floor(careerMonths / 12);
+  if (years < 1) return `${careerMonths}개월`;
+  return `${years}년`;
 }

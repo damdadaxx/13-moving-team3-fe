@@ -76,7 +76,9 @@ export default function SentEstimateCard({
               'tablet:text-2xl-bold',
             )}
           >
-            {estimate.price?.toLocaleString()}원
+            {estimate.price != null
+              ? `${estimate.price.toLocaleString()}원`
+              : '-'}
           </span>
         </div>
       </div>

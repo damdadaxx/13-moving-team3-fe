@@ -7,4 +7,9 @@ export const reviewKeys = {
       moverId,
       query,
     ] as const /** 기사님별 리뷰(검색 조건) */,
+  mine: () => [...reviewKeys.all, 'me'] as const,
+  pending: (page: number, pageSize: number) =>
+    [...reviewKeys.mine(), 'pending', page, pageSize] as const,
+  completed: (page: number, pageSize: number) =>
+    [...reviewKeys.mine(), 'completed', page, pageSize] as const,
 };

@@ -49,7 +49,9 @@ export function usePendingReviewsQuery(page: number) {
     meta: { name: '작성 가능한 리뷰 목록' },
   });
 }
-/*@ 내가 작성한 리뷰 목록
+
+/*
+@ 내가 작성한 리뷰 목록
 - GET /reviews/me?hasReview=true
 - 페이지를 넘겨도 이전 목록을 잠깐 보여 주려고 keepPreviousData를 쓴다
 */

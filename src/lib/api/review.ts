@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // 리뷰 API 호출 함수
 import type {
   MoverReviewListData,
@@ -7,13 +6,6 @@ import type {
   GetMyReviewsParams,
   MyReviewListData,
   ReviewSummary,
-=======
-import type {
-  GetMyReviewsParams,
-  MoverReviewListData,
-  MoverReviewListQuery,
-  MyReviewListData,
->>>>>>> b62aee0 (feat: 리뷰작성완료 목록)
 } from '@/types/review';
 
 import clientFetch from '@/lib/api/clientFetch';
@@ -66,7 +58,6 @@ export async function getMyReviews({
     `${ENDPOINTS.review.mine}?${params.toString()}`,
   );
 }
-<<<<<<< HEAD
 
 /*
 @ POST /reviews
@@ -80,5 +71,3 @@ export async function createReview(
     body: JSON.stringify(input),
   });
 }
-=======
->>>>>>> b62aee0 (feat: 리뷰작성완료 목록)

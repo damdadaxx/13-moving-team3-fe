@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect } from 'react';
 
-import { toCompletedReview } from '@/types/review';
+import { CompletedReview, MyReviewEstimateItem } from '@/types/review';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
@@ -16,6 +16,8 @@ import {
   useCompletedReviewsQuery,
 } from '@/hooks/queries/reviews/queries';
 
+import formatRegion from '@/utils/formatRegion';
+
 import CompletedReviewCard from '@/components/customer/reviews/CompletedReviewCard';
 import Button from '@/components/ui/Button/Button';
 import Pagination from '@/components/ui/Pagination';
@@ -24,6 +26,28 @@ import { Skeleton } from '@/components/ui/Skeleton';
 function getPageFromSearch(searchParams: URLSearchParams) {
   const rawPage = Number(searchParams.get('page'));
   return rawPage > 0 ? rawPage : 1;
+}
+
+export function toCompletedReview(
+  item: MyReviewEstimateItem,
+): CompletedReview | null {
+  if (!item.review) return null;
+
+  return {
+    id: item.id,
+    moverId: item.mover.userId,
+    moverName: item.mover.nickname,
+    description: item.mover.shortIntro ?? '',
+    imgUrl: item.mover.imgUrl,
+    serviceType: item.estimateRequest.serviceType,
+    isDesignated: item.isDesignated ?? false,
+    fromRegion: formatRegion(item.estimateRequest.departureAddress),
+    toRegion: formatRegion(item.estimateRequest.arrivalAddress),
+    moveDate: item.estimateRequest.moveDate,
+    rating: item.review.rating,
+    content: item.review.content,
+    createdAt: item.review.createdAt,
+  };
 }
 
 function CompletedReviewCardSkeleton() {

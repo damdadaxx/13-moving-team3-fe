@@ -1,7 +1,5 @@
 import type { ServiceType } from '@/types/serviceType';
 
-import formatRegion from '@/utils/formatRegion';
-
 export interface RatingDistributionItem {
   rating: number;
   count: number;
@@ -118,26 +116,4 @@ export interface CompletedReview {
   rating: number;
   content: string;
   createdAt: string;
-}
-
-export function toCompletedReview(
-  item: MyReviewEstimateItem,
-): CompletedReview | null {
-  if (!item.review) return null;
-
-  return {
-    id: item.id,
-    moverId: item.mover.userId,
-    moverName: item.mover.nickname,
-    description: item.mover.shortIntro ?? '',
-    imgUrl: item.mover.imgUrl,
-    serviceType: item.estimateRequest.serviceType,
-    isDesignated: item.isDesignated ?? false,
-    fromRegion: formatRegion(item.estimateRequest.departureAddress),
-    toRegion: formatRegion(item.estimateRequest.arrivalAddress),
-    moveDate: item.estimateRequest.moveDate,
-    rating: item.review.rating,
-    content: item.review.content,
-    createdAt: item.review.createdAt,
-  };
 }

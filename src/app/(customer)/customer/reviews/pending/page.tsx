@@ -1,6 +1,6 @@
 // [메뉴] 헤더 모달 메뉴 > 이사 리뷰 > 작성 가능한 리뷰 탭메뉴
 // [페이지] 작성 가능한 리뷰
-import PendingReviewList from '@/components/reviews/PendingReviewList';
+import PendingReviewList from '@/components/customer/reviews/PendingReviewList';
 
 export default function ReviewPendingPage() {
   return (

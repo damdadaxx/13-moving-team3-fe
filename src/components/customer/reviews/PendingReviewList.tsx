@@ -15,8 +15,8 @@ import {
 
 import formatRegion from '@/utils/formatRegion';
 
-import PendingReviewCard from '@/components/reviews/PendingReviewCard';
-import WriteReviewModal from '@/components/reviews/WriteReviewModal';
+import PendingReviewCard from '@/components/customer/reviews/PendingReviewCard';
+import WriteReviewModal from '@/components/customer/reviews/WriteReviewModal';
 import Pagination from '@/components/ui/Pagination';
 import { Skeleton } from '@/components/ui/Skeleton';
 

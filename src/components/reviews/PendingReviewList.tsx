@@ -28,7 +28,7 @@ function getPageFromSearch(searchParams: URLSearchParams) {
 function PendingReviewCardSkeleton() {
   return (
     <li>
-      <div className="flex w-full flex-col gap-[20px] rounded-[20px] border-[0.5px] border-line-100 bg-gray-50 px-[20px] py-[24px] tablet:p-[32px] desktop:px-[40px] desktop:py-[32px]">
+      <div className="flex w-full flex-col gap-[20px] rounded-[20px] border-[0.5px] border-line-100 bg-gray-50 px-[20px] py-[24px] tablet:gap-[40px] tablet:p-[32px] desktop:gap-[24px] desktop:px-[40px] desktop:py-[32px]">
         <div className="flex items-center gap-[12px]">
           <Skeleton width={64} height={64} borderRadius={12} />
           <div className="flex min-w-0 flex-1 flex-col gap-[8px]">
@@ -82,7 +82,7 @@ export default function PendingReviewList() {
   const isEmpty = !isPending && reviews.length === 0;
 
   return (
-    <div className="flex flex-col gap-[20px]">
+    <div className="flex min-w-0 flex-col gap-[20px]">
       {isPending && !data ? (
         <ul className="flex flex-col gap-[20px]">
           {Array.from({ length: PENDING_REVIEWS_PAGE_SIZE }, (_, index) => (
@@ -109,9 +109,9 @@ export default function PendingReviewList() {
           </div>
         </div>
       ) : (
-        <ul className="flex flex-col gap-[20px]">
+        <ul className="flex min-w-0 flex-col gap-[20px]">
           {reviews.map((review) => (
-            <li key={review.id}>
+            <li key={review.id} className="min-w-0">
               <PendingReviewCard review={review} onWrite={setSelectedReview} />
             </li>
           ))}
@@ -119,7 +119,7 @@ export default function PendingReviewList() {
       )}
 
       {totalPages >= 1 ? (
-        <div className="flex justify-center pt-[28px] desktop:pt-[64px]">
+        <div className="flex justify-center pt-[40px] desktop:pt-[64px]">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

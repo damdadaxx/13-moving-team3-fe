@@ -72,22 +72,19 @@ function getPageItems(
   ];
 }
 
-const paginationCell = cva(
-  'flex shrink-0 items-center justify-center bg-background-100',
-  {
-    variants: {
-      size: {
-        sm: 'size-[34px] rounded-[6px]',
-        lg: 'size-[48px] rounded-[8px]',
-        responsive:
-          'size-[34px] rounded-[6px] desktop:size-[48px] desktop:rounded-[8px]',
-      },
-    },
-    defaultVariants: {
-      size: 'responsive',
+const paginationCell = cva('flex shrink-0 items-center justify-center', {
+  variants: {
+    size: {
+      sm: 'size-[34px] rounded-[6px]',
+      lg: 'size-[48px] rounded-[8px]',
+      responsive:
+        'size-[34px] rounded-[6px] desktop:size-[48px] desktop:rounded-[8px]',
     },
   },
-);
+  defaultVariants: {
+    size: 'responsive',
+  },
+});
 
 const paginationNumber = cva('cursor-pointer', {
   variants: {

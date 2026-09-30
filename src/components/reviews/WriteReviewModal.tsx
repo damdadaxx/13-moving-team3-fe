@@ -6,10 +6,9 @@ import type { PendingReview } from '@/types/review';
 import Image from 'next/image';
 
 import IcArrowRight from '@/assets/icons/ic_arrow_right.svg';
-import IcDriver from '@/assets/icons/ic_driver.svg';
-import IcDriverMark from '@/assets/icons/ic_driver_mark.svg';
+import IcDriverMark from '@/assets/icons/ic_mover_badge.svg';
 import IcStar from '@/assets/icons/ic_star.svg';
-import ImgMoverCharacter from '@/assets/images/img_mover_character.png';
+import ImgMoverCharacter from '@/assets/images/img_profile_example.png';
 
 import { HttpError } from '@/lib/api/errors';
 
@@ -75,7 +74,7 @@ export default function WriteReviewModal({
       {
         onSuccess: () => {
           showToast('리뷰가 등록되었어요.');
-          onClose();
+          handleClose();
         },
         onError: (error) => {
           const message =
@@ -88,12 +87,18 @@ export default function WriteReviewModal({
     );
   }
 
+  function handleClose() {
+    setRating(0);
+    setComment('');
+    onClose();
+  }
+
   if (!review) return null;
 
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       title="리뷰 쓰기"
       variant="sheet"
       buttons={
@@ -124,14 +129,7 @@ export default function WriteReviewModal({
             <div className="flex items-center justify-between">
               <div className="flex flex-col items-start justify-center gap-[4px]">
                 <span className="relative flex h-[18.2px] w-[16px] shrink-0 items-center justify-center">
-                  <IcDriver
-                    aria-hidden="true"
-                    className="h-[17.5px] w-[15.4px]"
-                  />
-                  <IcDriverMark
-                    aria-hidden="true"
-                    className="absolute top-[calc(50%-0.14px)] left-1/2 h-[5.8px] w-[11.1px] -translate-x-1/2 -translate-y-1/2"
-                  />
+                  <IcDriverMark aria-hidden="true" />
                 </span>
                 <p className="text-lg-semibold flex items-center gap-[4px] text-black-300 desktop:text-2lg-semibold">
                   <span>{review.moverName}</span>
@@ -189,12 +187,13 @@ export default function WriteReviewModal({
                   aria-checked={rating === starValue}
                   aria-label={`${starValue}점`}
                   onClick={() => setRating(starValue)}
-                  className="cursor-pointer size-[24px] desktop:size-[36px]"
+                  className="size-[24px] cursor-pointer overflow-hidden desktop:size-[36px]"
                 >
+                  {/* 별점 아이콘 사이즈 조절 */}
                   <IcStar
                     aria-hidden="true"
                     className={cn(
-                      'size-[20px] desktop:size-[30px]',
+                      'size-full scale-[1.2]',
                       isActive
                         ? '[&_path]:fill-yellow-100'
                         : '[&_path]:fill-gray-100',

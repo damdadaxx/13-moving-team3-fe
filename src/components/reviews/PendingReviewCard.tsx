@@ -163,7 +163,7 @@ export default function PendingReviewCard({
                   <span> 기사님</span>
                 </p>
               </div>
-              <p className="truncate text-xs-regular text-gray-500 group-hover:underline tablet:text-md-regular">
+              <p className="truncate text-xs-regular text-gray-500 group-hover:underline tablet:text-md-regular  tablet:mb-[8px]">
                 {review.description}
               </p>
               <div className="flex flex-wrap items-center gap-[8px]">
@@ -234,7 +234,7 @@ export default function PendingReviewCard({
                   <span> 기사님</span>
                 </p>
               </div>
-              <p className="truncate text-xs-regular text-gray-500 group-hover:underline tablet:text-md-regular">
+              <p className="truncate text-xs-regular text-gray-500 group-hover:underline tablet:text-md-regular  tablet:mb-[8px]">
                 {review.description}
               </p>
               <div className="flex flex-wrap items-center gap-[8px]">

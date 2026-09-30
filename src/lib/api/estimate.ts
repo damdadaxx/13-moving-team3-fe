@@ -85,6 +85,9 @@ export async function getReceivedRequests(
   if (query.isDesignated !== undefined) {
     params.set('isDesignated', String(query.isDesignated));
   }
+  if (query.isServiceArea !== undefined) {
+    params.set('isServiceArea', String(query.isServiceArea));
+  }
   if (query.cursor) params.set('cursor', query.cursor);
   if (query.size !== undefined) params.set('size', String(query.size));
 

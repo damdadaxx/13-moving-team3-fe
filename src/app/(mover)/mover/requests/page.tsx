@@ -22,7 +22,6 @@ import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import useInfiniteScroll from '@/hooks/common/useInfiniteScroll';
 import useSearchInput from '@/hooks/common/useSearchInput';
 import { useReceivedRequestsQuery } from '@/hooks/queries/estimate/queries';
-import { useMoverProfileQuery } from '@/hooks/queries/moverProfile/queries';
 
 import { cn } from '@/utils/cn';
 
@@ -48,10 +47,6 @@ export default function MoverEstimateRequestPage() {
     ServiceType[]
   >([]);
   const [designatedOnly, setDesignatedOnly] = useState(true);
-  // "서비스 가능 지역" 체크박스: 자격이 있는(지정이 아닌) 건은 서버가 이미
-  // 내 서비스 지역으로만 걸러서 내려준다. 지정 건은 자격과 무관하게 보이므로,
-  // 이 체크박스를 켰을 때만 내 프로필의 serviceRegions를 regions 필터로 보내
-  // "내 서비스 지역 밖의 지정 건"을 걸러낸다
   const [regionAvailableOnly, setRegionAvailableOnly] = useState(true);
   const [sortValue, setSortValue] = useState<ReceivedRequestSortBy>('moveDate');
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
@@ -87,27 +82,20 @@ export default function MoverEstimateRequestPage() {
     setHiddenRequestIds((prev) => new Set(prev).add(estimateRequestId));
   }
 
-  const { data: moverProfile } = useMoverProfileQuery();
-  const serviceRegions = moverProfile?.serviceRegions;
-
   const query = useMemo(
     () => ({
       sortBy: sortValue,
       serviceTypes:
         selectedServiceTypes.length > 0 ? selectedServiceTypes : undefined,
-      regions:
-        regionAvailableOnly && serviceRegions?.length
-          ? serviceRegions
-          : undefined,
       keyword: debouncedKeyword.trim() || undefined,
       isDesignated: designatedOnly ? true : undefined,
+      isServiceArea: regionAvailableOnly ? true : undefined,
       size: PAGE_SIZE,
     }),
     [
       sortValue,
       selectedServiceTypes,
       regionAvailableOnly,
-      serviceRegions,
       debouncedKeyword,
       designatedOnly,
     ],

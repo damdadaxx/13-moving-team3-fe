@@ -19,12 +19,13 @@
 
 import type { MyEstimateSummary } from '@/types/estimate';
 import type { ServiceType } from '@/types/serviceType';
+import Image from 'next/image';
 import Link from 'next/link';
 
 import IcCheckCircle from '@/assets/icons/ic_check_circle.svg';
+import ImgLogoM from '@/assets/icons/ic_driver.png';
 import IcLike from '@/assets/icons/ic_like.svg';
 import IcLikeLine from '@/assets/icons/ic_like_line.svg';
-import ImgLogoM from '@/assets/icons/ic_mover_badge.svg';
 import IcStar from '@/assets/icons/ic_star.svg';
 import ImgAvatarBeaver from '@/assets/images/img_avatar_beaver.png';
 
@@ -179,7 +180,9 @@ export default function ReceivedEstimateCard({
               <div className="flex min-w-px flex-1 flex-col gap-[4px] tablet:gap-[8px]">
                 <div className="flex w-full items-center justify-between gap-[8px]">
                   <p className="flex min-w-px items-center gap-[4px] text-md-semibold text-black-300 tablet:text-lg-semibold">
-                    <ImgLogoM
+                    <Image
+                      src={ImgLogoM}
+                      alt=""
                       aria-hidden
                       className="size-[20px] shrink-0 tablet:hidden"
                     />

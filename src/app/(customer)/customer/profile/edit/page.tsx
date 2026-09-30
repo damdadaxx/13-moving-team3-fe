@@ -22,6 +22,8 @@ import { customerProfileKeys } from '@/hooks/queries/customerProfile/keys';
 import { useUpdateCustomerProfileMutation } from '@/hooks/queries/customerProfile/mutations';
 import { useCustomerProfileQuery } from '@/hooks/queries/customerProfile/queries';
 
+import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
+
 import CustomerProfileEditForm from '@/components/customer/CustomerProfileEditForm';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
@@ -49,7 +51,8 @@ export default function ProfileEditPage() {
         ? {
             name: user.name,
             email: user.email,
-            phoneNumber: user.phoneNumber ?? '',
+            // 저장된 값은 숫자만 있으므로 화면에서는 하이픈을 넣어 보여준다
+            phoneNumber: formatPhoneNumber(user.phoneNumber ?? ''),
             currentPassword: '',
             newPassword: '',
             newPasswordConfirm: '',

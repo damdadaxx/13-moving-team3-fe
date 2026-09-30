@@ -7,26 +7,43 @@ export const loginSchema = z.object({
   password: z.string().min(8, '비밀번호는 8자 이상이어야 합니다.'),
 });
 
+/*
+@ 비밀번호 규칙 (백엔드 authValidation.ts 와 동일하게 유지)
+- 8~64자, 숫자 1개 이상, 특수문자 1개 이상
+- 특수문자: 키보드 ASCII 특수문자 !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~ (공백·한글 제외)
+- 로그인은 기존 가입자도 들어와야 하므로 이 규칙을 적용하지 않는다
+*/
+const passwordSchema = z
+  .string()
+  .min(8, '비밀번호는 8자 이상이어야 합니다.')
+  .max(64, '비밀번호는 64자 이하여야 합니다.')
+  .regex(/[0-9]/, '비밀번호에 숫자를 포함해주세요.')
+  .regex(/[!-/:-@[-`{-~]/, '비밀번호에 특수문자를 포함해주세요.');
+
 const nameSchema = z
   .string()
   .trim()
   .min(2, '이름은 2자 이상이어야 합니다.')
   .max(20, '이름은 20자 이하여야 합니다.');
 
-// Figma: 전화번호는 숫자만 입력 (하이픈 없이)
+/*
+@ 전화번호
+- 화면에서는 010-1234-5678 처럼 하이픈이 붙은 값을 받는다 (formatPhoneNumber)
+- 숫자만 남겼을 때 10~11자리 휴대폰 번호인지 확인한다
+*/
 const phoneNumberSchema = z
   .string()
   .trim()
-  .regex(/^\d+$/, '숫자만 입력해주세요.')
-  .regex(/^01[016789]\d{7,8}$/, '올바른 전화번호 형식이 아닙니다.');
+  .transform((value) => value.replace(/\D/g, ''))
+  .refine(
+    (digits) => /^01[016789]\d{7,8}$/.test(digits),
+    '올바른 전화번호 형식이 아닙니다.',
+  );
 
 export const signupSchema = z
   .object({
     email: z.email('이메일 형식이 아닙니다.'),
-    password: z
-      .string()
-      .min(8, '비밀번호는 8자 이상이어야 합니다.')
-      .regex(/[0-9]/, '비밀번호에 숫자를 포함해주세요.'),
+    password: passwordSchema,
     passwordConfirm: z.string().min(1, '비밀번호 확인을 입력해주세요.'),
     name: nameSchema,
     phoneNumber: phoneNumberSchema,

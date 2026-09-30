@@ -2,8 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
-import type { PendingReview } from '@/types/review';
-import { toPendingReview } from '@/types/review';
+import type { MyReviewEstimateItem, PendingReview } from '@/types/review';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
@@ -14,6 +13,8 @@ import {
   usePendingReviewsQuery,
 } from '@/hooks/queries/reviews/queries';
 
+import formatRegion from '@/utils/formatRegion';
+
 import PendingReviewCard from '@/components/reviews/PendingReviewCard';
 import WriteReviewModal from '@/components/reviews/WriteReviewModal';
 import Pagination from '@/components/ui/Pagination';
@@ -22,6 +23,22 @@ import { Skeleton } from '@/components/ui/Skeleton';
 function getPageFromSearch(searchParams: URLSearchParams) {
   const rawPage = Number(searchParams.get('page'));
   return rawPage > 0 ? rawPage : 1;
+}
+
+export function toPendingReview(item: MyReviewEstimateItem): PendingReview {
+  return {
+    id: item.id,
+    moverId: item.mover.userId,
+    moverName: item.mover.nickname,
+    description: item.mover.shortIntro ?? '',
+    imgUrl: item.mover.imgUrl,
+    serviceType: item.estimateRequest.serviceType,
+    isDesignated: item.isDesignated ?? false,
+    fromRegion: formatRegion(item.estimateRequest.departureAddress),
+    toRegion: formatRegion(item.estimateRequest.arrivalAddress),
+    moveDate: item.estimateRequest.moveDate,
+    price: item.price ?? 0,
+  };
 }
 
 //리뷰 카드 스켈레톤 적용

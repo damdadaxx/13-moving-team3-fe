@@ -37,7 +37,7 @@ function MetaItem({ label, value }: { label: string; value: string }) {
 
 function MetaDivider() {
   return (
-    <span aria-hidden="true" className="h-[50px] w-px shrink-0 bg-line-200" />
+    <span aria-hidden="true" className="h-[50px] w-px shrink-0 bg-line-100" />
   );
 }
 
@@ -82,7 +82,7 @@ export default function PendingReviewCard({
               router.push(`/mover/${review.moverId}`);
             }}
           >
-            <div className="flex min-w-0 flex-1 flex-col gap-[4px]">
+            <div className="flex min-w-0 flex-1 flex-col">
               <div className="flex min-w-0 w-full flex-col items-start gap-[4px] tablet:flex-row tablet:items-start tablet:gap-[6px]">
                 <span className="relative flex h-[18.2px] w-[16px] shrink-0 items-center justify-center tablet:mt-[4px]">
                   <IcDriverMark aria-hidden="true" />
@@ -153,7 +153,7 @@ export default function PendingReviewCard({
                 sizes="80px"
               />
             </div>
-            <div className="flex min-w-0 flex-1 flex-col gap-[8px]">
+            <div className="flex min-w-0 flex-1 flex-col">
               <div className="flex min-w-0 w-full flex-col items-start gap-[4px] tablet:flex-row tablet:items-start tablet:gap-[6px]">
                 <span className="relative flex h-[18.2px] w-[16px] shrink-0 items-center justify-center tablet:mt-[4px]">
                   <IcDriverMark aria-hidden="true" />
@@ -224,7 +224,7 @@ export default function PendingReviewCard({
                 sizes="100px"
               />
             </div>
-            <div className="flex min-w-0 flex-1 flex-col gap-[8px]">
+            <div className="flex min-w-0 flex-1 flex-col">
               <div className="flex min-w-0 w-full flex-col items-start gap-[4px] tablet:flex-row tablet:items-start tablet:gap-[6px]">
                 <span className="relative flex h-[18.2px] w-[16px] shrink-0 items-center justify-center tablet:mt-[4px]">
                   <IcDriverMark aria-hidden="true" />

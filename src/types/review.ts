@@ -1,7 +1,5 @@
 import type { ServiceType } from '@/types/serviceType';
 
-import formatRegion from '@/utils/formatRegion';
-
 export interface RatingDistributionItem {
   rating: number;
   count: number;
@@ -98,20 +96,4 @@ export interface PendingReview {
   toRegion: string;
   moveDate: string;
   price: number;
-}
-
-export function toPendingReview(item: MyReviewEstimateItem): PendingReview {
-  return {
-    id: item.id,
-    moverId: item.mover.userId,
-    moverName: item.mover.nickname,
-    description: item.mover.shortIntro ?? '',
-    imgUrl: item.mover.imgUrl,
-    serviceType: item.estimateRequest.serviceType,
-    isDesignated: item.isDesignated ?? false,
-    fromRegion: formatRegion(item.estimateRequest.departureAddress),
-    toRegion: formatRegion(item.estimateRequest.arrivalAddress),
-    moveDate: item.estimateRequest.moveDate,
-    price: item.price ?? 0,
-  };
 }

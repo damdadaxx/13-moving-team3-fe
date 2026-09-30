@@ -8,6 +8,7 @@ import IcArrowRight from '@/assets/icons/ic_arrow_right.svg';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
+import { cn } from '@/utils/cn';
 import getShortAddress from '@/utils/getShortAddress';
 
 import ServiceTypeTag from '@/components/ui/Tag/ServiceTypeTag';
@@ -29,6 +30,8 @@ interface EstimateRequestSummaryProps {
   variant?: 'modal' | 'card';
   /** variant="card"일 때 칩 줄 오른쪽에 보여줄 보조 요소 (예: 상대 시간) */
   topRightSlot?: React.ReactNode;
+  /** 바깥 래퍼 간격 등을 카드별 시안에 맞출 때 쓴다 */
+  className?: string;
 }
 
 export default function EstimateRequestSummary({
@@ -40,6 +43,7 @@ export default function EstimateRequestSummary({
   moveDate,
   variant = 'modal',
   topRightSlot,
+  className,
 }: EstimateRequestSummaryProps) {
   const tagSize = useBreakpointValue({
     mobile: 'sm' as const,
@@ -74,7 +78,9 @@ export default function EstimateRequestSummary({
   const displayToRegion = getShortAddress(toRegion);
 
   return (
-    <div className="flex flex-col gap-[16px] desktop:gap-[24px]">
+    <div
+      className={cn('flex flex-col gap-[16px] desktop:gap-[24px]', className)}
+    >
       {isCard ? (
         <div className="flex min-h-[34px] items-center justify-between">
           {chips}

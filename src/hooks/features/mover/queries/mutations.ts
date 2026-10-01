@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { HttpError } from '@/lib/api/errors';
 import { createMoverProfile, updateMoverProfile } from '@/lib/api/moverProfile';
 
-import { moverProfileKeys } from '@/hooks/features/moverProfile/queries/keys';
+import { moverProfileKeys } from '@/hooks/features/mover/queries/keys';
 
 export function useCreateMoverProfileMutation() {
   const queryClient = useQueryClient();

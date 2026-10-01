@@ -9,3 +9,8 @@ export const moverKeys = {
   detail: (id: string) =>
     [...moverKeys.all, 'detail', id] as const /** 기사님 상세 */,
 };
+
+export const moverProfileKeys = {
+  all: ['moverProfile'] as const,
+  detail: () => [...moverProfileKeys.all, 'detail'] as const,
+};

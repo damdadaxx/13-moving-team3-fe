@@ -22,7 +22,7 @@ import {
 import {
   createMoverAccountEditPlan,
   type MoverAccountEditPlan,
-} from '@/hooks/features/moverProfile/moverAccountEditPlan';
+} from '@/hooks/features/mover/moverAccountEditPlan';
 
 type MoverAccountSchemaInput = z.input<MoverAccountSchema>;
 type MoverAccountSchemaOutput = z.output<MoverAccountSchema>;

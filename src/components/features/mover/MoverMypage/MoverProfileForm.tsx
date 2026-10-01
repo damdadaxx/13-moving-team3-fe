@@ -7,8 +7,8 @@ import type { AuthProviderName } from '@/types/auth';
 import type { MoverProfileFormValues } from '@/types/moverProfile';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
-import type { MoverProfileEditPlan } from '@/hooks/features/moverProfile/moverProfileEditPlan';
-import { useMoverProfileForm } from '@/hooks/features/moverProfile/useMoverProfileForm';
+import type { MoverProfileEditPlan } from '@/hooks/features/mover/moverProfileEditPlan';
+import { useMoverProfileForm } from '@/hooks/features/mover/useMoverProfileForm';
 
 import { cn } from '@/utils/cn';
 

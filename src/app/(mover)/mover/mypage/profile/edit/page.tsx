@@ -16,10 +16,10 @@ import { authKeys } from '@/hooks/features/auth/queries/keys';
 import {
   toCareerFormValues,
   type MoverProfileEditPlan,
-} from '@/hooks/features/moverProfile/moverProfileEditPlan';
-import { moverProfileKeys } from '@/hooks/features/moverProfile/queries/keys';
-import { useUpdateMoverProfileMutation } from '@/hooks/features/moverProfile/queries/mutations';
-import { useMoverProfileQuery } from '@/hooks/features/moverProfile/queries/queries';
+} from '@/hooks/features/mover/moverProfileEditPlan';
+import { moverProfileKeys } from '@/hooks/features/mover/queries/keys';
+import { useUpdateMoverProfileMutation } from '@/hooks/features/mover/queries/mutations';
+import { useMoverProfileQuery } from '@/hooks/features/mover/queries/queries';
 
 import MoverProfileForm from '@/components/features/mover/MoverMypage/MoverProfileForm';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';

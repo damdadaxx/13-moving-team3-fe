@@ -15,9 +15,9 @@ import { useToast } from '@/hooks/common/useToast';
 import { authKeys } from '@/hooks/features/auth/queries/keys';
 import { useUpdateMeMutation } from '@/hooks/features/auth/queries/mutations';
 import { useAuth } from '@/hooks/features/auth/useAuth';
-import { createMoverProfileCreatePlan } from '@/hooks/features/moverProfile/moverProfileCreatePlan';
-import { moverProfileKeys } from '@/hooks/features/moverProfile/queries/keys';
-import { useCreateMoverProfileMutation } from '@/hooks/features/moverProfile/queries/mutations';
+import { createMoverProfileCreatePlan } from '@/hooks/features/mover/moverProfileCreatePlan';
+import { moverProfileKeys } from '@/hooks/features/mover/queries/keys';
+import { useCreateMoverProfileMutation } from '@/hooks/features/mover/queries/mutations';
 
 import MoverProfileForm from '@/components/features/mover/MoverMypage/MoverProfileForm';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';

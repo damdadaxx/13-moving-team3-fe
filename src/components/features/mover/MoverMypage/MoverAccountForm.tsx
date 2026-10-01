@@ -6,8 +6,8 @@ import type { AuthProviderName } from '@/types/auth';
 import type { MoverAccountFormValues } from '@/types/moverAccount';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
-import type { MoverAccountEditPlan } from '@/hooks/features/moverProfile/moverAccountEditPlan';
-import { useMoverAccountForm } from '@/hooks/features/moverProfile/useMoverAccountForm';
+import type { MoverAccountEditPlan } from '@/hooks/features/mover/moverAccountEditPlan';
+import { useMoverAccountForm } from '@/hooks/features/mover/useMoverAccountForm';
 
 import { cn } from '@/utils/cn';
 

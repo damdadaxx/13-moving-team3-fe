@@ -11,9 +11,13 @@ import {
   fetchMoverList,
   getLikedMovers,
 } from '@/lib/api/mover';
+import { getMoverProfile } from '@/lib/api/moverProfile';
 import { MOVER_LIST_PAGE_SIZE } from '@/lib/constants/mover';
 
-import { moverKeys } from '@/hooks/features/mover/queries/keys';
+import {
+  moverKeys,
+  moverProfileKeys,
+} from '@/hooks/features/mover/queries/keys';
 
 /*
 @ 기사님 찾기 목록 (무한 스크롤)
@@ -62,5 +66,20 @@ export function useMoverDetailQuery(id: string) {
     queryFn: () => fetchMoverDetail(id),
     enabled: Boolean(id),
     meta: { name: '기사님 상세' },
+  });
+}
+
+/*
+@ 내 기사님 프로필
+- undefined: 사용할 수 있는 조회 결과 없음
+- null: 404, 프로필 미등록
+- 객체: 등록 완료
+*/
+export function useMoverProfileQuery() {
+  return useQuery({
+    queryKey: moverProfileKeys.detail(),
+    queryFn: getMoverProfile,
+    staleTime: 5 * 60 * 1000,
+    meta: { name: '내 기사님 프로필' },
   });
 }

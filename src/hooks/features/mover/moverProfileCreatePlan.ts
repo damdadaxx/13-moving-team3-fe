@@ -4,7 +4,7 @@ import type {
   MoverProfileFormValues,
 } from '@/types/moverProfile';
 
-import { toCareerMonths } from '@/hooks/features/moverProfile/moverProfileEditPlan';
+import { toCareerMonths } from '@/hooks/features/mover/moverProfileEditPlan';
 
 /*=================================================
 기사님 프로필 최초 등록 계획

@@ -22,11 +22,11 @@ import {
 import {
   normalizeCareerNumberInput,
   normalizeCareerRemainderInput,
-} from '@/hooks/features/moverProfile/moverCareerInput';
+} from '@/hooks/features/mover/moverCareerInput';
 import {
   createMoverProfileEditPlan,
   type MoverProfileEditPlan,
-} from '@/hooks/features/moverProfile/moverProfileEditPlan';
+} from '@/hooks/features/mover/moverProfileEditPlan';
 
 type MoverProfileSchemaInput = z.input<typeof moverProfileSchema>;
 type MoverProfileSchemaOutput = z.output<typeof moverProfileSchema>;

@@ -4,7 +4,7 @@ import formatDate from '@/utils/formatDate';
 import StarRating from '@/components/ui/StarRating';
 
 interface MoverReviewItemProps {
-  nickname: string;
+  name: string;
   createdAt: string;
   rating: number;
   content: string;
@@ -12,7 +12,7 @@ interface MoverReviewItemProps {
 }
 
 export default function MoverReviewItem({
-  nickname,
+  name,
   createdAt,
   rating,
   content,
@@ -36,7 +36,7 @@ export default function MoverReviewItem({
               'tablet:text-2lg-regular',
             )}
           >
-            {nickname}
+            {name}
           </p>
           <span
             aria-hidden

@@ -11,7 +11,7 @@ import { useToast } from '@/hooks/common/useToast';
 import {
   useCreateEstimateMutation,
   useUpdateEstimateStatusMutation,
-} from '@/hooks/queries/estimate/mutations';
+} from '@/hooks/features/estimate/queries/mutations';
 
 import Button from '@/components/ui/Button/Button';
 import Input from '@/components/ui/Form/Input';

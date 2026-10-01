@@ -16,7 +16,7 @@ import imgMovingSmall from '@/assets/images/img_moving_small.png';
 import { HttpError } from '@/lib/api/errors';
 import { ROUTES } from '@/lib/constants/routes';
 
-import { useCreateEstimateRequestMutation } from '@/hooks/queries/estimate/mutations';
+import { useCreateEstimateRequestMutation } from '@/hooks/features/estimate/queries/mutations';
 
 import { cn } from '@/utils/cn';
 

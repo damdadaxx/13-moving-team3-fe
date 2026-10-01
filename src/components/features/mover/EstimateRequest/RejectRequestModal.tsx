@@ -7,7 +7,7 @@ import { HttpError } from '@/lib/api/errors';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useToast } from '@/hooks/common/useToast';
-import { useUpdateEstimateStatusMutation } from '@/hooks/queries/estimate/mutations';
+import { useUpdateEstimateStatusMutation } from '@/hooks/features/estimate/queries/mutations';
 
 import Button from '@/components/ui/Button/Button';
 import Label from '@/components/ui/Form/Label';

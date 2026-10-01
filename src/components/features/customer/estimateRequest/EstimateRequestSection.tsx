@@ -6,8 +6,8 @@
 // 3) 그 외        - 견적 요청 폼
 'use client';
 
-import { useCustomerProfileQuery } from '@/hooks/queries/customer/queries';
-import { useActiveEstimateRequestQuery } from '@/hooks/queries/estimate/queries';
+import { useCustomerProfileQuery } from '@/hooks/features/customer/queries/queries';
+import { useActiveEstimateRequestQuery } from '@/hooks/features/estimate/queries/queries';
 
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 

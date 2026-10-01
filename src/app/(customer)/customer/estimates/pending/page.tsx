@@ -10,8 +10,8 @@ import { HttpError } from '@/lib/api/errors';
 import { ROUTES } from '@/lib/constants/routes';
 
 import { useToast } from '@/hooks/common/useToast';
-import { useAcceptEstimateMutation } from '@/hooks/queries/estimate/mutations';
-import { useActiveEstimateRequestQuery } from '@/hooks/queries/estimate/queries';
+import { useAcceptEstimateMutation } from '@/hooks/features/estimate/queries/mutations';
+import { useActiveEstimateRequestQuery } from '@/hooks/features/estimate/queries/queries';
 
 import { cn } from '@/utils/cn';
 

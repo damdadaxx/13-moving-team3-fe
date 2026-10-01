@@ -3,8 +3,8 @@
 
 import { LIKED_MOVER_ID_PAGE_SIZE } from '@/lib/constants/mover';
 
-import { useAuth } from '@/hooks/auth/useAuth';
-import { useLikedMoversQuery } from '@/hooks/queries/mover/queries';
+import { useAuth } from '@/hooks/features/auth/useAuth';
+import { useLikedMoversQuery } from '@/hooks/features/mover/queries/queries';
 
 import { cn } from '@/utils/cn';
 

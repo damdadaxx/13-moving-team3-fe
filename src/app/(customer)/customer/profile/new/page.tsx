@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/lib/constants/routes';
 
 import { useToast } from '@/hooks/common/useToast';
-import { useCreateCustomerProfileMutation } from '@/hooks/queries/customerProfile/mutations';
+import { useCreateCustomerProfileMutation } from '@/hooks/features/customerProfile/queries/mutations';
 
 import CustomerProfileForm from '@/components/features/customer/CustomerProfile/CustomerProfileForm';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMoverDetailQuery } from '@/hooks/queries/mover/queries';
+import { useMoverDetailQuery } from '@/hooks/features/mover/queries/queries';
 
 import { cn } from '@/utils/cn';
 

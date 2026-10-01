@@ -7,7 +7,7 @@
 
 import type { EstimateGroup, MyEstimateSummary } from '@/types/estimate';
 
-import { useEstimateDetailQuery } from '@/hooks/queries/estimate/queries';
+import { useEstimateDetailQuery } from '@/hooks/features/estimate/queries/queries';
 
 import formatDate from '@/utils/formatDate';
 

@@ -3,7 +3,7 @@
 import IcLikeBlack from '@/assets/icons/ic_like_black.svg';
 import IcLikeEmpty from '@/assets/icons/ic_like_empty.svg';
 
-import { useMoverLike } from '@/hooks/likes/useMoverLike';
+import { useMoverLike } from '@/hooks/features/like/useMoverLike';
 
 import { cn } from '@/utils/cn';
 

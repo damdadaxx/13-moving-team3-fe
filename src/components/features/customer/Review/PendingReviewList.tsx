@@ -11,7 +11,7 @@ import ImgEmpty from '@/assets/images/img_empty.png';
 import {
   PENDING_REVIEWS_PAGE_SIZE,
   usePendingReviewsQuery,
-} from '@/hooks/queries/reviews/queries';
+} from '@/hooks/features/review/queries/queries';
 
 import formatRegion from '@/utils/formatRegion';
 

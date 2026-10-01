@@ -10,8 +10,8 @@ import {
   type SignupFormValues,
 } from '@/lib/validations/authValidation';
 
-import { useSignupForm } from '@/hooks/auth/useSignupForm';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+import { useSignupForm } from '@/hooks/features/auth/useSignupForm';
 
 import Input from '@/components/ui/Form/Input';
 

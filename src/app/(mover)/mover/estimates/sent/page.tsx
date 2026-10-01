@@ -10,7 +10,7 @@ import Image from 'next/image';
 import ImgEmptyBeaver from '@/assets/images/img_empty_beaver.png';
 
 import useInfiniteScroll from '@/hooks/common/useInfiniteScroll';
-import { useMyEstimatesQuery } from '@/hooks/queries/estimate/queries';
+import { useMyEstimatesQuery } from '@/hooks/features/estimate/queries/queries';
 
 import { cn } from '@/utils/cn';
 

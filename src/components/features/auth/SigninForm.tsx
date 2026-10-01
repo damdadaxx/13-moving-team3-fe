@@ -8,9 +8,9 @@ import { HttpError } from '@/lib/api/errors';
 import { getSignupPath } from '@/lib/constants/routes';
 import type { LoginFormValues } from '@/lib/validations/authValidation';
 
-import { useAuth } from '@/hooks/auth/useAuth';
-import { useLoginForm } from '@/hooks/auth/useLoginForm';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+import { useAuth } from '@/hooks/features/auth/useAuth';
+import { useLoginForm } from '@/hooks/features/auth/useLoginForm';
 
 import { cn } from '@/utils/cn';
 

@@ -9,13 +9,13 @@ import { HttpError } from '@/lib/api/errors';
 import { getSigninPath } from '@/lib/constants/routes';
 import type { SignupFormValues } from '@/lib/validations/authValidation';
 
-import { useAuth } from '@/hooks/auth/useAuth';
-import { useSignupForm } from '@/hooks/auth/useSignupForm';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import {
   useConfirmEmailVerificationMutation,
   useSendEmailVerificationMutation,
-} from '@/hooks/queries/auth/mutations';
+} from '@/hooks/features/auth/queries/mutations';
+import { useAuth } from '@/hooks/features/auth/useAuth';
+import { useSignupForm } from '@/hooks/features/auth/useSignupForm';
 
 import { cn } from '@/utils/cn';
 import { formatPhoneNumber } from '@/utils/formatPhoneNumber';

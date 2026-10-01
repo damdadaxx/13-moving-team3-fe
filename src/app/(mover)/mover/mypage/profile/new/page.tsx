@@ -11,13 +11,13 @@ import { usePathname, useRouter } from 'next/navigation';
 import { isUnauthorizedHttpError } from '@/lib/api/errors';
 import { ROUTES } from '@/lib/constants/routes';
 
-import { useAuth } from '@/hooks/auth/useAuth';
 import { useToast } from '@/hooks/common/useToast';
-import { createMoverProfileCreatePlan } from '@/hooks/mover/moverProfileCreatePlan';
-import { authKeys } from '@/hooks/queries/auth/keys';
-import { useUpdateMeMutation } from '@/hooks/queries/auth/mutations';
-import { moverProfileKeys } from '@/hooks/queries/moverProfile/keys';
-import { useCreateMoverProfileMutation } from '@/hooks/queries/moverProfile/mutations';
+import { authKeys } from '@/hooks/features/auth/queries/keys';
+import { useUpdateMeMutation } from '@/hooks/features/auth/queries/mutations';
+import { useAuth } from '@/hooks/features/auth/useAuth';
+import { createMoverProfileCreatePlan } from '@/hooks/features/moverProfile/moverProfileCreatePlan';
+import { moverProfileKeys } from '@/hooks/features/moverProfile/queries/keys';
+import { useCreateMoverProfileMutation } from '@/hooks/features/moverProfile/queries/mutations';
 
 import MoverProfileForm from '@/components/features/mover/MoverMypage/MoverProfileForm';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';

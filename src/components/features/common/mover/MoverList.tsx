@@ -7,11 +7,11 @@ import type { MoverListQuery } from '@/types/mover';
 
 import { LIKED_MOVER_ID_PAGE_SIZE } from '@/lib/constants/mover';
 
-import { useAuth } from '@/hooks/auth/useAuth';
+import { useAuth } from '@/hooks/features/auth/useAuth';
 import {
   useLikedMoversQuery,
   useMoverListInfiniteQuery,
-} from '@/hooks/queries/mover/queries';
+} from '@/hooks/features/mover/queries/queries';
 
 import { cn } from '@/utils/cn';
 

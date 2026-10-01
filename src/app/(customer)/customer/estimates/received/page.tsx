@@ -12,7 +12,7 @@ import { Fragment } from 'react';
 import type { MyEstimateListQuery } from '@/types/estimate';
 
 import useInfiniteScroll from '@/hooks/common/useInfiniteScroll';
-import { useMyEstimatesQuery } from '@/hooks/queries/estimate/queries';
+import { useMyEstimatesQuery } from '@/hooks/features/estimate/queries/queries';
 
 import { cn } from '@/utils/cn';
 

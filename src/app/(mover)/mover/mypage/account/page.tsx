@@ -11,14 +11,14 @@ import { usePathname, useRouter } from 'next/navigation';
 import { isUnauthorizedHttpError } from '@/lib/api/errors';
 import { ROUTES } from '@/lib/constants/routes';
 
-import { useAuth } from '@/hooks/auth/useAuth';
 import { useToast } from '@/hooks/common/useToast';
-import type { MoverAccountEditPlan } from '@/hooks/mover/moverAccountEditPlan';
-import { authKeys } from '@/hooks/queries/auth/keys';
+import { authKeys } from '@/hooks/features/auth/queries/keys';
 import {
   useUpdateMeMutation,
   useUpdatePasswordMutation,
-} from '@/hooks/queries/auth/mutations';
+} from '@/hooks/features/auth/queries/mutations';
+import { useAuth } from '@/hooks/features/auth/useAuth';
+import type { MoverAccountEditPlan } from '@/hooks/features/moverProfile/moverAccountEditPlan';
 
 import MoverAccountForm from '@/components/features/mover/MoverMypage/MoverAccountForm';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';

@@ -11,8 +11,8 @@ import { HttpError } from '@/lib/api/errors';
 
 import useInfiniteScroll from '@/hooks/common/useInfiniteScroll';
 import { useToast } from '@/hooks/common/useToast';
-import { useBulkDeleteLikesMutation } from '@/hooks/queries/likes/mutations';
-import { useLikedMoversQuery } from '@/hooks/queries/likes/queries';
+import { useBulkDeleteLikesMutation } from '@/hooks/features/like/queries/mutations';
+import { useLikedMoversQuery } from '@/hooks/features/like/queries/queries';
 
 import { cn } from '@/utils/cn';
 

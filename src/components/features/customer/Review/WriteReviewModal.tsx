@@ -14,7 +14,7 @@ import { HttpError } from '@/lib/api/errors';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useToast } from '@/hooks/common/useToast';
-import { useCreateReviewMutation } from '@/hooks/queries/reviews/mutations';
+import { useCreateReviewMutation } from '@/hooks/features/review/queries/mutations';
 
 import { cn } from '@/utils/cn';
 import formatDate from '@/utils/formatDate';

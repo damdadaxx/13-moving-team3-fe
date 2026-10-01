@@ -3,7 +3,7 @@
 import { ROUTES } from '@/lib/constants/routes';
 import ProfileGuard from '@/lib/providers/ProfileGuard';
 
-import { useMoverProfileQuery } from '@/hooks/queries/moverProfile/queries';
+import { useMoverProfileQuery } from '@/hooks/features/moverProfile/queries/queries';
 
 interface MoverProfileGuardProps {
   children: React.ReactNode;

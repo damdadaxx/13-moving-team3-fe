@@ -7,7 +7,7 @@ import { usePathname, useRouter } from 'next/navigation';
 
 import { HttpError } from '@/lib/api/errors';
 
-import { authKeys } from '@/hooks/queries/auth/keys';
+import { authKeys } from '@/hooks/features/auth/queries/keys';
 
 import Button from '@/components/ui/Button/Button';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';

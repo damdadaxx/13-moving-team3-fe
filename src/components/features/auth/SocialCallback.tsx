@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 
 import { getSafeCallbackPath, getSigninPath } from '@/lib/constants/routes';
 
-import { useAuth } from '@/hooks/auth/useAuth';
+import { useAuth } from '@/hooks/features/auth/useAuth';
 
 import { cn } from '@/utils/cn';
 

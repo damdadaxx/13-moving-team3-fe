@@ -21,7 +21,7 @@ import ImgEmptyBeaver from '@/assets/images/img_empty_beaver.png';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import useInfiniteScroll from '@/hooks/common/useInfiniteScroll';
 import useSearchInput from '@/hooks/common/useSearchInput';
-import { useReceivedRequestsQuery } from '@/hooks/queries/estimate/queries';
+import { useReceivedRequestsQuery } from '@/hooks/features/estimate/queries/queries';
 
 import { cn } from '@/utils/cn';
 

@@ -2,7 +2,7 @@
 
 import { ROUTES } from '@/lib/constants/routes';
 
-import { useEstimateDetailWithMover } from '@/hooks/queries/estimates/queries';
+import { useEstimateDetailWithMover } from '@/hooks/features/estimateDetail/queries/queries';
 
 import EstimateDetailContent from '@/components/features/common/Estimate/EstimateDetailContent';
 import EmptyState from '@/components/ui/EmptyState';

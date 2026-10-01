@@ -12,14 +12,14 @@ import { isUnauthorizedHttpError } from '@/lib/api/errors';
 import { ROUTES } from '@/lib/constants/routes';
 
 import { useToast } from '@/hooks/common/useToast';
+import { authKeys } from '@/hooks/features/auth/queries/keys';
 import {
   toCareerFormValues,
   type MoverProfileEditPlan,
-} from '@/hooks/mover/moverProfileEditPlan';
-import { authKeys } from '@/hooks/queries/auth/keys';
-import { moverProfileKeys } from '@/hooks/queries/moverProfile/keys';
-import { useUpdateMoverProfileMutation } from '@/hooks/queries/moverProfile/mutations';
-import { useMoverProfileQuery } from '@/hooks/queries/moverProfile/queries';
+} from '@/hooks/features/moverProfile/moverProfileEditPlan';
+import { moverProfileKeys } from '@/hooks/features/moverProfile/queries/keys';
+import { useUpdateMoverProfileMutation } from '@/hooks/features/moverProfile/queries/mutations';
+import { useMoverProfileQuery } from '@/hooks/features/moverProfile/queries/queries';
 
 import MoverProfileForm from '@/components/features/mover/MoverMypage/MoverProfileForm';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';

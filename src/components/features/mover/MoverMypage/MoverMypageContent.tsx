@@ -12,9 +12,9 @@ import ImgDefaultProfile from '@/assets/images/img_default_profile.png';
 import { HttpError } from '@/lib/api/errors';
 import { ROUTES } from '@/lib/constants/routes';
 
-import { useAuth } from '@/hooks/auth/useAuth';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
-import { useMoverDetailQuery } from '@/hooks/queries/mover/queries';
+import { useAuth } from '@/hooks/features/auth/useAuth';
+import { useMoverDetailQuery } from '@/hooks/features/mover/queries/queries';
 
 import { cn } from '@/utils/cn';
 

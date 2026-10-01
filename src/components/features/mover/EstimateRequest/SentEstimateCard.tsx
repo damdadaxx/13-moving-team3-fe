@@ -9,7 +9,7 @@ import type { EstimateGroup, MyEstimateSummary } from '@/types/estimate';
 
 import IcBadgeCheck from '@/assets/icons/ic_badge_check.svg';
 
-import { useEstimateDetailQuery } from '@/hooks/queries/estimate/queries';
+import { useEstimateDetailQuery } from '@/hooks/features/estimate/queries/queries';
 
 import { cn } from '@/utils/cn';
 import formatDate from '@/utils/formatDate';

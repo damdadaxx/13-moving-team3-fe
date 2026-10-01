@@ -10,17 +10,17 @@ import { useRouter } from 'next/navigation';
 
 import { ROUTES } from '@/lib/constants/routes';
 
-import { useAuth } from '@/hooks/auth/useAuth';
 import { useToast } from '@/hooks/common/useToast';
-import type { CustomerProfileEditPlan } from '@/hooks/customer/customerProfileEditPlan';
-import { authKeys } from '@/hooks/queries/auth/keys';
+import { authKeys } from '@/hooks/features/auth/queries/keys';
 import {
   useUpdateMeMutation,
   useUpdatePasswordMutation,
-} from '@/hooks/queries/auth/mutations';
-import { customerProfileKeys } from '@/hooks/queries/customerProfile/keys';
-import { useUpdateCustomerProfileMutation } from '@/hooks/queries/customerProfile/mutations';
-import { useCustomerProfileQuery } from '@/hooks/queries/customerProfile/queries';
+} from '@/hooks/features/auth/queries/mutations';
+import { useAuth } from '@/hooks/features/auth/useAuth';
+import type { CustomerProfileEditPlan } from '@/hooks/features/customerProfile/customerProfileEditPlan';
+import { customerProfileKeys } from '@/hooks/features/customerProfile/queries/keys';
+import { useUpdateCustomerProfileMutation } from '@/hooks/features/customerProfile/queries/mutations';
+import { useCustomerProfileQuery } from '@/hooks/features/customerProfile/queries/queries';
 
 import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
 

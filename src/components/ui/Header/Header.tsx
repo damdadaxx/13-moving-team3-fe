@@ -12,11 +12,11 @@ import ImgLogoMobile from '@/assets/images/img_logo_m.svg';
 
 import { ROUTES, isProtectedPath } from '@/lib/constants/routes';
 
-import { useAuth } from '@/hooks/auth/useAuth';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useOutsideClick } from '@/hooks/common/useOutsideClick';
-import useNotificationStream from '@/hooks/notifications/useNotificationStream';
-import { useUnreadCountQuery } from '@/hooks/queries/notifications/queries';
+import { useAuth } from '@/hooks/features/auth/useAuth';
+import { useUnreadCountQuery } from '@/hooks/features/notification/queries/queries';
+import useNotificationStream from '@/hooks/features/notification/useNotificationStream';
 
 import { cn } from '@/utils/cn';
 import { getAuthVariant } from '@/utils/getAuthVariant';

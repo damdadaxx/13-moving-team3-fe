@@ -14,7 +14,7 @@ import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import {
   COMPLETED_REVIEWS_PAGE_SIZE,
   useCompletedReviewsQuery,
-} from '@/hooks/queries/reviews/queries';
+} from '@/hooks/features/review/queries/queries';
 
 import formatRegion from '@/utils/formatRegion';
 

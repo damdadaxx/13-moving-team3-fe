@@ -7,12 +7,12 @@ import { usePathname, useRouter } from 'next/navigation';
 import { HttpError } from '@/lib/api/errors';
 import { getGuestSigninPath, ROUTES } from '@/lib/constants/routes';
 
-import { useAuth } from '@/hooks/auth/useAuth';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+import { useModal } from '@/hooks/common/useModal';
 import { useToast } from '@/hooks/common/useToast';
-import { useModal } from '@/hooks/modal/useModal';
-import { useCreateDesignatedEstimateMutation } from '@/hooks/queries/estimates/mutations';
-import { useActiveEstimateRequestQuery } from '@/hooks/queries/estimates/queries';
+import { useAuth } from '@/hooks/features/auth/useAuth';
+import { useCreateDesignatedEstimateMutation } from '@/hooks/features/estimateDetail/queries/mutations';
+import { useActiveEstimateRequestQuery } from '@/hooks/features/estimateDetail/queries/queries';
 
 import type { ButtonSize } from '@/components/ui/Button/Button';
 import Button from '@/components/ui/Button/Button';

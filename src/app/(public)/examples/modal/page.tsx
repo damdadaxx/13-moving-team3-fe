@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
-import { useModal } from '@/hooks/modal/useModal';
+import { useModal } from '@/hooks/common/useModal';
 
 import SendEstimateModal from '@/components/features/mover/EstimateRequest/SendEstimateModal';
 import Button from '@/components/ui/Button/Button';

@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import type { MoverReviewListItem } from '@/types/review';
 
-import { useMoverReviewsQuery } from '@/hooks/queries/reviews/queries';
+import { useMoverReviewsQuery } from '@/hooks/features/review/queries/queries';
 
 import { cn } from '@/utils/cn';
 import {

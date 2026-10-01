@@ -12,8 +12,8 @@ import {
   toRatingDistribution,
 } from '@/utils/formatReview';
 
-import MoverReviewItem from '@/components/common/MoverReview/MoverReviewItem';
-import MoverReviewSummary from '@/components/common/MoverReview/MoverReviewSummary';
+import MoverReviewItem from '@/components/features/common/MoverReview/MoverReviewItem';
+import MoverReviewSummary from '@/components/features/common/MoverReview/MoverReviewSummary';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 import Pagination from '@/components/ui/Pagination';
 import SectionTitle from '@/components/ui/SectionTitle';
@@ -74,7 +74,7 @@ export default function MoverReviewList({ moverId }: { moverId: string }) {
               )}
             >
               <MoverReviewItem
-                name={formatMaskedReviewerName(review.user.name)}
+                name={formatMaskedReviewerName(review.user?.name)}
                 createdAt={review.createdAt}
                 rating={review.rating}
                 content={review.content}

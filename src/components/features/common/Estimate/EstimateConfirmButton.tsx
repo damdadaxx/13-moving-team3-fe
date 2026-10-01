@@ -5,7 +5,7 @@ import { HttpError } from '@/lib/api/errors';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useModal } from '@/hooks/common/useModal';
 import { useToast } from '@/hooks/common/useToast';
-import { useConfirmEstimateMutation } from '@/hooks/features/estimateDetail/queries/mutations';
+import { useConfirmEstimateMutation } from '@/hooks/features/estimate/queries/mutations';
 
 import type { ButtonSize } from '@/components/ui/Button/Button';
 import Button from '@/components/ui/Button/Button';

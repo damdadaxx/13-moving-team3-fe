@@ -11,8 +11,8 @@ import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useModal } from '@/hooks/common/useModal';
 import { useToast } from '@/hooks/common/useToast';
 import { useAuth } from '@/hooks/features/auth/useAuth';
-import { useCreateDesignatedEstimateMutation } from '@/hooks/features/estimateDetail/queries/mutations';
-import { useActiveEstimateRequestQuery } from '@/hooks/features/estimateDetail/queries/queries';
+import { useCreateDesignatedEstimateMutation } from '@/hooks/features/estimate/queries/mutations';
+import { useActiveEstimateRequestQuery } from '@/hooks/features/estimate/queries/queries';
 
 import type { ButtonSize } from '@/components/ui/Button/Button';
 import Button from '@/components/ui/Button/Button';

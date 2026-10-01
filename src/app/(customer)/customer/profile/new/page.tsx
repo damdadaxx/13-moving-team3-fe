@@ -10,7 +10,7 @@ import { ROUTES } from '@/lib/constants/routes';
 import { useToast } from '@/hooks/common/useToast';
 import { useCreateCustomerProfileMutation } from '@/hooks/queries/customerProfile/mutations';
 
-import CustomerProfileForm from '@/components/customer/CustomerProfileForm';
+import CustomerProfileForm from '@/components/features/customer/CustomerProfile/CustomerProfileForm';
 
 export default function ProfileNewPage() {
   const router = useRouter();

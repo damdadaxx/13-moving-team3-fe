@@ -14,7 +14,7 @@ import { useMyEstimatesQuery } from '@/hooks/queries/estimate/queries';
 
 import { cn } from '@/utils/cn';
 
-import RejectedRequestCard from '@/components/mover/RejectedRequestCard';
+import RejectedRequestCard from '@/components/features/mover/EstimateRequest/RejectedRequestCard';
 import Button from '@/components/ui/Button/Button';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 

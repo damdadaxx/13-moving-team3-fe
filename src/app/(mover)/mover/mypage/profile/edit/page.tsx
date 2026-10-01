@@ -21,7 +21,7 @@ import { moverProfileKeys } from '@/hooks/queries/moverProfile/keys';
 import { useUpdateMoverProfileMutation } from '@/hooks/queries/moverProfile/mutations';
 import { useMoverProfileQuery } from '@/hooks/queries/moverProfile/queries';
 
-import MoverProfileForm from '@/components/mover/MoverProfileForm';
+import MoverProfileForm from '@/components/features/mover/MoverMypage/MoverProfileForm';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
 export default function MoverProfileEditPage() {

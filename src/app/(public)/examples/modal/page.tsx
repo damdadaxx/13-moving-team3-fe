@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useModal } from '@/hooks/modal/useModal';
 
-import SendEstimateModal from '@/components/mover/SendEstimateModal';
+import SendEstimateModal from '@/components/features/mover/EstimateRequest/SendEstimateModal';
 import Button from '@/components/ui/Button/Button';
 
 export default function ModalExamplePage() {

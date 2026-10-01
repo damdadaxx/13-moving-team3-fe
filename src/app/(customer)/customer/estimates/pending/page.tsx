@@ -15,8 +15,8 @@ import { useActiveEstimateRequestQuery } from '@/hooks/queries/estimate/queries'
 
 import { cn } from '@/utils/cn';
 
-import EstimateRequestHeader from '@/components/customer/estimates/EstimateRequestHeader';
-import PendingEstimateCard from '@/components/customer/estimates/PendingEstimateCard';
+import EstimateRequestHeader from '@/components/features/customer/Estimate/EstimateRequestHeader';
+import PendingEstimateCard from '@/components/features/customer/Estimate/PendingEstimateCard';
 import EmptyState from '@/components/ui/EmptyState';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 

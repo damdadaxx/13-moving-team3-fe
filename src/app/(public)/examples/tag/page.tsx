@@ -7,7 +7,7 @@ import { SERVICE_TYPES } from '@/types/serviceType';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
-import ServiceTypeTag from '@/components/ui/Tag/ServiceTypeTag';
+import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
 
 export default function TagExamplePage() {
   const currentBreakpoint = useBreakpointValue(

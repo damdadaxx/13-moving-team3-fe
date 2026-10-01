@@ -24,7 +24,7 @@ import { useCustomerProfileQuery } from '@/hooks/queries/customerProfile/queries
 
 import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
 
-import CustomerProfileEditForm from '@/components/customer/CustomerProfileEditForm';
+import CustomerProfileEditForm from '@/components/features/customer/CustomerProfile/CustomerProfileEditForm';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
 export default function ProfileEditPage() {

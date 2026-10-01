@@ -16,7 +16,7 @@ import { useMyEstimatesQuery } from '@/hooks/queries/estimate/queries';
 
 import { cn } from '@/utils/cn';
 
-import EstimateRequestBlock from '@/components/customer/EstimateRequestBlock';
+import EstimateRequestBlock from '@/components/features/customer/ReceivedEstimate/EstimateRequestBlock';
 import EmptyListNotice from '@/components/ui/EmptyListNotice';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 

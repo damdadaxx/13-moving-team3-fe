@@ -14,7 +14,7 @@ import { useMyEstimatesQuery } from '@/hooks/queries/estimate/queries';
 
 import { cn } from '@/utils/cn';
 
-import SentEstimateCard from '@/components/mover/SentEstimateCard';
+import SentEstimateCard from '@/components/features/mover/EstimateRequest/SentEstimateCard';
 import Button from '@/components/ui/Button/Button';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 

@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 
 import { OPEN_GRAPH_DEFAULT } from '@/lib/constants/site';
 
-import MoverDetailPageContent from '@/components/common/MoverDetail/MoverDetailPageContent';
+import MoverDetailPageContent from '@/components/features/common/MoverDetail/MoverDetailPageContent';
 
 interface MoverDetailPageProps {
   params: Promise<{ id: string }>;

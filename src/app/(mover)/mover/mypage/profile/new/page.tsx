@@ -19,7 +19,7 @@ import { useUpdateMeMutation } from '@/hooks/queries/auth/mutations';
 import { moverProfileKeys } from '@/hooks/queries/moverProfile/keys';
 import { useCreateMoverProfileMutation } from '@/hooks/queries/moverProfile/mutations';
 
-import MoverProfileForm from '@/components/mover/MoverProfileForm';
+import MoverProfileForm from '@/components/features/mover/MoverMypage/MoverProfileForm';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
 export default function MoverProfileNewPage() {

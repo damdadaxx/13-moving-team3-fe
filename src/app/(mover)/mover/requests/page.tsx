@@ -25,14 +25,14 @@ import { useReceivedRequestsQuery } from '@/hooks/queries/estimate/queries';
 
 import { cn } from '@/utils/cn';
 
-import ReceivedRequestCard from '@/components/mover/ReceivedRequestCard';
+import ReceivedRequestCard from '@/components/features/mover/EstimateRequest/ReceivedRequestCard';
 import Button from '@/components/ui/Button/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import ServiceTypeSelector from '@/components/ui/Chip/ServiceTypeSelector';
 import InputSearchbar from '@/components/ui/Form/InputSearchbar';
 import Label from '@/components/ui/Form/Label';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
-import Modal from '@/components/ui/Modal/Modal';
+import Modal from '@/components/ui/Modal';
 import Sort, { type SortOption } from '@/components/ui/Sort';
 
 const SORT_OPTIONS: SortOption<ReceivedRequestSortBy>[] = [

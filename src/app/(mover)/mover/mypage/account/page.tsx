@@ -20,7 +20,7 @@ import {
   useUpdatePasswordMutation,
 } from '@/hooks/queries/auth/mutations';
 
-import MoverAccountForm from '@/components/mover/MoverAccountForm';
+import MoverAccountForm from '@/components/features/mover/MoverMypage/MoverAccountForm';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
 export default function MoverInfoPage() {

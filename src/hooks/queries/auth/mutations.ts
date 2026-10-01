@@ -4,10 +4,11 @@ import type { Role } from '@/types/role';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import {
-  checkEmailAvailable,
+  confirmEmailVerification,
   getMe,
   login,
   logout,
+  sendEmailVerification,
   signup,
   updateMe,
   updatePassword,
@@ -70,15 +71,18 @@ export function useSyncSessionMutation() {
 }
 
 /*
-@ 이메일 중복 확인
-- 회원가입 화면의 버튼이 눌렸을 때만 호출하므로 Query 가 아니라 Mutation 으로 둔다.
-- 결과는 화면 상태로만 쓰고 캐시에 저장하지 않는다 (시간이 지나면 값이 달라질 수 있다).
+@ 이메일 인증번호 발송·확인
+- 사용자가 버튼을 눌렀을 때만 호출하므로 Mutation 으로 둔다.
 */
-export function useCheckEmailMutation() {
+export function useSendEmailVerificationMutation() {
   return useMutation({
     mutationFn: ({ email, role }: { email: string; role: Role }) =>
-      checkEmailAvailable(email, role),
+      sendEmailVerification(email, role),
   });
+}
+
+export function useConfirmEmailVerificationMutation() {
+  return useMutation({ mutationFn: confirmEmailVerification });
 }
 
 /*=================================================

@@ -102,24 +102,42 @@ export async function updatePassword(
 }
 
 /*
-@ 이메일 중복 확인
-- 회원가입 화면의 중복 확인 버튼이 사용한다.
-- 같은 이메일이라도 역할(고객/기사님)이 다르면 가입할 수 있어 role 을 함께 보낸다.
-- 확인 시점 이후 다른 사람이 먼저 가입할 수 있으므로, 최종 판정은 회원가입 응답이다.
+@ 회원가입 이메일 인증 (서명 토큰 방식)
+- 발송: 가입되지 않은 이메일에만 보낸다 (이미 가입된 이메일은 409).
+  응답의 token 은 인증번호 확인에 쓸 challenge 토큰이다. 서버는 인증번호를 저장하지 않는다.
+- 확인: 성공하면 회원가입에 함께 보낼 verified 토큰을 돌려준다 (30분 유효).
 */
-export async function checkEmailAvailable(
+export async function sendEmailVerification(
   email: string,
   role: Role,
-): Promise<boolean> {
-  const { isAvailable } = await clientFetch<{ isAvailable: boolean }>(
-    ENDPOINTS.auth.checkEmail,
+): Promise<{ token: string; expiresInMinutes: number }> {
+  return clientFetch<{ token: string; expiresInMinutes: number }>(
+    ENDPOINTS.auth.emailVerification,
     {
       method: 'POST',
       body: JSON.stringify({ email, role: toBackendRole(role) }),
     },
   );
+}
 
-  return isAvailable;
+export async function confirmEmailVerification(input: {
+  email: string;
+  role: Role;
+  code: string;
+  token: string;
+}): Promise<{ token: string }> {
+  return clientFetch<{ token: string }>(
+    ENDPOINTS.auth.emailVerificationConfirm,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        email: input.email,
+        role: toBackendRole(input.role),
+        code: input.code,
+        token: input.token,
+      }),
+    },
+  );
 }
 
 export async function login(input: LoginInput): Promise<AuthUser> {
@@ -144,6 +162,7 @@ export async function signup(input: SignupInput): Promise<AuthUser> {
       name: input.name,
       phoneNumber: input.phoneNumber,
       role: toBackendRole(input.role),
+      emailVerificationToken: input.emailVerificationToken,
     }),
   });
 

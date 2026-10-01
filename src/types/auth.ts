@@ -37,6 +37,8 @@ export interface SignupInput {
   name: string;
   phoneNumber: string;
   role: Role;
+  /** 이메일 인증 확인 응답으로 받은 토큰 (서버가 인증 여부를 이 값으로 판단한다) */
+  emailVerificationToken: string;
 }
 
 /*=================================================

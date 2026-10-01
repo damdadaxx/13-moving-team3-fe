@@ -6,7 +6,7 @@ import { Controller } from 'react-hook-form';
 import type { CustomerProfileFormValues } from '@/types/customerProfile';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
-import { useCustomerProfileForm } from '@/hooks/features/customerProfile/useCustomerProfileForm';
+import { useCustomerProfileForm } from '@/hooks/features/customer/useCustomerProfileForm';
 
 import Button from '@/components/ui/Button/Button';
 import RegionChipGroup from '@/components/ui/Chip/RegionChipGroup';

@@ -7,8 +7,8 @@ import type { AuthProviderName } from '@/types/auth';
 import type { CustomerProfileEditFormValues } from '@/types/customerProfile';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
-import type { CustomerProfileEditPlan } from '@/hooks/features/customerProfile/customerProfileEditPlan';
-import { useCustomerProfileEditForm } from '@/hooks/features/customerProfile/useCustomerProfileEditForm';
+import type { CustomerProfileEditPlan } from '@/hooks/features/customer/customerProfileEditPlan';
+import { useCustomerProfileEditForm } from '@/hooks/features/customer/useCustomerProfileEditForm';
 
 import { cn } from '@/utils/cn';
 import { formatPhoneNumber } from '@/utils/formatPhoneNumber';

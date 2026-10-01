@@ -6,7 +6,7 @@ import {
 } from '@/lib/api/customerProfile';
 import { HttpError } from '@/lib/api/errors';
 
-import { customerProfileKeys } from '@/hooks/features/customerProfile/queries/keys';
+import { customerProfileKeys } from '@/hooks/features/customer/queries/keys';
 
 /*=================================================
 고객 프로필 Mutation

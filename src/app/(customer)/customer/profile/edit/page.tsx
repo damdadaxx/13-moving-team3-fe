@@ -17,10 +17,10 @@ import {
   useUpdatePasswordMutation,
 } from '@/hooks/features/auth/queries/mutations';
 import { useAuth } from '@/hooks/features/auth/useAuth';
-import type { CustomerProfileEditPlan } from '@/hooks/features/customerProfile/customerProfileEditPlan';
-import { customerProfileKeys } from '@/hooks/features/customerProfile/queries/keys';
-import { useUpdateCustomerProfileMutation } from '@/hooks/features/customerProfile/queries/mutations';
-import { useCustomerProfileQuery } from '@/hooks/features/customerProfile/queries/queries';
+import type { CustomerProfileEditPlan } from '@/hooks/features/customer/customerProfileEditPlan';
+import { customerProfileKeys } from '@/hooks/features/customer/queries/keys';
+import { useUpdateCustomerProfileMutation } from '@/hooks/features/customer/queries/mutations';
+import { useCustomerProfileQuery } from '@/hooks/features/customer/queries/queries';
 
 import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
 

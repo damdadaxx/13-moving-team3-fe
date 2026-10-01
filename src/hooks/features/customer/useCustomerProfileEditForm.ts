@@ -19,7 +19,7 @@ import { customerProfileEditSchema } from '@/lib/validations/customerProfileVali
 import {
   createCustomerProfileEditPlan,
   type CustomerProfileEditPlan,
-} from '@/hooks/features/customerProfile/customerProfileEditPlan';
+} from '@/hooks/features/customer/customerProfileEditPlan';
 
 type CustomerProfileEditSchemaInput = z.input<typeof customerProfileEditSchema>;
 type CustomerProfileEditSchemaOutput = z.output<

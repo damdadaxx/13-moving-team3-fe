@@ -1,20 +1,25 @@
-// tanstack/react-query - customer queries
 import { useQuery } from '@tanstack/react-query';
 
-import { getCustomerProfile } from '@/lib/api/customer';
+import { getCustomerProfile } from '@/lib/api/customerProfile';
 
-import { customerKeys } from '@/hooks/features/customer/queries/keys';
+import { customerProfileKeys } from '@/hooks/features/customer/queries/keys';
+
+/*=================================================
+고객 프로필 Query
+=================================================*/
 
 /*
-@ 고객 프로필
-- 등록 전에는 null이다 (에러가 아니다)
-- 견적 요청은 프로필을 참조하므로, 없으면 요청 자체가 404로 막힌다
+@ 현재 로그인한 고객의 프로필 조회
+- CustomerProfile 객체: 프로필이 등록된 고객
+- null: GET /customer/profile이 404를 반환한 프로필 미등록 고객
+- error: 네트워크 또는 서버 오류로 등록 여부를 확인할 수 없는 상태
+- customer layout의 AuthGuard 안에서 사용하므로 CUSTOMER 인증이 끝난 뒤에만 실행된다.
 */
 export function useCustomerProfileQuery() {
   return useQuery({
-    queryKey: customerKeys.profile(),
+    queryKey: customerProfileKeys.detail(),
     queryFn: getCustomerProfile,
     staleTime: 5 * 60 * 1000,
-    meta: { name: '고객 프로필' },
+    meta: { name: '내 고객 프로필' },
   });
 }

@@ -3,7 +3,7 @@
 import { ROUTES } from '@/lib/constants/routes';
 import ProfileGuard from '@/lib/providers/ProfileGuard';
 
-import { useCustomerProfileQuery } from '@/hooks/features/customerProfile/queries/queries';
+import { useCustomerProfileQuery } from '@/hooks/features/customer/queries/queries';
 
 interface CustomerProfileGuardProps {
   children: React.ReactNode;

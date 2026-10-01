@@ -101,6 +101,45 @@ export async function updatePassword(
   });
 }
 
+/*
+@ 회원가입 이메일 인증 (서명 토큰 방식)
+- 발송: 가입되지 않은 이메일에만 보낸다 (이미 가입된 이메일은 409).
+  응답의 token 은 인증번호 확인에 쓸 challenge 토큰이다. 서버는 인증번호를 저장하지 않는다.
+- 확인: 성공하면 회원가입에 함께 보낼 verified 토큰을 돌려준다 (30분 유효).
+*/
+export async function sendEmailVerification(
+  email: string,
+  role: Role,
+): Promise<{ token: string; expiresInMinutes: number }> {
+  return clientFetch<{ token: string; expiresInMinutes: number }>(
+    ENDPOINTS.auth.emailVerification,
+    {
+      method: 'POST',
+      body: JSON.stringify({ email, role: toBackendRole(role) }),
+    },
+  );
+}
+
+export async function confirmEmailVerification(input: {
+  email: string;
+  role: Role;
+  code: string;
+  token: string;
+}): Promise<{ token: string }> {
+  return clientFetch<{ token: string }>(
+    ENDPOINTS.auth.emailVerificationConfirm,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        email: input.email,
+        role: toBackendRole(input.role),
+        code: input.code,
+        token: input.token,
+      }),
+    },
+  );
+}
+
 export async function login(input: LoginInput): Promise<AuthUser> {
   const user = await clientFetch<AuthUserResponse>(ENDPOINTS.auth.login, {
     method: 'POST',
@@ -123,6 +162,7 @@ export async function signup(input: SignupInput): Promise<AuthUser> {
       name: input.name,
       phoneNumber: input.phoneNumber,
       role: toBackendRole(input.role),
+      emailVerificationToken: input.emailVerificationToken,
     }),
   });
 

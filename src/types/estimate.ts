@@ -142,8 +142,9 @@ export interface DesignatedEstimate {
 
 /*
 @ GET /estimate-requests/received - 기사님이 받은 요청 목록
-- 커서 기반 무한 스크롤. sortBy/serviceTypes/regions/keyword/isDesignated로 필터링한다
-- "자격"(내 서비스 종류·지역)은 서버가 판정하고, "지정" 견적은 자격과 무관하게 보인다
+- 커서 기반 무한 스크롤. sortBy/serviceTypes/regions/keyword/isDesignated/isServiceArea로 필터링한다
+- 내 프로필의 제공 서비스·서비스 지역 매칭은 isServiceArea=true일 때만 서버가 적용한다
+- isDesignated=true와 isServiceArea=true를 같이 보내면 "지정 견적 중 서비스·지역이 맞는 요청"(교집합)이다
 */
 export type ReceivedRequestSortBy = 'moveDate' | 'createdAt';
 
@@ -153,6 +154,8 @@ export interface ReceivedRequestQuery {
   regions?: Region[];
   keyword?: string;
   isDesignated?: boolean;
+  /** "서비스 가능 지역" 체크박스. true면 내 제공 서비스·서비스 지역에 맞는 요청만 */
+  isServiceArea?: boolean;
   cursor?: string;
   size?: number;
 }

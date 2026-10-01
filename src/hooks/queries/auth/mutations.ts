@@ -1,11 +1,14 @@
 // tanstack/react-query - auth mutations
 import type { AuthUser } from '@/types/auth';
+import type { Role } from '@/types/role';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import {
+  confirmEmailVerification,
   getMe,
   login,
   logout,
+  sendEmailVerification,
   signup,
   updateMe,
   updatePassword,
@@ -65,6 +68,21 @@ export function useSyncSessionMutation() {
     mutationFn: getMe,
     onSuccess: resetAuthCache,
   });
+}
+
+/*
+@ 이메일 인증번호 발송·확인
+- 사용자가 버튼을 눌렀을 때만 호출하므로 Mutation 으로 둔다.
+*/
+export function useSendEmailVerificationMutation() {
+  return useMutation({
+    mutationFn: ({ email, role }: { email: string; role: Role }) =>
+      sendEmailVerification(email, role),
+  });
+}
+
+export function useConfirmEmailVerificationMutation() {
+  return useMutation({ mutationFn: confirmEmailVerification });
 }
 
 /*=================================================

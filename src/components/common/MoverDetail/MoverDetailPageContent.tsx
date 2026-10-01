@@ -1,16 +1,15 @@
 'use client';
 
-import { useMoverDetailQuery } from '@/hooks/queries/movers/queries';
+import { useMoverDetailQuery } from '@/hooks/queries/mover/queries';
 
 import { cn } from '@/utils/cn';
 
-import DesignatedEstimateRequestButton from '@/components/common/MoverDetail/DesignatedEstimateRequestButton';
-import MoverActionButtonGroup from '@/components/common/MoverDetail/MoverDetailButtonGroups';
+import MoverActionButtonGroup from '@/components/common/MoverDetail/MoverActionButtonGroup';
 import MoverDetailTopSection from '@/components/common/MoverDetail/MoverDetailTopSection';
 import MoverInfo from '@/components/common/MoverDetail/MoverInfo';
-import MoverLikeIconButton from '@/components/common/MoverDetail/MoverLikeIconButton';
-import MoverReviewList from '@/components/common/MoverDetail/MoverReviewList';
+import MoverStickyActionBar from '@/components/common/MoverDetail/MoverStickyActionBar';
 import ShareMoverInfo from '@/components/common/MoverDetail/ShareMoverInfo';
+import MoverReviewList from '@/components/common/MoverReview/MoverReviewList';
 import EmptyState from '@/components/ui/EmptyState';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
@@ -34,23 +33,37 @@ export default function MoverDetailPageContent({
   }
 
   return (
-    <main className={cn('bg-gray-50 pb-[28px]', 'desktop:pb-[126px]')}>
+    <main className={cn('bg-gray-50')}>
       {/* 상단 섹션 */}
-      <MoverDetailTopSection imageUrl={mover.imgUrl} />
+      <MoverDetailTopSection
+        imageUrl={mover.imgUrl}
+        nickname={mover.nickname}
+      />
 
       {/* 정보 섹션 */}
-      <section className={cn('px-[20px]', 'tablet:px-[72px]')}>
+      <section
+        className={cn(
+          'px-[20px] pb-[134px]',
+          'tablet:pb-[126px] tablet:px-[72px]',
+        )}
+      >
         <div
           className={cn(
-            'desktop:flex desktop:gap-[140px] max-w-[1200px] mx-auto',
+            'max-w-[1200px] mx-auto',
+            'desktop:flex desktop:gap-[140px]',
           )}
         >
-          <div className={cn('min-w-0 desktop:flex-1')}>
+          <div className={cn('min-w-0', 'desktop:flex-1')}>
             {/* 기사님 정보 섹션 */}
             <MoverInfo mover={mover} />
 
             {/* 공유하기 */}
-            <ShareMoverInfo className={cn('desktop:hidden')} />
+            <ShareMoverInfo
+              className={cn(
+                'pb-[32px] mb-[32px] border-b border-line-100',
+                'desktop:hidden desktop:border-none',
+              )}
+            />
 
             {/* 리뷰섹션 */}
             <div className={cn('max-w-[1200px] mx-auto')}>
@@ -78,23 +91,10 @@ export default function MoverDetailPageContent({
           </section>
 
           {/* 모바일, 테스크탑 버튼 그룹 섹션 */}
-          <section
-            className={cn(
-              'flex items-center gap-[8px] mt-[53px]',
-              'tablet:mt-[72px]',
-              'desktop:hidden',
-            )}
-          >
-            <MoverLikeIconButton
-              moverId={mover.id}
-              likeCount={mover.likeCount}
-            />
-            <DesignatedEstimateRequestButton
-              moverId={mover.id}
-              size="sm"
-              className="flex-1"
-            />
-          </section>
+          <MoverStickyActionBar
+            moverId={mover.id}
+            likeCount={mover.likeCount}
+          />
         </div>
       </section>
     </main>

@@ -22,6 +22,24 @@ export type EstimateStatus =
   | 'NOT_SELECTED' // 다른 견적 확정으로 탈락
   | 'EXPIRED'; // 확정 없이 이사일 경과
 
+export const ESTIMATE_STATUS_TEXT: Record<EstimateStatus, string> = {
+  PROPOSED: '견적대기',
+  DESIGNATED: '지정견적',
+  REJECTED: '견적대기',
+  ACCEPTED: '확정견적',
+  NOT_SELECTED: '견적 미선택',
+  EXPIRED: '견적 만료',
+};
+
+export const ESTIMATE_STATUS_COLOR: Record<EstimateStatus, string> = {
+  PROPOSED: 'text-gray-300',
+  DESIGNATED: 'text-orange-400',
+  REJECTED: 'text-gray-300',
+  ACCEPTED: 'text-orange-400',
+  NOT_SELECTED: 'text-gray-300',
+  EXPIRED: 'text-gray-300',
+};
+
 /** POST /estimate-requests 요청 본문 (백엔드 createEstimateRequestSchema) */
 export interface CreateEstimateRequestInput {
   serviceType: ServiceType;
@@ -142,8 +160,9 @@ export interface DesignatedEstimate {
 
 /*
 @ GET /estimate-requests/received - 기사님이 받은 요청 목록
-- 커서 기반 무한 스크롤. sortBy/serviceTypes/regions/keyword/isDesignated로 필터링한다
-- "자격"(내 서비스 종류·지역)은 서버가 판정하고, "지정" 견적은 자격과 무관하게 보인다
+- 커서 기반 무한 스크롤. sortBy/serviceTypes/regions/keyword/isDesignated/isServiceArea로 필터링한다
+- 내 프로필의 제공 서비스·서비스 지역 매칭은 isServiceArea=true일 때만 서버가 적용한다
+- isDesignated=true와 isServiceArea=true를 같이 보내면 "지정 견적 중 서비스·지역이 맞는 요청"(교집합)이다
 */
 export type ReceivedRequestSortBy = 'moveDate' | 'createdAt';
 
@@ -153,6 +172,8 @@ export interface ReceivedRequestQuery {
   regions?: Region[];
   keyword?: string;
   isDesignated?: boolean;
+  /** "서비스 가능 지역" 체크박스. true면 내 제공 서비스·서비스 지역에 맞는 요청만 */
+  isServiceArea?: boolean;
   cursor?: string;
   size?: number;
 }
@@ -211,7 +232,8 @@ export interface CreateEstimateResponse {
 */
 export type UpdateEstimateStatusInput =
   | { status: 'PROPOSED'; price: number; comment: string }
-  | { status: 'REJECTED'; rejectReason: string };
+  | { status: 'REJECTED'; rejectReason: string }
+  | { status: 'ACCEPTED' };
 
 export interface UpdateEstimateStatusResponse {
   estimateId: string;
@@ -244,18 +266,21 @@ export interface EstimateRequestInfo {
   status: 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'EXPIRED';
 }
 
-/** 견적을 보낸 기사님 정보와 집계값 */
+/*
+@ 견적을 보낸 기사님 정보와 집계값 (백엔드 estimateMapper.toEstimateListItem + moverStatsRepository)
+- 리뷰가 없으면 averageRating은 0
+- isLiked는 고객이 조회할 때만 내려온다
+*/
 export interface MoverSummary {
   moverId: string;
   nickname: string;
   imgUrl: string | null;
   careerMonths: number;
-  userId: string;
-  user: { name: string };
   reviewCount: number;
-  averageRating: number | null;
-  confirmedEstimateCount: number;
+  averageRating: number;
+  confirmedCount: number;
   likeCount: number;
+  isLiked?: boolean;
 }
 
 export interface CustomerSummary {
@@ -290,9 +315,30 @@ export interface EstimateListResponse {
 }
 
 /*
-@ GET /estimates/{estimateId} - 견적 상세 조회
-- 목록(GET /estimates)에는 없는 customer 정보가 여기에만 있다
+@ 견적 상세 (GET /estimates/{estimateId})
+- 견적서 화면(대기 중인 견적/받은 견적/기사님 확정견적 공용)에서 쓴다
+- canConfirm은 고객이 이 견적을 확정할 수 있는지, canRespond는 기사님이 발송/반려할 수 있는지를
+  백엔드가 상태(status)와 역할을 보고 판정해서 내려준다
 */
+export interface EstimateDetailMover {
+  moverId: string;
+  nickname: string;
+  imgUrl: string | null;
+  careerMonths: number;
+}
+
+export interface EstimateDetailRequest {
+  estimateRequestId: string;
+  serviceType: ServiceType;
+  moveDate: string;
+  departureZipCode: string;
+  departureAddress: string;
+  arrivalZipCode: string;
+  arrivalAddress: string;
+  requestedAt: string;
+  status: EstimateRequestStatus;
+}
+
 export interface EstimateDetail {
   estimateId: string;
   price: number | null;
@@ -301,11 +347,16 @@ export interface EstimateDetail {
   isDesignated: boolean;
   status: EstimateStatus;
   createdAt: string;
-  mover: MoverSummary;
-  customer: CustomerSummary;
-  estimateRequest: EstimateRequestInfo;
-  /** CUSTOMER 관점 - 본인 요청 + 요청 PENDING + 견적 PROPOSED일 때만 true */
-  canConfirm?: boolean;
-  /** MOVER 관점 - 본인 견적 + 요청 PENDING + 견적 DESIGNATED일 때만 true */
-  canRespond?: boolean;
+  mover: EstimateDetailMover;
+  customer: { name: string };
+  estimateRequest: EstimateDetailRequest;
+  canConfirm: boolean;
+  canRespond: boolean;
 }
+
+/*
+@ 견적서 상태 필터 (내 견적 관리 화면의 드롭다운)
+- 서버에 다시 묻지 않고 이미 받아온 견적서 배열만 거르는 화면 전용 값이다
+- CONFIRMED = ACCEPTED, PENDING = 그 외(NOT_SELECTED·EXPIRED)
+*/
+export type EstimateStatusFilter = 'ALL' | 'CONFIRMED' | 'PENDING';

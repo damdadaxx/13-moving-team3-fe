@@ -17,7 +17,13 @@ import ButtonIcon from '@/components/ui/Button/ButtonIcon';
  * @ 기사님 공유하기 정보 컴포넌트
  * - 기사님 공유하기 버튼을 표시
  */
-export default function ShareMoverInfo({ className }: { className?: string }) {
+export default function ShareMoverInfo({
+  text,
+  className,
+}: {
+  text?: string;
+  className?: string;
+}) {
   const { showToast } = useToast();
 
   const handleCopyLink = async () => {
@@ -48,20 +54,14 @@ export default function ShareMoverInfo({ className }: { className?: string }) {
   };
 
   return (
-    <section
-      className={cn(
-        'pb-[32px] mb-[32px] border-b border-line-100',
-        'desktop:border-none',
-        className,
-      )}
-    >
+    <section className={cn('desktop:mt-[40px]', className)}>
       <p
         className={cn(
           'mb-[12px] text-lg-semibold text-black-400',
-          'desktop:mb-[22px] tabletext-xl-semibold',
+          'desktop:mb-[22px] tablet:text-xl-semibold',
         )}
       >
-        나만 알기엔 아쉬운 기사님인가요?
+        {text ?? '나만 알기엔 아쉬운 기사님인가요?'}
       </p>
       <div className={cn('flex gap-[12px]', 'tablet:gap-[16px]')}>
         <ButtonIcon variant="clip" onClick={handleCopyLink} />

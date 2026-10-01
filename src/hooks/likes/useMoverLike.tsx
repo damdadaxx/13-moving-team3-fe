@@ -101,10 +101,12 @@ export function useMoverLike(moverId: string, initialLikeCount: number) {
     try {
       if (isLiked) {
         await deleteLikeMutation.mutateAsync(moverId); /** 좋아요 취소 */
+        showToast('찜을 취소했어요.');
         return;
       }
 
       await createLikeMutation.mutateAsync(moverId); /** 좋아요 추가 */
+      showToast('기사님을 찜했어요.');
     } catch (error) {
       if (error instanceof HttpError && error.code === 'BAD_REQUEST') {
         /** 좋아요 상태 무효화 */

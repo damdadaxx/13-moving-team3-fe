@@ -1,82 +1,50 @@
 // 헤더 알림 드롭다운
 'use client';
 
-import { useState } from 'react';
+import { useRef } from 'react';
 
+import type { Notification } from '@/types/notification';
 import { cva } from 'class-variance-authority';
+import { useRouter } from 'next/navigation';
 
 import IcAlarmClose from '@/assets/icons/ic_alarm_close.svg';
 import IcMarkAllRead from '@/assets/icons/ic_mark_all_read.svg';
 
+import { useAuth } from '@/hooks/auth/useAuth';
+import useInfiniteScroll from '@/hooks/common/useInfiniteScroll';
+import {
+  useReadAllNotificationsMutation,
+  useReadNotificationMutation,
+} from '@/hooks/queries/notifications/mutations';
+import {
+  useNotificationsQuery,
+  useUnreadCountQuery,
+} from '@/hooks/queries/notifications/queries';
+
 import { cn } from '@/utils/cn';
+import formatDate from '@/utils/formatDate';
+import getNotificationHref from '@/utils/getNotificationHref';
+import splitNotificationContent from '@/utils/splitNotificationContent';
 
 import { HEADER_PANEL_IDS } from '@/components/ui/Header/types';
-
-interface NotificationPart {
-  text: string;
-  isHighlight?: boolean;
-}
-
-interface NotificationItem {
-  id: string;
-  parts: NotificationPart[];
-  timeLabel: string;
-  isRead: boolean;
-}
 
 interface NotificationDropdownProps {
   isOpen: boolean;
   onClose: () => void;
-  onUnreadChange?: (count: number) => void;
 }
 
-// TODO: 알림 API 연동 후 실제 목록으로 교체
-const DUMMY_NOTIFICATIONS: NotificationItem[] = [
-  {
-    id: '1',
-    parts: [
-      { text: '김코드 기사님의 ' },
-      { text: '소형이사 견적', isHighlight: true },
-      { text: '이 도착했어요.' },
-    ],
-    timeLabel: '2시간 전',
-    isRead: false,
-  },
-  {
-    id: '2',
-    parts: [
-      { text: '김코드 기사님의 견적이 ' },
-      { text: '확정', isHighlight: true },
-      { text: '되었어요.' },
-    ],
-    timeLabel: '3시간 전',
-    isRead: false,
-  },
-  {
-    id: '3',
-    parts: [
-      { text: '내일은 ' },
-      { text: '경기(일산) → 서울(영등포) 이사 예정일', isHighlight: true },
-      { text: '이에요.' },
-    ],
-    timeLabel: '5시간 전',
-    isRead: false,
-  },
-  {
-    id: '4',
-    parts: [
-      { text: '내일은 ' },
-      { text: '경기(일산) → 서울(영등포) 이사 예정일', isHighlight: true },
-      { text: '이에요.' },
-    ],
-    timeLabel: '5시간 전',
-    isRead: true,
-  },
-];
+interface NotificationStatusItemProps {
+  message: string;
+}
 
-export const DUMMY_UNREAD_COUNT = DUMMY_NOTIFICATIONS.filter(
-  (item) => !item.isRead,
-).length;
+/** 알림 상태 아이템 컴포넌트 */
+function NotificationStatusItem({ message }: NotificationStatusItemProps) {
+  return (
+    <li className={cn('px-[32px] py-[24px] text-md-medium text-gray-400')}>
+      {message}
+    </li>
+  );
+}
 
 const notificationDropdownPanel = cva(
   cn(
@@ -108,40 +76,54 @@ const notificationDropdownItem = cva(
  * 알림 드롭다운
  * @param isOpen - 드롭다운 열림 여부
  * @param onClose - 드롭다운 닫기 핸들러
- * @param onUnreadChange - 읽지 않은 알림 수 변경 핸들러
  * @returns 알림 드롭다운 컴포넌트
  */
 export default function NotificationDropdown({
   isOpen,
   onClose,
-  onUnreadChange,
 }: NotificationDropdownProps) {
-  const [notifications, setNotifications] = useState(DUMMY_NOTIFICATIONS);
+  const router = useRouter();
+  const listRef = useRef<HTMLUListElement>(null);
+  const { role } = useAuth();
+  const { data: unread } = useUnreadCountQuery(true);
+  const {
+    data,
+    isLoading,
+    isError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useNotificationsQuery(isOpen);
+  const readNotification = useReadNotificationMutation();
+  const readAllNotifications = useReadAllNotificationsMutation();
+  const notifications = data?.pages.flatMap((page) => page.list) ?? [];
+  const sentinelRef = useInfiniteScroll<HTMLLIElement>({
+    onIntersect: () => {
+      void fetchNextPage();
+    },
+    enabled: isOpen && hasNextPage && !isFetchingNextPage,
+    rootRef: listRef,
+    rootMargin: '48px',
+  });
 
   /** 알림 모두 읽음 처리 */
   const handleMarkAllRead = () => {
-    setNotifications((prev) =>
-      prev.map((item) => (item.isRead ? item : { ...item, isRead: true })),
-    );
-    onUnreadChange?.(0);
+    if ((unread?.unreadCount ?? 0) === 0 || readAllNotifications.isPending) {
+      return;
+    }
+    readAllNotifications.mutate();
   };
 
-  const handleItemClick = (item: NotificationItem) => {
+  /** 알림 클릭 처리 */
+  const handleItemClick = (item: Notification) => {
     if (!item.isRead) {
-      setNotifications((prev) =>
-        prev.map((notification) =>
-          notification.id === item.id
-            ? { ...notification, isRead: true }
-            : notification,
-        ),
-      );
-      onUnreadChange?.(
-        notifications.filter(
-          (notification) => notification.id !== item.id && !notification.isRead,
-        ).length,
-      );
+      readNotification.mutate(item.id);
     }
     onClose();
+    if (!role) return;
+
+    // 알림 링크 이동
+    router.push(getNotificationHref(role, item));
   };
 
   return (
@@ -166,7 +148,11 @@ export default function NotificationDropdown({
             type="button"
             aria-label="알림 모두 읽음 처리"
             onClick={handleMarkAllRead}
-            className={cn('h-[24px] w-[24px] cursor-pointer overflow-clip')}
+            disabled={(unread?.unreadCount ?? 0) === 0}
+            className={cn(
+              'h-[24px] w-[24px] cursor-pointer overflow-clip',
+              'disabled:cursor-default disabled:opacity-40',
+            )}
           >
             <IcMarkAllRead aria-hidden className={cn('h-full w-full')} />
           </button>
@@ -181,51 +167,72 @@ export default function NotificationDropdown({
         </div>
       </div>
       <div className={cn('flex min-h-0 w-full flex-1 flex-col')}>
-        <ul className={cn('min-h-0 flex-1 overflow-y-auto scrollbar-gray-300')}>
-          {notifications.map((item) => (
-            <li
-              key={item.id}
-              className={cn(
-                'border-b border-line-200 last:border-b-0 last:pb-[10px] px-[16px]',
-                'hover:bg-background-200 transition-colors duration-300',
-              )}
-            >
-              <button
-                type="button"
-                onClick={() => handleItemClick(item)}
-                className={cn(notificationDropdownItem(), 'cursor-pointer')}
+        <ul
+          ref={listRef}
+          className={cn('min-h-0 flex-1 overflow-y-auto scrollbar-gray-300')}
+        >
+          {isLoading ? (
+            <NotificationStatusItem message="알림을 불러오는 중이에요." />
+          ) : null}
+          {isError ? (
+            <NotificationStatusItem message="알림을 불러오지 못했어요." />
+          ) : null}
+          {!isLoading && !isError && notifications.length === 0 ? (
+            <NotificationStatusItem message="알림이 없어요." />
+          ) : null}
+
+          {/* 알림 목록 렌더링 */}
+          {notifications.map((item, index) => {
+            const parts = splitNotificationContent(item.content);
+            const isLast = index === notifications.length - 1;
+
+            return (
+              <li
+                key={item.id}
+                className={cn(
+                  'border-b border-line-200 px-[16px]',
+                  isLast && 'border-b-0 pb-[10px]',
+                  'hover:bg-background-200 transition-colors duration-300',
+                )}
               >
-                <p
-                  className={cn(
-                    'text-md-medium',
-                    'desktop:text-lg-medium',
-                    item.isRead ? 'text-gray-400' : 'text-black-400',
-                  )}
+                <button
+                  type="button"
+                  onClick={() => handleItemClick(item)}
+                  className={cn(notificationDropdownItem(), 'cursor-pointer')}
                 >
-                  {item.parts.map((part) => (
-                    <span
-                      key={part.text}
-                      className={cn(
-                        !item.isRead && part.isHighlight
-                          ? 'text-orange-400'
-                          : undefined,
-                      )}
-                    >
-                      {part.text}
-                    </span>
-                  ))}
-                </p>
-                <p
-                  className={cn(
-                    'text-sm-medium text-gray-400',
-                    'desktop:text-md-medium',
-                  )}
-                >
-                  {item.timeLabel}
-                </p>
-              </button>
-            </li>
-          ))}
+                  <p
+                    className={cn(
+                      'text-md-medium',
+                      'desktop:text-lg-medium',
+                      item.isRead ? 'text-gray-400' : 'text-black-400',
+                    )}
+                  >
+                    {parts.map((part, index) => (
+                      <span
+                        key={`${item.id}-${index}`}
+                        className={cn(
+                          !item.isRead && part.isHighlight
+                            ? 'text-orange-400'
+                            : undefined,
+                        )}
+                      >
+                        {part.text}
+                      </span>
+                    ))}
+                  </p>
+                  <p
+                    className={cn(
+                      'text-sm-medium text-gray-400',
+                      'desktop:text-md-medium',
+                    )}
+                  >
+                    {formatDate(item.createdAt, 'relative')}
+                  </p>
+                </button>
+              </li>
+            );
+          })}
+          <li ref={sentinelRef} aria-hidden className={cn('h-px')} />
         </ul>
       </div>
     </div>

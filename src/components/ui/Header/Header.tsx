@@ -15,6 +15,8 @@ import { ROUTES, isProtectedPath } from '@/lib/constants/routes';
 import { useAuth } from '@/hooks/auth/useAuth';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useOutsideClick } from '@/hooks/common/useOutsideClick';
+import useNotificationStream from '@/hooks/notifications/useNotificationStream';
+import { useUnreadCountQuery } from '@/hooks/queries/notifications/queries';
 
 import { cn } from '@/utils/cn';
 import { getAuthVariant } from '@/utils/getAuthVariant';
@@ -22,7 +24,6 @@ import { getAuthVariant } from '@/utils/getAuthVariant';
 import DesktopMenu from '@/components/ui/Header/DesktopMenu';
 import HeaderActions from '@/components/ui/Header/HeaderActions';
 import MobileMenu from '@/components/ui/Header/MobileMenu';
-import { DUMMY_UNREAD_COUNT } from '@/components/ui/Header/NotificationDropdown';
 import type { HeaderMenuItem, HeaderPanel } from '@/components/ui/Header/types';
 
 interface HeaderProps {
@@ -52,7 +53,6 @@ const MENU_DATA: Record<AuthVariant, HeaderMenuItem[]> = {
 
 export default function Header({ hasSessionCookie = false }: HeaderProps) {
   const [openPanel, setOpenPanel] = useState<HeaderPanel | null>(null);
-  const [unreadCount, setUnreadCount] = useState(DUMMY_UNREAD_COUNT);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const notificationMenuRef = useRef<HTMLDivElement>(null);
@@ -62,6 +62,9 @@ export default function Header({ hasSessionCookie = false }: HeaderProps) {
   const isNotificationMenuOpen = openPanel === 'notification';
 
   const { user, role, isLoggedIn, isLoading, logout } = useAuth();
+  const { data: unread } = useUnreadCountQuery(isLoggedIn);
+  useNotificationStream(isLoggedIn);
+  const unreadCount = unread?.unreadCount ?? 0;
   const pathname = usePathname();
   const headerVariant = getAuthVariant(role);
   const isGuest = !isLoading && !isLoggedIn;
@@ -160,7 +163,6 @@ export default function Header({ hasSessionCookie = false }: HeaderProps) {
           profileMenuRef={profileMenuRef}
           onTogglePanel={togglePanel}
           onClosePanel={closePanel}
-          onUnreadChange={setUnreadCount}
           onLogout={logout}
         />
       </div>

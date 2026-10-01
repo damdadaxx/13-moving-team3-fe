@@ -33,18 +33,29 @@ export const ROUTES = {
   customerProfileEdit: '/customer/profile/edit', // 프로필 수정
   customerLikedMovers: '/customer/liked-movers', // 찜한 기사님
   customerReviewsRoot: '/customer/reviews', // 이사 리뷰 (작성대기/작성한 리뷰)
-  customerReviewsPending: '/customer/reviews/pending', // 이사 리뷰 > 작성 대기
+  customerReviewsPending: '/customer/reviews/pending', // 이사 리뷰 > 작성 가능한 리뷰
+  customerReviewsCompleted: '/customer/reviews/completed', // 이사 리뷰 > 내가 작성한 리뷰
 
   /* 기사님 프로필 메뉴 */
   moverMypage: '/mover/mypage', // 마이페이지 (계정·프로필 수정 포함)
-  moverProfileRoot: '/mover/mypage/profile',
-  moverProfileNew: '/mover/mypage/profile/new',
-  moverProfileEdit: '/mover/mypage/profile/edit',
-  moverAccount: '/mover/mypage/account',
+  moverProfileRoot: '/mover/mypage/profile', // 기사님 프로필 (등록/수정)
+  moverProfileNew: '/mover/mypage/profile/new', // 기사님 프로필 최초 등록
+  moverProfileEdit: '/mover/mypage/profile/edit', // 기사님 프로필 수정
+  moverAccount: '/mover/mypage/account', // 기본 정보(계정) 수정/보기
 } as const;
 
 export function getHomePath(role: Role): string {
   return role === 'customer' ? ROUTES.customerHome : ROUTES.moverHome;
+}
+
+/*
+@ 프로필 최초 등록 경로
+- 회원가입 직후에는 역할에 맞는 프로필 등록 화면으로 보낸다.
+*/
+export function getProfileNewPath(role: Role): string {
+  return role === 'customer'
+    ? ROUTES.customerProfileNew
+    : ROUTES.moverProfileNew;
 }
 
 export function getSigninPath(role: Role): string {

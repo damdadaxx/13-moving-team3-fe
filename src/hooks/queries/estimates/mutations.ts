@@ -8,7 +8,10 @@ import {
   type QueryClient,
 } from '@tanstack/react-query';
 
-import { createDesignatedEstimate } from '@/lib/api/estimate';
+import {
+  createDesignatedEstimate,
+  updateEstimateStatus,
+} from '@/lib/api/estimate';
 
 import { estimateKeys } from '@/hooks/queries/estimates/keys';
 
@@ -67,6 +70,26 @@ export function useCreateDesignatedEstimateMutation() {
     }) => createDesignatedEstimate(estimateRequestId, moverId),
     onSuccess: (data, { moverId }) => {
       addDesignatedMoverToCache(queryClient, moverId, data);
+    },
+  });
+}
+
+/**
+ * @ 견적 확정 뮤테이션
+ * - PATCH /estimates/{estimateId}, status: 'ACCEPTED'
+ * - 확정하면 같은 요청의 나머지 PROPOSED 견적은 NOT_SELECTED로 바뀐다
+ * - 성공하면 이 견적의 상세 캐시를 무효화해 확정 상태를 다시 받아온다
+ */
+export function useConfirmEstimateMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (estimateId: string) =>
+      updateEstimateStatus(estimateId, { status: 'ACCEPTED' }),
+    onSuccess: (_data, estimateId) => {
+      queryClient.invalidateQueries({
+        queryKey: estimateKeys.detail(estimateId),
+      });
     },
   });
 }

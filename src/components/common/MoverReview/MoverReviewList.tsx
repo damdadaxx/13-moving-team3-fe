@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import type { ReviewSummary } from '@/types/review';
+import type { MoverReviewListItem } from '@/types/review';
 
 import { useMoverReviewsQuery } from '@/hooks/queries/reviews/queries';
 
@@ -12,10 +12,11 @@ import {
   toRatingDistribution,
 } from '@/utils/formatReview';
 
-import MoverReviewItem from '@/components/common/MoverDetail/MoverReviewItem';
-import MoverReviewSummary from '@/components/common/MoverDetail/MoverReviewSummary';
+import MoverReviewItem from '@/components/common/MoverReview/MoverReviewItem';
+import MoverReviewSummary from '@/components/common/MoverReview/MoverReviewSummary';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 import Pagination from '@/components/ui/Pagination';
+import SectionTitle from '@/components/ui/SectionTitle';
 
 export default function MoverReviewList({ moverId }: { moverId: string }) {
   const [page, setPage] = useState(1);
@@ -35,7 +36,7 @@ export default function MoverReviewList({ moverId }: { moverId: string }) {
     setPage(totalPages);
   }
 
-  const reviews: ReviewSummary[] = data?.list ?? [];
+  const reviews: MoverReviewListItem[] = data?.list ?? [];
   const reviewCount = data?.reviewCount ?? 0;
   const distribution = toRatingDistribution(data?.ratingDistribution ?? []);
 
@@ -43,14 +44,7 @@ export default function MoverReviewList({ moverId }: { moverId: string }) {
   return (
     <div className="flex w-full flex-col gap-[16px]">
       <div className="flex flex-col gap-[16px]">
-        <h2
-          className={cn(
-            'text-lg-semibold text-black-400',
-            'tablet:text-xl-semibold',
-          )}
-        >
-          리뷰
-        </h2>
+        <SectionTitle className="mb-0 tablet:mb-0">리뷰</SectionTitle>
         {data ? (
           <MoverReviewSummary
             averageRating={data.ratingAvg}
@@ -80,7 +74,7 @@ export default function MoverReviewList({ moverId }: { moverId: string }) {
               )}
             >
               <MoverReviewItem
-                nickname={formatMaskedReviewerName(review.customerName)}
+                name={formatMaskedReviewerName(review.user.name)}
                 createdAt={review.createdAt}
                 rating={review.rating}
                 content={review.content}

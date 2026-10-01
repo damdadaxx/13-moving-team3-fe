@@ -31,7 +31,6 @@ interface HeaderActionsProps {
   profileMenuRef: RefObject<HTMLDivElement | null>;
   onTogglePanel: (panel: HeaderPanel) => void;
   onClosePanel: () => void;
-  onUnreadChange: (count: number) => void;
   onLogout: () => void;
 }
 
@@ -63,7 +62,6 @@ function formatUnreadCount(count: number) {
  * @param profileMenuRef - 프로필 메뉴 바깥 클릭 참조
  * @param onTogglePanel - 패널 토글 핸들러
  * @param onClosePanel - 패널 닫기 핸들러
- * @param onUnreadChange - 읽지 않은 알림 수 변경 핸들러
  * @param onLogout - 로그아웃 핸들러
  * @returns 헤더 우측 액션 컴포넌트
  */
@@ -79,7 +77,6 @@ export default function HeaderActions({
   profileMenuRef,
   onTogglePanel,
   onClosePanel,
-  onUnreadChange,
   onLogout,
 }: HeaderActionsProps) {
   const unreadCountLabel = formatUnreadCount(unreadCount);
@@ -140,7 +137,6 @@ export default function HeaderActions({
             <NotificationDropdown
               isOpen={isNotificationOpen}
               onClose={onClosePanel}
-              onUnreadChange={onUnreadChange}
             />
           </div>
           <div ref={profileMenuRef} className={cn('relative')}>

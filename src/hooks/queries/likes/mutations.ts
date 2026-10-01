@@ -9,7 +9,7 @@ import {
 import { createLike, deleteLike, bulkDeleteLikes } from '@/lib/api/like';
 
 import { likeKeys } from '@/hooks/queries/likes/keys';
-import { moverKeys } from '@/hooks/queries/movers/keys';
+import { moverKeys } from '@/hooks/queries/mover/keys';
 
 interface LikeOptimisticContext {
   previousStatus: LikeStatus | undefined;

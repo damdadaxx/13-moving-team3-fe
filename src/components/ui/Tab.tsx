@@ -60,7 +60,7 @@ export default function Tab({ tabs }: { tabs: Tabs[] }) {
         )}
       >
         {tabs.map((tab) => {
-          const isActive = tab.href === currentPath;
+          const isActive = currentPath.includes(tab.href);
 
           return (
             <Link

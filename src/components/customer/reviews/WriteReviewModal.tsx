@@ -6,7 +6,7 @@ import type { PendingReview } from '@/types/review';
 import Image from 'next/image';
 
 import IcArrowRight from '@/assets/icons/ic_arrow_right.svg';
-import IcDriverMark from '@/assets/icons/ic_mover_badge.svg';
+import IcDriverMark from '@/assets/icons/ic_driver.png';
 import IcStar from '@/assets/icons/ic_star.svg';
 import ImgMoverCharacter from '@/assets/images/img_profile_example.png';
 
@@ -129,7 +129,13 @@ export default function WriteReviewModal({
             <div className="flex items-center justify-between">
               <div className="flex flex-col items-start justify-center gap-[4px]">
                 <span className="relative flex h-[18.2px] w-[16px] shrink-0 items-center justify-center">
-                  <IcDriverMark aria-hidden="true" />
+                  <Image
+                    src={IcDriverMark}
+                    alt=""
+                    aria-hidden="true"
+                    fill
+                    className="object-contain"
+                  />
                 </span>
                 <p className="text-lg-semibold flex items-center gap-[4px] text-black-300 desktop:text-2lg-semibold">
                   <span>{review.moverName}</span>

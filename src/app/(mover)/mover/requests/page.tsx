@@ -123,6 +123,12 @@ export default function MoverEstimateRequestPage() {
     [requests, hiddenRequestIds],
   );
   const totalCount = data?.pages[0]?.totalCount ?? 0;
+  // totalCount는 필터가 적용된 건수라, 빈 화면 문구는 필터 사용 여부로 나눈다
+  const hasActiveFilter =
+    designatedOnly ||
+    regionAvailableOnly ||
+    selectedServiceTypes.length > 0 ||
+    Boolean(query.keyword);
 
   const sentinelRef = useInfiniteScroll<HTMLDivElement>({
     onIntersect: () => fetchNextPage(),
@@ -261,9 +267,9 @@ export default function MoverEstimateRequestPage() {
                 priority
               />
               <p className="text-lg-regular text-gray-400 desktop:text-xl-regular">
-                {totalCount === 0
-                  ? '아직 받은 요청이 없어요!'
-                  : '조건에 맞는 요청이 없어요.'}
+                {hasActiveFilter
+                  ? '조건에 맞는 요청이 없어요.'
+                  : '아직 받은 요청이 없어요!'}
               </p>
             </div>
           )}

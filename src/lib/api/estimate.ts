@@ -70,6 +70,8 @@ export async function acceptEstimate(
 @ GET /estimate-requests/received - 기사님이 받은 요청 목록
 - serviceTypes/regions는 콤마로 나열해서 보낸다 (백엔드가 콤마·반복 모두 지원하지만 콤마로 통일)
 - keyword가 빈 문자열이면 아예 보내지 않는다 (백엔드는 빈 문자열도 "검색 안 함"으로 처리하지만 굳이 보낼 필요 없음)
+- isDesignated/isServiceArea는 'true'/'false' 문자열로 보내고, undefined면 생략한다
+- "서비스 가능 지역" 매칭은 isServiceArea=true만 보내면 서버가 내 프로필 기준으로 처리한다 (regions로 프로필 지역을 보낼 필요 없음)
 */
 export async function getReceivedRequests(
   query: ReceivedRequestQuery = {},

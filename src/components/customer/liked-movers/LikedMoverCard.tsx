@@ -4,8 +4,8 @@ import type { ServiceType } from '@/types/serviceType';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import IcDriverMark from '@/assets/icons/ic_driver.png';
 import IcLike from '@/assets/icons/ic_like.svg';
-import IcDriverMark from '@/assets/icons/ic_mover_badge.svg';
 import IcStar from '@/assets/icons/ic_star.svg';
 import ImgMoverCharacter from '@/assets/images/img_profile_example.png';
 
@@ -67,7 +67,12 @@ export default function LikedMoverCard({
   const driverName = (
     <div className="flex items-center gap-[4px]">
       <span className="relative flex h-[23px] w-[20px] shrink-0 items-center justify-center">
-        <IcDriverMark aria-hidden="true" className="h-[23px] w-[20px] " />
+        <Image
+          src={IcDriverMark}
+          alt=""
+          aria-hidden
+          className="h-[23px] w-[20px]"
+        />
       </span>
       <p className="text-md-semibold text-black-300 tablet:text-lg-semibold">
         {mover.name}

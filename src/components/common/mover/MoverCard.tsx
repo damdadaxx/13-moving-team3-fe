@@ -4,9 +4,9 @@ import type { MoverListItem } from '@/types/mover';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import IcMoverBadge from '@/assets/icons/ic_driver.png';
 import IcLikeActive from '@/assets/icons/ic_like_active.svg';
 import IcLikeInactive from '@/assets/icons/ic_like_inactive.svg';
-import IcMoverBadge from '@/assets/icons/ic_mover_badge.svg';
 import IcStarActive from '@/assets/icons/ic_star_active.svg';
 import ImgProfileDefault from '@/assets/images/img_profile_default.png';
 
@@ -171,7 +171,12 @@ export default function MoverCard({ mover, variant = 'list' }: MoverCardProps) {
             />
             <div className="flex min-w-0 flex-1 flex-col gap-1">
               <div className="flex items-center gap-1">
-                <IcMoverBadge aria-hidden className="h-[18px] w-4 shrink-0" />
+                <Image
+                  src={IcMoverBadge}
+                  alt=""
+                  aria-hidden
+                  className="h-[18px] w-4 shrink-0"
+                />
                 <p className="truncate text-md-semibold text-black-300">
                   {mover.nickname} 기사님
                 </p>
@@ -259,7 +264,12 @@ export default function MoverCard({ mover, variant = 'list' }: MoverCardProps) {
         )}
       >
         <div className="flex min-w-0 items-center gap-1">
-          <IcMoverBadge aria-hidden className="h-[23px] w-5 shrink-0" />
+          <Image
+            src={IcMoverBadge}
+            alt=""
+            aria-hidden
+            className="h-[23px] w-5 shrink-0"
+          />
           <p
             className={cn(
               'truncate text-md-semibold text-black-300',

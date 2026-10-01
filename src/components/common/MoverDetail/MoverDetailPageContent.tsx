@@ -9,8 +9,8 @@ import MoverActionButtonGroup from '@/components/common/MoverDetail/MoverDetailB
 import MoverDetailTopSection from '@/components/common/MoverDetail/MoverDetailTopSection';
 import MoverInfo from '@/components/common/MoverDetail/MoverInfo';
 import MoverLikeIconButton from '@/components/common/MoverDetail/MoverLikeIconButton';
-import MoverReviewList from '@/components/common/MoverDetail/MoverReviewList';
 import ShareMoverInfo from '@/components/common/MoverDetail/ShareMoverInfo';
+import MoverReviewList from '@/components/common/MoverReview/MoverReviewList';
 import EmptyState from '@/components/ui/EmptyState';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
@@ -34,12 +34,20 @@ export default function MoverDetailPageContent({
   }
 
   return (
-    <main className={cn('bg-gray-50 pb-[28px]', 'desktop:pb-[126px]')}>
+    <main className={cn('bg-gray-50')}>
       {/* 상단 섹션 */}
-      <MoverDetailTopSection imageUrl={mover.imgUrl} />
+      <MoverDetailTopSection
+        imageUrl={mover.imgUrl}
+        nickname={mover.nickname}
+      />
 
       {/* 정보 섹션 */}
-      <section className={cn('px-[20px]', 'tablet:px-[72px]')}>
+      <section
+        className={cn(
+          'px-[20px] pb-[134px]',
+          'tablet:pb-[150px] tablet:px-[72px]',
+        )}
+      >
         <div
           className={cn(
             'desktop:flex desktop:gap-[140px] max-w-[1200px] mx-auto',
@@ -80,20 +88,26 @@ export default function MoverDetailPageContent({
           {/* 모바일, 테스크탑 버튼 그룹 섹션 */}
           <section
             className={cn(
-              'flex items-center gap-[8px] mt-[53px]',
-              'tablet:mt-[72px]',
+              'fixed bottom-0 left-0 right-0 px-[20px] py-[28px] bg-gray-50 border-t border-line-200',
+              'tablet:px-[72px]',
               'desktop:hidden',
             )}
           >
-            <MoverLikeIconButton
-              moverId={mover.id}
-              likeCount={mover.likeCount}
-            />
-            <DesignatedEstimateRequestButton
-              moverId={mover.id}
-              size="sm"
-              className="flex-1"
-            />
+            <div
+              className={cn(
+                'flex items-center gap-[8px] max-w-[1200px] mx-auto',
+              )}
+            >
+              <MoverLikeIconButton
+                moverId={mover.id}
+                likeCount={mover.likeCount}
+              />
+              <DesignatedEstimateRequestButton
+                moverId={mover.id}
+                size="sm"
+                className="flex-1"
+              />
+            </div>
           </section>
         </div>
       </section>

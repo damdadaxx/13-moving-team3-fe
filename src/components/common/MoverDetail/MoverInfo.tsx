@@ -2,15 +2,14 @@
 
 import type { MoverListItem } from '@/types/mover';
 
-import IcMoverBadge from '@/assets/icons/ic_mover_badge.svg';
-
 import { cn } from '@/utils/cn';
 
-import MoverReviewInfo from '@/components/common/MoverDetail/MoverReviewInfo';
-import ServiceRegionList from '@/components/common/MoverDetail/ServiceRegionList';
-import ServiceTypeList from '@/components/common/MoverDetail/ServiceTypeList';
-import ServiceTypeTagList from '@/components/common/MoverDetail/ServiceTypeTagList';
 import ShareButtonGroup from '@/components/common/MoverDetail/ShareButtonGroup';
+import MoverNickname from '@/components/common/MoverProfile/MoverNickname';
+import MoverReviewInfo from '@/components/common/MoverReview/MoverReviewInfo';
+import ServiceRegionList from '@/components/common/ServiceRegion/ServiceRegionList';
+import ServiceTypeList from '@/components/common/ServiceType/ServiceTypeList';
+import ServiceTypeTagList from '@/components/common/ServiceType/ServiceTypeTagList';
 
 interface MoverInfoProps {
   className?: string;
@@ -25,16 +24,14 @@ export default function MoverInfo({ className, mover }: MoverInfoProps) {
         {/* 서비스 타입 태그 */}
         <ServiceTypeTagList serviceTypes={mover.serviceTypes} />
 
-        <div>
-          <h1
-            className={cn(
-              'mb-[16px] text-2lg-semibold text-black-300',
-              'tablet:mb-[20px] tablet:text-2xl-semibold',
-            )}
-          >
-            {mover.shortIntro}
-          </h1>
-        </div>
+        <h1
+          className={cn(
+            'mb-[16px] text-2lg-semibold text-black-300',
+            'tablet:mb-[20px] tablet:text-2xl-semibold',
+          )}
+        >
+          {mover.shortIntro}
+        </h1>
 
         <div
           className={cn(
@@ -42,17 +39,8 @@ export default function MoverInfo({ className, mover }: MoverInfoProps) {
             'tablet:mb-[20px]',
           )}
         >
-          <div className={cn('flex items-center gap-[4px]')}>
-            <IcMoverBadge className="h-[20px] w-[23px]" />
-            <p
-              className={cn(
-                'text-lg-semibold text-black-300',
-                'tablet:text-2lg-semibold',
-              )}
-            >
-              {mover.nickname}
-            </p>
-          </div>
+          {/* 기사님 닉네임 */}
+          <MoverNickname nickname={mover.nickname} />
 
           {/* 찜하기 */}
           <ShareButtonGroup moverId={mover.id} likeCount={mover.likeCount} />
@@ -64,7 +52,7 @@ export default function MoverInfo({ className, mover }: MoverInfoProps) {
             'desktop:gap-[40px]',
           )}
         >
-          {/* 리뷰/경력 정보 */}
+          {/* 진행/리뷰/경력 정보 */}
           <MoverReviewInfo
             confirmedCount={mover.confirmedCount}
             averageRating={mover.averageRating}

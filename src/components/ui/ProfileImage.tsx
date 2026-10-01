@@ -6,9 +6,11 @@ import { cn } from '@/utils/cn';
 
 export default function ProfileImage({
   imageUrl,
+  alt = '',
   className,
 }: {
   imageUrl?: string;
+  alt?: string;
   className?: string;
 }) {
   return (
@@ -22,7 +24,7 @@ export default function ProfileImage({
     >
       <Image
         src={imageUrl || ImgDefaultProfile.src}
-        alt="기사님 상세"
+        alt={alt}
         fill
         sizes="(min-width: 1024px) 134px, (min-width: 744px) 100px, 64px"
         className={cn('object-cover')}

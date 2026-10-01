@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useWatch } from 'react-hook-form';
 
 import type { Role } from '@/types/role';
 
@@ -39,7 +40,7 @@ export default function SignupForm({ role }: SignupFormProps) {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     trigger,
     formState: { errors, isSubmitting, isValid },
   } = useSignupForm();
@@ -58,7 +59,8 @@ export default function SignupForm({ role }: SignupFormProps) {
   const confirmCodeMutation = useConfirmEmailVerificationMutation();
   const [code, setCode] = useState('');
   const [codeError, setCodeError] = useState('');
-  const emailValue = watch('email');
+  // React Compiler 에서는 watch() 가 리렌더를 일으키지 않아 useWatch 로 구독한다
+  const emailValue = useWatch({ control, name: 'email' });
   const [verification, setVerification] = useState<{
     email: string;
     challengeToken: string;

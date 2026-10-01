@@ -39,13 +39,17 @@ export const ENDPOINTS = {
     profile: api('/customer/profile'), // [POST/GET/PATCH] 로그인
   },
 
+  // --- EstimateRequest(견적 요청) ---
+  estimateRequest: {
+    create: api('/estimate-requests'), // [POST] 로그인 - 견적 요청
+    active: api('/estimate-requests/active'), // [GET] 로그인 - 진행 중인 견적 요청 + 받은 견적 목록(없으면 null)
+    received: api('/estimate-requests/received'), // [GET] 로그인(기사님) - 받은 요청 목록(커서 무한 스크롤)
+    designatedEstimate: (estimateRequestId: number | string) =>
+      api(`/estimate-requests/${estimateRequestId}/estimates`), // [POST] 로그인 - 지정 견적 요청(고객이 기사님 지정)
+  },
+
   // --- Estimate(견적) ---
   estimate: {
-    request: api('/estimate-requests'), // [POST] 로그인 - 견적 요청
-    activeRequest: api('/estimate-requests/active'), // [GET] 로그인 - 진행 중인 견적 요청 + 받은 견적 목록(없으면 null)
-    estimates: (estimateRequestId: number | string) =>
-      api(`/estimate-requests/${estimateRequestId}/estimates`), // [POST] 로그인 - 지정 견적 요청(고객이 기사님 지정)
-    received: api('/estimate-requests/received'), // [GET] 로그인(기사님) - 받은 요청 목록(커서 무한 스크롤)
     list: api('/estimates'), // [GET] 로그인 - 내 견적 목록(커서 무한 스크롤) / [POST] 로그인(기사님) - 견적 보내기(지정 없이)
     detail: (estimateId: number | string) => api(`/estimates/${estimateId}`), // [GET] 로그인 - 견적 상세
     update: (estimateId: number | string) => api(`/estimates/${estimateId}`), // [PATCH] 로그인 - 견적 상태 전환(발송/반려/확정)

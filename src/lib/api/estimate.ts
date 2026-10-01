@@ -29,7 +29,7 @@ import { ENDPOINTS } from '@/lib/api/endpoints';
 export async function createEstimateRequest(
   input: CreateEstimateRequestInput,
 ): Promise<EstimateRequest> {
-  return clientFetch<EstimateRequest>(ENDPOINTS.estimate.request, {
+  return clientFetch<EstimateRequest>(ENDPOINTS.estimateRequest.create, {
     method: 'POST',
     body: JSON.stringify(input),
   });
@@ -44,7 +44,7 @@ export async function createEstimateRequest(
 */
 export async function getActiveEstimateRequest(): Promise<ActiveEstimateRequest | null> {
   return clientFetch<ActiveEstimateRequest | null>(
-    ENDPOINTS.estimate.activeRequest,
+    ENDPOINTS.estimateRequest.active,
   );
 }
 
@@ -95,8 +95,8 @@ export async function getReceivedRequests(
 
   const queryString = params.toString();
   const url = queryString
-    ? `${ENDPOINTS.estimate.received}?${queryString}`
-    : ENDPOINTS.estimate.received;
+    ? `${ENDPOINTS.estimateRequest.received}?${queryString}`
+    : ENDPOINTS.estimateRequest.received;
 
   return clientFetch<ReceivedRequestListResponse>(url);
 }
@@ -169,13 +169,6 @@ export async function updateEstimateStatus(
   );
 }
 
-/* @ TODO: 활성 견적 요청 조회 함수 이름 통일
-- fetchActiveEstimateRequest는 지정 견적 쪽 호출을 위한 별칭이다
-- hooks/queries/estimates를 getActiveEstimateRequest로 바꾼 뒤 이 별칭을 제거한다
-- hooks/queries/estimate와 estimates 폴더·쿼리키도 하나로 합친다
-*/
-export const fetchActiveEstimateRequest = getActiveEstimateRequest;
-
 /*
 @ 지정 견적 요청 (POST /estimate-requests/{estimateRequestId}/estimates)
 - body: { moverId }
@@ -186,7 +179,7 @@ export function createDesignatedEstimate(
   moverId: string,
 ): Promise<DesignatedEstimate> {
   return clientFetch<DesignatedEstimate>(
-    ENDPOINTS.estimate.estimates(estimateRequestId),
+    ENDPOINTS.estimateRequest.designatedEstimate(estimateRequestId),
     {
       method: 'POST',
       body: JSON.stringify({ moverId }),

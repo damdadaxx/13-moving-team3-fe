@@ -79,10 +79,10 @@ export interface CreateReviewInput {
   content: string;
   rating: number;
 }
+
 /*
-@ 리뷰 도메인 타입
-- GET /reviews/me, POST /reviews 응답을 따른다
-- PendingReview는 카드/모달이 쓰는 화면 모델이다
+@ 작성 가능한 리뷰 화면 모델
+- GET /reviews/me?hasReview=false 응답을 카드/모달이 쓰기 쉽게 변환한다
 */
 export interface PendingReview {
   id: string;
@@ -96,4 +96,24 @@ export interface PendingReview {
   toRegion: string;
   moveDate: string;
   price: number;
+}
+
+/*
+@ 내가 작성한 리뷰 화면 모델
+- GET /reviews/me?hasReview=true 응답을 카드가 쓰기 쉽게 변환한다
+*/
+export interface CompletedReview {
+  id: string;
+  moverId: string;
+  moverName: string;
+  description: string;
+  imgUrl: string | null;
+  serviceType: ServiceType;
+  isDesignated: boolean;
+  fromRegion: string;
+  toRegion: string;
+  moveDate: string;
+  rating: number;
+  content: string;
+  createdAt: string;
 }

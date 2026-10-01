@@ -6,6 +6,7 @@ import { reviewKeys } from '@/hooks/queries/reviews/keys';
 
 export const MOVER_REVIEW_PAGE_SIZE = 5;
 export const PENDING_REVIEWS_PAGE_SIZE = 4;
+export const COMPLETED_REVIEWS_PAGE_SIZE = 3;
 
 /** @ 기사님 리뷰 목록 쿼리 */
 export function useMoverReviewsQuery(moverId: string, page: number) {
@@ -46,5 +47,24 @@ export function usePendingReviewsQuery(page: number) {
       }),
     placeholderData: keepPreviousData,
     meta: { name: '작성 가능한 리뷰 목록' },
+  });
+}
+
+/*
+@ 내가 작성한 리뷰 목록
+- GET /reviews/me?hasReview=true
+- 페이지를 넘겨도 이전 목록을 잠깐 보여 주려고 keepPreviousData를 쓴다
+*/
+export function useCompletedReviewsQuery(page: number) {
+  return useQuery({
+    queryKey: reviewKeys.completed(page, COMPLETED_REVIEWS_PAGE_SIZE),
+    queryFn: () =>
+      getMyReviews({
+        page,
+        pageSize: COMPLETED_REVIEWS_PAGE_SIZE,
+        hasReview: true,
+      }),
+    placeholderData: keepPreviousData,
+    meta: { name: '내가 작성한 리뷰 목록' },
   });
 }

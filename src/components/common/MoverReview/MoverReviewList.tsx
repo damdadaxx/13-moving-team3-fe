@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import type { ReviewSummary } from '@/types/review';
+import type { MoverReviewListItem } from '@/types/review';
 
 import { useMoverReviewsQuery } from '@/hooks/queries/reviews/queries';
 
@@ -36,7 +36,7 @@ export default function MoverReviewList({ moverId }: { moverId: string }) {
     setPage(totalPages);
   }
 
-  const reviews: ReviewSummary[] = data?.list ?? [];
+  const reviews: MoverReviewListItem[] = data?.list ?? [];
   const reviewCount = data?.reviewCount ?? 0;
   const distribution = toRatingDistribution(data?.ratingDistribution ?? []);
 
@@ -74,7 +74,7 @@ export default function MoverReviewList({ moverId }: { moverId: string }) {
               )}
             >
               <MoverReviewItem
-                nickname={formatMaskedReviewerName(review.customerName)}
+                name={formatMaskedReviewerName(review.user.name)}
                 createdAt={review.createdAt}
                 rating={review.rating}
                 content={review.content}

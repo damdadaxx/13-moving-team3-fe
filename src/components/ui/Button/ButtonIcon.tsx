@@ -27,7 +27,7 @@ const buttonIconVariants = cva(
         like: 'border border-line-200 bg-gray-50',
         clip: 'border border-line-200 bg-gray-50',
         kakao: 'bg-[#FAE100]',
-        facebook: 'bg-orange-400',
+        facebook: 'bg-[#0866FF]',
       },
       size: {
         sm: 'size-[40px] rounded-[8px]',

@@ -1,7 +1,7 @@
 import { cn } from '@/utils/cn';
 
-import ButtonLikeMover from '@/components/common/MoverDetail/ButtonLikeMover';
-import DesignatedEstimateRequestButton from '@/components/common/MoverDetail/DesignatedEstimateRequestButton';
+import DesignatedEstimateRequestButton from '@/components/common/Estimate/DesignatedEstimateRequestButton';
+import LikeButton from '@/components/common/MoverDetail/LikeButton';
 
 interface MoverActionButtonGroupProps {
   className?: string;
@@ -29,7 +29,7 @@ export default function MoverActionButtonGroup({
       </p>
       <div className="flex w-full flex-col gap-[16px]">
         <DesignatedEstimateRequestButton moverId={moverId} size="lg" />
-        <ButtonLikeMover moverId={moverId} likeCount={likeCount} />
+        <LikeButton variant="text" moverId={moverId} likeCount={likeCount} />
       </div>
     </div>
   );

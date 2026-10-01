@@ -14,11 +14,11 @@ import { ROUTES } from '@/lib/constants/routes';
 
 import { useAuth } from '@/hooks/auth/useAuth';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
-import { useMoverDetailQuery } from '@/hooks/queries/movers/queries';
+import { useMoverDetailQuery } from '@/hooks/queries/mover/queries';
 
 import { cn } from '@/utils/cn';
 
-import ShareButtonGroup from '@/components/common/MoverDetail/ShareButtonGroup';
+import LikeButton from '@/components/common/MoverDetail/LikeButton';
 import MoverNickname from '@/components/common/MoverProfile/MoverNickname';
 import MoverReviewInfo from '@/components/common/MoverReview/MoverReviewInfo';
 import MoverReviewList from '@/components/common/MoverReview/MoverReviewList';
@@ -181,7 +181,8 @@ export default function MoverMypageContent() {
                 {/* 기사님 닉네임 */}
                 <MoverNickname nickname={mover.nickname} />
                 {/* 찜하기 */}
-                <ShareButtonGroup
+                <LikeButton
+                  variant="count"
                   iconFirst={true}
                   readOnly={true}
                   moverId={mover.id}

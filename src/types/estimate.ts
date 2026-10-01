@@ -22,6 +22,24 @@ export type EstimateStatus =
   | 'NOT_SELECTED' // 다른 견적 확정으로 탈락
   | 'EXPIRED'; // 확정 없이 이사일 경과
 
+export const ESTIMATE_STATUS_TEXT: Record<EstimateStatus, string> = {
+  PROPOSED: '견적대기',
+  DESIGNATED: '지정견적',
+  REJECTED: '견적대기',
+  ACCEPTED: '확정견적',
+  NOT_SELECTED: '견적 미선택',
+  EXPIRED: '견적 만료',
+};
+
+export const ESTIMATE_STATUS_COLOR: Record<EstimateStatus, string> = {
+  PROPOSED: 'text-gray-300',
+  DESIGNATED: 'text-orange-400',
+  REJECTED: 'text-gray-300',
+  ACCEPTED: 'text-orange-400',
+  NOT_SELECTED: 'text-gray-300',
+  EXPIRED: 'text-gray-300',
+};
+
 /** POST /estimate-requests 요청 본문 (백엔드 createEstimateRequestSchema) */
 export interface CreateEstimateRequestInput {
   serviceType: ServiceType;
@@ -214,7 +232,8 @@ export interface CreateEstimateResponse {
 */
 export type UpdateEstimateStatusInput =
   | { status: 'PROPOSED'; price: number; comment: string }
-  | { status: 'REJECTED'; rejectReason: string };
+  | { status: 'REJECTED'; rejectReason: string }
+  | { status: 'ACCEPTED' };
 
 export interface UpdateEstimateStatusResponse {
   estimateId: string;
@@ -296,9 +315,30 @@ export interface EstimateListResponse {
 }
 
 /*
-@ GET /estimates/{estimateId} - 견적 상세 조회
-- 목록(GET /estimates)에는 없는 customer 정보가 여기에만 있다
+@ 견적 상세 (GET /estimates/{estimateId})
+- 견적서 화면(대기 중인 견적/받은 견적/기사님 확정견적 공용)에서 쓴다
+- canConfirm은 고객이 이 견적을 확정할 수 있는지, canRespond는 기사님이 발송/반려할 수 있는지를
+  백엔드가 상태(status)와 역할을 보고 판정해서 내려준다
 */
+export interface EstimateDetailMover {
+  moverId: string;
+  nickname: string;
+  imgUrl: string | null;
+  careerMonths: number;
+}
+
+export interface EstimateDetailRequest {
+  estimateRequestId: string;
+  serviceType: ServiceType;
+  moveDate: string;
+  departureZipCode: string;
+  departureAddress: string;
+  arrivalZipCode: string;
+  arrivalAddress: string;
+  requestedAt: string;
+  status: EstimateRequestStatus;
+}
+
 export interface EstimateDetail {
   estimateId: string;
   price: number | null;
@@ -307,13 +347,11 @@ export interface EstimateDetail {
   isDesignated: boolean;
   status: EstimateStatus;
   createdAt: string;
-  mover: MoverSummary;
-  customer: CustomerSummary;
-  estimateRequest: EstimateRequestInfo;
-  /** CUSTOMER 관점 - 본인 요청 + 요청 PENDING + 견적 PROPOSED일 때만 true */
-  canConfirm?: boolean;
-  /** MOVER 관점 - 본인 견적 + 요청 PENDING + 견적 DESIGNATED일 때만 true */
-  canRespond?: boolean;
+  mover: EstimateDetailMover;
+  customer: { name: string };
+  estimateRequest: EstimateDetailRequest;
+  canConfirm: boolean;
+  canRespond: boolean;
 }
 
 /*

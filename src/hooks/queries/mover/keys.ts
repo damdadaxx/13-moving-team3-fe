@@ -6,4 +6,6 @@ export const moverKeys = {
   list: (params: Omit<MoverListQuery, 'cursor'>) =>
     [...moverKeys.lists(), params] as const,
   liked: (size: number) => [...moverKeys.all, 'liked', size] as const,
+  detail: (id: string) =>
+    [...moverKeys.all, 'detail', id] as const /** 기사님 상세 */,
 };

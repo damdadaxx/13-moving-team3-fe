@@ -30,14 +30,25 @@ export interface ReviewSummary {
   content: string;
   createdAt: string;
   updatedAt: string;
-  customerName?: string;
+}
+
+/*
+@ 기사님 리뷰 작성자
+- GET /reviews/mover/{moverId} 의 list[].user
+*/
+export interface MoverReviewUser {
+  name: string;
+}
+
+export interface MoverReviewListItem extends ReviewSummary {
+  user: MoverReviewUser;
 }
 
 /*
 @ 기사님 리뷰 목록 (GET /reviews/mover/{moverId})
 */
 export interface MoverReviewListData {
-  list: ReviewSummary[];
+  list: MoverReviewListItem[];
   ratingDistribution: RatingDistributionItem[];
   ratingAvg: number;
   reviewCount: number;

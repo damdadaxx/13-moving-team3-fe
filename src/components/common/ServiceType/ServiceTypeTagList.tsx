@@ -1,11 +1,13 @@
 'use client';
 
+import { EstimateStatus } from '@/types/estimate';
 import type { ServiceType } from '@/types/serviceType';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
 import { cn } from '@/utils/cn';
 
+import EstimateStatusBadge from '@/components/common/Estimate/EstimateStatusBadge';
 import ServiceTypeTag from '@/components/ui/Tag/ServiceTypeTag';
 
 /**
@@ -14,21 +16,38 @@ import ServiceTypeTag from '@/components/ui/Tag/ServiceTypeTag';
  */
 export default function ServiceTypeTagList({
   serviceTypes,
+  estimateStatus,
+  className,
 }: {
   serviceTypes: ServiceType[];
+  estimateStatus?: EstimateStatus;
+  className?: string;
 }) {
   const currentBreakpoint = useBreakpointValue('sm', 'md', 'md');
 
   return (
-    <div className={cn('flex gap-[8px] mb-[8px]', 'tablet:mb-[12px]')}>
-      {serviceTypes.map((serviceType) => (
-        <ServiceTypeTag
-          key={serviceType}
-          variant="service"
-          serviceType={serviceType}
-          size={currentBreakpoint}
+    <div
+      className={cn(
+        estimateStatus ? 'flex justify-between items-center' : undefined,
+        className,
+      )}
+    >
+      <div className={cn('flex gap-[8px] flex-wrap')}>
+        {serviceTypes.map((serviceType) => (
+          <ServiceTypeTag
+            key={serviceType}
+            variant="service"
+            serviceType={serviceType}
+            size={currentBreakpoint}
+          />
+        ))}
+      </div>
+      {estimateStatus && (
+        <EstimateStatusBadge
+          status={estimateStatus}
+          className={cn('tablet:hidden')}
         />
-      ))}
+      )}
     </div>
   );
 }

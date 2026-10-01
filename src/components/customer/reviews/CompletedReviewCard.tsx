@@ -4,7 +4,7 @@ import type { CompletedReview } from '@/types/review';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-import IcDriverMark from '@/assets/icons/ic_mover_badge.svg';
+import IcDriverMark from '@/assets/icons/ic_driver.png';
 import ImgMoverCharacter from '@/assets/images/img_profile_example.png';
 
 import { cn } from '@/utils/cn';
@@ -111,7 +111,13 @@ export default function CompletedReviewCard({
           >
             <div className="flex min-w-0 flex-col items-start gap-[4px]">
               <span className="relative flex h-[18.2px] w-[16px] shrink-0 items-center justify-center">
-                <IcDriverMark aria-hidden="true" />
+                <Image
+                  src={IcDriverMark}
+                  alt=""
+                  aria-hidden="true"
+                  fill
+                  className="object-contain"
+                />
               </span>
               <p className="flex min-w-0 items-center gap-[4px] text-lg-semibold text-black-300 group-hover:underline">
                 <span className="min-w-0 break-all">{review.moverName}</span>
@@ -170,7 +176,13 @@ export default function CompletedReviewCard({
             <div className="flex w-full flex-col items-start">
               <div className="flex min-w-0 items-center gap-[6px]">
                 <span className="relative flex h-[18.2px] w-[16px] shrink-0 items-center justify-center">
-                  <IcDriverMark aria-hidden="true" />
+                  <Image
+                    src={IcDriverMark}
+                    alt=""
+                    aria-hidden="true"
+                    fill
+                    className="object-contain"
+                  />
                 </span>
                 <p className="flex min-w-0 items-center gap-[4px] text-2lg-bold text-black-300 group-hover:underline">
                   <span className="min-w-0 break-all">{review.moverName}</span>

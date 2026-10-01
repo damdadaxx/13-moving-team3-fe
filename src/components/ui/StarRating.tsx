@@ -33,7 +33,7 @@ export default function StarRating({
 
   return (
     <div
-      className={cn('inline-flex', className)}
+      className={cn('inline-flex h-[20px]', className)}
       aria-label={isReadOnly ? `${value}점` : undefined}
     >
       <Rating

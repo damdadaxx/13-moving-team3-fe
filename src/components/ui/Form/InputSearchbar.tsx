@@ -4,6 +4,7 @@
 import { useRef, useState } from 'react';
 
 import { cva, type VariantProps } from 'class-variance-authority';
+import { useTranslations } from 'next-intl';
 
 import IcSearchMd from '@/assets/icons/ic_search_md.svg';
 import IcSearchSm from '@/assets/icons/ic_search_sm.svg';
@@ -79,10 +80,11 @@ export default function InputSearchbar({
   onClear,
   onSearch,
   onKeyDown,
-  placeholder = '텍스트를 입력해 주세요.',
+  placeholder,
   ref,
   ...props
 }: InputSearchbarProps) {
+  const t = useTranslations('SearchBar');
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isTyping, setIsTyping] = useState(false);
 
@@ -179,7 +181,7 @@ export default function InputSearchbar({
       {onSearch ? (
         <button
           type="button"
-          aria-label="검색"
+          aria-label={t('search')}
           onClick={handleSearch}
           className={cn(
             'flex shrink-0 cursor-pointer',
@@ -201,7 +203,7 @@ export default function InputSearchbar({
       <input
         ref={setRefs}
         type="search"
-        placeholder={placeholder}
+        placeholder={placeholder ?? t('placeholder')}
         /* type=search가 브라우저 기본 X 버튼을 붙이는데 우리 ⓧ와 겹쳐서 지운다 */
         className="order-2 min-w-0 flex-1 bg-transparent text-black-400 outline-none placeholder:text-gray-400 [&::-webkit-search-cancel-button]:appearance-none"
         onKeyDown={(event) => {
@@ -226,7 +228,7 @@ export default function InputSearchbar({
       {isTyping && (
         <button
           type="button"
-          aria-label="검색어 지우기"
+          aria-label={t('clear')}
           /* mousedown에서 input이 포커스를 잃으면 캐럿이 튀므로 막아둔다 */
           onMouseDown={(event) => event.preventDefault()}
           onClick={handleClear}

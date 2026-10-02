@@ -1,6 +1,7 @@
 'use client';
 
 // 히어로 섹션 컴포넌트
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import ImgCar from '@/assets/images/landing/img_car.svg';
@@ -14,6 +15,7 @@ import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { cn } from '@/utils/cn';
 
 export default function Hero() {
+  const t = useTranslations('Landing');
   /*
   @ 히어로 배경 이미지
   - 마운트 전에는 mobile 이미지를 보여주고, 마운트 후 실제 브레이크포인트 이미지로 바꾼다.
@@ -65,7 +67,7 @@ export default function Hero() {
               'tablet:text-3xl-bold',
             )}
           >
-            이사업체, 어떻게 고르세요?
+            {t('heroTitle')}
           </h1>
           <p
             className={cn(
@@ -73,8 +75,7 @@ export default function Hero() {
               'tablet:text-2lg-regular',
             )}
           >
-            무빙은 여러 견적을 한눈에 비교해 <br /> 이사업체 선정 과정을
-            간편하게 바꿔드려요
+            {t('heroDescLine1')} <br /> {t('heroDescLine2')}
           </p>
         </div>
       </div>

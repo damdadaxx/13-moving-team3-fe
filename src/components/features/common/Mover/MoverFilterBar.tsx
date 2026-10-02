@@ -3,13 +3,9 @@
 
 import type { MoverListSortBy } from '@/types/mover';
 import type { Region } from '@/types/region';
-import type { ServiceType } from '@/types/serviceType';
-
-import {
-  MOVER_SORT_LABEL,
-  REGION_LABEL,
-  SERVICE_TYPE_LABEL,
-} from '@/lib/constants/mover';
+import { REGIONS } from '@/types/region';
+import { SERVICE_TYPES, type ServiceType } from '@/types/serviceType';
+import { useTranslations } from 'next-intl';
 
 import { cn } from '@/utils/cn';
 
@@ -19,23 +15,13 @@ import Sort, { type SortOption } from '@/components/ui/Sort';
 /** '전체'는 필터를 해제하는 값. 선택하면 undefined로 바꿔 트리거에 placeholder(지역/서비스)가 보이게 한다 */
 const ALL = 'ALL';
 
-const REGION_OPTIONS: DropdownOption<Region | typeof ALL>[] = [
-  { value: ALL, label: '전체' },
-  ...(Object.entries(REGION_LABEL) as [Region, string][]).map(
-    ([value, label]) => ({ value, label }),
-  ),
+/** 정렬 옵션 표시 순서 (라벨은 messages > MoverSort) */
+const SORT_VALUES: MoverListSortBy[] = [
+  'reviewCount',
+  'rating',
+  'career',
+  'confirmedCount',
 ];
-
-const SERVICE_OPTIONS: DropdownOption<ServiceType | typeof ALL>[] = [
-  { value: ALL, label: '전체' },
-  ...(Object.entries(SERVICE_TYPE_LABEL) as [ServiceType, string][]).map(
-    ([value, label]) => ({ value, label }),
-  ),
-];
-
-const SORT_OPTIONS: SortOption<MoverListSortBy>[] = (
-  Object.entries(MOVER_SORT_LABEL) as [MoverListSortBy, string][]
-).map(([value, label]) => ({ value, label }));
 
 interface MoverFilterBarProps {
   region?: Region;
@@ -64,24 +50,42 @@ export default function MoverFilterBar({
   onReset,
   className,
 }: MoverFilterBarProps) {
+  const t = useTranslations('MoverFind');
+  const tRegion = useTranslations('Region');
+  const tServiceType = useTranslations('ServiceType');
+  const tSort = useTranslations('MoverSort');
+
+  /* 옵션 순서는 REGIONS / SERVICE_TYPES (백엔드 enum = Figma 표시 순서), 라벨만 현재 언어로 바꾼다 */
+  const regionOptions: DropdownOption<Region | typeof ALL>[] = [
+    { value: ALL, label: t('all') },
+    ...REGIONS.map((value) => ({ value, label: tRegion(value) })),
+  ];
+  const serviceOptions: DropdownOption<ServiceType | typeof ALL>[] = [
+    { value: ALL, label: t('all') },
+    ...SERVICE_TYPES.map((value) => ({ value, label: tServiceType(value) })),
+  ];
+  const sortOptions: SortOption<MoverListSortBy>[] = SORT_VALUES.map(
+    (value) => ({ value, label: tSort(value) }),
+  );
+
   return (
     <div className={cn('flex items-center justify-between gap-3', className)}>
       {/* 드롭다운 간격: 모바일 8px / 태블릿·데스크톱 12px */}
       <div className={cn('flex items-center gap-2', 'tablet:gap-3')}>
         <Dropdown
           columns={2}
-          options={REGION_OPTIONS}
+          options={regionOptions}
           value={region}
-          placeholder="지역"
+          placeholder={t('regionPlaceholder')}
           onChange={(value) =>
             onRegionChange(value === ALL ? undefined : value)
           }
           className="desktop:w-40"
         />
         <Dropdown
-          options={SERVICE_OPTIONS}
+          options={serviceOptions}
           value={serviceType}
-          placeholder="서비스"
+          placeholder={t('servicePlaceholder')}
           onChange={(value) =>
             onServiceTypeChange(value === ALL ? undefined : value)
           }
@@ -96,10 +100,10 @@ export default function MoverFilterBar({
             'desktop:block',
           )}
         >
-          초기화
+          {t('reset')}
         </button>
       </div>
-      <Sort options={SORT_OPTIONS} value={sortBy} onChange={onSortChange} />
+      <Sort options={sortOptions} value={sortBy} onChange={onSortChange} />
     </div>
   );
 }

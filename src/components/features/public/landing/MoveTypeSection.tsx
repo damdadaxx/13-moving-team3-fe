@@ -1,4 +1,5 @@
 // 이사 유형 선택 섹션 컴포넌트
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import ImgHowToChoose from '@/assets/images/landing/img_how_to_choose.jpg';
@@ -7,6 +8,8 @@ import ImgHowToChooseMobile from '@/assets/images/landing/img_how_to_choose_m.jp
 import { cn } from '@/utils/cn';
 
 export default function MoveTypeSection() {
+  const t = useTranslations('Landing');
+
   return (
     <section
       className={cn(
@@ -22,8 +25,8 @@ export default function MoveTypeSection() {
           'desktop:m-0 desktop:pl-[108px] desktop:text-[clamp(24px,1.667vw,32px)]',
         )}
       >
-        번거로운 선정과정, <br />
-        이사 유형부터 선택해요
+        {t('moveTypeLine1')} <br />
+        {t('moveTypeLine2')}
       </h2>
       {/* TODO: 이미지 밀림 현상 수정 */}
       <div>

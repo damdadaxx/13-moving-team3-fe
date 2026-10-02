@@ -60,5 +60,75 @@
   "GlobalError": {
     "message": "The app ran into an error!",
     "reload": "Reload"
+  },
+  "Landing": {
+    "heroTitle": "How do you choose a moving company?",
+    "heroDescLine1": "Moving lets you compare multiple estimates at a glance",
+    "heroDescLine2": "and makes choosing a mover simple",
+    "moveTypeLine1": "Skip the hassle,",
+    "moveTypeLine2": "start by choosing your move type",
+    "compareLine1": "Compare estimates from",
+    "compareLine2": "multiple movers at a glance",
+    "requestLine1": "Request the moving service you need",
+    "requestLine2": "and receive estimates",
+    "requestImageAlt": "Moving estimate request"
+  },
+  "MoverFind": {
+    "title": "Find Movers",
+    "searchLabel": "Search movers by nickname",
+    "likedTitle": "Liked Movers",
+    "empty": "No movers match your filters.",
+    "regionPlaceholder": "Region",
+    "servicePlaceholder": "Service",
+    "all": "All",
+    "reset": "Reset"
+  },
+  "MoverCard": {
+    "nickname": "{nickname}",
+    "profileAlt": "{nickname}'s profile",
+    "rating": "Rating",
+    "career": "Experience",
+    "careerYears": "{count, plural, one {# yr} other {# yrs}}",
+    "careerMonths": "{count, plural, one {# mo} other {# mos}}",
+    "confirmedCount": "{count}",
+    "confirmed": "confirmed",
+    "liked": "Liked",
+    "like": "Like"
+  },
+  "MoverSort": {
+    "reviewCount": "Most Reviews",
+    "rating": "Highest Rated",
+    "career": "Most Experienced",
+    "confirmedCount": "Most Confirmed"
+  },
+  "ServiceType": {
+    "SMALL_MOVE": "Small Move",
+    "HOME_MOVE": "Home Move",
+    "OFFICE_MOVE": "Office Move",
+    "DESIGNATED_ESTIMATE": "Designated Request"
+  },
+  "Region": {
+    "SEOUL": "Seoul",
+    "GYEONGGI": "Gyeonggi",
+    "INCHEON": "Incheon",
+    "GANGWON": "Gangwon",
+    "CHUNGBUK": "Chungbuk",
+    "CHUNGNAM": "Chungnam",
+    "SEJONG": "Sejong",
+    "DAEJEON": "Daejeon",
+    "JEONBUK": "Jeonbuk",
+    "JEONNAM": "Jeonnam",
+    "GWANGJU": "Gwangju",
+    "GYEONGBUK": "Gyeongbuk",
+    "GYEONGNAM": "Gyeongnam",
+    "DAEGU": "Daegu",
+    "ULSAN": "Ulsan",
+    "BUSAN": "Busan",
+    "JEJU": "Jeju"
+  },
+  "SearchBar": {
+    "placeholder": "Enter text",
+    "search": "Search",
+    "clear": "Clear search"
   }
 }

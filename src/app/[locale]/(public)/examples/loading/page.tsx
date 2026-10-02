@@ -3,7 +3,7 @@
 
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 import { Skeleton } from '@/components/ui/Skeleton';

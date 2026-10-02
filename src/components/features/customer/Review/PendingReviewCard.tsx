@@ -1,8 +1,8 @@
 'use client';
 
+import { useRouter } from '@/i18n/navigation';
 import type { PendingReview } from '@/types/review';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 
 import IcDriverMark from '@/assets/icons/ic_driver.png';
 import ImgMoverCharacter from '@/assets/images/img_profile_example.png';

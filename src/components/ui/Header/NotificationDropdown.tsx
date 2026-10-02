@@ -3,9 +3,9 @@
 
 import { useRef } from 'react';
 
+import { useRouter } from '@/i18n/navigation';
 import type { Notification } from '@/types/notification';
 import { cva } from 'class-variance-authority';
-import { useRouter } from 'next/navigation';
 
 import IcAlarmClose from '@/assets/icons/ic_alarm_close.svg';
 import IcMarkAllRead from '@/assets/icons/ic_mark_all_read.svg';

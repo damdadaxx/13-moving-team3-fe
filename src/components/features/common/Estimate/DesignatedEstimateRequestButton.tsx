@@ -1,8 +1,8 @@
 // @ 지정 견적 요청 버튼 컴포넌트
 'use client';
 
+import { usePathname, useRouter } from '@/i18n/navigation';
 import type { EstimateRequestDetail, EstimateSummary } from '@/types/estimate';
-import { usePathname, useRouter } from 'next/navigation';
 
 import { HttpError } from '@/lib/api/errors';
 import { getGuestSigninPath, ROUTES } from '@/lib/constants/routes';

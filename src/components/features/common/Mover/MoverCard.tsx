@@ -1,8 +1,8 @@
 // 기사님 카드
 // Figma: Card-list/기사님 찾기 (size=md 모바일 / 태블릿·데스크톱 큰 카드 / size=sm 찜한 기사님)
+import { Link } from '@/i18n/navigation';
 import type { MoverListItem } from '@/types/mover';
 import Image from 'next/image';
-import Link from 'next/link';
 
 import IcMoverBadge from '@/assets/icons/ic_driver.png';
 import IcLikeActive from '@/assets/icons/ic_like_active.svg';

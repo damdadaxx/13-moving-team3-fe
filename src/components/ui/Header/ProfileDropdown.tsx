@@ -1,8 +1,8 @@
 // 헤더 프로필 드롭다운
+import { Link } from '@/i18n/navigation';
 import type { AuthUser } from '@/types/auth';
 import type { Role } from '@/types/role';
 import { cva } from 'class-variance-authority';
-import Link from 'next/link';
 
 import { ROUTES } from '@/lib/constants/routes';
 

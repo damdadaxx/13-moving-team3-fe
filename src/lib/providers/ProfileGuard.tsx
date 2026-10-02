@@ -2,8 +2,8 @@
 
 import { useEffect } from 'react';
 
+import { usePathname, useRouter } from '@/i18n/navigation';
 import { useQueryClient, type UseQueryResult } from '@tanstack/react-query';
-import { usePathname, useRouter } from 'next/navigation';
 
 import { HttpError } from '@/lib/api/errors';
 

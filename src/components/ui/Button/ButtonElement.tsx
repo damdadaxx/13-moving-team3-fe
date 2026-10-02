@@ -3,7 +3,7 @@
 
 import { TailSpin } from 'react-loader-spinner';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 
 import { cn } from '@/utils/cn';
 

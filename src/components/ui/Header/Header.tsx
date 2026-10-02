@@ -3,9 +3,8 @@
 // 공용 헤더 컴포넌트
 import { useCallback, useRef, useState } from 'react';
 
+import { Link, usePathname } from '@/i18n/navigation';
 import type { AuthVariant } from '@/types/role';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
 import ImgLogo from '@/assets/images/img_logo.svg';
 import ImgLogoMobile from '@/assets/images/img_logo_m.svg';

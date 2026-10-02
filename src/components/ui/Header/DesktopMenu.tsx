@@ -1,9 +1,8 @@
 'use client';
 
 // 헤더 Desktop 메뉴
+import { Link, usePathname } from '@/i18n/navigation';
 import { cva } from 'class-variance-authority';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
 import { ROUTES } from '@/lib/constants/routes';
 

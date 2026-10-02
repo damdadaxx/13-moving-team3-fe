@@ -4,9 +4,9 @@
 
 import { useMemo } from 'react';
 
+import { usePathname, useRouter } from '@/i18n/navigation';
 import type { MoverAccountFormValues } from '@/types/moverAccount';
 import { useQueryClient } from '@tanstack/react-query';
-import { usePathname, useRouter } from 'next/navigation';
 
 import { isUnauthorizedHttpError } from '@/lib/api/errors';
 import { ROUTES } from '@/lib/constants/routes';

@@ -3,8 +3,8 @@
 // 헤더 모바일 슬라이드 메뉴
 import { useEffect, type Ref } from 'react';
 
+import { Link } from '@/i18n/navigation';
 import { cva } from 'class-variance-authority';
-import Link from 'next/link';
 
 import IcMenuClose from '@/assets/icons/ic_menu_close.svg';
 

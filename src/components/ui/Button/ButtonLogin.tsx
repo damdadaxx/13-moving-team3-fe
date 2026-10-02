@@ -1,5 +1,5 @@
 // 헤더 로그인 버튼 (링크)
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 
 import { getGuestSigninPath } from '@/lib/constants/routes';
 

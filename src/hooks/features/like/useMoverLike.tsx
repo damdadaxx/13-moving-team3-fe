@@ -1,7 +1,7 @@
 'use client';
 
+import { usePathname, useRouter } from '@/i18n/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { usePathname, useRouter } from 'next/navigation';
 
 import { HttpError } from '@/lib/api/errors';
 import { getGuestSigninPath, ROUTES } from '@/lib/constants/routes';

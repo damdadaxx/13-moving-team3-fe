@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect } from 'react';
 
+import { usePathname, useRouter } from '@/i18n/navigation';
 import { CompletedReview, MyReviewEstimateItem } from '@/types/review';
 import Image from 'next/image';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 import ImgEmpty from '@/assets/images/img_empty.png';
 

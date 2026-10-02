@@ -60,5 +60,75 @@
   "GlobalError": {
     "message": "アプリでエラーが発生しました！",
     "reload": "再読み込み"
+  },
+  "Landing": {
+    "heroTitle": "引越し業者、どうやって選びますか？",
+    "heroDescLine1": "Movingなら複数の見積もりをひと目で比較",
+    "heroDescLine2": "引越し業者選びをもっと簡単に",
+    "moveTypeLine1": "面倒な業者選びは、",
+    "moveTypeLine2": "引越しタイプを選ぶところから",
+    "compareLine1": "業者の見積もりを",
+    "compareLine2": "ひと目で比較・選択",
+    "requestLine1": "引越しサービスを依頼して",
+    "requestLine2": "見積もりを受け取ろう",
+    "requestImageAlt": "引越し見積もり依頼のイメージ"
+  },
+  "MoverFind": {
+    "title": "引越し業者を探す",
+    "searchLabel": "業者のニックネームで検索",
+    "likedTitle": "お気に入りの業者",
+    "empty": "条件に合う業者がいません。",
+    "regionPlaceholder": "地域",
+    "servicePlaceholder": "サービス",
+    "all": "すべて",
+    "reset": "リセット"
+  },
+  "MoverCard": {
+    "nickname": "{nickname}",
+    "profileAlt": "{nickname}のプロフィール",
+    "rating": "評価",
+    "career": "経歴",
+    "careerYears": "{count}年",
+    "careerMonths": "{count}ヶ月",
+    "confirmedCount": "{count}件",
+    "confirmed": "確定",
+    "liked": "お気に入り済み",
+    "like": "お気に入り"
+  },
+  "MoverSort": {
+    "reviewCount": "レビューが多い順",
+    "rating": "評価が高い順",
+    "career": "経歴が長い順",
+    "confirmedCount": "確定が多い順"
+  },
+  "ServiceType": {
+    "SMALL_MOVE": "小規模引越し",
+    "HOME_MOVE": "家庭の引越し",
+    "OFFICE_MOVE": "オフィス引越し",
+    "DESIGNATED_ESTIMATE": "指定見積もり依頼"
+  },
+  "Region": {
+    "SEOUL": "ソウル",
+    "GYEONGGI": "京畿",
+    "INCHEON": "仁川",
+    "GANGWON": "江原",
+    "CHUNGBUK": "忠北",
+    "CHUNGNAM": "忠南",
+    "SEJONG": "世宗",
+    "DAEJEON": "大田",
+    "JEONBUK": "全北",
+    "JEONNAM": "全南",
+    "GWANGJU": "光州",
+    "GYEONGBUK": "慶北",
+    "GYEONGNAM": "慶南",
+    "DAEGU": "大邱",
+    "ULSAN": "蔚山",
+    "BUSAN": "釜山",
+    "JEJU": "済州"
+  },
+  "SearchBar": {
+    "placeholder": "テキストを入力してください",
+    "search": "検索",
+    "clear": "検索語を消去"
   }
 }

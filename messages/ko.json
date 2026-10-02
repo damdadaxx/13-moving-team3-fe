@@ -60,5 +60,75 @@
   "GlobalError": {
     "message": "앱에 오류가 발생했어요!",
     "reload": "새로고침"
+  },
+  "Landing": {
+    "heroTitle": "이사업체, 어떻게 고르세요?",
+    "heroDescLine1": "무빙은 여러 견적을 한눈에 비교해",
+    "heroDescLine2": "이사업체 선정 과정을 간편하게 바꿔드려요",
+    "moveTypeLine1": "번거로운 선정과정,",
+    "moveTypeLine2": "이사 유형부터 선택해요",
+    "compareLine1": "여러 업체의 견적을",
+    "compareLine2": "한눈에 비교하고 선택해요",
+    "requestLine1": "원하는 이사 서비스를 요청하고",
+    "requestLine2": "견적을 받아보세요",
+    "requestImageAlt": "이사 견적 요청 이미지"
+  },
+  "MoverFind": {
+    "title": "기사님 찾기",
+    "searchLabel": "기사님 별명 검색",
+    "likedTitle": "찜한 기사님",
+    "empty": "조건에 맞는 기사님이 없어요.",
+    "regionPlaceholder": "지역",
+    "servicePlaceholder": "서비스",
+    "all": "전체",
+    "reset": "초기화"
+  },
+  "MoverCard": {
+    "nickname": "{nickname} 기사님",
+    "profileAlt": "{nickname} 기사님 프로필",
+    "rating": "평점",
+    "career": "경력",
+    "careerYears": "{count}년",
+    "careerMonths": "{count}개월",
+    "confirmedCount": "{count}건",
+    "confirmed": "확정",
+    "liked": "찜함",
+    "like": "찜"
+  },
+  "MoverSort": {
+    "reviewCount": "리뷰 많은순",
+    "rating": "평점 높은순",
+    "career": "경력 높은순",
+    "confirmedCount": "확정 많은순"
+  },
+  "ServiceType": {
+    "SMALL_MOVE": "소형이사",
+    "HOME_MOVE": "가정이사",
+    "OFFICE_MOVE": "사무실이사",
+    "DESIGNATED_ESTIMATE": "지정 견적 요청"
+  },
+  "Region": {
+    "SEOUL": "서울",
+    "GYEONGGI": "경기",
+    "INCHEON": "인천",
+    "GANGWON": "강원",
+    "CHUNGBUK": "충북",
+    "CHUNGNAM": "충남",
+    "SEJONG": "세종",
+    "DAEJEON": "대전",
+    "JEONBUK": "전북",
+    "JEONNAM": "전남",
+    "GWANGJU": "광주",
+    "GYEONGBUK": "경북",
+    "GYEONGNAM": "경남",
+    "DAEGU": "대구",
+    "ULSAN": "울산",
+    "BUSAN": "부산",
+    "JEJU": "제주"
+  },
+  "SearchBar": {
+    "placeholder": "텍스트를 입력해 주세요.",
+    "search": "검색",
+    "clear": "검색어 지우기"
   }
 }

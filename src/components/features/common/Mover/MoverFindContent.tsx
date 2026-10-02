@@ -6,6 +6,7 @@ import { useState } from 'react';
 import type { MoverListSortBy } from '@/types/mover';
 import type { Region } from '@/types/region';
 import type { ServiceType } from '@/types/serviceType';
+import { useTranslations } from 'next-intl';
 
 import { LIKED_MOVER_ID_PAGE_SIZE } from '@/lib/constants/mover';
 
@@ -31,6 +32,7 @@ import InputSearchbar from '@/components/ui/Form/InputSearchbar';
   태블릿 아트보드는 카드 4장에 맞춰 잘려 있어(10px) 모바일 값을 따른다
 */
 export default function MoverFindContent() {
+  const t = useTranslations('MoverFind');
   const [keyword, setKeyword] = useState('');
   const [region, setRegion] = useState<Region>();
   const [serviceType, setServiceType] = useState<ServiceType>();
@@ -72,7 +74,7 @@ export default function MoverFindContent() {
             'desktop:not-sr-only desktop:block desktop:px-2 desktop:py-8 desktop:text-2xl-semibold desktop:text-black-500',
           )}
         >
-          기사님 찾기
+          {t('title')}
         </h1>
 
         <div
@@ -86,8 +88,7 @@ export default function MoverFindContent() {
           <InputSearchbar
             value={keyword}
             onChange={(event) => setKeyword(event.target.value)}
-            placeholder="텍스트를 입력해 주세요."
-            aria-label="기사님 별명 검색"
+            aria-label={t('searchLabel')}
             className={cn(
               'mt-[16px] mb-1.5',
               'tablet:mt-[24px] tablet:mb-2.5',

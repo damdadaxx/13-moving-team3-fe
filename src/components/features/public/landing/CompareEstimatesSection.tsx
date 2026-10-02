@@ -1,4 +1,5 @@
 // 업체 견적 비교 섹션 컴포넌트
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import ImgBuilding from '@/assets/images/landing/img_building.svg';
@@ -22,6 +23,8 @@ function EstimateCard({ className }: EstimateCardProps) {
 }
 
 export default function CompareEstimatesSection() {
+  const t = useTranslations('Landing');
+
   return (
     <section className={cn('relative overflow-hidden')}>
       <div
@@ -46,7 +49,7 @@ export default function CompareEstimatesSection() {
             'desktop:left-[21.51%] desktop:top-[11.1%] desktop:text-[clamp(24px,1.667vw,32px)]',
           )}
         >
-          여러 업체의 견적을 <br /> 한눈에 비교하고 선택해요
+          {t('compareLine1')} <br /> {t('compareLine2')}
         </h2>
 
         <div

@@ -1,4 +1,5 @@
 // 이사 견적 요청 섹션 컴포넌트
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import ImgEstimateRequestMobile from '@/assets/images/landing/img_estimate_request.jpg';
@@ -10,6 +11,7 @@ import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { cn } from '@/utils/cn';
 
 export default function EstimateRequestSection() {
+  const t = useTranslations('Landing');
   /*
   @ 이사 견적 요청 이미지
   - 마운트 전에는 mobile 이미지를 보여주고, 마운트 후 실제 브레이크포인트 이미지로 바꾼다.
@@ -39,7 +41,7 @@ export default function EstimateRequestSection() {
         <Image
           className={cn('object-cover')}
           src={estimateRequestImage}
-          alt="이사 견적 요청 이미지"
+          alt={t('requestImageAlt')}
           fill
           sizes="(min-width: 744px) 1402px, 100vw"
         />
@@ -52,8 +54,8 @@ export default function EstimateRequestSection() {
             'desktop:top-[clamp(49px,11.625vw-70.045px,152px)] desktop:right-[clamp(53px,24.266vw-195.489px,268px)] desktop:text-left',
           )}
         >
-          원하는 이사 서비스를 요청하고
-          <br /> 견적을 받아보세요
+          {t('requestLine1')}
+          <br /> {t('requestLine2')}
         </h2>
       </div>
     </section>

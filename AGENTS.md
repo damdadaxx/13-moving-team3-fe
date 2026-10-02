@@ -110,7 +110,8 @@ axios를 사용하지 않는다. Fetch 래퍼를 사용한다.
 
 ## 인증 가드
 
-`middleware.ts`가 아니라 `AuthProvider` + 라우트 그룹 `layout`에서 처리한다.
+`middleware.ts`(Next 16: `proxy.ts`)가 아니라 `AuthProvider` + 라우트 그룹 `layout`에서 처리한다.
+`src/proxy.ts`는 다국어(locale) 라우팅 전용이다. 인증 로직을 넣지 않는다.
 
 | 그룹         | 접근                                  |
 | ------------ | ------------------------------------- |
@@ -140,11 +141,11 @@ axios를 사용하지 않는다. Fetch 래퍼를 사용한다.
 
 ## 로딩 UI
 
-| 컴포넌트          | 사용                                          |
-| ----------------- | --------------------------------------------- |
-| `LoadingDisplay`  | 페이지/섹션 전체 대기 (react-loader-spinner)  |
-| `Skeleton`        | 카드·텍스트 자리표시 (react-loading-skeleton) |
-| `app/loading.tsx` | 라우트 전환                                   |
+| 컴포넌트                   | 사용                                          |
+| -------------------------- | --------------------------------------------- |
+| `LoadingDisplay`           | 페이지/섹션 전체 대기 (react-loader-spinner)  |
+| `Skeleton`                 | 카드·텍스트 자리표시 (react-loading-skeleton) |
+| `app/[locale]/loading.tsx` | 라우트 전환                                   |
 
 ---
 
@@ -176,7 +177,7 @@ axios를 사용하지 않는다. Fetch 래퍼를 사용한다.
 
 | 종류                                 | 경로                                    |
 | ------------------------------------ | --------------------------------------- |
-| 페이지                               | `src/app/`                              |
+| 페이지                               | `src/app/[locale]/`                     |
 | 공용 UI                              | `src/components/ui/`                    |
 | 고객 전용 UI                         | `src/components/customer/`              |
 | 기사님 전용 UI                       | `src/components/mover/`                 |

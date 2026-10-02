@@ -13,7 +13,7 @@
 import { getPathname } from '@/i18n/navigation';
 import type { SocialProvider } from '@/types/auth';
 import type { Role } from '@/types/role';
-import { useLocale } from 'next-intl';
+import { type Messages, useLocale, useTranslations } from 'next-intl';
 
 import IcLoginGoogle from '@/assets/icons/ic_login_google.svg';
 import IcLoginKakao from '@/assets/icons/ic_login_kakao.svg';
@@ -27,13 +27,13 @@ import { cn } from '@/utils/cn';
 import ButtonElement from '@/components/ui/Button/ButtonElement';
 
 const SOCIAL_BUTTONS = [
-  { provider: 'google', Icon: IcLoginGoogle, label: '구글로 시작하기' },
-  { provider: 'kakao', Icon: IcLoginKakao, label: '카카오로 시작하기' },
-  { provider: 'naver', Icon: IcLoginNaver, label: '네이버로 시작하기' },
+  { provider: 'google', Icon: IcLoginGoogle, labelKey: 'socialGoogle' },
+  { provider: 'kakao', Icon: IcLoginKakao, labelKey: 'socialKakao' },
+  { provider: 'naver', Icon: IcLoginNaver, labelKey: 'socialNaver' },
 ] as const satisfies ReadonlyArray<{
   provider: SocialProvider;
   Icon: React.FC<React.SVGProps<SVGSVGElement>>;
-  label: string;
+  labelKey: keyof Messages['Auth'];
 }>;
 
 interface SocialLoginButtonsProps {
@@ -41,6 +41,7 @@ interface SocialLoginButtonsProps {
 }
 
 export default function SocialLoginButtons({ role }: SocialLoginButtonsProps) {
+  const t = useTranslations('Auth');
   const locale = useLocale();
 
   /*
@@ -74,14 +75,14 @@ export default function SocialLoginButtons({ role }: SocialLoginButtonsProps) {
           'tablet:text-xl-regular tablet:text-black-200',
         )}
       >
-        SNS 계정으로 간편 가입하기
+        {t('socialTitle')}
       </h2>
       <ul className={cn('flex gap-6', 'tablet:gap-8')}>
-        {SOCIAL_BUTTONS.map(({ provider, Icon, label }) => (
+        {SOCIAL_BUTTONS.map(({ provider, Icon, labelKey }) => (
           <li key={provider}>
             <ButtonElement
               type="button"
-              aria-label={label}
+              aria-label={t(labelKey)}
               onClick={() => handleClick(provider)}
               className={cn(
                 'size-[54px] overflow-hidden rounded-full',

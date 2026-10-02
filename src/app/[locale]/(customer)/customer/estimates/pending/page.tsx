@@ -6,6 +6,8 @@
 // (진행 중인 요청과 거기 들어온 견적 목록을 함께 내려주는 엔드포인트)
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { HttpError } from '@/lib/api/errors';
 import { ROUTES } from '@/lib/constants/routes';
 
@@ -21,6 +23,9 @@ import EmptyState from '@/components/ui/EmptyState';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
 export default function EstimatePendingPage() {
+  const t = useTranslations('CustomerEstimates');
+  const tConfirm = useTranslations('EstimateConfirm');
+  const tError = useTranslations('Error');
   const activeQuery = useActiveEstimateRequestQuery();
   const acceptEstimate = useAcceptEstimateMutation();
   const { showToast } = useToast();
@@ -33,9 +38,7 @@ export default function EstimatePendingPage() {
     acceptEstimate.mutate(estimateId, {
       onError: (error) => {
         showToast(
-          error instanceof HttpError
-            ? error.message
-            : '견적 확정에 실패했어요. 잠시 후 다시 시도해 주세요.',
+          error instanceof HttpError ? error.message : tConfirm('failedRetry'),
         );
       },
     });
@@ -46,8 +49,8 @@ export default function EstimatePendingPage() {
   if (activeQuery.isError) {
     return (
       <EmptyState
-        message="견적 정보를 불러오지 못했어요."
-        buttonLabel="다시 시도"
+        message={t('loadFailed')}
+        buttonLabel={tError('retry')}
         onClick={() => activeQuery.refetch()}
       />
     );
@@ -58,8 +61,8 @@ export default function EstimatePendingPage() {
   if (!activeRequest) {
     return (
       <EmptyState
-        message="진행 중인 견적 요청이 없어요."
-        buttonLabel="견적 요청하러 가기"
+        message={t('noActiveRequest')}
+        buttonLabel={t('goRequest')}
         href={ROUTES.customerHome}
       />
     );
@@ -99,8 +102,8 @@ export default function EstimatePendingPage() {
         {pendingEstimates.length === 0 ? (
           <p className="text-lg-regular text-center text-gray-400 tablet:text-2xl-regular">
             {activeRequest.status === 'CONFIRMED'
-              ? '견적을 확정했어요. 받았던 견적에서 확인할 수 있어요.'
-              : '아직 도착한 견적이 없어요. 조금만 기다려 주세요.'}
+              ? t('confirmedNotice')
+              : t('waiting')}
           </p>
         ) : (
           <ul

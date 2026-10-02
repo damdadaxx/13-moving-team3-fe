@@ -6,13 +6,15 @@
 'use client';
 
 import type { EstimateGroup, MyEstimateSummary } from '@/types/estimate';
+import { useTranslations } from 'next-intl';
 
 import IcBadgeCheck from '@/assets/icons/ic_badge_check.svg';
 
+import { useFormatDate } from '@/hooks/common/useFormatDate';
+import { useFormatPrice } from '@/hooks/common/useFormatPrice';
 import { useEstimateDetailQuery } from '@/hooks/features/estimate/queries/queries';
 
 import { cn } from '@/utils/cn';
-import formatDate from '@/utils/formatDate';
 
 import Button from '@/components/ui/Button/Button';
 import EstimateCard from '@/components/ui/EstimateCard';
@@ -28,6 +30,11 @@ export default function SentEstimateCard({
   estimateRequest,
   estimate,
 }: SentEstimateCardProps) {
+  const t = useTranslations('Estimate');
+  const tStatus = useTranslations('EstimateStatus');
+  const tMover = useTranslations('MoverEstimates');
+  const formatDate = useFormatDate();
+  const formatPrice = useFormatPrice();
   const { data: detail } = useEstimateDetailQuery(estimate.estimateId);
 
   const isConfirmed = estimate.status === 'ACCEPTED';
@@ -49,7 +56,7 @@ export default function SentEstimateCard({
           isConfirmed && (
             <span className="flex items-center gap-[4px] text-lg-bold text-orange-400">
               <IcBadgeCheck aria-hidden className="size-[20px]" />
-              확정견적
+              {tStatus('ACCEPTED')}
             </span>
           )
         }
@@ -68,7 +75,7 @@ export default function SentEstimateCard({
               'tablet:text-lg-medium tablet:text-black-400',
             )}
           >
-            견적 금액
+            {t('priceAmount')}
           </span>
           <span
             className={cn(
@@ -76,9 +83,7 @@ export default function SentEstimateCard({
               'tablet:text-2xl-bold',
             )}
           >
-            {estimate.price != null
-              ? `${estimate.price.toLocaleString()}원`
-              : '-'}
+            {estimate.price != null ? formatPrice(estimate.price) : '-'}
           </span>
         </div>
       </div>
@@ -87,14 +92,14 @@ export default function SentEstimateCard({
         <div className="absolute inset-0 flex items-center justify-center rounded-[20px] border border-gray-300 bg-black-500/64">
           <div className="flex w-[200px] flex-col items-center gap-[20px]">
             <p className="text-2lg-semibold text-gray-50">
-              이사 완료된 견적이에요
+              {tMover('completedOverlay')}
             </p>
             <Button
               variant="outlined"
               className="bg-orange-100"
               href={`/mover/estimates/sent/${estimate.estimateId}`}
             >
-              견적 상세보기
+              {t('viewEstimateDetail')}
             </Button>
           </div>
         </div>

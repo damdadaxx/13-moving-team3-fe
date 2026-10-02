@@ -78,14 +78,3 @@ export default function formatDate(
   // 'korean' (이사일/견적 요청일 등): 2024년 07월 01일 (월)
   return `${year}년 ${month}월 ${day}일 (${dayOfWeek})`;
 }
-
-/*
-@ 기사님 경력 표시
-- API는 개월 수(careerMonths)로 내려준다
-- 12개월 미만은 N개월, 이상은 N년
-*/
-export function formatCareerLabel(careerMonths: number): string {
-  const years = Math.floor(careerMonths / 12);
-  if (years < 1) return `${careerMonths}개월`;
-  return `${years}년`;
-}

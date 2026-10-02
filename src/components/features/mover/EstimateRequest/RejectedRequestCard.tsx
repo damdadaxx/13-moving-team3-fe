@@ -6,10 +6,10 @@
 'use client';
 
 import type { EstimateGroup, MyEstimateSummary } from '@/types/estimate';
+import { useTranslations } from 'next-intl';
 
+import { useFormatDate } from '@/hooks/common/useFormatDate';
 import { useEstimateDetailQuery } from '@/hooks/features/estimate/queries/queries';
-
-import formatDate from '@/utils/formatDate';
 
 import EstimateCard from '@/components/ui/EstimateCard';
 
@@ -24,6 +24,8 @@ export default function RejectedRequestCard({
   estimateRequest,
   estimate,
 }: RejectedRequestCardProps) {
+  const t = useTranslations('MoverEstimates');
+  const formatDate = useFormatDate();
   const { data: detail } = useEstimateDetailQuery(estimate.estimateId);
 
   const moveDateLabel = formatDate(estimateRequest.moveDate, 'korean');
@@ -41,7 +43,7 @@ export default function RejectedRequestCard({
       />
 
       <div className="absolute inset-0 flex items-center justify-center rounded-[20px] border border-gray-300 bg-black-500/64">
-        <p className="text-2lg-semibold text-white">반려된 요청이에요</p>
+        <p className="text-2lg-semibold text-white">{t('rejectedOverlay')}</p>
       </div>
     </EstimateCard>
   );

@@ -10,6 +10,7 @@
 import { Fragment } from 'react';
 
 import type { MyEstimateListQuery } from '@/types/estimate';
+import { useTranslations } from 'next-intl';
 
 import useInfiniteScroll from '@/hooks/common/useInfiniteScroll';
 import { useMyEstimatesQuery } from '@/hooks/features/estimate/queries/queries';
@@ -27,6 +28,7 @@ const RECEIVED_ESTIMATES_QUERY: MyEstimateListQuery = {
 };
 
 export default function EstimateReceivedPage() {
+  const t = useTranslations('CustomerEstimates');
   const {
     data,
     isPending,
@@ -54,12 +56,10 @@ export default function EstimateReceivedPage() {
       >
         {isPending && <LoadingDisplay />}
 
-        {isError && (
-          <EmptyListNotice message="견적을 불러오지 못했어요. 잠시 후 다시 시도해주세요." />
-        )}
+        {isError && <EmptyListNotice message={t('listLoadFailed')} />}
 
         {!isPending && !isError && items.length === 0 && (
-          <EmptyListNotice message="아직 받았던 견적이 없어요!" />
+          <EmptyListNotice message={t('receivedEmpty')} />
         )}
 
         {items.map((item, index) => (

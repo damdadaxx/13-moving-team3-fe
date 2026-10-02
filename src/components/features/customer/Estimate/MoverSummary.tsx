@@ -2,12 +2,14 @@
 // Figma: Card-list/대기중인내역 Desktop(510:43173) · Mobile(510:43224)
 //
 // 크기는 mobile·tablet·desktop이 모두 같고, 아래 구분선까지 이 컴포넌트가 그린다.
+import { useTranslations } from 'next-intl';
+
 import IcLike from '@/assets/icons/ic_like.svg';
 import IcMoverMark from '@/assets/icons/ic_mover_mark.svg';
 import IcStar from '@/assets/icons/ic_star.svg';
 import ImgProfileExample from '@/assets/images/img_profile_example.png';
 
-import { formatCareer, formatRating } from '@/utils/formatMoverStats';
+import { formatRating } from '@/utils/formatMoverStats';
 
 interface MoverSummaryProps {
   name: string;
@@ -36,6 +38,16 @@ export default function MoverSummary({
   careerMonths,
   confirmedCount,
 }: MoverSummaryProps) {
+  const t = useTranslations('MoverCard');
+  const tCommon = useTranslations('Common');
+  const tLike = useTranslations('MoverLike');
+  // 이 카드는 1년 미만을 "1년 미만"으로 보여준다 (N개월 아님)
+  const careerYears = Math.floor(careerMonths / 12);
+  const careerLabel =
+    careerYears > 0
+      ? tCommon('careerYears', { count: careerYears })
+      : tCommon('careerUnderOneYear');
+
   return (
     <div className="flex items-center gap-[8px] border-b border-line-200 pt-[12px] pb-[20px]">
       {/*
@@ -57,8 +69,9 @@ export default function MoverSummary({
             <span className="flex h-[23px] w-[20px] shrink-0 items-center justify-center">
               <IcMoverMark aria-hidden="true" className="h-[18.2px] w-[16px]" />
             </span>
-            <span className="truncate">{name}</span>
-            <span>기사님</span>
+            <span className="truncate">
+              {t('nickname', { nickname: name })}
+            </span>
           </p>
 
           <p className="text-md-regular flex items-center gap-[2px] text-gray-500">
@@ -66,8 +79,10 @@ export default function MoverSummary({
               aria-hidden="true"
               className="size-[24px] shrink-0 text-red-200"
             />
-            <span>{likeCount}</span>
-            <span className="sr-only">명이 찜했어요</span>
+            <span aria-hidden>{likeCount}</span>
+            <span className="sr-only">
+              {tLike('countLabel', { count: likeCount })}
+            </span>
           </p>
         </div>
 
@@ -83,13 +98,15 @@ export default function MoverSummary({
           </span>
           <Divider />
           <span className="flex items-center gap-[4px] whitespace-nowrap">
-            <span className="text-gray-300">경력</span>
-            <span className="text-black-300">{formatCareer(careerMonths)}</span>
+            <span className="text-gray-300">{t('career')}</span>
+            <span className="text-black-300">{careerLabel}</span>
           </span>
           <Divider />
           <span className="flex items-center gap-[4px] whitespace-nowrap">
-            <span className="text-black-300">{confirmedCount}건</span>
-            <span className="text-gray-300">확정</span>
+            <span className="text-black-300">
+              {t('confirmedCount', { count: confirmedCount })}
+            </span>
+            <span className="text-gray-300">{t('confirmed')}</span>
           </span>
         </div>
       </div>

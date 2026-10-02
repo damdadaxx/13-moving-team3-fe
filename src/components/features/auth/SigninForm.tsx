@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import type { Role } from '@/types/role';
+import { useTranslations } from 'next-intl';
 
 import { HttpError } from '@/lib/api/errors';
 import { getSignupPath } from '@/lib/constants/routes';
@@ -24,6 +25,7 @@ interface SigninFormProps {
 }
 
 export default function SigninForm({ role }: SigninFormProps) {
+  const t = useTranslations('Auth');
   const { login } = useAuth();
   const {
     register,
@@ -41,9 +43,7 @@ export default function SigninForm({ role }: SigninFormProps) {
       await login({ ...data, role });
     } catch (error) {
       setSubmitError(
-        error instanceof HttpError
-          ? error.message
-          : '로그인에 실패했습니다. 다시 시도해주세요.',
+        error instanceof HttpError ? error.message : t('loginFailed'),
       );
     }
   }
@@ -58,19 +58,19 @@ export default function SigninForm({ role }: SigninFormProps) {
         <div className={cn('flex flex-col gap-8', 'tablet:gap-14')}>
           <div className={cn('flex flex-col gap-4', 'tablet:gap-8')}>
             <Input
-              label="이메일"
+              label={t('email')}
               type="email"
               autoComplete="email"
-              placeholder="이메일을 입력해 주세요"
+              placeholder={t('emailPlaceholder')}
               size={errors.email ? errorSize : 'sm'}
               error={errors.email?.message}
               {...register('email')}
             />
             <Input
-              label="비밀번호"
+              label={t('password')}
               type="password"
               autoComplete="current-password"
-              placeholder="비밀번호를 입력해 주세요"
+              placeholder={t('passwordPlaceholder')}
               size={errors.password ? errorSize : 'sm'}
               error={errors.password?.message}
               {...register('password')}
@@ -81,12 +81,12 @@ export default function SigninForm({ role }: SigninFormProps) {
             isLoading={isSubmitting}
             error={submitError}
           >
-            로그인
+            {t('login')}
           </AuthSubmitButton>
         </div>
         <AuthLinkText
-          text="아직 무빙 회원이 아니신가요?"
-          linkLabel="이메일로 회원가입하기"
+          text={t('noAccount')}
+          linkLabel={t('goSignup')}
           href={getSignupPath(role)}
         />
       </form>

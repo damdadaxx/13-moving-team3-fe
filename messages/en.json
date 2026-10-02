@@ -1,1 +1,64 @@
-{}
+{
+  "Common": {
+    "loading": "Loading",
+    "login": "Log in"
+  },
+  "Header": {
+    "home": "Moving home",
+    "menu": "Menu",
+    "closeMobileMenu": "Close mobile menu",
+    "profileMenu": "Profile menu",
+    "notifications": "Notifications",
+    "notificationsWithCount": "Notifications ({count})",
+    "nav": {
+      "findMover": "Find Movers",
+      "requestEstimate": "Request Estimate",
+      "myEstimates": "My Estimates",
+      "receivedRequests": "Received Requests"
+    }
+  },
+  "ProfileMenu": {
+    "displayName": "{name} ({role, select, customer {Customer} other {Mover}})",
+    "editProfile": "Edit Profile",
+    "likedMovers": "Liked Movers",
+    "reviews": "Moving Reviews",
+    "mypage": "My Page",
+    "logout": "Log out"
+  },
+  "Notification": {
+    "title": "Notifications",
+    "markAllRead": "Mark all notifications as read",
+    "close": "Close notifications",
+    "loading": "Loading notifications...",
+    "error": "Couldn't load notifications.",
+    "empty": "No notifications yet."
+  },
+  "Footer": {
+    "tagline": "Complicated move? Moving handles it all!"
+  },
+  "IconButton": {
+    "like": "Like",
+    "copyLink": "Copy link",
+    "shareKakao": "Share on KakaoTalk",
+    "shareFacebook": "Share on Facebook"
+  },
+  "PageHeader": {
+    "estimateRequest": "Estimate Request",
+    "estimateDetail": "Estimate Details",
+    "likedMovers": "Liked Movers",
+    "mypage": "My Page",
+    "receivedRequests": "Received Requests"
+  },
+  "NotFound": {
+    "message": "Page not found!",
+    "goHome": "Go to home"
+  },
+  "Error": {
+    "message": "Something went wrong!",
+    "retry": "Try again"
+  },
+  "GlobalError": {
+    "message": "The app ran into an error!",
+    "reload": "Reload"
+  }
+}

@@ -1,1 +1,64 @@
-{}
+{
+  "Common": {
+    "loading": "로딩 중",
+    "login": "로그인"
+  },
+  "Header": {
+    "home": "무빙 홈",
+    "menu": "메뉴",
+    "closeMobileMenu": "모바일 메뉴 닫기",
+    "profileMenu": "프로필 메뉴",
+    "notifications": "알림",
+    "notificationsWithCount": "알림 {count}개",
+    "nav": {
+      "findMover": "기사님 찾기",
+      "requestEstimate": "견적 요청",
+      "myEstimates": "내 견적 관리",
+      "receivedRequests": "받은 요청"
+    }
+  },
+  "ProfileMenu": {
+    "displayName": "{name} {role, select, customer {고객} other {기사}}님",
+    "editProfile": "프로필 수정",
+    "likedMovers": "찜한 기사님",
+    "reviews": "이사 리뷰",
+    "mypage": "마이페이지",
+    "logout": "로그아웃"
+  },
+  "Notification": {
+    "title": "알림",
+    "markAllRead": "알림 모두 읽음 처리",
+    "close": "알림 닫기",
+    "loading": "알림을 불러오는 중이에요.",
+    "error": "알림을 불러오지 못했어요.",
+    "empty": "알림이 없어요."
+  },
+  "Footer": {
+    "tagline": "복잡한 이사 준비, 무빙 하나면 끝!"
+  },
+  "IconButton": {
+    "like": "찜하기",
+    "copyLink": "링크 복사",
+    "shareKakao": "카카오 공유",
+    "shareFacebook": "페이스북 공유"
+  },
+  "PageHeader": {
+    "estimateRequest": "견적요청",
+    "estimateDetail": "견적 상세",
+    "likedMovers": "찜한 기사님",
+    "mypage": "마이페이지",
+    "receivedRequests": "받은 요청"
+  },
+  "NotFound": {
+    "message": "페이지를 찾을 수 없어요!",
+    "goHome": "홈으로 가기"
+  },
+  "Error": {
+    "message": "오류가 발생했어요!",
+    "retry": "다시 시도"
+  },
+  "GlobalError": {
+    "message": "앱에 오류가 발생했어요!",
+    "reload": "새로고침"
+  }
+}

@@ -6,6 +6,7 @@ import { useRef } from 'react';
 import { useRouter } from '@/i18n/navigation';
 import type { Notification } from '@/types/notification';
 import { cva } from 'class-variance-authority';
+import { useTranslations } from 'next-intl';
 
 import IcAlarmClose from '@/assets/icons/ic_alarm_close.svg';
 import IcMarkAllRead from '@/assets/icons/ic_mark_all_read.svg';
@@ -82,6 +83,7 @@ export default function NotificationDropdown({
   isOpen,
   onClose,
 }: NotificationDropdownProps) {
+  const t = useTranslations('Notification');
   const router = useRouter();
   const listRef = useRef<HTMLUListElement>(null);
   const { role } = useAuth();
@@ -141,12 +143,12 @@ export default function NotificationDropdown({
         <p
           className={cn('text-lg-bold text-black-300', 'desktop:text-2lg-bold')}
         >
-          알림
+          {t('title')}
         </p>
         <div className={cn('flex gap-[8px]')}>
           <button
             type="button"
-            aria-label="알림 모두 읽음 처리"
+            aria-label={t('markAllRead')}
             onClick={handleMarkAllRead}
             disabled={(unread?.unreadCount ?? 0) === 0}
             className={cn(
@@ -158,7 +160,7 @@ export default function NotificationDropdown({
           </button>
           <button
             type="button"
-            aria-label="알림 닫기"
+            aria-label={t('close')}
             onClick={onClose}
             className={cn('h-[24px] w-[24px] cursor-pointer overflow-clip')}
           >
@@ -171,14 +173,10 @@ export default function NotificationDropdown({
           ref={listRef}
           className={cn('min-h-0 flex-1 overflow-y-auto scrollbar-gray-300')}
         >
-          {isLoading ? (
-            <NotificationStatusItem message="알림을 불러오는 중이에요." />
-          ) : null}
-          {isError ? (
-            <NotificationStatusItem message="알림을 불러오지 못했어요." />
-          ) : null}
+          {isLoading ? <NotificationStatusItem message={t('loading')} /> : null}
+          {isError ? <NotificationStatusItem message={t('error')} /> : null}
           {!isLoading && !isError && notifications.length === 0 ? (
-            <NotificationStatusItem message="알림이 없어요." />
+            <NotificationStatusItem message={t('empty')} />
           ) : null}
 
           {/* 알림 목록 렌더링 */}

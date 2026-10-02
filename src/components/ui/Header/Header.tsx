@@ -5,6 +5,7 @@ import { useCallback, useRef, useState } from 'react';
 
 import { Link, usePathname } from '@/i18n/navigation';
 import type { AuthVariant } from '@/types/role';
+import { type Messages, useTranslations } from 'next-intl';
 
 import ImgLogo from '@/assets/images/img_logo.svg';
 import ImgLogoMobile from '@/assets/images/img_logo_m.svg';
@@ -29,21 +30,30 @@ interface HeaderProps {
   hasSessionCookie?: boolean;
 }
 
-const MENU_DATA: Record<AuthVariant, HeaderMenuItem[]> = {
-  guest: [{ menu: '기사님 찾기', href: ROUTES.moverList }],
+/*
+@ 역할별 GNB 메뉴
+- 메뉴 이름은 번역 키(messages > Header.nav)로 두고, 컴포넌트에서 현재 언어로 바꾼다
+*/
+type HeaderNavKey = keyof Messages['Header']['nav'];
+
+const MENU_DATA: Record<
+  AuthVariant,
+  (Omit<HeaderMenuItem, 'menu'> & { menuKey: HeaderNavKey })[]
+> = {
+  guest: [{ menuKey: 'findMover', href: ROUTES.moverList }],
   customer: [
-    { menu: '견적 요청', href: ROUTES.customerHome },
-    { menu: '기사님 찾기', href: ROUTES.moverList },
+    { menuKey: 'requestEstimate', href: ROUTES.customerHome },
+    { menuKey: 'findMover', href: ROUTES.moverList },
     {
-      menu: '내 견적 관리',
+      menuKey: 'myEstimates',
       href: ROUTES.customerEstimates,
       activePrefix: ROUTES.customerEstimatesRoot,
     },
   ],
   mover: [
-    { menu: '받은 요청', href: ROUTES.moverHome },
+    { menuKey: 'receivedRequests', href: ROUTES.moverHome },
     {
-      menu: '내 견적 관리',
+      menuKey: 'myEstimates',
       href: ROUTES.moverEstimates,
       activePrefix: ROUTES.moverEstimatesRoot,
     },
@@ -67,7 +77,13 @@ export default function Header({ hasSessionCookie = false }: HeaderProps) {
   const pathname = usePathname();
   const headerVariant = getAuthVariant(role);
   const isGuest = !isLoading && !isLoggedIn;
-  const menus = isLoading ? [] : MENU_DATA[headerVariant];
+  const t = useTranslations('Header');
+  const menus: HeaderMenuItem[] = isLoading
+    ? []
+    : MENU_DATA[headerVariant].map(({ menuKey, ...item }) => ({
+        ...item,
+        menu: t(`nav.${menuKey}`),
+      }));
   /*
   @ 로그인 스켈레톤 힌트
   - httpOnly accessToken은 클라이언트에서 못 읽는다
@@ -130,7 +146,7 @@ export default function Header({ hasSessionCookie = false }: HeaderProps) {
           className={cn('flex items-center gap-[24px]', 'desktop:gap-[80px]')}
         >
           {/* 로고 */}
-          <Link href="/" aria-label="무빙 홈">
+          <Link href="/" aria-label={t('home')}>
             <ImgLogoMobile
               aria-hidden
               className={cn('h-[32px] w-[32px] tablet:hidden')}

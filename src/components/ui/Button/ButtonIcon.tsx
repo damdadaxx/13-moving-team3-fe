@@ -1,5 +1,6 @@
 // 공통 아이콘 버튼 (Figma: Button > etc)
 import { cva, type VariantProps } from 'class-variance-authority';
+import { useTranslations } from 'next-intl';
 
 import IcClip from '@/assets/icons/ic_clip.svg';
 import IcFacebook from '@/assets/icons/ic_facebook.svg';
@@ -67,26 +68,30 @@ const buttonIconGlyphVariants = cva(
   },
 );
 
+/*
+@ 아이콘 버튼 종류별 설정
+- 접근성 라벨은 번역 키(messages > IconButton)로 두고, 컴포넌트에서 현재 언어로 바꾼다
+*/
 const VARIANT_CONFIG = {
   like: {
     Icon: IcLike,
     iconClassName: 'text-black-500',
-    ariaLabel: '찜하기',
+    ariaLabelKey: 'like',
   },
   clip: {
     Icon: IcClip,
     iconClassName: 'text-gray-300',
-    ariaLabel: '링크 복사',
+    ariaLabelKey: 'copyLink',
   },
   kakao: {
     Icon: IcKakao,
     iconClassName: undefined,
-    ariaLabel: '카카오 공유',
+    ariaLabelKey: 'shareKakao',
   },
   facebook: {
     Icon: IcFacebook,
     iconClassName: undefined,
-    ariaLabel: '페이스북 공유',
+    ariaLabelKey: 'shareFacebook',
   },
 } as const;
 
@@ -114,12 +119,9 @@ export default function ButtonIcon({
   'aria-pressed': ariaPressed,
   ...props
 }: ButtonIconProps) {
+  const t = useTranslations('IconButton');
   const resolvedVariant = variant ?? 'like';
-  const {
-    Icon,
-    iconClassName,
-    ariaLabel: variantAriaLabel,
-  } = VARIANT_CONFIG[resolvedVariant];
+  const { Icon, iconClassName, ariaLabelKey } = VARIANT_CONFIG[resolvedVariant];
 
   /** 좋아요 아이콘 클래스 적용 */
   const likeIconClassName =
@@ -136,7 +138,7 @@ export default function ButtonIcon({
       disabled={disabled}
       isLoading={isLoading}
       onClick={onClick}
-      aria-label={ariaLabel ?? variantAriaLabel}
+      aria-label={ariaLabel ?? t(ariaLabelKey)}
       aria-pressed={ariaPressed}
       className={cn(
         buttonIconVariants({ variant: resolvedVariant, size }),

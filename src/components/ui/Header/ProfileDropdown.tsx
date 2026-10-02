@@ -3,6 +3,7 @@ import { Link } from '@/i18n/navigation';
 import type { AuthUser } from '@/types/auth';
 import type { Role } from '@/types/role';
 import { cva } from 'class-variance-authority';
+import { type Messages, useTranslations } from 'next-intl';
 
 import { ROUTES } from '@/lib/constants/routes';
 
@@ -17,24 +18,31 @@ interface ProfileDropdownProps {
   onLogout?: () => void;
 }
 
-const PROFILE_MENU_DATA: Record<Role, { label: string; href: string }[]> = {
+/*
+@ 역할별 프로필 메뉴
+- 메뉴 이름은 번역 키(messages > ProfileMenu)로 두고, 컴포넌트에서 현재 언어로 바꾼다
+*/
+const PROFILE_MENU_DATA: Record<
+  Role,
+  { labelKey: keyof Messages['ProfileMenu']; href: string }[]
+> = {
   customer: [
     {
-      label: '프로필 수정',
+      labelKey: 'editProfile',
       href: ROUTES.customerProfileEdit,
     },
     {
-      label: '찜한 기사님',
+      labelKey: 'likedMovers',
       href: ROUTES.customerLikedMovers,
     },
     {
-      label: '이사 리뷰',
+      labelKey: 'reviews',
       href: ROUTES.customerReviewsPending,
     },
   ],
   mover: [
     {
-      label: '마이페이지',
+      labelKey: 'mypage',
       href: ROUTES.moverMypage,
     },
   ],
@@ -97,6 +105,8 @@ export default function ProfileDropdown({
   onClose,
   onLogout,
 }: ProfileDropdownProps) {
+  const t = useTranslations('ProfileMenu');
+
   const handleLogout = () => {
     onLogout?.();
     onClose();
@@ -110,11 +120,11 @@ export default function ProfileDropdown({
       className={profileDropdownPanel({ open: isOpen })}
     >
       <p className={profileDropdownItem({ variant: 'name' })}>
-        {`${user.name} ${user.role === 'customer' ? '고객' : '기사'}님`}
+        {t('displayName', { name: user.name, role: user.role })}
       </p>
       {PROFILE_MENU_DATA[user.role].map((item, index, items) => (
         <Link
-          key={item.label}
+          key={item.labelKey}
           href={item.href}
           onClick={onClose}
           className={cn(
@@ -122,7 +132,7 @@ export default function ProfileDropdown({
             index === items.length - 1 && 'desktop:mb-[10px]',
           )}
         >
-          {item.label}
+          {t(item.labelKey)}
         </Link>
       ))}
       <button
@@ -130,7 +140,7 @@ export default function ProfileDropdown({
         onClick={handleLogout}
         className={profileDropdownItem({ variant: 'logout' })}
       >
-        로그아웃
+        {t('logout')}
       </button>
     </div>
   );

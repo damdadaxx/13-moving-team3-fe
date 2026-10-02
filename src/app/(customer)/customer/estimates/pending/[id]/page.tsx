@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 
 import { OPEN_GRAPH_DEFAULT } from '@/lib/constants/site';
 
-import EstimatePendingDetailPageContent from '@/components/customer/EstimatePendingDetail/EstimatePendingDetailPageContent';
+import EstimatePendingDetailPageContent from '@/components/features/customer/EstimatePendingDetail/EstimatePendingDetailPageContent';
 
 interface EstimatePendingDetailPageProps {
   params: Promise<{ id: string }>;

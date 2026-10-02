@@ -1,6 +1,6 @@
 // [메뉴] 헤더 모달 메뉴 > 찜한 기사님
 // [페이지] 찜한 기사님
-import LikedMoverList from '@/components/customer/liked-movers/LikedMoverList';
+import LikedMoverList from '@/components/features/customer/LikedMover/LikedMoverList';
 
 export default function LikedMoverPage() {
   return (

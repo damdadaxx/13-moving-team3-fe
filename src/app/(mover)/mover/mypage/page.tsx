@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 
 import { OPEN_GRAPH_DEFAULT } from '@/lib/constants/site';
 
-import MoverMypageContent from '@/components/mover/MoverMypage/MoverMypageContent';
+import MoverMypageContent from '@/components/features/mover/MoverMypage/MoverMypageContent';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

@@ -10,11 +10,11 @@ import Image from 'next/image';
 import ImgEmptyBeaver from '@/assets/images/img_empty_beaver.png';
 
 import useInfiniteScroll from '@/hooks/common/useInfiniteScroll';
-import { useMyEstimatesQuery } from '@/hooks/queries/estimate/queries';
+import { useMyEstimatesQuery } from '@/hooks/features/estimate/queries/queries';
 
 import { cn } from '@/utils/cn';
 
-import SentEstimateCard from '@/components/mover/SentEstimateCard';
+import SentEstimateCard from '@/components/features/mover/EstimateRequest/SentEstimateCard';
 import Button from '@/components/ui/Button/Button';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 

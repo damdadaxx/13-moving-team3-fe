@@ -6,8 +6,13 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useRouter } from '@/i18n/navigation';
 import type { Role } from '@/types/role';
+import { useLocale } from 'next-intl';
 
-import { getSafeCallbackPath, getSigninPath } from '@/lib/constants/routes';
+import {
+  getSafeCallbackPath,
+  getSigninPath,
+  splitLocalePrefix,
+} from '@/lib/constants/routes';
 
 import { useAuth } from '@/hooks/features/auth/useAuth';
 
@@ -47,6 +52,7 @@ export default function SocialCallback({
   callbackUrl,
 }: SocialCallbackProps) {
   const router = useRouter();
+  const locale = useLocale();
   const { syncSession } = useAuth();
   const [syncErrorMessage, setSyncErrorMessage] = useState<string | null>(null);
 
@@ -63,10 +69,14 @@ export default function SocialCallback({
           setSyncErrorMessage(DEFAULT_ERROR_MESSAGE);
           return;
         }
-        router.replace(getSafeCallbackPath(user.role, callbackUrl));
+        // 시작할 때 callbackUrl 에 붙여 보낸 locale 로 돌아간다 (없으면 지금 locale)
+        const targetLocale = splitLocalePrefix(callbackUrl ?? '').locale;
+        router.replace(getSafeCallbackPath(user.role, callbackUrl), {
+          locale: targetLocale ?? locale,
+        });
       })
       .catch(() => setSyncErrorMessage(DEFAULT_ERROR_MESSAGE));
-  }, [callbackUrl, error, router, syncSession]);
+  }, [callbackUrl, error, locale, router, syncSession]);
 
   const message = error
     ? (SOCIAL_ERROR_MESSAGES[error] ?? DEFAULT_ERROR_MESSAGE)

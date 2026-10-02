@@ -10,14 +10,17 @@
 */
 'use client';
 
+import { getPathname } from '@/i18n/navigation';
 import type { SocialProvider } from '@/types/auth';
 import type { Role } from '@/types/role';
+import { useLocale } from 'next-intl';
 
 import IcLoginGoogle from '@/assets/icons/ic_login_google.svg';
 import IcLoginKakao from '@/assets/icons/ic_login_kakao.svg';
 import IcLoginNaver from '@/assets/icons/ic_login_naver.svg';
 
 import { getSocialLoginUrl } from '@/lib/api/auth';
+import { getHomePath } from '@/lib/constants/routes';
 
 import { cn } from '@/utils/cn';
 
@@ -38,17 +41,26 @@ interface SocialLoginButtonsProps {
 }
 
 export default function SocialLoginButtons({ role }: SocialLoginButtonsProps) {
+  const locale = useLocale();
+
   /*
   @ 소셜 로그인 시작
   - 가드가 붙여준 ?callbackUrl 을 프로바이더 왕복 뒤에도 쓰도록 넘긴다
+  - 백엔드는 locale 없는 /auth/callback 으로 돌려보내므로, callbackUrl 에 현재 locale 을 붙여(/ko 포함) 보낸다
+    (callbackUrl 이 없으면 역할 home). 돌아온 뒤 SocialCallback 이 이 locale 로 이동한다
   - 백엔드 302 를 따라가야 하므로 router.push 가 아닌 전체 페이지 이동으로 프록시(/api)에 요청한다
   */
   function handleClick(provider: SocialProvider) {
     const callbackUrl = new URLSearchParams(window.location.search).get(
       'callbackUrl',
     );
+    const localizedCallbackUrl = getPathname({
+      locale,
+      href: callbackUrl ?? getHomePath(role),
+      forcePrefix: true,
+    });
     const url = new URL(
-      getSocialLoginUrl(provider, role, callbackUrl),
+      getSocialLoginUrl(provider, role, localizedCallbackUrl),
       window.location.origin,
     );
     window.location.assign(url);

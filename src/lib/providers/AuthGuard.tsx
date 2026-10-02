@@ -11,7 +11,7 @@ import {
   getSigninPath,
 } from '@/lib/constants/routes';
 
-import { useAuth } from '@/hooks/auth/useAuth';
+import { useAuth } from '@/hooks/features/auth/useAuth';
 
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 

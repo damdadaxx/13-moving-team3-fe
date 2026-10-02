@@ -13,7 +13,7 @@ import type { BackendRole } from '@/types/auth';
 
 import { toFrontendRole } from '@/lib/api/auth';
 
-import SocialCallback from '@/components/auth/SocialCallback';
+import SocialCallback from '@/components/features/auth/SocialCallback';
 
 interface SocialCallbackPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

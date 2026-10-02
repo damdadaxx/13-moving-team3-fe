@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 
 import { OPEN_GRAPH_DEFAULT } from '@/lib/constants/site';
 
-import MoverEstimateConfirmedDetailPageContent from '@/components/mover/EstimateConfirmedDetail/MoverEstimateConfirmedDetailPageContent';
+import MoverEstimateConfirmedDetailPageContent from '@/components/features/mover/EstimateConfirmedDetail/MoverEstimateConfirmedDetailPageContent';
 
 interface MoverEstimateSentDetailPageProps {
   params: Promise<{ id: string }>;

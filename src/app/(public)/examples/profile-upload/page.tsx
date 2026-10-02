@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form';
 import ImgProfileExample from '@/assets/images/img_profile_example.png';
 
 import Button from '@/components/ui/Button/Button';
-import ProfileUpload from '@/components/ui/ProfileUpload/ProfileUpload';
+import ProfileUpload from '@/components/ui/ProfileUpload';
 
 interface ProfileUploadFormValues {
   profileImage: FileList;

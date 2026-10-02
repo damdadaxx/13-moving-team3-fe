@@ -1,7 +1,7 @@
 // [레이아웃] 기사님 전용
 import AuthGuard from '@/lib/providers/AuthGuard';
 
-import MoverProfileGuard from '@/components/mover/MoverProfileGuard';
+import MoverProfileGuard from '@/components/features/mover/MoverProfileGuard';
 
 export default function MoverLayout({
   children,

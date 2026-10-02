@@ -10,13 +10,13 @@ import { HttpError } from '@/lib/api/errors';
 import { ROUTES } from '@/lib/constants/routes';
 
 import { useToast } from '@/hooks/common/useToast';
-import { useAcceptEstimateMutation } from '@/hooks/queries/estimate/mutations';
-import { useActiveEstimateRequestQuery } from '@/hooks/queries/estimate/queries';
+import { useAcceptEstimateMutation } from '@/hooks/features/estimate/queries/mutations';
+import { useActiveEstimateRequestQuery } from '@/hooks/features/estimate/queries/queries';
 
 import { cn } from '@/utils/cn';
 
-import EstimateRequestHeader from '@/components/customer/estimates/EstimateRequestHeader';
-import PendingEstimateCard from '@/components/customer/estimates/PendingEstimateCard';
+import EstimateRequestHeader from '@/components/features/customer/Estimate/EstimateRequestHeader';
+import PendingEstimateCard from '@/components/features/customer/Estimate/PendingEstimateCard';
 import EmptyState from '@/components/ui/EmptyState';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 

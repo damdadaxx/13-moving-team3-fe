@@ -10,21 +10,21 @@ import { useRouter } from 'next/navigation';
 
 import { ROUTES } from '@/lib/constants/routes';
 
-import { useAuth } from '@/hooks/auth/useAuth';
 import { useToast } from '@/hooks/common/useToast';
-import type { CustomerProfileEditPlan } from '@/hooks/customer/customerProfileEditPlan';
-import { authKeys } from '@/hooks/queries/auth/keys';
+import { authKeys } from '@/hooks/features/auth/queries/keys';
 import {
   useUpdateMeMutation,
   useUpdatePasswordMutation,
-} from '@/hooks/queries/auth/mutations';
-import { customerProfileKeys } from '@/hooks/queries/customerProfile/keys';
-import { useUpdateCustomerProfileMutation } from '@/hooks/queries/customerProfile/mutations';
-import { useCustomerProfileQuery } from '@/hooks/queries/customerProfile/queries';
+} from '@/hooks/features/auth/queries/mutations';
+import { useAuth } from '@/hooks/features/auth/useAuth';
+import type { CustomerProfileEditPlan } from '@/hooks/features/customer/customerProfileEditPlan';
+import { customerProfileKeys } from '@/hooks/features/customer/queries/keys';
+import { useUpdateCustomerProfileMutation } from '@/hooks/features/customer/queries/mutations';
+import { useCustomerProfileQuery } from '@/hooks/features/customer/queries/queries';
 
 import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
 
-import CustomerProfileEditForm from '@/components/customer/CustomerProfileEditForm';
+import CustomerProfileEditForm from '@/components/features/customer/CustomerProfile/CustomerProfileEditForm';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
 export default function ProfileEditPage() {

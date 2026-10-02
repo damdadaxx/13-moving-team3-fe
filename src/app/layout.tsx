@@ -18,7 +18,7 @@ import KakaoScript from '@/lib/providers/KakaoScript';
 import { cn } from '@/utils/cn';
 
 import Header from '@/components/ui/Header/Header';
-import PageHeader from '@/components/ui/PageHeader/PageHeader';
+import PageHeader from '@/components/ui/PageHeader';
 
 import './globals.css';
 

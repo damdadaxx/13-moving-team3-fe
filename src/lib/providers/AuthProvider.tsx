@@ -13,8 +13,8 @@ import {
   useLogoutMutation,
   useSignupMutation,
   useSyncSessionMutation,
-} from '@/hooks/queries/auth/mutations';
-import { useMeQuery } from '@/hooks/queries/auth/queries';
+} from '@/hooks/features/auth/queries/mutations';
+import { useMeQuery } from '@/hooks/features/auth/queries/queries';
 
 export interface AuthContextValue {
   user: AuthUser | null;

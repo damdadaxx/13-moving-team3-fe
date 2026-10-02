@@ -10,16 +10,16 @@ import { useRouter } from 'next/navigation';
 import IcAlarmClose from '@/assets/icons/ic_alarm_close.svg';
 import IcMarkAllRead from '@/assets/icons/ic_mark_all_read.svg';
 
-import { useAuth } from '@/hooks/auth/useAuth';
 import useInfiniteScroll from '@/hooks/common/useInfiniteScroll';
+import { useAuth } from '@/hooks/features/auth/useAuth';
 import {
   useReadAllNotificationsMutation,
   useReadNotificationMutation,
-} from '@/hooks/queries/notifications/mutations';
+} from '@/hooks/features/notification/queries/mutations';
 import {
   useNotificationsQuery,
   useUnreadCountQuery,
-} from '@/hooks/queries/notifications/queries';
+} from '@/hooks/features/notification/queries/queries';
 
 import { cn } from '@/utils/cn';
 import formatDate from '@/utils/formatDate';

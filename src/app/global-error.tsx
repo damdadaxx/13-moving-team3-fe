@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 
 // root layout 에러 최후 보루
-// app/layout.tsx 자체가 에러났을 때만 동작
+// app/[locale]/layout.tsx(루트 레이아웃) 자체가 에러났을 때만 동작
 
 import { pretendard } from '@/lib/constants/fonts';
 

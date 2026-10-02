@@ -2,21 +2,21 @@
 // [페이지] 마이페이지
 import { Metadata } from 'next';
 
-import { OPEN_GRAPH_DEFAULT } from '@/lib/constants/site';
+import { createPageMetadata } from '@/lib/constants/site';
 
 import MoverMypageContent from '@/components/features/mover/MoverMypage/MoverMypageContent';
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+
+  return createPageMetadata(locale, {
     title: '마이페이지',
-    openGraph: {
-      ...OPEN_GRAPH_DEFAULT,
-      url: `/mover/mypage`,
-    },
-    twitter: {
-      card: 'summary_large_image',
-    },
-  };
+    path: `/mover/mypage`,
+  });
 }
 
 export default async function MoverMypagePage() {

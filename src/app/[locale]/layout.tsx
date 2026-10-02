@@ -11,10 +11,10 @@ import Providers from '@/app/providers';
 import { ACCESS_TOKEN_COOKIE } from '@/lib/constants/auth';
 import { pretendard } from '@/lib/constants/fonts';
 import {
-  OPEN_GRAPH_DEFAULT,
   SITE_DESCRIPTION,
   SITE_TITLE,
   SITE_URL,
+  getOpenGraph,
 } from '@/lib/constants/site';
 import KakaoScript from '@/lib/providers/KakaoScript';
 
@@ -23,15 +23,20 @@ import { cn } from '@/utils/cn';
 import Header from '@/components/ui/Header/Header';
 import PageHeader from '@/components/ui/PageHeader';
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: SITE_TITLE,
-  description: SITE_DESCRIPTION,
-  openGraph: {
-    ...OPEN_GRAPH_DEFAULT,
-    url: '/',
-  },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    openGraph: getOpenGraph(locale, '/'),
+  };
+}
 
 /*
 @ 지원하는 locale 목록을 빌드 타임에 알려준다 (정적 렌더링용)

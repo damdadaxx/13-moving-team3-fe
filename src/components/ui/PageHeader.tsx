@@ -1,7 +1,7 @@
 // 페이지 제목 바 (GNB 하단)
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { usePathname } from '@/i18n/navigation';
 
 import { cn } from '@/utils/cn';
 import getPageHeaderTitle from '@/utils/getPageHeaderTitle';

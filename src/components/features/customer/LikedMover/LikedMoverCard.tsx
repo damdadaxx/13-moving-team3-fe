@@ -1,8 +1,8 @@
 'use client';
 
+import { Link } from '@/i18n/navigation';
 import type { ServiceType } from '@/types/serviceType';
 import Image from 'next/image';
-import Link from 'next/link';
 
 import IcDriverMark from '@/assets/icons/ic_driver.png';
 import IcLike from '@/assets/icons/ic_like.svg';

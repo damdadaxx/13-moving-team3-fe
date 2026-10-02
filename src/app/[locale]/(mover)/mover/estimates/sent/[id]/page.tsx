@@ -2,29 +2,23 @@
 // [페이지] 견적 상세
 import { Metadata } from 'next';
 
-import { OPEN_GRAPH_DEFAULT } from '@/lib/constants/site';
+import { createPageMetadata } from '@/lib/constants/site';
 
 import MoverEstimateConfirmedDetailPageContent from '@/components/features/mover/EstimateConfirmedDetail/MoverEstimateConfirmedDetailPageContent';
 
 interface MoverEstimateSentDetailPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string; locale: string }>;
 }
 
 export async function generateMetadata({
   params,
 }: MoverEstimateSentDetailPageProps): Promise<Metadata> {
-  const { id } = await params;
+  const { id, locale } = await params;
 
-  return {
+  return createPageMetadata(locale, {
     title: '견적 상세',
-    openGraph: {
-      ...OPEN_GRAPH_DEFAULT,
-      url: `/mover/estimates/sent/${id}`,
-    },
-    twitter: {
-      card: 'summary_large_image',
-    },
-  };
+    path: `/mover/estimates/sent/${id}`,
+  });
 }
 
 export default async function MoverEstimateSentDetailPage({

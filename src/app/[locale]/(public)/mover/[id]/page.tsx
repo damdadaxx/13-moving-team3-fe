@@ -2,29 +2,23 @@
 // [페이지] 기사님 상세
 import type { Metadata } from 'next';
 
-import { OPEN_GRAPH_DEFAULT } from '@/lib/constants/site';
+import { createPageMetadata } from '@/lib/constants/site';
 
 import MoverDetailPageContent from '@/components/features/common/MoverDetail/MoverDetailPageContent';
 
 interface MoverDetailPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string; locale: string }>;
 }
 
 export async function generateMetadata({
   params,
 }: MoverDetailPageProps): Promise<Metadata> {
-  const { id } = await params;
+  const { id, locale } = await params;
 
-  return {
+  return createPageMetadata(locale, {
     title: '기사님 상세',
-    openGraph: {
-      ...OPEN_GRAPH_DEFAULT,
-      url: `/mover/${id}`,
-    },
-    twitter: {
-      card: 'summary_large_image',
-    },
-  };
+    path: `/mover/${id}`,
+  });
 }
 
 export default async function MoverDetailPage({

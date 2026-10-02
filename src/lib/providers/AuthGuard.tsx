@@ -2,8 +2,8 @@
 
 import { useEffect } from 'react';
 
+import { usePathname, useRouter } from '@/i18n/navigation';
 import type { AuthVariant } from '@/types/role';
-import { usePathname, useRouter } from 'next/navigation';
 
 import {
   getHomePath,

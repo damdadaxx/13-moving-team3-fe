@@ -1,6 +1,6 @@
 // 인증 페이지 안내 문구 + 주황 밑줄 링크
 // 예: "기사님이신가요? 기사님 전용 페이지", "아직 무빙 회원이 아니신가요? 이메일로 회원가입하기"
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 
 import { cn } from '@/utils/cn';
 

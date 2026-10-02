@@ -4,8 +4,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import { useRouter } from '@/i18n/navigation';
 import type { Role } from '@/types/role';
-import { useRouter } from 'next/navigation';
 
 import { getSafeCallbackPath, getSigninPath } from '@/lib/constants/routes';
 

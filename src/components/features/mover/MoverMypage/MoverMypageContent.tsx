@@ -2,8 +2,8 @@
 
 'use client';
 
+import { useRouter } from '@/i18n/navigation';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 
 import IcWriting from '@/assets/icons/ic_writing.svg';
 import IcWritingGray from '@/assets/icons/ic_writing_gray.svg';

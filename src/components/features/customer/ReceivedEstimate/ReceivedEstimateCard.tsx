@@ -17,10 +17,10 @@
 */
 'use client';
 
+import { Link } from '@/i18n/navigation';
 import type { MyEstimateSummary } from '@/types/estimate';
 import type { ServiceType } from '@/types/serviceType';
 import Image from 'next/image';
-import Link from 'next/link';
 
 import IcCheckCircle from '@/assets/icons/ic_check_circle.svg';
 import ImgLogoM from '@/assets/icons/ic_driver.png';

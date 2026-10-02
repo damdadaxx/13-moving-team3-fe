@@ -2,29 +2,23 @@
 // [페이지] 견적 상세 (받았던 견적)
 import { Metadata } from 'next';
 
-import { OPEN_GRAPH_DEFAULT } from '@/lib/constants/site';
+import { createPageMetadata } from '@/lib/constants/site';
 
 import EstimateReceivedDetailPageContent from '@/components/features/customer/EstimateReceivedDetail/EstimateReceivedDetailPageContent';
 
 interface EstimateReceivedDetailPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string; locale: string }>;
 }
 
 export async function generateMetadata({
   params,
 }: EstimateReceivedDetailPageProps): Promise<Metadata> {
-  const { id } = await params;
+  const { id, locale } = await params;
 
-  return {
+  return createPageMetadata(locale, {
     title: '견적 상세',
-    openGraph: {
-      ...OPEN_GRAPH_DEFAULT,
-      url: `/customer/estimates/received/${id}`,
-    },
-    twitter: {
-      card: 'summary_large_image',
-    },
-  };
+    path: `/customer/estimates/received/${id}`,
+  });
 }
 
 export default async function EstimateReceivedDetailPage({

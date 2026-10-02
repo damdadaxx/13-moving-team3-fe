@@ -2,8 +2,8 @@
 // [페이지] 프로필 최초 생성
 'use client';
 
+import { useRouter } from '@/i18n/navigation';
 import type { CustomerProfileFormValues } from '@/types/customerProfile';
-import { useRouter } from 'next/navigation';
 
 import { ROUTES } from '@/lib/constants/routes';
 

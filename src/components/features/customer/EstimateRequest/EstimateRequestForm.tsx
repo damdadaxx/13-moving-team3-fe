@@ -5,9 +5,9 @@
 
 import { useMemo, useState } from 'react';
 
+import { useRouter } from '@/i18n/navigation';
 import { SERVICE_TYPE_LABELS, type ServiceType } from '@/types/serviceType';
 import type { StaticImageData } from 'next/image';
-import { useRouter } from 'next/navigation';
 
 import imgMovingHome from '@/assets/images/img_moving_home.png';
 import imgMovingOffice from '@/assets/images/img_moving_office.png';

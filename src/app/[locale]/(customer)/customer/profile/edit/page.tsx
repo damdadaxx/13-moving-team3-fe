@@ -4,9 +4,9 @@
 
 import { useMemo } from 'react';
 
+import { useRouter } from '@/i18n/navigation';
 import type { CustomerProfileEditFormValues } from '@/types/customerProfile';
 import { useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 
 import { ROUTES } from '@/lib/constants/routes';
 

@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl';
+
 import { cn } from '@/utils/cn';
 
 import StarRating from '@/components/ui/StarRating';
@@ -23,6 +25,7 @@ function RatingBar({
   totalCount,
   isHighest,
 }: RatingDistribution & { totalCount: number; isHighest: boolean }) {
+  const t = useTranslations('Review');
   const percent = totalCount === 0 ? 0 : (count / totalCount) * 100;
 
   return (
@@ -33,7 +36,7 @@ function RatingBar({
           isHighest ? 'text-md-bold' : 'text-md-medium',
         )}
       >
-        {score}점
+        {t('scoreLabel', { score })}
       </p>
       <div
         className={cn(
@@ -67,6 +70,7 @@ export default function MoverReviewSummary({
   reviewCount,
   distribution,
 }: MoverReviewSummaryProps) {
+  const t = useTranslations('Review');
   const highestCount = Math.max(...distribution.map((item) => item.count));
 
   return (
@@ -88,7 +92,7 @@ export default function MoverReviewSummary({
               'tablet:text-md-regular',
             )}
           >
-            {reviewCount}개의 리뷰
+            {t('reviewCount', { count: reviewCount })}
           </p>
         </div>
       </div>

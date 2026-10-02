@@ -1,7 +1,11 @@
 {
   "Common": {
     "loading": "로딩 중",
-    "login": "로그인"
+    "login": "로그인",
+    "careerYears": "{count}년",
+    "careerMonths": "{count}개월",
+    "cancel": "취소",
+    "customerOnly": "고객 계정으로 로그인해주세요."
   },
   "Header": {
     "home": "무빙 홈",
@@ -88,8 +92,6 @@
     "profileAlt": "{nickname} 기사님 프로필",
     "rating": "평점",
     "career": "경력",
-    "careerYears": "{count}년",
-    "careerMonths": "{count}개월",
     "confirmedCount": "{count}건",
     "confirmed": "확정",
     "liked": "찜함",
@@ -130,5 +132,64 @@
     "placeholder": "텍스트를 입력해 주세요.",
     "search": "검색",
     "clear": "검색어 지우기"
+  },
+  "MoverDetail": {
+    "metaTitle": "기사님 상세",
+    "notFound": "기사님 정보를 찾을 수 없어요.",
+    "requestLine1": "{nickname} 기사님에게",
+    "requestLine2": "지정 견적을 요청해보세요!",
+    "profileAlt": "{nickname} 프로필 사진",
+    "serviceTypes": "제공 서비스",
+    "serviceRegions": "서비스 가능 지역",
+    "shareTitle": "나만 알기엔 아쉬운 기사님인가요?",
+    "statConfirmed": "진행",
+    "statReview": "리뷰",
+    "statCareer": "총 경력",
+    "statConfirmedCount": "{count}건"
+  },
+  "DesignatedEstimate": {
+    "request": "지정 견적 요청하기",
+    "requested": "지정 견적 요청 완료",
+    "alreadyReceived": "이미 견적을 받았어요",
+    "success": "지정 견적 요청이 완료되었어요",
+    "failed": "지정 견적 요청에 실패했어요.",
+    "confirmMessage": "지정 견적 요청을 취소하시겠습니까? 취소한 요청은 다시 복구할 수 없습니다.",
+    "needRequestMessage": "일반 견적 요청을 먼저 진행해 주세요.",
+    "goGeneralRequest": "일반 견적 요청 하기",
+    "alreadyConfirmed": "이미 확정된 이사 견적이 있어요.",
+    "alreadyDesignated": "이미 지정 견적을 요청한 기사님이에요.",
+    "alreadyHasEstimate": "이미 견적을 받은 기사님이에요."
+  },
+  "MoverLike": {
+    "countLabel": "찜 {count}개",
+    "like": "찜하기",
+    "unlike": "찜 취소하기",
+    "likeMover": "기사님 찜하기",
+    "liked": "기사님을 찜했어요.",
+    "unliked": "찜을 취소했어요.",
+    "failed": "찜하기에 실패했어요.",
+    "profileRequiredTitle": "프로필 등록",
+    "profileRequiredLine1": "기사님을 찜하려면 프로필 등록이 필요해요.",
+    "profileRequiredLine2": "프로필 등록 페이지로 이동할까요?",
+    "goProfile": "프로필 등록하기"
+  },
+  "Share": {
+    "copied": "링크가 복사되었어요",
+    "kakaoFailed": "카카오 공유를 실행할 수 없어요",
+    "facebookPublicOnly": "페이스북은 공개된 주소만 미리보기를 가져올 수 있어요"
+  },
+  "Review": {
+    "title": "리뷰",
+    "loadFailed": "리뷰를 불러오지 못했어요.",
+    "empty": "아직 등록된 리뷰가 없어요!",
+    "scoreLabel": "{score}점",
+    "reviewCount": "{count}개의 리뷰",
+    "ratingAria": "{value}점",
+    "anonymousReviewer": "고객****"
+  },
+  "Pagination": {
+    "label": "페이지네이션",
+    "prev": "이전 페이지",
+    "next": "다음 페이지"
   }
 }

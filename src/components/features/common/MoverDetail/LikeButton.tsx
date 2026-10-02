@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import IcLikeBlack from '@/assets/icons/ic_like_black.svg';
 import IcLikeEmpty from '@/assets/icons/ic_like_empty.svg';
 
@@ -68,6 +70,8 @@ function CountBadge({
   likeCount: number;
   iconFirst: boolean;
 }) {
+  const t = useTranslations('MoverLike');
+
   return (
     <div
       className={cn(
@@ -75,7 +79,7 @@ function CountBadge({
         iconFirst && 'flex-row-reverse justify-end',
         className,
       )}
-      aria-label={`찜 ${likeCount}개`}
+      aria-label={t('countLabel', { count: likeCount })}
     >
       <p
         className={cn('text-md-medium text-gray-500', 'tablet:text-2lg-medium')}
@@ -101,6 +105,7 @@ function LikeToggle({
   variant: 'icon' | 'text' | 'count';
   iconFirst: boolean;
 }) {
+  const t = useTranslations('MoverLike');
   const { isLiked, likeCount, isPending, toggleLike } = useMoverLike(
     moverId,
     initialLikeCount,
@@ -114,7 +119,7 @@ function LikeToggle({
         onClick={toggleLike}
         disabled={isPending}
         aria-pressed={isLiked}
-        aria-label={isLiked ? '찜 취소하기' : '찜하기'}
+        aria-label={isLiked ? t('unlike') : t('like')}
         className={className}
       />
     );
@@ -127,7 +132,7 @@ function LikeToggle({
         disabled={isPending}
         onClick={toggleLike}
         aria-pressed={isLiked}
-        aria-label={isLiked ? '찜 취소하기' : '기사님 찜하기'}
+        aria-label={isLiked ? t('unlike') : t('likeMover')}
         className={cn(
           'h-[54px] gap-[10px] rounded-[16px] border border-line-200 bg-gray-50 p-[10px] hover:bg-background-100',
           className,
@@ -138,7 +143,9 @@ function LikeToggle({
         ) : (
           <IcLikeEmpty aria-hidden className="h-[24px] w-[24px]" />
         )}
-        <span className="text-2lg-semibold text-black-400">기사님 찜하기</span>
+        <span className="text-2lg-semibold text-black-400">
+          {t('likeMover')}
+        </span>
       </ButtonElement>
     );
   }
@@ -154,7 +161,7 @@ function LikeToggle({
       onClick={toggleLike}
       disabled={isPending}
       aria-pressed={isLiked}
-      aria-label={isLiked ? '찜 취소하기' : '찜하기'}
+      aria-label={isLiked ? t('unlike') : t('like')}
     >
       <p
         className={cn('text-md-medium text-gray-500', 'tablet:text-2lg-medium')}

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import type { MoverReviewListItem } from '@/types/review';
+import { useTranslations } from 'next-intl';
 
 import { useMoverReviewsQuery } from '@/hooks/features/review/queries/queries';
 
@@ -19,6 +20,7 @@ import Pagination from '@/components/ui/Pagination';
 import SectionTitle from '@/components/ui/SectionTitle';
 
 export default function MoverReviewList({ moverId }: { moverId: string }) {
+  const t = useTranslations('Review');
   const [page, setPage] = useState(1);
   const [currentMoverId, setCurrentMoverId] = useState(moverId);
 
@@ -44,7 +46,7 @@ export default function MoverReviewList({ moverId }: { moverId: string }) {
   return (
     <div className="flex w-full flex-col gap-[16px]">
       <div className="flex flex-col gap-[16px]">
-        <SectionTitle className="mb-0 tablet:mb-0">리뷰</SectionTitle>
+        <SectionTitle className="mb-0 tablet:mb-0">{t('title')}</SectionTitle>
         {data ? (
           <MoverReviewSummary
             averageRating={data.ratingAvg}
@@ -58,11 +60,11 @@ export default function MoverReviewList({ moverId }: { moverId: string }) {
         <LoadingDisplay size={40} fullHeight={false} className="py-[40px]" />
       ) : isError ? (
         <p className="py-[40px] text-center text-lg-regular text-gray-400">
-          리뷰를 불러오지 못했어요.
+          {t('loadFailed')}
         </p>
       ) : reviews.length === 0 ? (
         <p className="py-[40px] text-center text-lg-regular text-gray-400">
-          아직 등록된 리뷰가 없어요!
+          {t('empty')}
         </p>
       ) : (
         <ul>
@@ -74,7 +76,10 @@ export default function MoverReviewList({ moverId }: { moverId: string }) {
               )}
             >
               <MoverReviewItem
-                name={formatMaskedReviewerName(review.user?.name)}
+                name={formatMaskedReviewerName(
+                  review.user?.name,
+                  t('anonymousReviewer'),
+                )}
                 createdAt={review.createdAt}
                 rating={review.rating}
                 content={review.content}

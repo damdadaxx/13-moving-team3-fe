@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 
 import { HttpError } from '@/lib/api/errors';
 import { getGuestSigninPath, ROUTES } from '@/lib/constants/routes';
@@ -25,6 +26,8 @@ import Button from '@/components/ui/Button/Button';
 - UI는 likes/mutations의 낙관적 업데이트가 먼저 바꾸고, 서버 응답으로 확정한다
 */
 export function useMoverLike(moverId: string, initialLikeCount: number) {
+  const t = useTranslations('MoverLike');
+  const tCommon = useTranslations('Common');
   const router = useRouter();
   const pathname = usePathname();
   const queryClient = useQueryClient();
@@ -50,12 +53,12 @@ export function useMoverLike(moverId: string, initialLikeCount: number) {
   function openProfileRequiredModal() {
     openModal(
       <p className="text-2lg-medium text-black-300">
-        기사님을 찜하려면 프로필 등록이 필요해요.
+        {t('profileRequiredLine1')}
         <br />
-        프로필 등록 페이지로 이동할까요?
+        {t('profileRequiredLine2')}
       </p>,
       {
-        title: '프로필 등록',
+        title: t('profileRequiredTitle'),
         variant: 'popup',
         buttons: (
           <>
@@ -65,7 +68,7 @@ export function useMoverLike(moverId: string, initialLikeCount: number) {
               className="flex-1"
               onClick={closeModal}
             >
-              취소
+              {tCommon('cancel')}
             </Button>
             <Button
               size={modalButtonSize}
@@ -73,7 +76,7 @@ export function useMoverLike(moverId: string, initialLikeCount: number) {
               href={ROUTES.customerProfileNew}
               onClick={closeModal}
             >
-              프로필 등록하기
+              {t('goProfile')}
             </Button>
           </>
         ),
@@ -94,19 +97,19 @@ export function useMoverLike(moverId: string, initialLikeCount: number) {
 
     /** 고객 계정이 아닌 경우 토스트 메시지 표시 */
     if (role !== 'customer') {
-      showToast('고객 계정으로 로그인해주세요.');
+      showToast(tCommon('customerOnly'));
       return;
     }
 
     try {
       if (isLiked) {
         await deleteLikeMutation.mutateAsync(moverId); /** 좋아요 취소 */
-        showToast('찜을 취소했어요.');
+        showToast(t('unliked'));
         return;
       }
 
       await createLikeMutation.mutateAsync(moverId); /** 좋아요 추가 */
-      showToast('기사님을 찜했어요.');
+      showToast(t('liked'));
     } catch (error) {
       if (error instanceof HttpError && error.code === 'BAD_REQUEST') {
         /** 좋아요 상태 무효화 */
@@ -122,9 +125,7 @@ export function useMoverLike(moverId: string, initialLikeCount: number) {
       }
 
       /** 찜하기에 실패 시 토스트 메시지 표시 */
-      showToast(
-        error instanceof HttpError ? error.message : '찜하기에 실패했어요.',
-      );
+      showToast(error instanceof HttpError ? error.message : t('failed'));
     }
   }
 

@@ -1,6 +1,8 @@
 // [공용] 기사님 공유하기 정보
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { useToast } from '@/hooks/common/useToast';
 
 import { cn } from '@/utils/cn';
@@ -24,12 +26,14 @@ export default function ShareMoverInfo({
   text?: string;
   className?: string;
 }) {
+  const t = useTranslations('Share');
+  const tDetail = useTranslations('MoverDetail');
   const { showToast } = useToast();
 
   const handleCopyLink = async () => {
     try {
       await copyPageUrl();
-      showToast('링크가 복사되었어요');
+      showToast(t('copied'));
     } catch {
       // 복사 실패 시에는 토스트를 띄우지 않는다
     }
@@ -40,7 +44,7 @@ export default function ShareMoverInfo({
     try {
       shareToKakao();
     } catch {
-      showToast('카카오 공유를 실행할 수 없어요');
+      showToast(t('kakaoFailed'));
     }
   };
 
@@ -48,7 +52,7 @@ export default function ShareMoverInfo({
   /** 페이스북 공유 핸들러 */
   const handleFacebookShare = () => {
     if (isLocalShareUrl()) {
-      showToast('페이스북은 공개된 주소만 미리보기를 가져올 수 있어요');
+      showToast(t('facebookPublicOnly'));
     }
     shareToFacebook();
   };
@@ -61,7 +65,7 @@ export default function ShareMoverInfo({
           'desktop:mb-[22px] tablet:text-xl-semibold',
         )}
       >
-        {text ?? '나만 알기엔 아쉬운 기사님인가요?'}
+        {text ?? tDetail('shareTitle')}
       </p>
       <div className={cn('flex gap-[12px]', 'tablet:gap-[16px]')}>
         <ButtonIcon variant="clip" onClick={handleCopyLink} />

@@ -12,6 +12,7 @@ import IcStarActive from '@/assets/icons/ic_star_active.svg';
 import ImgProfileDefault from '@/assets/images/img_profile_default.png';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+import { useFormatCareer } from '@/hooks/common/useFormatCareer';
 
 import { cn } from '@/utils/cn';
 
@@ -31,19 +32,6 @@ interface MoverCardProps {
 
 const CARD_BASE =
   'block rounded-2xl border-[0.5px] border-line-100 bg-gray-50 p-5 shadow-[-2px_-2px_10px_rgb(220_220_220_/_0.2),2px_2px_10px_rgb(220_220_220_/_0.2)]';
-
-/*
-@ 경력 표시
-- 개월 수로 내려온다. 1년 미만은 개월, 그 이상은 년 단위로 내림
-- 단위(년/개월, yrs/mos …)는 messages > MoverCard.careerYears / careerMonths
-*/
-function useFormatCareer() {
-  const t = useTranslations('MoverCard');
-  return (careerMonths: number) =>
-    careerMonths < 12
-      ? t('careerMonths', { count: careerMonths })
-      : t('careerYears', { count: Math.floor(careerMonths / 12) });
-}
 
 /*
 @ 프로필 이미지

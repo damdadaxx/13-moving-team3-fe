@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { useMoverDetailQuery } from '@/hooks/features/mover/queries/queries';
 
 import { cn } from '@/utils/cn';
@@ -22,6 +24,7 @@ export default function MoverDetailPageContent({
 }: {
   moverId: string;
 }) {
+  const t = useTranslations('MoverDetail');
   const { data: mover, isPending, isError } = useMoverDetailQuery(moverId);
 
   if (isPending) {
@@ -29,7 +32,7 @@ export default function MoverDetailPageContent({
   }
 
   if (isError || !mover) {
-    return <EmptyState message="기사님 정보를 찾을 수 없어요." />;
+    return <EmptyState message={t('notFound')} />;
   }
 
   return (

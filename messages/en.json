@@ -1,7 +1,11 @@
 {
   "Common": {
     "loading": "Loading",
-    "login": "Log in"
+    "login": "Log in",
+    "careerYears": "{count, plural, one {# yr} other {# yrs}}",
+    "careerMonths": "{count, plural, one {# mo} other {# mos}}",
+    "cancel": "Cancel",
+    "customerOnly": "Please log in with a customer account."
   },
   "Header": {
     "home": "Moving home",
@@ -88,8 +92,6 @@
     "profileAlt": "{nickname}'s profile",
     "rating": "Rating",
     "career": "Experience",
-    "careerYears": "{count, plural, one {# yr} other {# yrs}}",
-    "careerMonths": "{count, plural, one {# mo} other {# mos}}",
     "confirmedCount": "{count}",
     "confirmed": "confirmed",
     "liked": "Liked",
@@ -130,5 +132,64 @@
     "placeholder": "Enter text",
     "search": "Search",
     "clear": "Clear search"
+  },
+  "MoverDetail": {
+    "metaTitle": "Mover Details",
+    "notFound": "We couldn't find this mover.",
+    "requestLine1": "Send {nickname}",
+    "requestLine2": "a designated estimate request!",
+    "profileAlt": "{nickname}'s profile photo",
+    "serviceTypes": "Services",
+    "serviceRegions": "Service Areas",
+    "shareTitle": "Too good to keep to yourself?",
+    "statConfirmed": "Moves",
+    "statReview": "Reviews",
+    "statCareer": "Experience",
+    "statConfirmedCount": "{count}"
+  },
+  "DesignatedEstimate": {
+    "request": "Request Designated Estimate",
+    "requested": "Designated Request Sent",
+    "alreadyReceived": "Estimate Already Received",
+    "success": "Your designated estimate request was sent.",
+    "failed": "Failed to send the designated estimate request.",
+    "confirmMessage": "Do you want to cancel the designated estimate request? A canceled request cannot be restored.",
+    "needRequestMessage": "Please submit a general estimate request first.",
+    "goGeneralRequest": "Request a General Estimate",
+    "alreadyConfirmed": "You already have a confirmed moving estimate.",
+    "alreadyDesignated": "You've already sent this mover a designated request.",
+    "alreadyHasEstimate": "You've already received an estimate from this mover."
+  },
+  "MoverLike": {
+    "countLabel": "{count, plural, one {# like} other {# likes}}",
+    "like": "Like",
+    "unlike": "Unlike",
+    "likeMover": "Like this mover",
+    "liked": "Added to your liked movers.",
+    "unliked": "Removed from your liked movers.",
+    "failed": "Failed to update your like.",
+    "profileRequiredTitle": "Create Profile",
+    "profileRequiredLine1": "You need a profile to like movers.",
+    "profileRequiredLine2": "Go to the profile setup page?",
+    "goProfile": "Create Profile"
+  },
+  "Share": {
+    "copied": "Link copied.",
+    "kakaoFailed": "Couldn't open KakaoTalk sharing.",
+    "facebookPublicOnly": "Facebook can only preview public URLs."
+  },
+  "Review": {
+    "title": "Reviews",
+    "loadFailed": "Couldn't load reviews.",
+    "empty": "No reviews yet!",
+    "scoreLabel": "{score}★",
+    "reviewCount": "{count, plural, one {# review} other {# reviews}}",
+    "ratingAria": "{value} out of 5",
+    "anonymousReviewer": "Customer****"
+  },
+  "Pagination": {
+    "label": "Pagination",
+    "prev": "Previous page",
+    "next": "Next page"
   }
 }

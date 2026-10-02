@@ -1,6 +1,7 @@
 'use client';
 import type { Region } from '@/types/region';
-import { REGION_OPTIONS } from '@/types/region';
+import { REGIONS } from '@/types/region';
+import { useTranslations } from 'next-intl';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
@@ -19,11 +20,13 @@ export default function ServiceRegionList({
   serviceRegions: Region[];
   className?: string;
 }) {
+  const t = useTranslations('MoverDetail');
+  const tRegion = useTranslations('Region');
   const currentBreakpoint = useBreakpointValue('sm', 'md', 'md');
 
   return (
     <div className={cn(className)}>
-      <SectionTitle>서비스 가능 지역</SectionTitle>
+      <SectionTitle>{t('serviceRegions')}</SectionTitle>
       <div
         className={cn(
           'grid grid-cols-[repeat(5,max-content)] gap-[8px]',
@@ -31,20 +34,18 @@ export default function ServiceRegionList({
         )}
       >
         {serviceRegions.map((serviceRegion) => {
-          const region = REGION_OPTIONS.find(
-            (option) => option.value === serviceRegion,
-          );
-          if (!region) return null;
+          // 모르는 지역 값은 건너뛴다 (라벨은 messages > Region)
+          if (!REGIONS.includes(serviceRegion)) return null;
 
           return (
             <SelectableChip
-              key={region.value}
+              key={serviceRegion}
               variant="default"
               size={currentBreakpoint}
               isSelected={false}
               className="cursor-default"
             >
-              {region.label}
+              {tRegion(serviceRegion)}
             </SelectableChip>
           );
         })}

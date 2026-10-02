@@ -1,7 +1,11 @@
 {
   "Common": {
     "loading": "読み込み中",
-    "login": "ログイン"
+    "login": "ログイン",
+    "careerYears": "{count}年",
+    "careerMonths": "{count}ヶ月",
+    "cancel": "キャンセル",
+    "customerOnly": "お客様アカウントでログインしてください。"
   },
   "Header": {
     "home": "Moving ホーム",
@@ -88,8 +92,6 @@
     "profileAlt": "{nickname}のプロフィール",
     "rating": "評価",
     "career": "経歴",
-    "careerYears": "{count}年",
-    "careerMonths": "{count}ヶ月",
     "confirmedCount": "{count}件",
     "confirmed": "確定",
     "liked": "お気に入り済み",
@@ -130,5 +132,64 @@
     "placeholder": "テキストを入力してください",
     "search": "検索",
     "clear": "検索語を消去"
+  },
+  "MoverDetail": {
+    "metaTitle": "業者詳細",
+    "notFound": "業者の情報が見つかりません。",
+    "requestLine1": "{nickname}に",
+    "requestLine2": "指定見積もりを依頼しましょう！",
+    "profileAlt": "{nickname}のプロフィール写真",
+    "serviceTypes": "提供サービス",
+    "serviceRegions": "対応地域",
+    "shareTitle": "ひとり占めするにはもったいない業者ですか？",
+    "statConfirmed": "実績",
+    "statReview": "レビュー",
+    "statCareer": "総経歴",
+    "statConfirmedCount": "{count}件"
+  },
+  "DesignatedEstimate": {
+    "request": "指定見積もりを依頼",
+    "requested": "指定見積もり依頼済み",
+    "alreadyReceived": "見積もり受信済み",
+    "success": "指定見積もりを依頼しました。",
+    "failed": "指定見積もりの依頼に失敗しました。",
+    "confirmMessage": "指定見積もり依頼をキャンセルしますか？キャンセルした依頼は元に戻せません。",
+    "needRequestMessage": "先に通常の見積もり依頼をしてください。",
+    "goGeneralRequest": "通常の見積もりを依頼",
+    "alreadyConfirmed": "すでに確定した引越し見積もりがあります。",
+    "alreadyDesignated": "この業者にはすでに指定見積もりを依頼しています。",
+    "alreadyHasEstimate": "この業者からはすでに見積もりを受け取っています。"
+  },
+  "MoverLike": {
+    "countLabel": "お気に入り {count}件",
+    "like": "お気に入り",
+    "unlike": "お気に入り解除",
+    "likeMover": "業者をお気に入り",
+    "liked": "お気に入りに追加しました。",
+    "unliked": "お気に入りを解除しました。",
+    "failed": "お気に入りの更新に失敗しました。",
+    "profileRequiredTitle": "プロフィール登録",
+    "profileRequiredLine1": "業者をお気に入りにするにはプロフィール登録が必要です。",
+    "profileRequiredLine2": "プロフィール登録ページへ移動しますか？",
+    "goProfile": "プロフィールを登録"
+  },
+  "Share": {
+    "copied": "リンクをコピーしました。",
+    "kakaoFailed": "KakaoTalk共有を開けませんでした。",
+    "facebookPublicOnly": "Facebookは公開URLのみプレビューできます。"
+  },
+  "Review": {
+    "title": "レビュー",
+    "loadFailed": "レビューを読み込めませんでした。",
+    "empty": "まだレビューがありません！",
+    "scoreLabel": "{score}点",
+    "reviewCount": "レビュー{count}件",
+    "ratingAria": "{value}点",
+    "anonymousReviewer": "お客様****"
+  },
+  "Pagination": {
+    "label": "ページネーション",
+    "prev": "前のページ",
+    "next": "次のページ"
   }
 }

@@ -1,7 +1,11 @@
+import { useTranslations } from 'next-intl';
+
 import IcStarFill from '@/assets/icons/ic_star_fill.svg';
 
+import { useFormatCareer } from '@/hooks/common/useFormatCareer';
+
 import { cn } from '@/utils/cn';
-import { formatCareerLabel, formatRating } from '@/utils/formatMover';
+import { formatRating } from '@/utils/formatMover';
 
 function Divider() {
   return <span aria-hidden className="h-[14px] w-px bg-line-100" />;
@@ -24,6 +28,9 @@ export default function MoverStatsRow({
   confirmedCount: number;
   className?: string;
 }) {
+  const t = useTranslations('MoverCard');
+  const formatCareer = useFormatCareer();
+
   return (
     <div className={cn('flex items-center gap-[8px]', className)}>
       {/* 별점 */}
@@ -38,15 +45,15 @@ export default function MoverStatsRow({
       {/* 경력 */}
       <p className="flex items-center gap-[8px] text-md-semibold text-black-300">
         <Divider />
-        <span className="text-md-medium text-gray-300">경력</span>
-        {formatCareerLabel(careerMonths)}
+        <span className="text-md-medium text-gray-300">{t('career')}</span>
+        {formatCareer(careerMonths)}
       </p>
 
       {/* 확정 건수 */}
       <p className="flex items-center gap-[8px] text-md-semibold text-black-300">
         <Divider />
-        {`${confirmedCount}건 `}
-        <span className="text-md-medium text-gray-300">확정</span>
+        {t('confirmedCount', { count: confirmedCount })}
+        <span className="text-md-medium text-gray-300">{t('confirmed')}</span>
       </p>
     </div>
   );

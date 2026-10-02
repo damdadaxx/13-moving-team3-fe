@@ -1,6 +1,7 @@
 'use client';
 
 import { cva, type VariantProps } from 'class-variance-authority';
+import { useTranslations } from 'next-intl';
 
 import IcChevronLeft from '@/assets/icons/ic_chevron_left.svg';
 import IcChevronRight from '@/assets/icons/ic_chevron_right.svg';
@@ -151,6 +152,7 @@ export default function Pagination({
   size = 'responsive',
   className,
 }: PaginationProps) {
+  const t = useTranslations('Pagination');
   //네모 박스에 대한 클래스.
   const cellClass = paginationCell({ size });
 
@@ -200,7 +202,7 @@ export default function Pagination({
 
   return (
     <nav
-      aria-label="페이지네이션"
+      aria-label={t('label')}
       className={cn(
         'flex items-center',
         size === 'sm' && 'gap-[8px]',
@@ -211,7 +213,7 @@ export default function Pagination({
     >
       <button
         type="button"
-        aria-label="이전 페이지"
+        aria-label={t('prev')}
         disabled={isFirstPage}
         className={cn(
           cellClass,
@@ -235,7 +237,7 @@ export default function Pagination({
 
       <button
         type="button"
-        aria-label="다음 페이지"
+        aria-label={t('next')}
         disabled={isLastPage}
         className={cn(
           cellClass,

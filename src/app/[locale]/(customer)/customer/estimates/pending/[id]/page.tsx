@@ -2,29 +2,23 @@
 // [페이지] 견적 상세 (대기중인 견적)
 import { Metadata } from 'next';
 
-import { OPEN_GRAPH_DEFAULT } from '@/lib/constants/site';
+import { createPageMetadata } from '@/lib/constants/site';
 
 import EstimatePendingDetailPageContent from '@/components/features/customer/EstimatePendingDetail/EstimatePendingDetailPageContent';
 
 interface EstimatePendingDetailPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string; locale: string }>;
 }
 
 export async function generateMetadata({
   params,
 }: EstimatePendingDetailPageProps): Promise<Metadata> {
-  const { id } = await params;
+  const { id, locale } = await params;
 
-  return {
+  return createPageMetadata(locale, {
     title: '견적 상세',
-    openGraph: {
-      ...OPEN_GRAPH_DEFAULT,
-      url: `/customer/estimates/pending/${id}`,
-    },
-    twitter: {
-      card: 'summary_large_image',
-    },
-  };
+    path: `/customer/estimates/pending/${id}`,
+  });
 }
 
 export default async function EstimatePendingDetailPage({

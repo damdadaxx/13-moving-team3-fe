@@ -3,6 +3,8 @@
 // root 레벨 공통 에러 UI
 import { useEffect } from 'react';
 
+import { useTranslations } from 'next-intl';
+
 import EmptyState from '@/components/ui/EmptyState';
 
 interface ErrorProps {
@@ -12,14 +14,16 @@ interface ErrorProps {
 }
 
 export default function Error({ error, reset }: ErrorProps) {
+  const t = useTranslations('Error');
+
   useEffect(() => {
     console.error(error);
   }, [error]);
 
   return (
     <EmptyState
-      message="오류가 발생했어요!"
-      buttonLabel="다시 시도"
+      message={t('message')}
+      buttonLabel={t('retry')}
       onClick={reset}
     />
   );

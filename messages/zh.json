@@ -1,1 +1,64 @@
-{}
+{
+  "Common": {
+    "loading": "加载中",
+    "login": "登录"
+  },
+  "Header": {
+    "home": "Moving 首页",
+    "menu": "菜单",
+    "closeMobileMenu": "关闭菜单",
+    "profileMenu": "个人菜单",
+    "notifications": "通知",
+    "notificationsWithCount": "通知 {count} 条",
+    "nav": {
+      "findMover": "寻找搬家师傅",
+      "requestEstimate": "申请报价",
+      "myEstimates": "我的报价",
+      "receivedRequests": "收到的请求"
+    }
+  },
+  "ProfileMenu": {
+    "displayName": "{name}（{role, select, customer {客户} other {师傅}}）",
+    "editProfile": "编辑资料",
+    "likedMovers": "收藏的师傅",
+    "reviews": "搬家评价",
+    "mypage": "我的页面",
+    "logout": "退出登录"
+  },
+  "Notification": {
+    "title": "通知",
+    "markAllRead": "全部标为已读",
+    "close": "关闭通知",
+    "loading": "正在加载通知…",
+    "error": "无法加载通知。",
+    "empty": "暂无通知。"
+  },
+  "Footer": {
+    "tagline": "繁琐的搬家准备，一个 Moving 就搞定！"
+  },
+  "IconButton": {
+    "like": "收藏",
+    "copyLink": "复制链接",
+    "shareKakao": "分享到 KakaoTalk",
+    "shareFacebook": "分享到 Facebook"
+  },
+  "PageHeader": {
+    "estimateRequest": "申请报价",
+    "estimateDetail": "报价详情",
+    "likedMovers": "收藏的师傅",
+    "mypage": "我的页面",
+    "receivedRequests": "收到的请求"
+  },
+  "NotFound": {
+    "message": "找不到页面！",
+    "goHome": "返回首页"
+  },
+  "Error": {
+    "message": "出错了！",
+    "retry": "重试"
+  },
+  "GlobalError": {
+    "message": "应用出现错误！",
+    "reload": "刷新"
+  }
+}

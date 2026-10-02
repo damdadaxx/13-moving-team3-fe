@@ -1,10 +1,14 @@
 // 푸터 컴포넌트
+import { useTranslations } from 'next-intl';
+
 import ImgLogo from '@/assets/images/landing/img_footer_logo.svg';
 import ImgLogoMobile from '@/assets/images/landing/img_footer_logo_m.svg';
 
 import { cn } from '@/utils/cn';
 
 export default function Footer() {
+  const t = useTranslations('Footer');
+
   return (
     <footer
       className={cn(
@@ -25,7 +29,7 @@ export default function Footer() {
           'tablet:text-[28px] tablet:leading-[calc(28/46)] tablet:font-bold',
         )}
       >
-        복잡한 이사 준비, 무빙 하나면 끝!
+        {t('tagline')}
       </p>
     </footer>
   );

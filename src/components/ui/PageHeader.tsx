@@ -2,15 +2,17 @@
 'use client';
 
 import { usePathname } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 
 import { cn } from '@/utils/cn';
-import getPageHeaderTitle from '@/utils/getPageHeaderTitle';
+import getPageHeaderTitleKey from '@/utils/getPageHeaderTitle';
 
 export default function PageHeader() {
+  const t = useTranslations('PageHeader');
   const pathname = usePathname();
-  const title = getPageHeaderTitle(pathname);
+  const titleKey = getPageHeaderTitleKey(pathname);
 
-  if (!title) return null;
+  if (!titleKey) return null;
 
   return (
     <div
@@ -32,7 +34,7 @@ export default function PageHeader() {
             'desktop:text-2xl-semibold',
           )}
         >
-          {title}
+          {t(titleKey)}
         </p>
       </div>
     </div>

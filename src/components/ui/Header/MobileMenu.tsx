@@ -5,6 +5,7 @@ import { useEffect, type Ref } from 'react';
 
 import { Link } from '@/i18n/navigation';
 import { cva } from 'class-variance-authority';
+import { useTranslations } from 'next-intl';
 
 import IcMenuClose from '@/assets/icons/ic_menu_close.svg';
 
@@ -78,6 +79,9 @@ export default function MobileMenu({
   onClose,
   ref,
 }: MobileMenuProps) {
+  const t = useTranslations('Header');
+  const tCommon = useTranslations('Common');
+
   useEffect(() => {
     if (!isOpen) return;
 
@@ -106,7 +110,7 @@ export default function MobileMenu({
       <div ref={ref} className={mobileMenuPanel({ open: isOpen })}>
         <button
           type="button"
-          aria-label="모바일 메뉴 닫기"
+          aria-label={t('closeMobileMenu')}
           onClick={onClose}
           className={cn(
             'h-[54px] w-full cursor-pointer border-b-1 border-b-line-100 px-[16px] py-[15px]',
@@ -129,7 +133,7 @@ export default function MobileMenu({
             {isGuest ? (
               <li className={mobileMenuItem()}>
                 <Link href={getGuestSigninPath()} onClick={onClose}>
-                  로그인
+                  {tCommon('login')}
                 </Link>
               </li>
             ) : null}

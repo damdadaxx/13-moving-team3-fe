@@ -67,10 +67,10 @@
     "heroDescLine2": "and makes choosing a mover simple",
     "moveTypeLine1": "Skip the hassle,",
     "moveTypeLine2": "start by choosing your move type",
-    "compareLine1": "Compare estimates from",
-    "compareLine2": "multiple movers at a glance",
-    "requestLine1": "Request the moving service you need",
-    "requestLine2": "and receive estimates",
+    "compareLine1": "Compare estimates",
+    "compareLine2": "at a glance",
+    "requestLine1": "Request your move",
+    "requestLine2": "and get estimates",
     "requestImageAlt": "Moving estimate request"
   },
   "MoverFind": {

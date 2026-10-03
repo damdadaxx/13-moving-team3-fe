@@ -5,12 +5,14 @@
 // mobile: 세로 스택, 라벨은 왼쪽 값은 오른쪽으로 밀어 정렬한다
 // tablet: 제목 아래 출발지·도착지·이사일이 한 줄
 // desktop: 제목은 왼쪽, 출발지·도착지·이사일은 오른쪽 끝으로 한 줄
-import { SERVICE_TYPE_LABELS, type ServiceType } from '@/types/serviceType';
+import type { ServiceType } from '@/types/serviceType';
+import { useTranslations } from 'next-intl';
 
 import IcArrowRight from '@/assets/icons/ic_arrow_right_sm.svg';
 
+import { useFormatDate } from '@/hooks/common/useFormatDate';
+
 import { cn } from '@/utils/cn';
-import formatDate from '@/utils/formatDate';
 import formatRegion from '@/utils/formatRegion';
 
 interface EstimateRequestHeaderProps {
@@ -58,6 +60,10 @@ export default function EstimateRequestHeader({
   arrivalAddress,
   moveDate,
 }: EstimateRequestHeaderProps) {
+  const t = useTranslations('Estimate');
+  const tServiceType = useTranslations('ServiceType');
+  const formatDate = useFormatDate();
+
   return (
     <div
       className={cn(
@@ -82,7 +88,7 @@ export default function EstimateRequestHeader({
               'tablet:text-2xl-bold',
             )}
           >
-            {SERVICE_TYPE_LABELS[serviceType]}
+            {tServiceType(serviceType)}
           </p>
           <p
             className={cn(
@@ -90,7 +96,7 @@ export default function EstimateRequestHeader({
               'tablet:text-md-regular',
             )}
           >
-            견적 신청일: {formatDate(requestedAt, 'requested')}
+            {t('requestedOn', { date: formatDate(requestedAt, 'requested') })}
           </p>
         </div>
 
@@ -107,15 +113,18 @@ export default function EstimateRequestHeader({
             )}
           >
             {/* 주소 원문은 도로명·건물명까지 길어서 시·군·구까지만 줄여 쓴다 */}
-            <Field label="출발지" value={formatRegion(departureAddress)} />
+            <Field
+              label={t('departure')}
+              value={formatRegion(departureAddress)}
+            />
             {/* 화살표는 출발지 → 도착지가 한 줄로 놓이는 tablet부터 보인다 */}
             <IcArrowRight
               aria-hidden="true"
               className="hidden h-[23px] w-[8.5px] shrink-0 tablet:block"
             />
-            <Field label="도착지" value={formatRegion(arrivalAddress)} />
+            <Field label={t('arrival')} value={formatRegion(arrivalAddress)} />
           </div>
-          <Field label="이사일" value={formatDate(moveDate, 'korean')} />
+          <Field label={t('moveDate')} value={formatDate(moveDate, 'korean')} />
         </div>
       </div>
     </div>

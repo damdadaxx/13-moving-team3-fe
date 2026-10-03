@@ -3,6 +3,7 @@
 'use client';
 
 import type { ServiceType } from '@/types/serviceType';
+import { useTranslations } from 'next-intl';
 
 import IcArrowRight from '@/assets/icons/ic_arrow_right.svg';
 
@@ -53,6 +54,8 @@ export default function EstimateRequestSummary({
   const isCard = variant === 'card';
   const divider = <div className="h-px w-full bg-line-100" />;
 
+  const t = useTranslations('Estimate');
+
   const chips = (
     <div className="flex items-center gap-[8px]">
       <ServiceTypeTag
@@ -67,7 +70,9 @@ export default function EstimateRequestSummary({
   );
 
   const name = (
-    <p className="text-xl-semibold text-black-300">{customerName} 고객님</p>
+    <p className="text-xl-semibold text-black-300">
+      {t('customerName', { name: customerName })}
+    </p>
   );
 
   const detailValueClassName = isCard
@@ -108,17 +113,21 @@ export default function EstimateRequestSummary({
       >
         <div className="flex items-end gap-[12px]">
           <div className="flex flex-col items-start">
-            <span className="text-md-regular text-gray-500">출발지</span>
+            <span className="text-md-regular text-gray-500">
+              {t('departure')}
+            </span>
             <span className={detailValueClassName}>{displayFromRegion}</span>
           </div>
           <IcArrowRight className="h-[23px] w-[17px] shrink-0 self-end" />
           <div className="flex flex-col items-start">
-            <span className="text-md-regular text-gray-500">도착지</span>
+            <span className="text-md-regular text-gray-500">
+              {t('arrival')}
+            </span>
             <span className={detailValueClassName}>{displayToRegion}</span>
           </div>
         </div>
         <div className="flex flex-col items-start">
-          <span className="text-md-regular text-gray-500">이사일</span>
+          <span className="text-md-regular text-gray-500">{t('moveDate')}</span>
           <span className={detailValueClassName}>{moveDate}</span>
         </div>
       </div>

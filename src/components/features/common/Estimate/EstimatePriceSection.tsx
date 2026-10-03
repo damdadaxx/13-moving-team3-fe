@@ -1,3 +1,7 @@
+import { useTranslations } from 'next-intl';
+
+import { useFormatPrice } from '@/hooks/common/useFormatPrice';
+
 import { cn } from '@/utils/cn';
 
 /**
@@ -16,8 +20,9 @@ export default function EstimatePriceSection({
   hidden?: boolean;
   className?: string;
 }) {
-  const priceText =
-    price === null ? '견적 대기중' : `${price.toLocaleString()}원`;
+  const t = useTranslations('Estimate');
+  const formatPrice = useFormatPrice();
+  const priceText = price === null ? t('pricePending') : formatPrice(price);
 
   if (layout === 'sidebar') {
     return (
@@ -28,7 +33,7 @@ export default function EstimatePriceSection({
           className,
         )}
       >
-        <p className="text-2lg-semibold text-gray-300">견적가</p>
+        <p className="text-2lg-semibold text-gray-300">{t('price')}</p>
         <p className={cn('text-xl-bold', 'tablet:text-2xl-bold')}>
           {priceText}
         </p>
@@ -47,7 +52,7 @@ export default function EstimatePriceSection({
       )}
     >
       <p className={cn('text-lg-semibold', 'tablet:text-xl-semibold')}>
-        견적가
+        {t('price')}
       </p>
       <p className={cn('text-xl-bold', 'tablet:text-2xl-bold')}>{priceText}</p>
     </div>

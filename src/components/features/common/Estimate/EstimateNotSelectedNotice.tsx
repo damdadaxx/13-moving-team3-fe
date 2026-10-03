@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl';
+
 import IcInfo from '@/assets/icons/ic_info.svg';
 
 import { cn } from '@/utils/cn';
@@ -11,6 +13,8 @@ export default function EstimateNotSelectedNotice({
 }: {
   className?: string;
 }) {
+  const t = useTranslations('Estimate');
+
   return (
     <div
       className={cn(
@@ -20,7 +24,7 @@ export default function EstimateNotSelectedNotice({
       )}
     >
       <IcInfo aria-hidden className="h-[24px] w-[24px] shrink-0" />
-      <p>확정하지 않은 견적이에요!</p>
+      <p>{t('notSelected')}</p>
     </div>
   );
 }

@@ -1,8 +1,5 @@
-import {
-  ESTIMATE_STATUS_COLOR,
-  ESTIMATE_STATUS_TEXT,
-  type EstimateStatus,
-} from '@/types/estimate';
+import { ESTIMATE_STATUS_COLOR, type EstimateStatus } from '@/types/estimate';
+import { useTranslations } from 'next-intl';
 
 import IcCheckedEstimate from '@/assets/icons/ic_checked_estimate.svg';
 
@@ -19,6 +16,9 @@ export default function EstimateStatusBadge({
   status: EstimateStatus;
   className?: string;
 }) {
+  // 상태 문구는 messages > EstimateStatus (키 = 상태 값)
+  const t = useTranslations('EstimateStatus');
+
   if (status === 'ACCEPTED') {
     return (
       <span
@@ -28,7 +28,7 @@ export default function EstimateStatusBadge({
         )}
       >
         <IcCheckedEstimate aria-hidden className="h-[20px] w-[20px]" />
-        {ESTIMATE_STATUS_TEXT[status]}
+        {t(status)}
       </span>
     );
   }
@@ -41,7 +41,7 @@ export default function EstimateStatusBadge({
         className,
       )}
     >
-      {ESTIMATE_STATUS_TEXT[status]}
+      {t(status)}
     </p>
   );
 }

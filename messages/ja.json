@@ -5,7 +5,9 @@
     "careerYears": "{count}年",
     "careerMonths": "{count}ヶ月",
     "cancel": "キャンセル",
-    "customerOnly": "お客様アカウントでログインしてください。"
+    "customerOnly": "お客様アカウントでログインしてください。",
+    "price": "{price}ウォン",
+    "careerUnderOneYear": "1年未満"
   },
   "Header": {
     "home": "Moving ホーム",
@@ -256,5 +258,78 @@
     "TOO_MANY_REQUESTS": "リクエストが多すぎます。しばらくしてからもう一度お試しください。",
     "retryText": "もう一度ログインしますか？",
     "goLogin": "ログインページへ"
+  },
+  "EstimateTabs": {
+    "customerPending": "保留中の見積もり",
+    "customerReceived": "受け取った見積もり",
+    "moverSent": "送信した見積もり",
+    "moverRejected": "お断りした依頼"
+  },
+  "EstimateStatus": {
+    "PROPOSED": "見積もり待ち",
+    "DESIGNATED": "指定見積もり",
+    "REJECTED": "見積もり待ち",
+    "ACCEPTED": "確定見積もり",
+    "NOT_SELECTED": "未選択",
+    "EXPIRED": "期限切れ"
+  },
+  "Estimate": {
+    "metaTitle": "見積もり詳細",
+    "notFound": "見積もり情報が見つかりません。",
+    "info": "見積もり情報",
+    "requestedAt": "見積もり依頼日",
+    "service": "サービス",
+    "usageDate": "利用日",
+    "departure": "出発地",
+    "arrival": "到着地",
+    "moveDate": "引越し日",
+    "moveType": "引越しタイプ",
+    "shareTitle": "見積書を共有",
+    "price": "見積額",
+    "priceAmount": "見積金額",
+    "pricePending": "見積もり待ち",
+    "notSelected": "確定しなかった見積もりです！",
+    "customerName": "{name} 様",
+    "viewDetail": "詳細を見る",
+    "viewEstimateDetail": "見積もり詳細を見る",
+    "requestedOn": "見積もり依頼日：{date}"
+  },
+  "EstimateConfirm": {
+    "button": "見積もりを確定",
+    "modalTitle": "見積もりを確定",
+    "modalLine1": "この見積もりで確定しますか？",
+    "modalLine2": "確定すると他の見積もりは自動的に未選択となり、元に戻せません。",
+    "confirm": "確定する",
+    "success": "見積もりを確定しました。",
+    "failed": "見積もりの確定に失敗しました。",
+    "failedRetry": "見積もりの確定に失敗しました。しばらくしてからもう一度お試しください。"
+  },
+  "CustomerEstimates": {
+    "loadFailed": "見積もり情報を読み込めませんでした。",
+    "noActiveRequest": "進行中の見積もり依頼はありません。",
+    "goRequest": "見積もりを依頼する",
+    "confirmedNotice": "見積もりを確定しました。受け取った見積もりで確認できます。",
+    "waiting": "まだ見積もりが届いていません。もう少しお待ちください。",
+    "listLoadFailed": "見積もりを読み込めませんでした。しばらくしてからもう一度お試しください。",
+    "receivedEmpty": "まだ受け取った見積もりはありません！",
+    "listTitle": "見積書一覧",
+    "filterLabel": "見積書のステータスで絞り込み",
+    "filterAll": "すべて",
+    "filterConfirmed": "確定見積もり",
+    "filterPending": "見積もり待ち",
+    "filterEmpty": "条件に合う見積書がありません。",
+    "notPending": "保留中の見積もりではありません。",
+    "goPending": "保留中の見積もりを見る",
+    "notReceived": "受け取った見積もりではありません。",
+    "goReceived": "受け取った見積もりを見る"
+  },
+  "MoverEstimates": {
+    "sentEmpty": "送信した見積もりはありません！",
+    "rejectedEmpty": "お断りした依頼はありません！",
+    "nextPageFailed": "次のページを読み込めませんでした。",
+    "rejectedOverlay": "お断りした依頼です",
+    "completedOverlay": "引越しが完了した見積もりです",
+    "notConfirmed": "確定した見積もりではありません。",
+    "goSent": "送信した見積もりを見る"
   }
 }

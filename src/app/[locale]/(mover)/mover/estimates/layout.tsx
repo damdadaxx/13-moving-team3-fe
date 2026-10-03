@@ -6,6 +6,7 @@
 // (예: sent/[id] 상세는 조각이 2개라 탭이 사라진다)
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useSelectedLayoutSegments } from 'next/navigation';
 
 import { MOVER_ESTIMATE_TABS } from '@/lib/constants/moverEstimateTabs';
@@ -17,12 +18,17 @@ export default function MoverEstimateLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const t = useTranslations('EstimateTabs');
   const segments = useSelectedLayoutSegments();
+  const tabs = MOVER_ESTIMATE_TABS.map(({ valueKey, ...tab }) => ({
+    ...tab,
+    value: t(valueKey),
+  }));
   const isListPage = segments.length === 1;
 
   return (
     <div className="flex flex-col bg-gray-50">
-      {isListPage && <Tab tabs={MOVER_ESTIMATE_TABS} />}
+      {isListPage && <Tab tabs={tabs} />}
       {children}
     </div>
   );

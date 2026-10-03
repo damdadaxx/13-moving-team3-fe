@@ -5,7 +5,9 @@
     "careerYears": "{count}년",
     "careerMonths": "{count}개월",
     "cancel": "취소",
-    "customerOnly": "고객 계정으로 로그인해주세요."
+    "customerOnly": "고객 계정으로 로그인해주세요.",
+    "price": "{price}원",
+    "careerUnderOneYear": "1년 미만"
   },
   "Header": {
     "home": "무빙 홈",
@@ -256,5 +258,78 @@
     "TOO_MANY_REQUESTS": "요청이 너무 많습니다. 잠시 후 다시 시도해주세요.",
     "retryText": "다시 로그인하시겠어요?",
     "goLogin": "로그인 페이지로 이동"
+  },
+  "EstimateTabs": {
+    "customerPending": "대기 중인 견적",
+    "customerReceived": "받았던 견적",
+    "moverSent": "보낸 견적 조회",
+    "moverRejected": "반려 요청"
+  },
+  "EstimateStatus": {
+    "PROPOSED": "견적대기",
+    "DESIGNATED": "지정견적",
+    "REJECTED": "견적대기",
+    "ACCEPTED": "확정견적",
+    "NOT_SELECTED": "견적 미선택",
+    "EXPIRED": "견적 만료"
+  },
+  "Estimate": {
+    "metaTitle": "견적 상세",
+    "notFound": "견적 정보를 찾을 수 없어요.",
+    "info": "견적 정보",
+    "requestedAt": "견적 요청일",
+    "service": "서비스",
+    "usageDate": "이용일",
+    "departure": "출발지",
+    "arrival": "도착지",
+    "moveDate": "이사일",
+    "moveType": "이사 유형",
+    "shareTitle": "견적서 공유하기",
+    "price": "견적가",
+    "priceAmount": "견적 금액",
+    "pricePending": "견적 대기중",
+    "notSelected": "확정하지 않은 견적이에요!",
+    "customerName": "{name} 고객님",
+    "viewDetail": "상세보기",
+    "viewEstimateDetail": "견적 상세보기",
+    "requestedOn": "견적 신청일: {date}"
+  },
+  "EstimateConfirm": {
+    "button": "견적 확정하기",
+    "modalTitle": "견적 확정하기",
+    "modalLine1": "이 견적으로 확정하시겠습니까?",
+    "modalLine2": "확정하면 나머지 견적은 자동으로 미선택 처리되고 되돌릴 수 없습니다.",
+    "confirm": "확정하기",
+    "success": "견적을 확정했어요.",
+    "failed": "견적 확정에 실패했어요.",
+    "failedRetry": "견적 확정에 실패했어요. 잠시 후 다시 시도해 주세요."
+  },
+  "CustomerEstimates": {
+    "loadFailed": "견적 정보를 불러오지 못했어요.",
+    "noActiveRequest": "진행 중인 견적 요청이 없어요.",
+    "goRequest": "견적 요청하러 가기",
+    "confirmedNotice": "견적을 확정했어요. 받았던 견적에서 확인할 수 있어요.",
+    "waiting": "아직 도착한 견적이 없어요. 조금만 기다려 주세요.",
+    "listLoadFailed": "견적을 불러오지 못했어요. 잠시 후 다시 시도해주세요.",
+    "receivedEmpty": "아직 받았던 견적이 없어요!",
+    "listTitle": "견적서 목록",
+    "filterLabel": "견적서 상태 필터",
+    "filterAll": "전체",
+    "filterConfirmed": "확정견적",
+    "filterPending": "견적대기",
+    "filterEmpty": "조건에 맞는 견적서가 없어요.",
+    "notPending": "대기중인 견적이 아니에요.",
+    "goPending": "대기중인 견적 보기",
+    "notReceived": "받았던 견적이 아니에요.",
+    "goReceived": "받았던 견적 보기"
+  },
+  "MoverEstimates": {
+    "sentEmpty": "보낸 견적이 없어요!",
+    "rejectedEmpty": "반려한 요청이 없어요!",
+    "nextPageFailed": "다음 페이지를 불러오지 못했어요.",
+    "rejectedOverlay": "반려된 요청이에요",
+    "completedOverlay": "이사 완료된 견적이에요",
+    "notConfirmed": "확정된 견적이 아니에요.",
+    "goSent": "보낸 견적 보기"
   }
 }

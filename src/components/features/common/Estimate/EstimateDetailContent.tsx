@@ -2,10 +2,11 @@
 
 import type { EstimateDetail } from '@/types/estimate';
 import type { MoverDetail } from '@/types/mover';
-import { SERVICE_TYPE_LABELS } from '@/types/serviceType';
+import { useTranslations } from 'next-intl';
+
+import { useFormatDate } from '@/hooks/common/useFormatDate';
 
 import { cn } from '@/utils/cn';
-import formatDate from '@/utils/formatDate';
 
 import CustomerEstimateIntro from '@/components/features/common/Estimate/CustomerEstimateIntro';
 import EstimateConfirmButton from '@/components/features/common/Estimate/EstimateConfirmButton';
@@ -43,6 +44,9 @@ export default function EstimateDetailContent({
   estimate: EstimateDetail;
   mover: MoverDetail;
 }) {
+  const t = useTranslations('Estimate');
+  const tServiceType = useTranslations('ServiceType');
+  const formatDate = useFormatDate();
   const isMoverConfirmed = variant === 'moverConfirmed';
   const isCtaHidden = variant !== 'customerPending';
   const isNotSelected =
@@ -51,19 +55,19 @@ export default function EstimateDetailContent({
   /** 견적 정보 항목 */
   const estimateInfoItems = [
     {
-      label: '견적 요청일',
+      label: t('requestedAt'),
       value: formatDate(estimate.estimateRequest.requestedAt, 'korean'),
     },
     {
-      label: '서비스',
-      value: SERVICE_TYPE_LABELS[estimate.estimateRequest.serviceType],
+      label: t('service'),
+      value: tServiceType(estimate.estimateRequest.serviceType),
     },
     {
-      label: '이용일',
+      label: t('usageDate'),
       value: formatDate(estimate.estimateRequest.moveDate, 'usage'),
     },
-    { label: '출발지', value: estimate.estimateRequest.departureAddress },
-    { label: '도착지', value: estimate.estimateRequest.arrivalAddress },
+    { label: t('departure'), value: estimate.estimateRequest.departureAddress },
+    { label: t('arrival'), value: estimate.estimateRequest.arrivalAddress },
   ];
 
   return (
@@ -155,7 +159,7 @@ export default function EstimateDetailContent({
                     'desktop:mb-[28px]',
                   )}
                 >
-                  견적 정보
+                  {t('info')}
                 </SectionTitle>
                 <dl
                   className={cn(
@@ -235,7 +239,7 @@ export default function EstimateDetailContent({
             {/* 공유하기 */}
             <ShareMoverInfo
               className={cn('invisible', 'desktop:visible')}
-              text="견적서 공유하기"
+              text={t('shareTitle')}
             />
           </section>
 

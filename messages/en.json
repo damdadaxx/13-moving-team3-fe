@@ -5,7 +5,9 @@
     "careerYears": "{count, plural, one {# yr} other {# yrs}}",
     "careerMonths": "{count, plural, one {# mo} other {# mos}}",
     "cancel": "Cancel",
-    "customerOnly": "Please log in with a customer account."
+    "customerOnly": "Please log in with a customer account.",
+    "price": "₩{price}",
+    "careerUnderOneYear": "Under 1 yr"
   },
   "Header": {
     "home": "Moving home",
@@ -256,5 +258,78 @@
     "TOO_MANY_REQUESTS": "Too many requests. Please try again later.",
     "retryText": "Want to log in again?",
     "goLogin": "Go to login"
+  },
+  "EstimateTabs": {
+    "customerPending": "Pending Estimates",
+    "customerReceived": "Received Estimates",
+    "moverSent": "Sent Estimates",
+    "moverRejected": "Rejected Requests"
+  },
+  "EstimateStatus": {
+    "PROPOSED": "Pending",
+    "DESIGNATED": "Designated",
+    "REJECTED": "Pending",
+    "ACCEPTED": "Confirmed",
+    "NOT_SELECTED": "Not Selected",
+    "EXPIRED": "Expired"
+  },
+  "Estimate": {
+    "metaTitle": "Estimate Details",
+    "notFound": "We couldn't find this estimate.",
+    "info": "Estimate Info",
+    "requestedAt": "Requested on",
+    "service": "Service",
+    "usageDate": "Service date",
+    "departure": "From",
+    "arrival": "To",
+    "moveDate": "Moving date",
+    "moveType": "Move type",
+    "shareTitle": "Share this estimate",
+    "price": "Price",
+    "priceAmount": "Estimate",
+    "pricePending": "Awaiting estimate",
+    "notSelected": "This estimate wasn't selected.",
+    "customerName": "{name}",
+    "viewDetail": "Details",
+    "viewEstimateDetail": "View Estimate",
+    "requestedOn": "Requested on {date}"
+  },
+  "EstimateConfirm": {
+    "button": "Confirm Estimate",
+    "modalTitle": "Confirm Estimate",
+    "modalLine1": "Confirm this estimate?",
+    "modalLine2": "Other estimates will be automatically declined, and this can't be undone.",
+    "confirm": "Confirm",
+    "success": "Estimate confirmed.",
+    "failed": "Failed to confirm the estimate.",
+    "failedRetry": "Failed to confirm the estimate. Please try again later."
+  },
+  "CustomerEstimates": {
+    "loadFailed": "Couldn't load your estimates.",
+    "noActiveRequest": "You have no active estimate request.",
+    "goRequest": "Request an Estimate",
+    "confirmedNotice": "Estimate confirmed. You can find it in Received Estimates.",
+    "waiting": "No estimates yet. Please hang tight.",
+    "listLoadFailed": "Couldn't load estimates. Please try again later.",
+    "receivedEmpty": "No received estimates yet!",
+    "listTitle": "Estimates",
+    "filterLabel": "Filter estimates by status",
+    "filterAll": "All",
+    "filterConfirmed": "Confirmed",
+    "filterPending": "Pending",
+    "filterEmpty": "No estimates match this filter.",
+    "notPending": "This isn't a pending estimate.",
+    "goPending": "View Pending Estimates",
+    "notReceived": "This isn't a received estimate.",
+    "goReceived": "View Received Estimates"
+  },
+  "MoverEstimates": {
+    "sentEmpty": "No sent estimates yet!",
+    "rejectedEmpty": "No rejected requests yet!",
+    "nextPageFailed": "Couldn't load the next page.",
+    "rejectedOverlay": "Request rejected",
+    "completedOverlay": "Move completed",
+    "notConfirmed": "This isn't a confirmed estimate.",
+    "goSent": "View Sent Estimates"
   }
 }

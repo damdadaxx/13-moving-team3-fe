@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { HttpError } from '@/lib/api/errors';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
@@ -28,6 +30,8 @@ export default function EstimateConfirmButton({
   size,
   className,
 }: EstimateConfirmButtonProps) {
+  const t = useTranslations('EstimateConfirm');
+  const tCommon = useTranslations('Common');
   const { showToast } = useToast();
   const { openModal, closeModal } = useModal();
   const modalButtonSize = useBreakpointValue('sm', 'sm', 'md');
@@ -37,11 +41,9 @@ export default function EstimateConfirmButton({
   async function confirmEstimate() {
     try {
       await mutateAsync(estimateId);
-      showToast('견적을 확정했어요.');
+      showToast(t('success'));
     } catch (error) {
-      showToast(
-        error instanceof HttpError ? error.message : '견적 확정에 실패했어요.',
-      );
+      showToast(error instanceof HttpError ? error.message : t('failed'));
     }
   }
 
@@ -49,12 +51,12 @@ export default function EstimateConfirmButton({
   function openConfirmModal() {
     openModal(
       <p className="text-2lg-medium text-black-300">
-        이 견적으로 확정하시겠습니까?
+        {t('modalLine1')}
         <br />
-        확정하면 나머지 견적은 자동으로 미선택 처리되고 되돌릴 수 없습니다.
+        {t('modalLine2')}
       </p>,
       {
-        title: '견적 확정하기',
+        title: t('modalTitle'),
         variant: 'popup',
         buttons: (
           <>
@@ -64,7 +66,7 @@ export default function EstimateConfirmButton({
               className="flex-1"
               onClick={closeModal}
             >
-              취소
+              {tCommon('cancel')}
             </Button>
             <Button
               size={modalButtonSize}
@@ -74,7 +76,7 @@ export default function EstimateConfirmButton({
                 void confirmEstimate();
               }}
             >
-              확정하기
+              {t('confirm')}
             </Button>
           </>
         ),
@@ -90,7 +92,7 @@ export default function EstimateConfirmButton({
       disabled={!canConfirm}
       isLoading={isPending}
     >
-      견적 확정하기
+      {t('button')}
     </Button>
   );
 }

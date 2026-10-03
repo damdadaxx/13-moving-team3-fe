@@ -16,18 +16,13 @@
 import { useState } from 'react';
 
 import type { EstimateGroup, EstimateStatusFilter } from '@/types/estimate';
+import { useTranslations } from 'next-intl';
 
 import { cn } from '@/utils/cn';
 
 import EstimateInfoSummary from '@/components/features/customer/ReceivedEstimate/EstimateInfoSummary';
 import ReceivedEstimateCard from '@/components/features/customer/ReceivedEstimate/ReceivedEstimateCard';
 import Dropdown, { type DropdownOption } from '@/components/ui/Dropdown';
-
-const STATUS_FILTER_OPTIONS: DropdownOption<EstimateStatusFilter>[] = [
-  { value: 'ALL', label: '전체' },
-  { value: 'CONFIRMED', label: '확정견적' },
-  { value: 'PENDING', label: '견적대기' },
-];
 
 interface EstimateRequestBlockProps {
   item: EstimateGroup;
@@ -36,6 +31,12 @@ interface EstimateRequestBlockProps {
 export default function EstimateRequestBlock({
   item,
 }: EstimateRequestBlockProps) {
+  const t = useTranslations('CustomerEstimates');
+  const statusFilterOptions: DropdownOption<EstimateStatusFilter>[] = [
+    { value: 'ALL', label: t('filterAll') },
+    { value: 'CONFIRMED', label: t('filterConfirmed') },
+    { value: 'PENDING', label: t('filterPending') },
+  ];
   const [statusFilter, setStatusFilter] = useState<EstimateStatusFilter>('ALL');
   const { estimateRequest, estimates } = item;
 
@@ -80,16 +81,16 @@ export default function EstimateRequestBlock({
 
         <div className="flex min-w-px flex-1 flex-col gap-[16px] desktop:gap-[20px]">
           <h2 className="flex items-center gap-[8px] text-lg-semibold text-black-400 tablet:text-xl-semibold">
-            견적서 목록
+            {t('listTitle')}
             <span className="text-orange-400">{visibleEstimates.length}</span>
           </h2>
 
           <div className="flex flex-col desktop:gap-[20px]">
             <Dropdown
-              options={STATUS_FILTER_OPTIONS}
+              options={statusFilterOptions}
               value={statusFilter}
               onChange={setStatusFilter}
-              aria-label="견적서 상태 필터"
+              aria-label={t('filterLabel')}
               className="self-start"
             />
 
@@ -105,7 +106,7 @@ export default function EstimateRequestBlock({
               </div>
             ) : (
               <p className="py-[40px] text-center text-lg-regular text-gray-400">
-                조건에 맞는 견적서가 없어요.
+                {t('filterEmpty')}
               </p>
             )}
           </div>

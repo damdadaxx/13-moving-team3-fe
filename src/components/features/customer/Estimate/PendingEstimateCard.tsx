@@ -9,8 +9,10 @@
 
 import type { Estimate } from '@/types/estimate';
 import type { ServiceType } from '@/types/serviceType';
+import { useTranslations } from 'next-intl';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+import { useFormatPrice } from '@/hooks/common/useFormatPrice';
 
 import { cn } from '@/utils/cn';
 
@@ -37,6 +39,10 @@ export default function PendingEstimateCard({
   isConfirming = false,
   isDisabled = false,
 }: PendingEstimateCardProps) {
+  const t = useTranslations('Estimate');
+  const tStatus = useTranslations('EstimateStatus');
+  const tConfirm = useTranslations('EstimateConfirm');
+  const formatPrice = useFormatPrice();
   const tagSize = useBreakpointValue(
     'sm' as const,
     'md' as const,
@@ -72,7 +78,7 @@ export default function PendingEstimateCard({
             </div>
             {/* 목록에는 PROPOSED 견적만 올라오므로 상태는 항상 "견적대기"다 */}
             <span className="text-lg-semibold px-[8px] text-gray-300">
-              견적대기
+              {tStatus('PROPOSED')}
             </span>
           </div>
 
@@ -106,7 +112,7 @@ export default function PendingEstimateCard({
                 'tablet:text-lg-medium tablet:text-black-400',
               )}
             >
-              견적 금액
+              {t('priceAmount')}
             </span>
             <span
               className={cn(
@@ -114,7 +120,7 @@ export default function PendingEstimateCard({
                 'tablet:text-2xl-bold',
               )}
             >
-              {estimate.price?.toLocaleString()}원
+              {estimate.price != null ? formatPrice(estimate.price) : '-'}
             </span>
           </div>
         </div>
@@ -135,7 +141,7 @@ export default function PendingEstimateCard({
           disabled={isDisabled}
           onClick={() => onConfirm(estimate.id)}
         >
-          견적 확정하기
+          {tConfirm('button')}
         </Button>
         <Button
           variant="outlined"
@@ -143,7 +149,7 @@ export default function PendingEstimateCard({
           className="tablet:order-1"
           href={`/customer/estimates/pending/${estimate.id}`}
         >
-          상세보기
+          {t('viewDetail')}
         </Button>
       </div>
     </EstimateCard>

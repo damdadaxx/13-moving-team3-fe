@@ -8,9 +8,10 @@
 - 제목: mobile만 가운데 정렬
 - 구분선: mobile·tablet만 (이사 유형 아래, 도착지 아래). desktop은 없다
 */
-import { SERVICE_TYPE_LABELS, type ServiceType } from '@/types/serviceType';
+import type { ServiceType } from '@/types/serviceType';
+import { useTranslations } from 'next-intl';
 
-import formatDate from '@/utils/formatDate';
+import { useFormatDate } from '@/hooks/common/useFormatDate';
 
 interface EstimateInfoSummaryProps {
   serviceType: ServiceType;
@@ -57,13 +58,16 @@ export default function EstimateInfoSummary({
   moveDate,
   requestedAt,
 }: EstimateInfoSummaryProps) {
+  const t = useTranslations('Estimate');
+  const tServiceType = useTranslations('ServiceType');
+  const formatDate = useFormatDate();
   const requestedAtLabel = formatDate(requestedAt, 'short');
 
   return (
     <div className="flex flex-col items-center gap-[16px] tablet:items-start tablet:gap-[28px] desktop:gap-[40px]">
       <div className="flex w-full items-center justify-center tablet:justify-between">
         <p className="text-2lg-semibold text-black-400 tablet:text-xl-semibold">
-          견적 정보
+          {t('info')}
         </p>
         <p className="hidden text-md-regular text-gray-500 tablet:block">
           {requestedAtLabel}
@@ -71,12 +75,15 @@ export default function EstimateInfoSummary({
       </div>
 
       <div className="flex w-full flex-col gap-[8px] tablet:gap-[12px] desktop:gap-[16px]">
-        <InfoRow label="이사 유형" value={SERVICE_TYPE_LABELS[serviceType]} />
+        <InfoRow label={t('moveType')} value={tServiceType(serviceType)} />
         <RowDivider />
-        <InfoRow label="출발지" value={fromAddress} />
-        <InfoRow label="도착지" value={toAddress} />
+        <InfoRow label={t('departure')} value={fromAddress} />
+        <InfoRow label={t('arrival')} value={toAddress} />
         <RowDivider />
-        <InfoRow label="이용일" value={formatDate(moveDate, 'korean')} />
+        <InfoRow
+          label={t('usageDate')}
+          value={formatDate(moveDate, 'korean')}
+        />
       </div>
 
       <p className="w-full text-right text-md-regular text-gray-500 tablet:hidden">

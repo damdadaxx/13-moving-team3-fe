@@ -47,6 +47,8 @@
 
 import { useRef } from 'react';
 
+import { useTranslations } from 'next-intl';
+
 import IcX from '@/assets/icons/ic_x.svg';
 
 import { useOutsideClick } from '@/hooks/common/useOutsideClick';
@@ -78,6 +80,7 @@ export default function Modal({
   children,
   className,
 }: ModalProps) {
+  const t = useTranslations('Common');
   const dialogRef = useRef<HTMLDivElement>(null);
 
   useOutsideClick(dialogRef, onClose, {
@@ -130,7 +133,7 @@ export default function Modal({
           <button
             type="button"
             onClick={onClose}
-            aria-label="닫기"
+            aria-label={t('close')}
             className={cn(
               'size-[24px] shrink-0 cursor-pointer',
               isSheet ? 'desktop:size-[36px]' : 'tablet:size-[36px]',

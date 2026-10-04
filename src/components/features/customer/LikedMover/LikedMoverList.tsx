@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 
 import type { LikedMoverItem } from '@/types/like';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import ImgEmpty from '@/assets/images/img_empty.png';
@@ -41,6 +42,7 @@ function toLikedMover(item: LikedMoverItem): LikedMover {
 }
 
 export default function LikedMoverList() {
+  const t = useTranslations('LikedMovers');
   const { showToast } = useToast();
   //삭제할 기사님의 ID값을 담는다.
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -116,13 +118,11 @@ export default function LikedMoverList() {
       onSuccess: () => {
         setIsSelectAll(false);
         setSelectedIds([]);
-        showToast('선택한 기사님을 찜 목록에서 삭제했어요.');
+        showToast(t('deleted'));
       },
       onError: (error) => {
         const message =
-          error instanceof HttpError
-            ? error.message
-            : '찜 삭제에 실패했어요. 잠시 후 다시 시도해주세요.';
+          error instanceof HttpError ? error.message : t('deleteFailed');
         showToast(message);
       },
     });
@@ -155,7 +155,10 @@ export default function LikedMoverList() {
         <Checkbox
           checked={isSelectAll}
           onChange={handleToggleAll}
-          label={`전체선택(${selectedCount}/${totalCount})`}
+          label={t('selectAll', {
+            selected: selectedCount,
+            total: totalCount,
+          })}
           labelClassName="text-md-regular tablet:text-lg-regular text-black-500"
         />
         <button
@@ -169,7 +172,7 @@ export default function LikedMoverList() {
               : 'cursor-pointer text-black-300',
           )}
         >
-          선택 항목 삭제
+          {t('deleteSelected')}
         </button>
       </div>
 
@@ -185,14 +188,14 @@ export default function LikedMoverList() {
             <div className="relative mx-auto h-[196px] w-[240px] overflow-hidden">
               <Image
                 src={ImgEmpty}
-                alt="찜한 기사님이 없습니다."
+                alt=""
                 fill
                 sizes="261px"
                 className="object-cover"
               />
             </div>
             <span className="py-[80px] text-center text-lg-regular text-gray-400">
-              찜한 기사님이 없습니다.
+              {t('empty')}
             </span>
           </li>
         ) : (

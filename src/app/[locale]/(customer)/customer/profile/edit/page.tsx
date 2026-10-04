@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import { useRouter } from '@/i18n/navigation';
 import type { CustomerProfileEditFormValues } from '@/types/customerProfile';
 import { useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 
 import { ROUTES } from '@/lib/constants/routes';
 
@@ -28,6 +29,7 @@ import CustomerProfileEditForm from '@/components/features/customer/CustomerProf
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
 export default function ProfileEditPage() {
+  const t = useTranslations('CustomerProfile');
   const router = useRouter();
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -86,7 +88,7 @@ export default function ProfileEditPage() {
     const completedSections: string[] = [];
 
     if (!plan.account && !plan.profile && !plan.password) {
-      throw new Error('변경된 정보가 없어 수정 요청을 보내지 않았습니다.');
+      throw new Error(t('noChanges'));
     }
 
     try {
@@ -97,7 +99,7 @@ export default function ProfileEditPage() {
       */
       if (plan.account) {
         await updateMeMutation.mutateAsync(plan.account);
-        completedSections.push('기본 정보');
+        completedSections.push(t('sectionAccount'));
       }
 
       /*
@@ -107,7 +109,7 @@ export default function ProfileEditPage() {
       */
       if (plan.profile) {
         await updateProfileMutation.mutateAsync(plan.profile);
-        completedSections.push('프로필');
+        completedSections.push(t('sectionProfile'));
       }
 
       /*
@@ -117,7 +119,7 @@ export default function ProfileEditPage() {
       */
       if (plan.password) {
         await updatePasswordMutation.mutateAsync(plan.password);
-        completedSections.push('비밀번호');
+        completedSections.push(t('sectionPassword'));
       }
     } catch (error) {
       /*
@@ -127,9 +129,7 @@ export default function ProfileEditPage() {
       - 원래 오류는 다시 throw해 폼 훅이 서버 validation 오류를 해당 입력란에 표시하게 한다.
       */
       if (completedSections.length > 0) {
-        showToast(
-          `${completedSections.join('·')} 수정은 저장되었지만 나머지 수정은 완료되지 않았습니다.`,
-        );
+        showToast(t('partialSaved', { sections: completedSections.join('·') }));
       }
 
       throw error;
@@ -160,7 +160,7 @@ export default function ProfileEditPage() {
 
     await Promise.allSettled(refetches);
 
-    showToast('프로필 수정이 완료되었습니다.');
+    showToast(t('updated'));
     router.replace(ROUTES.customerHome);
   };
 

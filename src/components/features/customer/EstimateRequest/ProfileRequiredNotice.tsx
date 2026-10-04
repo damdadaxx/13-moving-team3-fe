@@ -5,6 +5,8 @@
 // 폼을 다 채운 뒤 그 문구를 보게 두지 말고, 들어올 때 바로 안내한다.
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { ROUTES } from '@/lib/constants/routes';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
@@ -14,6 +16,7 @@ import { cn } from '@/utils/cn';
 import Button from '@/components/ui/Button/Button';
 
 export default function ProfileRequiredNotice() {
+  const t = useTranslations('EstimateRequest');
   // 진행 중 안내 화면과 같은 규격을 쓴다 ([[EstimateRequestInProgress]])
   const buttonSize = useBreakpointValue('sm', 'sm', 'lg');
 
@@ -25,9 +28,9 @@ export default function ProfileRequiredNotice() {
       )}
     >
       <p className="text-md-regular text-center text-gray-400 desktop:text-xl-regular">
-        견적을 요청하려면 프로필 등록이 필요해요.
+        {t('profileRequiredLine1')}
         <br />
-        이사 지역과 서비스를 등록하고 맞춤 견적을 받아보세요.
+        {t('profileRequiredLine2')}
       </p>
 
       <Button
@@ -35,7 +38,7 @@ export default function ProfileRequiredNotice() {
         href={ROUTES.customerProfileNew}
         className="w-auto px-[24px]"
       >
-        프로필 등록하러 가기
+        {t('goProfile')}
       </Button>
     </div>
   );

@@ -6,6 +6,8 @@
 
 import { useId, useRef, useState } from 'react';
 
+import { useLocale, useTranslations } from 'next-intl';
+
 import IcCalendar from '@/assets/icons/ic_calendar.svg';
 import IcChevronDown from '@/assets/icons/ic_chevron_down.svg';
 
@@ -15,10 +17,13 @@ import { cn } from '@/utils/cn';
 
 import Calendar from './Calendar';
 
-/** Figma 트리거 표기 "2025년 7월 1일" — 0 패딩도 요일도 없어서 formatDate('korean')과 다르다 */
-export function formatDateKorean(date: Date) {
-  return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
-}
+/** Figma 트리거 표기 "2025년 7월 1일" — 0 패딩도 요일도 없어서 formatDate('korean')과 다르다.
+    현재 언어의 Intl 형식을 쓴다 (ko: 2025년 7월 1일 / en: July 1, 2025) */
+const TRIGGER_DATE_FORMAT: Intl.DateTimeFormatOptions = {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+};
 
 interface DateDropdownProps {
   /** 선택된 날짜. 넘기지 않으면 컴포넌트가 자체 상태로 관리한다 (Calendar와 같은 규칙) */
@@ -53,8 +58,8 @@ export default function DateDropdown({
   value,
   onChange,
   onConfirm,
-  placeholder = '날짜 선택하기',
-  formatValue = formatDateKorean,
+  placeholder,
+  formatValue,
   confirmLabel,
   minDate,
   maxDate,
@@ -66,6 +71,8 @@ export default function DateDropdown({
   className,
   calendarClassName,
 }: DateDropdownProps) {
+  const t = useTranslations('Calendar');
+  const locale = useLocale();
   const [isOpen, setIsOpen] = useState(false);
   const [internalValue, setInternalValue] = useState<Date | null>(null);
   const selected = value !== undefined ? value : internalValue;
@@ -130,7 +137,12 @@ export default function DateDropdown({
             selected ? 'text-black-400' : 'text-gray-400',
           )}
         >
-          {selected ? formatValue(selected) : placeholder}
+          {selected
+            ? (formatValue?.(selected) ??
+              new Intl.DateTimeFormat(locale, TRIGGER_DATE_FORMAT).format(
+                selected,
+              ))
+            : (placeholder ?? t('datePlaceholder'))}
         </span>
         {/* 회전만 Figma에 없다. 화살표가 안 움직이면 드롭다운으로 안 읽혀서 넣었다 */}
         <IcChevronDown
@@ -146,7 +158,7 @@ export default function DateDropdown({
         <div
           id={popupId}
           role="dialog"
-          aria-label={ariaLabel ?? '날짜 선택'}
+          aria-label={ariaLabel ?? t('dateAria')}
           className={cn(
             'absolute top-full z-dropdown mt-3.5',
             align === 'right' ? 'right-0' : 'left-0',

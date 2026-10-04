@@ -5,6 +5,7 @@
 
 import { useMemo } from 'react';
 
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import ImgEmptyBeaver from '@/assets/images/img_empty_beaver.png';
@@ -21,6 +22,8 @@ import LoadingDisplay from '@/components/ui/LoadingDisplay';
 const PAGE_SIZE = 10;
 
 export default function MoverEstimateSentPage() {
+  const t = useTranslations('MoverEstimates');
+  const tError = useTranslations('Error');
   const {
     data,
     isPending,
@@ -107,23 +110,21 @@ export default function MoverEstimateSentPage() {
             priority
           />
           <p className="text-lg-regular text-gray-400 desktop:text-xl-regular">
-            보낸 견적이 없어요!
+            {t('sentEmpty')}
           </p>
         </div>
       )}
 
       {isFetchNextPageError && (
         <div className="flex flex-col items-center gap-[12px] py-[24px]">
-          <p className="text-md-regular text-red-200">
-            다음 페이지를 불러오지 못했어요.
-          </p>
+          <p className="text-md-regular text-red-200">{t('nextPageFailed')}</p>
           <Button
             type="button"
             size="sm"
             isLoading={isFetchingNextPage}
             onClick={() => fetchNextPage()}
           >
-            다시 시도
+            {tError('retry')}
           </Button>
         </div>
       )}

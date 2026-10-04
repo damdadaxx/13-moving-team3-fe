@@ -22,15 +22,6 @@ export type EstimateStatus =
   | 'NOT_SELECTED' // 다른 견적 확정으로 탈락
   | 'EXPIRED'; // 확정 없이 이사일 경과
 
-export const ESTIMATE_STATUS_TEXT: Record<EstimateStatus, string> = {
-  PROPOSED: '견적대기',
-  DESIGNATED: '지정견적',
-  REJECTED: '견적대기',
-  ACCEPTED: '확정견적',
-  NOT_SELECTED: '견적 미선택',
-  EXPIRED: '견적 만료',
-};
-
 export const ESTIMATE_STATUS_COLOR: Record<EstimateStatus, string> = {
   PROPOSED: 'text-gray-300',
   DESIGNATED: 'text-orange-400',

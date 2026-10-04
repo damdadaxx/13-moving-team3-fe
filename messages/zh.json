@@ -5,7 +5,9 @@
     "careerYears": "{count}年",
     "careerMonths": "{count}个月",
     "cancel": "取消",
-    "customerOnly": "请使用客户账号登录。"
+    "customerOnly": "请使用客户账号登录。",
+    "price": "{price}韩元",
+    "careerUnderOneYear": "不到1年"
   },
   "Header": {
     "home": "Moving 首页",
@@ -256,5 +258,78 @@
     "TOO_MANY_REQUESTS": "请求过多，请稍后再试。",
     "retryText": "要重新登录吗？",
     "goLogin": "前往登录页面"
+  },
+  "EstimateTabs": {
+    "customerPending": "待处理的报价",
+    "customerReceived": "收到的报价",
+    "moverSent": "已发送的报价",
+    "moverRejected": "已拒绝的请求"
+  },
+  "EstimateStatus": {
+    "PROPOSED": "待确认",
+    "DESIGNATED": "指定报价",
+    "REJECTED": "待确认",
+    "ACCEPTED": "已确认",
+    "NOT_SELECTED": "未选择",
+    "EXPIRED": "已过期"
+  },
+  "Estimate": {
+    "metaTitle": "报价详情",
+    "notFound": "找不到报价信息。",
+    "info": "报价信息",
+    "requestedAt": "报价申请日",
+    "service": "服务",
+    "usageDate": "使用日期",
+    "departure": "出发地",
+    "arrival": "目的地",
+    "moveDate": "搬家日期",
+    "moveType": "搬家类型",
+    "shareTitle": "分享报价单",
+    "price": "报价",
+    "priceAmount": "报价金额",
+    "pricePending": "等待报价",
+    "notSelected": "这是未确认的报价！",
+    "customerName": "{name} 客户",
+    "viewDetail": "查看详情",
+    "viewEstimateDetail": "查看报价详情",
+    "requestedOn": "申请日期：{date}"
+  },
+  "EstimateConfirm": {
+    "button": "确认报价",
+    "modalTitle": "确认报价",
+    "modalLine1": "确认选择这个报价吗？",
+    "modalLine2": "确认后其余报价将自动设为未选择，且无法撤销。",
+    "confirm": "确认",
+    "success": "报价已确认。",
+    "failed": "报价确认失败。",
+    "failedRetry": "报价确认失败，请稍后再试。"
+  },
+  "CustomerEstimates": {
+    "loadFailed": "无法加载报价信息。",
+    "noActiveRequest": "没有进行中的报价请求。",
+    "goRequest": "去申请报价",
+    "confirmedNotice": "报价已确认，可在收到的报价中查看。",
+    "waiting": "还没有收到报价，请稍候。",
+    "listLoadFailed": "无法加载报价，请稍后再试。",
+    "receivedEmpty": "还没有收到的报价！",
+    "listTitle": "报价单列表",
+    "filterLabel": "按状态筛选报价单",
+    "filterAll": "全部",
+    "filterConfirmed": "已确认",
+    "filterPending": "待确认",
+    "filterEmpty": "没有符合条件的报价单。",
+    "notPending": "这不是待处理的报价。",
+    "goPending": "查看待处理的报价",
+    "notReceived": "这不是收到的报价。",
+    "goReceived": "查看收到的报价"
+  },
+  "MoverEstimates": {
+    "sentEmpty": "还没有发送的报价！",
+    "rejectedEmpty": "还没有拒绝的请求！",
+    "nextPageFailed": "无法加载下一页。",
+    "rejectedOverlay": "已拒绝的请求",
+    "completedOverlay": "搬家已完成的报价",
+    "notConfirmed": "这不是已确认的报价。",
+    "goSent": "查看已发送的报价"
   }
 }

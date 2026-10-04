@@ -1,4 +1,5 @@
 import type { EstimateStatus } from '@/types/estimate';
+import { useTranslations } from 'next-intl';
 
 import { cn } from '@/utils/cn';
 
@@ -15,6 +16,8 @@ export default function CustomerEstimateIntro({
   customerName: string;
   status: EstimateStatus;
 }) {
+  const t = useTranslations('Estimate');
+
   return (
     <div
       className={cn(
@@ -28,8 +31,7 @@ export default function CustomerEstimateIntro({
           'tablet:text-2xl-semibold',
         )}
       >
-        <span>{customerName}</span>
-        <span>고객님</span>
+        <span>{t('customerName', { name: customerName })}</span>
       </p>
       <EstimateStatusBadge
         status={status}

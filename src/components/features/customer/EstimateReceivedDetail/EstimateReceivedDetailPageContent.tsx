@@ -1,6 +1,7 @@
 'use client';
 
 import type { EstimateStatus } from '@/types/estimate';
+import { useTranslations } from 'next-intl';
 
 import { ROUTES } from '@/lib/constants/routes';
 
@@ -23,6 +24,9 @@ export default function EstimateReceivedDetailPageContent({
 }: {
   estimateId: string;
 }) {
+  const tEstimate = useTranslations('Estimate');
+  const tMover = useTranslations('MoverDetail');
+  const t = useTranslations('CustomerEstimates');
   // 견적 상세 + 기사님 상세 조회
   const detail = useEstimateDetailWithMover(estimateId);
 
@@ -33,12 +37,12 @@ export default function EstimateReceivedDetailPageContent({
 
   // 견적 조회 실패
   if (detail.status === 'estimate-error') {
-    return <EmptyState message="견적 정보를 찾을 수 없어요." />;
+    return <EmptyState message={tEstimate('notFound')} />;
   }
 
   // 기사님 조회 실패
   if (detail.status === 'mover-error') {
-    return <EmptyState message="기사님 정보를 찾을 수 없어요." />;
+    return <EmptyState message={tMover('notFound')} />;
   }
 
   // 견적 상세 + 기사님 상세 조회 성공
@@ -48,8 +52,8 @@ export default function EstimateReceivedDetailPageContent({
   if (!RECEIVED_ESTIMATE_STATUSES.includes(estimate.status)) {
     return (
       <EmptyState
-        message="받았던 견적이 아니에요."
-        buttonLabel="받았던 견적 보기"
+        message={t('notReceived')}
+        buttonLabel={t('goReceived')}
         href={ROUTES.customerEstimates}
       />
     );

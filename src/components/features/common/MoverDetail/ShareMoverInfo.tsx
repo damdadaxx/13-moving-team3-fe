@@ -28,6 +28,7 @@ export default function ShareMoverInfo({
 }) {
   const t = useTranslations('Share');
   const tDetail = useTranslations('MoverDetail');
+  const tMeta = useTranslations('Metadata');
   const { showToast } = useToast();
 
   const handleCopyLink = async () => {
@@ -42,7 +43,11 @@ export default function ShareMoverInfo({
   /** 카카오 공유 핸들러 */
   const handleKakaoShare = () => {
     try {
-      shareToKakao();
+      shareToKakao({
+        title: tMeta('ogTitle'),
+        description: tMeta('siteDescription'),
+        buttonTitle: t('viewOnWeb'),
+      });
     } catch {
       showToast(t('kakaoFailed'));
     }
@@ -54,7 +59,7 @@ export default function ShareMoverInfo({
     if (isLocalShareUrl()) {
       showToast(t('facebookPublicOnly'));
     }
-    shareToFacebook();
+    shareToFacebook(tMeta('ogTitle'));
   };
 
   return (

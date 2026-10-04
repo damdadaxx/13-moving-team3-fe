@@ -70,7 +70,8 @@
   },
   "Error": {
     "message": "Something went wrong!",
-    "retry": "Try again"
+    "retry": "Try again",
+    "profileLoadFailed": "We couldn't load your profile. Please try again."
   },
   "GlobalError": {
     "message": "The app ran into an error!",
@@ -187,7 +188,8 @@
   "Share": {
     "copied": "Link copied.",
     "kakaoFailed": "Couldn't open KakaoTalk sharing.",
-    "facebookPublicOnly": "Facebook can only preview public URLs."
+    "facebookPublicOnly": "Facebook can only preview public URLs.",
+    "viewOnWeb": "View on web"
   },
   "Review": {
     "title": "Reviews",
@@ -545,5 +547,10 @@
     "profileNotFound": "We couldn't find your mover profile.",
     "alreadyCreated": "A profile already exists. Checking your profile again.",
     "saveFailed": "An error occurred while saving your profile. Please try again later."
+  },
+  "Metadata": {
+    "siteTitle": "Moving : Matching movers with people on the move",
+    "siteDescription": "A service that matches customers with professional movers",
+    "ogTitle": "Moving : Complicated moves made simple with Moving!"
   }
 }

@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { useQueryClient, type UseQueryResult } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 
 import { HttpError } from '@/lib/api/errors';
 
@@ -72,6 +73,7 @@ export default function ProfileGuard<TProfile>({
   signinPath,
   children,
 }: ProfileGuardProps<TProfile>) {
+  const t = useTranslations('Error');
   const pathname = usePathname();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -179,9 +181,7 @@ export default function ProfileGuard<TProfile>({
   */
   if (shouldShowProfileError) {
     const errorMessage =
-      error instanceof Error
-        ? error.message
-        : '프로필 정보를 확인하지 못했습니다. 다시 시도해주세요.';
+      error instanceof Error ? error.message : t('profileLoadFailed');
 
     return (
       <main className="flex min-h-[350px] w-full items-center justify-center px-[24px]">
@@ -200,7 +200,7 @@ export default function ProfileGuard<TProfile>({
             }}
             className="w-full"
           >
-            다시 시도
+            {t('retry')}
           </Button>
         </div>
       </main>

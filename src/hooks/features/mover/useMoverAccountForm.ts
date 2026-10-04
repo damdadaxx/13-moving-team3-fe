@@ -11,6 +11,7 @@ import {
 import type { AuthProviderName } from '@/types/auth';
 import type { MoverAccountFormValues } from '@/types/moverAccount';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { z } from 'zod';
 
 import { HttpError } from '@/lib/api/errors';
@@ -72,16 +73,11 @@ function getPasswordErrorField(
   return null;
 }
 
-function getMoverAccountSubmitErrorMessage(error: HttpError): string {
-  if (error.status === 401) {
-    return '로그인 정보가 만료되었습니다. 다시 로그인한 뒤 시도해주세요.';
-  }
-
-  if (error.status === 403) {
-    return '현재 계정에서는 요청한 정보를 수정할 수 없습니다.';
-  }
-
-  return error.message;
+/* 정리한 문구는 messages > MoverAccount 번역 키로 돌려주고, 없으면 null(백엔드 message 사용) */
+function getMoverAccountSubmitErrorKey(error: HttpError) {
+  if (error.status === 401) return 'sessionExpired';
+  if (error.status === 403) return 'editForbidden';
+  return null;
 }
 
 /*=================================================
@@ -93,6 +89,7 @@ export function useMoverAccountForm({
   provider,
   onSubmit,
 }: UseMoverAccountFormOptions) {
+  const t = useTranslations('MoverAccount');
   const [submitError, setSubmitError] = useState('');
   const initialValues: MoverAccountFormValues = {
     ...EMPTY_MOVER_ACCOUNT_FORM_VALUES,
@@ -145,7 +142,7 @@ export function useMoverAccountForm({
       const plan = createMoverAccountEditPlan(values, initialValues, provider);
 
       if (!plan.hasChanges) {
-        throw new Error('변경된 정보가 없습니다.');
+        throw new Error(t('noChanges'));
       }
 
       await onSubmit?.(plan);
@@ -171,16 +168,13 @@ export function useMoverAccountForm({
         }
 
         if (!hasMappedFieldError) {
-          setSubmitError(getMoverAccountSubmitErrorMessage(error));
+          const errorKey = getMoverAccountSubmitErrorKey(error);
+          setSubmitError(errorKey ? t(errorKey) : error.message);
         }
         return;
       }
 
-      setSubmitError(
-        error instanceof Error
-          ? error.message
-          : '기본정보 수정 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
-      );
+      setSubmitError(error instanceof Error ? error.message : t('editFailed'));
     }
   };
 

@@ -3,6 +3,7 @@
 'use client';
 
 import { useRouter } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import IcWriting from '@/assets/icons/ic_writing.svg';
@@ -31,6 +32,7 @@ import Modal from '@/components/ui/Modal';
 import PageBanner from '@/components/ui/PageBanner';
 
 function ButtonGroup({ className }: { className?: string }) {
+  const t = useTranslations('MoverMypage');
   const currentBreakpoint = useBreakpointValue('sm', 'lg', 'lg');
 
   return (
@@ -47,7 +49,7 @@ function ButtonGroup({ className }: { className?: string }) {
         icon={<IcWriting />}
         size={currentBreakpoint}
       >
-        내 프로필 수정
+        {t('editProfile')}
       </Button>
       <Button
         href={ROUTES.moverAccount}
@@ -56,7 +58,7 @@ function ButtonGroup({ className }: { className?: string }) {
         variant="outlined"
         color="gray"
       >
-        기본 정보 수정
+        {t('editAccount')}
       </Button>
     </section>
   );
@@ -71,6 +73,8 @@ function isMoverProfileNotFound(error: unknown): boolean {
 }
 
 export default function MoverMypageContent() {
+  const t = useTranslations('MoverMypage');
+  const tCommon = useTranslations('Common');
   const router = useRouter();
   const modalButtonSize = useBreakpointValue('sm', 'sm', 'md');
   const { user: moverUser } = useAuth();
@@ -99,7 +103,7 @@ export default function MoverMypageContent() {
         <Modal
           isOpen
           onClose={leaveMypage}
-          title="프로필 등록"
+          title={t('profileRequiredTitle')}
           variant="popup"
           buttons={
             <>
@@ -109,22 +113,22 @@ export default function MoverMypageContent() {
                 className="flex-1"
                 onClick={leaveMypage}
               >
-                취소
+                {tCommon('cancel')}
               </Button>
               <Button
                 size={modalButtonSize}
                 className="flex-1"
                 onClick={() => router.replace(ROUTES.moverProfileNew)}
               >
-                프로필 등록하기
+                {t('goProfile')}
               </Button>
             </>
           }
         >
           <p className="text-2lg-medium text-black-300">
-            마이페이지를 이용하려면 프로필 등록이 필요해요.
+            {t('profileRequiredLine1')}
             <br />
-            프로필 등록 페이지로 이동할까요?
+            {t('profileRequiredLine2')}
           </p>
         </Modal>
       </>
@@ -137,7 +141,7 @@ export default function MoverMypageContent() {
   - !mover는 프로필 유무가 아니라, 그릴 객체가 없어 mover를 좁히기 위한 조건
   */
   if (isError || !mover) {
-    return <EmptyState message="기사님 정보를 찾을 수 없어요." />;
+    return <EmptyState message={t('notFound')} />;
   }
 
   return (
@@ -171,7 +175,7 @@ export default function MoverMypageContent() {
               >
                 <Image
                   src={mover.imgUrl || ImgDefaultProfile.src}
-                  alt={`${mover.nickname} 프로필 사진`}
+                  alt={t('profileImageAlt', { nickname: mover.nickname })}
                   fill
                   sizes="(min-width: 744px) 80px, 60px"
                   className={cn('object-cover')}
@@ -235,7 +239,7 @@ export default function MoverMypageContent() {
 
               {/* 진행/리뷰/경력 정보 */}
               <MoverReviewInfo
-                label="활동 현황"
+                label={t('activity')}
                 variant="mypage"
                 confirmedCount={mover.confirmedCount}
                 averageRating={mover.averageRating}

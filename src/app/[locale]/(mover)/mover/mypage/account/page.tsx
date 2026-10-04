@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import type { MoverAccountFormValues } from '@/types/moverAccount';
 import { useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 
 import { isUnauthorizedHttpError } from '@/lib/api/errors';
 import { ROUTES } from '@/lib/constants/routes';
@@ -24,6 +25,7 @@ import MoverAccountForm from '@/components/features/mover/MoverMypage/MoverAccou
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
 export default function MoverInfoPage() {
+  const t = useTranslations('MoverAccount');
   const pathname = usePathname();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -70,9 +72,7 @@ export default function MoverInfoPage() {
       }
     } catch (error) {
       if (hasUpdatedAccount && plan.password) {
-        showToast(
-          '기본정보 수정은 저장되었지만 비밀번호 수정은 완료되지 않았습니다.',
-        );
+        showToast(t('partialSaved'));
       }
 
       if (isUnauthorizedHttpError(error)) {
@@ -96,7 +96,7 @@ export default function MoverInfoPage() {
 
     await Promise.allSettled(refetches);
 
-    showToast('기본정보 수정이 완료되었습니다.');
+    showToast(t('updated'));
     router.replace(ROUTES.moverMypage);
   };
 

@@ -11,6 +11,7 @@ import {
 import type { AuthProviderName } from '@/types/auth';
 import type { MoverProfileFormValues } from '@/types/moverProfile';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { z } from 'zod';
 
 import { HttpError } from '@/lib/api/errors';
@@ -83,24 +84,13 @@ function toMoverProfileFieldName(
     : null;
 }
 
-function getMoverProfileSubmitErrorMessage(error: HttpError): string {
-  if (error.status === 401) {
-    return '로그인 정보가 만료되었습니다. 다시 로그인한 뒤 시도해주세요.';
-  }
-
-  if (error.status === 403) {
-    return '기사님 계정만 프로필을 저장할 수 있습니다.';
-  }
-
-  if (error.status === 404) {
-    return '등록된 기사님 프로필을 찾지 못했습니다.';
-  }
-
-  if (error.status === 409) {
-    return '이미 등록된 프로필입니다. 프로필 정보를 다시 확인합니다.';
-  }
-
-  return error.message;
+/* 정리한 문구는 messages > MoverProfile 번역 키로 돌려주고, 없으면 null(백엔드 message 사용) */
+function getMoverProfileSubmitErrorKey(error: HttpError) {
+  if (error.status === 401) return 'sessionExpired';
+  if (error.status === 403) return 'moverOnly';
+  if (error.status === 404) return 'profileNotFound';
+  if (error.status === 409) return 'alreadyCreated';
+  return null;
 }
 
 /*=================================================
@@ -115,6 +105,7 @@ export function useMoverProfileForm({
   onCreateSubmit,
   onEditSubmit,
 }: UseMoverProfileFormOptions) {
+  const t = useTranslations('MoverProfile');
   const [submitError, setSubmitError] = useState('');
   const isPhoneNumberRequired = mode === 'create' && provider !== 'LOCAL';
   const initialValues: MoverProfileFormValues = {
@@ -215,7 +206,7 @@ export function useMoverProfileForm({
         );
 
         if (!plan.hasChanges) {
-          throw new Error('변경된 프로필 정보가 없습니다.');
+          throw new Error(t('noChanges'));
         }
 
         await onEditSubmit?.(plan);
@@ -236,16 +227,13 @@ export function useMoverProfileForm({
         });
 
         if (!hasMappedFieldError) {
-          setSubmitError(getMoverProfileSubmitErrorMessage(error));
+          const errorKey = getMoverProfileSubmitErrorKey(error);
+          setSubmitError(errorKey ? t(errorKey) : error.message);
         }
         return;
       }
 
-      setSubmitError(
-        error instanceof Error
-          ? error.message
-          : '프로필 저장 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
-      );
+      setSubmitError(error instanceof Error ? error.message : t('saveFailed'));
     }
   };
 

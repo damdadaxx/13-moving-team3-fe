@@ -11,10 +11,11 @@
 import { useState } from 'react';
 
 import type { ReceivedRequestItem } from '@/types/estimate';
+import { useTranslations } from 'next-intl';
 
 import IcWriting from '@/assets/icons/ic_writing.svg';
 
-import formatDate from '@/utils/formatDate';
+import { useFormatDate } from '@/hooks/common/useFormatDate';
 
 import Button from '@/components/ui/Button/Button';
 import EstimateCard from '@/components/ui/EstimateCard';
@@ -39,11 +40,13 @@ export default function ReceivedRequestCard({
   onRejectSuccess,
   onSendSuccess,
 }: ReceivedRequestCardProps) {
+  const t = useTranslations('MoverRequests');
+  const formatDateLocale = useFormatDate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
 
-  const moveDateLabel = formatDate(request.moveDate, 'korean');
-  const requestedAtLabel = formatDate(request.requestedAt, 'relative');
+  const moveDateLabel = formatDateLocale(request.moveDate, 'korean');
+  const requestedAtLabel = formatDateLocale(request.requestedAt, 'relative');
 
   return (
     <>
@@ -75,7 +78,7 @@ export default function ReceivedRequestCard({
             icon={<IcWriting className="size-[24px]" />}
             onClick={() => setIsModalOpen(true)}
           >
-            견적 보내기
+            {t('sendEstimate')}
           </Button>
           {request.isDesignated && (
             <Button
@@ -84,7 +87,7 @@ export default function ReceivedRequestCard({
               className="tablet:order-1 tablet:flex-1 desktop:order-1 desktop:flex-1"
               onClick={() => setIsRejectModalOpen(true)}
             >
-              반려하기
+              {t('reject')}
             </Button>
           )}
         </div>

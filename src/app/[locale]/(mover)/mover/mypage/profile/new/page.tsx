@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import type { MoverProfileFormValues } from '@/types/moverProfile';
 import { useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 
 import { isUnauthorizedHttpError } from '@/lib/api/errors';
 import { ROUTES } from '@/lib/constants/routes';
@@ -23,6 +24,7 @@ import MoverProfileForm from '@/components/features/mover/MoverMypage/MoverProfi
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
 export default function MoverProfileNewPage() {
+  const t = useTranslations('MoverProfile');
   const pathname = usePathname();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -69,7 +71,7 @@ export default function MoverProfileNewPage() {
       await createProfileMutation.mutateAsync(plan.profile);
     } catch (error) {
       if (hasUpdatedAccount) {
-        showToast('전화번호는 저장되었지만 프로필 등록은 완료되지 않았습니다.');
+        showToast(t('phoneSavedOnly'));
       }
 
       if (isUnauthorizedHttpError(error)) {
@@ -97,7 +99,7 @@ export default function MoverProfileNewPage() {
 
     await Promise.allSettled(refetches);
 
-    showToast('기사님 프로필 등록이 완료되었습니다.');
+    showToast(t('created'));
     router.replace(ROUTES.moverHome);
   };
 

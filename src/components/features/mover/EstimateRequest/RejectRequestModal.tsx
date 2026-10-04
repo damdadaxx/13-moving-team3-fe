@@ -2,6 +2,7 @@
 import { useState } from 'react';
 
 import type { ServiceType } from '@/types/serviceType';
+import { useTranslations } from 'next-intl';
 
 import { HttpError } from '@/lib/api/errors';
 
@@ -44,6 +45,7 @@ export default function RejectRequestModal({
   moveDate,
   onSuccess,
 }: RejectRequestModalProps) {
+  const t = useTranslations('MoverRequests');
   const [rejectReason, setRejectReason] = useState('');
   const controlSize = useBreakpointValue('sm', 'sm', 'md');
   const { showToast } = useToast();
@@ -55,7 +57,7 @@ export default function RejectRequestModal({
     if (!isValid) return;
 
     if (!estimateId) {
-      showToast('견적 정보를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.');
+      showToast(t('estimateLoadFailed'));
       return;
     }
 
@@ -69,9 +71,7 @@ export default function RejectRequestModal({
       onClose();
     } catch (error) {
       const message =
-        error instanceof HttpError
-          ? error.message
-          : '반려 처리에 실패했어요. 잠시 후 다시 시도해 주세요.';
+        error instanceof HttpError ? error.message : t('rejectFailed');
       showToast(message);
     }
   }
@@ -80,7 +80,7 @@ export default function RejectRequestModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="반려요청"
+      title={t('rejectTitle')}
       variant="sheet"
       buttons={
         <Button
@@ -88,7 +88,7 @@ export default function RejectRequestModal({
           disabled={!isValid || updateEstimateStatusMutation.isPending}
           onClick={handleSubmit}
         >
-          반려하기
+          {t('reject')}
         </Button>
       }
     >
@@ -103,11 +103,11 @@ export default function RejectRequestModal({
         />
 
         <div>
-          <Label variant="modal">반려 사유를 입력해 주세요</Label>
+          <Label variant="modal">{t('rejectReasonLabel')}</Label>
           <textarea
             value={rejectReason}
             onChange={(event) => setRejectReason(event.target.value)}
-            placeholder="최소 10자 이상 입력해주세요"
+            placeholder={t('minLengthPlaceholder')}
             className="h-[160px] w-full resize-none rounded-[16px] border border-line-200 px-[16px] py-[14px] text-lg-regular text-black-500 placeholder:text-gray-400 focus:outline-none desktop:px-[24px] desktop:text-2lg-regular"
           />
         </div>

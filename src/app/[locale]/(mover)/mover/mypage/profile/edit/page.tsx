@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import type { MoverProfileFormValues } from '@/types/moverProfile';
 import { useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 
 import { isUnauthorizedHttpError } from '@/lib/api/errors';
 import { ROUTES } from '@/lib/constants/routes';
@@ -25,6 +26,7 @@ import MoverProfileForm from '@/components/features/mover/MoverMypage/MoverProfi
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
 export default function MoverProfileEditPage() {
+  const t = useTranslations('MoverProfile');
   const pathname = usePathname();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -56,7 +58,7 @@ export default function MoverProfileEditPage() {
 
   const handleSubmit = async (plan: MoverProfileEditPlan) => {
     if (!plan.profile) {
-      throw new Error('변경된 프로필 정보가 없습니다.');
+      throw new Error(t('noChanges'));
     }
 
     try {
@@ -77,7 +79,7 @@ export default function MoverProfileEditPage() {
       }),
     ]);
 
-    showToast('프로필 수정이 완료되었습니다.');
+    showToast(t('updated'));
     router.replace(ROUTES.moverMypage);
   };
 

@@ -1,6 +1,7 @@
 // [메뉴] 헤더 모달 메뉴 > 마이페이지
 // [페이지] 마이페이지
 import { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 
 import { createPageMetadata } from '@/lib/constants/site';
 
@@ -12,9 +13,10 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const t = await getTranslations('MoverMypage');
 
   return createPageMetadata(locale, {
-    title: '마이페이지',
+    title: t('metaTitle'),
     path: `/mover/mypage`,
   });
 }

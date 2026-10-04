@@ -3,10 +3,12 @@
 import { useState } from 'react';
 
 import type { ServiceType } from '@/types/serviceType';
+import { useTranslations } from 'next-intl';
 
 import { HttpError } from '@/lib/api/errors';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+import { useFormatPrice } from '@/hooks/common/useFormatPrice';
 import { useToast } from '@/hooks/common/useToast';
 import {
   useCreateEstimateMutation,
@@ -38,11 +40,6 @@ interface SendEstimateModalProps {
 
 const MIN_COMMENT_LENGTH = 10;
 
-function formatPrice(rawDigits: string): string {
-  if (!rawDigits) return '';
-  return `${BigInt(rawDigits).toLocaleString('ko-KR')}원`;
-}
-
 export default function SendEstimateModal({
   isOpen,
   onClose,
@@ -56,6 +53,8 @@ export default function SendEstimateModal({
   moveDate,
   onSuccess,
 }: SendEstimateModalProps) {
+  const t = useTranslations('MoverRequests');
+  const formatPrice = useFormatPrice();
   const [price, setPrice] = useState('');
   const [comment, setComment] = useState('');
   const controlSize = useBreakpointValue('sm', 'sm', 'md');
@@ -68,14 +67,16 @@ export default function SendEstimateModal({
   const isValid = price !== '' && comment.length >= MIN_COMMENT_LENGTH;
 
   function handlePriceChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setPrice(formatPrice(event.target.value.replace(/[^0-9]/g, '')));
+    /* 입력값은 숫자만 남겨 현재 언어 금액 표기로 보여준다 (ko: 180,000원 / en: ₩180,000) */
+    const rawDigits = event.target.value.replace(/[^0-9]/g, '');
+    setPrice(rawDigits ? formatPrice(Number(rawDigits)) : '');
   }
 
   async function handleSubmit() {
     if (!isValid) return;
 
     if (isDesignated && !estimateId) {
-      showToast('견적 정보를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.');
+      showToast(t('estimateLoadFailed'));
       return;
     }
 
@@ -102,9 +103,7 @@ export default function SendEstimateModal({
       onClose();
     } catch (error) {
       const message =
-        error instanceof HttpError
-          ? error.message
-          : '견적 전송에 실패했어요. 잠시 후 다시 시도해 주세요.';
+        error instanceof HttpError ? error.message : t('sendFailed');
       showToast(message);
     }
   }
@@ -113,7 +112,7 @@ export default function SendEstimateModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="견적 보내기"
+      title={t('sendEstimate')}
       variant="sheet"
       buttons={
         <Button
@@ -121,7 +120,7 @@ export default function SendEstimateModal({
           disabled={!isValid || isPending}
           onClick={handleSubmit}
         >
-          견적 보내기
+          {t('sendEstimate')}
         </Button>
       }
     >
@@ -136,21 +135,21 @@ export default function SendEstimateModal({
         />
 
         <Input
-          label="견적가를 입력해 주세요"
+          label={t('priceLabel')}
           labelVariant="modal"
           size={controlSize}
           inputMode="numeric"
           value={price}
           onChange={handlePriceChange}
-          placeholder="견적가 입력"
+          placeholder={t('pricePlaceholder')}
         />
 
         <div>
-          <Label variant="modal">코멘트를 입력해 주세요</Label>
+          <Label variant="modal">{t('commentLabel')}</Label>
           <textarea
             value={comment}
             onChange={(event) => setComment(event.target.value)}
-            placeholder="최소 10자 이상 입력해주세요"
+            placeholder={t('minLengthPlaceholder')}
             className="h-[160px] w-full resize-none rounded-[16px] border border-line-200 px-[16px] py-[14px] text-lg-regular text-black-500 placeholder:text-gray-400 focus:outline-none desktop:px-[24px] desktop:text-2lg-regular"
           />
         </div>

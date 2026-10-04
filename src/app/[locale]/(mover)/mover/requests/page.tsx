@@ -13,6 +13,7 @@ import { useMemo, useState } from 'react';
 
 import type { ReceivedRequestSortBy } from '@/types/estimate';
 import type { ServiceType } from '@/types/serviceType';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import IcFilter from '@/assets/icons/ic_filter.svg';
@@ -35,14 +36,15 @@ import LoadingDisplay from '@/components/ui/LoadingDisplay';
 import Modal from '@/components/ui/Modal';
 import Sort, { type SortOption } from '@/components/ui/Sort';
 
-const SORT_OPTIONS: SortOption<ReceivedRequestSortBy>[] = [
-  { value: 'moveDate', label: '이사 빠른순' },
-  { value: 'createdAt', label: '요청일 빠른순' },
-];
-
 const PAGE_SIZE = 10;
 
 export default function MoverEstimateRequestPage() {
+  const t = useTranslations('MoverRequests');
+  const tCommon = useTranslations('Common');
+  const sortOptions: SortOption<ReceivedRequestSortBy>[] = [
+    { value: 'moveDate', label: t('sortMoveDate') },
+    { value: 'createdAt', label: t('sortRequestedAt') },
+  ];
   const [selectedServiceTypes, setSelectedServiceTypes] = useState<
     ServiceType[]
   >([]);
@@ -151,7 +153,7 @@ export default function MoverEstimateRequestPage() {
         {/* 검색바 */}
         <div className="flex flex-col gap-[24px] max-w-[1200px]">
           <InputSearchbar
-            placeholder="어떤 고객님을 찾고 계세요?"
+            placeholder={t('searchPlaceholder')}
             value={keyword}
             onChange={(event) => setKeyword(event.target.value)}
           />
@@ -179,19 +181,21 @@ export default function MoverEstimateRequestPage() {
             )}
           >
             <p className="flex items-center gap-1 text-black-400">
-              <span className="text-sm-medium">전체</span>
-              <span className="text-sm-semibold">{totalCount}건</span>
+              <span className="text-sm-medium">{t('total')}</span>
+              <span className="text-sm-semibold">
+                {t('count', { count: totalCount })}
+              </span>
             </p>
             <div className="flex items-center gap-1">
               <Sort
-                options={SORT_OPTIONS}
+                options={sortOptions}
                 value={sortValue}
                 onChange={setSortValue}
               />
               <button
                 type="button"
                 onClick={() => setIsFilterSheetOpen(true)}
-                aria-label="필터"
+                aria-label={tCommon('filter')}
                 className={cn('cursor-pointer')}
               >
                 <IcFilter className="size-[32px]" />
@@ -202,7 +206,7 @@ export default function MoverEstimateRequestPage() {
           {/* desktop: 카운트 별도 줄, 체크박스 + 정렬이 같은 줄 */}
           <div className="hidden desktop:flex desktop:flex-col desktop:gap-[24px]">
             <p className="flex items-center gap-[4px] text-2lg-semibold text-black-400">
-              전체 {totalCount}건
+              {t('totalCount', { count: totalCount })}
             </p>
 
             <div className="flex items-center justify-between">
@@ -210,17 +214,17 @@ export default function MoverEstimateRequestPage() {
                 <Checkbox
                   checked={designatedOnly}
                   onChange={setDesignatedOnly}
-                  label="지정 견적 요청"
+                  label={t('designatedOnly')}
                 />
                 <Checkbox
                   checked={regionAvailableOnly}
                   onChange={setRegionAvailableOnly}
-                  label="서비스 가능 지역"
+                  label={t('serviceAreaOnly')}
                 />
               </div>
 
               <Sort
-                options={SORT_OPTIONS}
+                options={sortOptions}
                 value={sortValue}
                 onChange={setSortValue}
               />
@@ -267,9 +271,7 @@ export default function MoverEstimateRequestPage() {
                 priority
               />
               <p className="text-lg-regular text-gray-400 desktop:text-xl-regular">
-                {hasActiveFilter
-                  ? '조건에 맞는 요청이 없어요.'
-                  : '아직 받은 요청이 없어요!'}
+                {hasActiveFilter ? t('emptyFiltered') : t('empty')}
               </p>
             </div>
           )}
@@ -280,18 +282,18 @@ export default function MoverEstimateRequestPage() {
         <Modal
           isOpen={isFilterSheetOpen}
           onClose={() => setIsFilterSheetOpen(false)}
-          title="필터"
+          title={tCommon('filter')}
           variant="sheet"
           buttons={
             <Button size="sm" onClick={() => setIsFilterSheetOpen(false)}>
-              확인
+              {tCommon('confirm')}
             </Button>
           }
           className={cn('py-[24px_32px] px-[24px]')}
         >
           <div>
             <Label variant="modal" className={cn('mb-[8px]')}>
-              이사 유형
+              {t('moveType')}
             </Label>
             <ServiceTypeSelector
               selectedServiceTypes={selectedServiceTypes}
@@ -303,18 +305,18 @@ export default function MoverEstimateRequestPage() {
 
           <div>
             <Label variant="modal" className={cn('mb-[8px]')}>
-              지역 및 견적
+              {t('regionAndEstimate')}
             </Label>
             <div className="flex flex-col gap-[12px]">
               <Checkbox
                 checked={designatedOnly}
                 onChange={setDesignatedOnly}
-                label="지정 견적 요청"
+                label={t('designatedOnly')}
               />
               <Checkbox
                 checked={regionAvailableOnly}
                 onChange={setRegionAvailableOnly}
-                label="서비스 가능 지역"
+                label={t('serviceAreaOnly')}
               />
             </div>
           </div>

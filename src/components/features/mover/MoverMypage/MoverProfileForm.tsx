@@ -5,8 +5,10 @@ import { Controller } from 'react-hook-form';
 
 import type { AuthProviderName } from '@/types/auth';
 import type { MoverProfileFormValues } from '@/types/moverProfile';
+import { useTranslations } from 'next-intl';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+import { useFormErrorMessage } from '@/hooks/common/useFormErrorMessage';
 import type { MoverProfileEditPlan } from '@/hooks/features/mover/moverProfileEditPlan';
 import { useMoverProfileForm } from '@/hooks/features/mover/useMoverProfileForm';
 
@@ -66,6 +68,11 @@ export default function MoverProfileForm({
   onCreateSubmit,
   onEditSubmit,
 }: MoverProfileFormProps) {
+  const t = useTranslations('MoverProfile');
+  /* 공통 라벨·버튼(전화번호, 프로필 이미지, 수정하기, 시작하기)은 고객 프로필과 같은 문구를 쓴다 */
+  const tField = useTranslations('CustomerProfile');
+  const tCommon = useTranslations('Common');
+  const toErrorMessage = useFormErrorMessage();
   const formId = useId();
   const [profileUploadKey, setProfileUploadKey] = useState(0);
   const isEditMode = mode === 'edit';
@@ -101,8 +108,8 @@ export default function MoverProfileForm({
   const profileImageRegistration = register('profileImage');
   const careerYearsRegistration = register('careerYears');
   const careerRemainderMonthsRegistration = register('careerRemainderMonths');
-  const serviceTypeError = errors.serviceTypes?.message;
-  const serviceRegionError = errors.serviceRegions?.message;
+  const serviceTypeError = toErrorMessage(errors.serviceTypes?.message);
+  const serviceRegionError = toErrorMessage(errors.serviceRegions?.message);
   const serviceTypeErrorId = serviceTypeError
     ? `${formId}-service-type-error`
     : undefined;
@@ -124,11 +131,11 @@ export default function MoverProfileForm({
         */}
         <header className="flex flex-col gap-[16px] desktop:gap-[32px]">
           <h1 className="text-2lg-bold text-black-400 desktop:text-3xl-semibold desktop:leading-[46px]">
-            {isEditMode ? '프로필 수정' : '기사님 프로필 등록'}
+            {isEditMode ? t('editTitle') : t('createTitle')}
           </h1>
           {!isEditMode && (
             <p className="text-xs-regular text-black-100 desktop:text-xl-regular desktop:text-black-200">
-              추가 정보를 입력하여 회원가입을 완료해주세요.
+              {t('createDescription')}
             </p>
           )}
         </header>
@@ -147,14 +154,14 @@ export default function MoverProfileForm({
               <>
                 <Input
                   id={`${formId}-phone-number`}
-                  label="전화번호"
+                  label={tField('phoneNumber')}
                   labelVariant="profile"
                   type="tel"
                   inputMode="tel"
                   autoComplete="tel"
                   size={controlSize}
                   required
-                  placeholder="전화번호를 입력해 주세요"
+                  placeholder={t('phoneNumberPlaceholder')}
                   disabled={areFieldsDisabled}
                   error={errors.phoneNumber?.message}
                   {...register('phoneNumber')}
@@ -168,10 +175,10 @@ export default function MoverProfileForm({
               <ProfileUpload
                 key={profileUploadKey}
                 id={`${formId}-profile-image`}
-                label="프로필 이미지"
+                label={tField('profileImage')}
                 labelVariant="profile"
                 imageUrl={isRemoveImageRequested ? undefined : imageUrl}
-                previewAlt="선택한 기사님 프로필 이미지"
+                previewAlt={t('previewAlt')}
                 disabled={areFieldsDisabled}
                 error={errors.profileImage?.message}
                 accept="image/jpeg,image/png,image/webp"
@@ -213,10 +220,10 @@ export default function MoverProfileForm({
                     className="cursor-pointer text-sm-medium text-gray-400 underline disabled:cursor-not-allowed disabled:opacity-50 desktop:text-lg-medium"
                   >
                     {hasSelectedImage
-                      ? '선택 취소'
+                      ? t('cancelSelection')
                       : isRemoveImageRequested
-                        ? '이미지 삭제 취소'
-                        : '이미지 삭제'}
+                        ? t('cancelRemoveImage')
+                        : t('removeImage')}
                   </button>
                 )}
             </div>
@@ -225,12 +232,12 @@ export default function MoverProfileForm({
 
             <Input
               id={`${formId}-nickname`}
-              label="별명"
+              label={t('nickname')}
               labelVariant="profile"
               size={controlSize}
               required
               maxLength={10}
-              placeholder="사이트에 노출될 별명을 입력해 주세요"
+              placeholder={t('nicknamePlaceholder')}
               disabled={areFieldsDisabled}
               error={errors.nickname?.message}
               {...register('nickname')}
@@ -251,7 +258,7 @@ export default function MoverProfileForm({
             */}
             <fieldset className="min-w-0" disabled={areFieldsDisabled}>
               <legend className="mb-[16px] text-lg-semibold text-black-300 desktop:text-xl-semibold">
-                경력
+                {t('career')}
                 <span aria-hidden="true" className="ml-1 text-orange-400">
                   *
                 </span>
@@ -267,7 +274,7 @@ export default function MoverProfileForm({
                       inputMode="numeric"
                       pattern="[0-9]*"
                       placeholder="0"
-                      aria-label="경력 연수"
+                      aria-label={t('careerYearsAria')}
                       disabled={areFieldsDisabled}
                       error={errors.careerYears?.message}
                       {...careerYearsRegistration}
@@ -280,7 +287,7 @@ export default function MoverProfileForm({
                     aria-hidden="true"
                     className="pt-[14px] text-lg-regular text-black-300 desktop:pt-[16px] desktop:text-2lg-regular"
                   >
-                    년
+                    {t('careerYearsUnit')}
                   </span>
                 </div>
 
@@ -293,7 +300,7 @@ export default function MoverProfileForm({
                       inputMode="numeric"
                       pattern="[0-9]*"
                       placeholder="0"
-                      aria-label="경력 개월 수"
+                      aria-label={t('careerMonthsAria')}
                       disabled={areFieldsDisabled}
                       error={errors.careerRemainderMonths?.message}
                       {...careerRemainderMonthsRegistration}
@@ -308,7 +315,7 @@ export default function MoverProfileForm({
                     aria-hidden="true"
                     className="pt-[14px] text-lg-regular text-black-300 desktop:pt-[16px] desktop:text-2lg-regular"
                   >
-                    개월
+                    {t('careerMonthsUnit')}
                   </span>
                 </div>
               </div>
@@ -318,12 +325,12 @@ export default function MoverProfileForm({
 
             <Input
               id={`${formId}-short-intro`}
-              label="한 줄 소개"
+              label={t('shortIntro')}
               labelVariant="profile"
               size={controlSize}
               required
               maxLength={50}
-              placeholder="한 줄 소개를 입력해 주세요"
+              placeholder={t('shortIntroPlaceholder')}
               disabled={areFieldsDisabled}
               error={errors.shortIntro?.message}
               {...register('shortIntro')}
@@ -339,11 +346,11 @@ export default function MoverProfileForm({
 
             <Textarea
               id={`${formId}-description`}
-              label="상세 설명"
+              label={t('description')}
               labelVariant="profile"
               required
               maxLength={300}
-              placeholder="상세 내용을 입력해 주세요"
+              placeholder={t('descriptionPlaceholder')}
               disabled={areFieldsDisabled}
               error={errors.description?.message}
               className="tablet:text-lg-regular tablet:leading-[26px] desktop:text-2lg-regular desktop:leading-[32px]"
@@ -359,7 +366,7 @@ export default function MoverProfileForm({
             */}
             <fieldset className="min-w-0" disabled={areFieldsDisabled}>
               <legend className="text-lg-semibold text-black-300 desktop:text-xl-semibold">
-                제공 서비스
+                {t('serviceTypes')}
                 <span aria-hidden="true" className="ml-1 text-orange-400">
                   *
                 </span>
@@ -401,7 +408,7 @@ export default function MoverProfileForm({
             */}
             <fieldset className="min-w-0" disabled={areFieldsDisabled}>
               <legend className="text-lg-semibold text-black-300 desktop:text-xl-semibold">
-                서비스 가능 지역
+                {t('serviceRegions')}
                 <span aria-hidden="true" className="ml-1 text-orange-400">
                   *
                 </span>
@@ -468,7 +475,7 @@ export default function MoverProfileForm({
               isLoading={isLoading}
               className={cn(isEditMode && 'desktop:order-2 desktop:flex-1')}
             >
-              {isEditMode ? '수정하기' : '시작하기'}
+              {isEditMode ? tField('edit') : tField('start')}
             </Button>
 
             {isEditMode && (
@@ -484,7 +491,7 @@ export default function MoverProfileForm({
                   'desktop:order-1 desktop:flex-1',
                 )}
               >
-                취소
+                {tCommon('cancel')}
               </Button>
             )}
           </div>

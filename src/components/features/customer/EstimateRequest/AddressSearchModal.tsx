@@ -7,6 +7,7 @@
 import { useState } from 'react';
 
 import { AddressSearchResult } from '@/types/address';
+import { useTranslations } from 'next-intl';
 
 import clientFetch from '@/lib/api/clientFetch';
 import { ENDPOINTS } from '@/lib/api/endpoints';
@@ -25,7 +26,7 @@ export type AddressResult = AddressSearchResult;
 interface AddressSearchModalProps {
   isOpen: boolean;
   onClose: () => void;
-  /** '출발지' | '도착지' — 제목에 쓰인다 */
+  /** 출발지 | 도착지 (번역된 문구) — 제목에 쓰인다 */
   label: string;
   onSelect: (address: AddressResult) => void;
 }
@@ -36,6 +37,8 @@ export default function AddressSearchModal({
   label,
   onSelect,
 }: AddressSearchModalProps) {
+  const t = useTranslations('EstimateRequest');
+  const tCommon = useTranslations('Common');
   const [keyword, setKeyword] = useState('');
   const [results, setResults] = useState<AddressResult[] | null>(null);
   const [selected, setSelected] = useState<AddressResult | null>(null);
@@ -69,9 +72,7 @@ export default function AddressSearchModal({
     } catch (caught) {
       setResults(null);
       setError(
-        caught instanceof HttpError
-          ? caught.message
-          : '주소를 검색하지 못했습니다. 잠시 후 다시 시도해주세요.',
+        caught instanceof HttpError ? caught.message : t('searchFailed'),
       );
     } finally {
       setIsLoading(false);
@@ -95,10 +96,10 @@ export default function AddressSearchModal({
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      title={`${label}를 선택해주세요`}
+      title={t('addressModalTitle', { label })}
       buttons={
         <Button size="lg" disabled={!selected} onClick={handleConfirm}>
-          선택완료
+          {tCommon('selectComplete')}
         </Button>
       }
     >
@@ -110,8 +111,8 @@ export default function AddressSearchModal({
           onChange={(event) => setKeyword(event.target.value)}
           onSearch={handleSearch}
           onClear={resetResults}
-          placeholder="주소를 입력해 주세요."
-          aria-label={`${label} 주소 검색`}
+          placeholder={t('addressPlaceholder')}
+          aria-label={t('addressSearchAria', { label })}
         />
 
         {results?.map((item) => {
@@ -137,7 +138,7 @@ export default function AddressSearchModal({
                 {/* 지번만 있는 주소도 있어서 각각 있을 때만 그린다 */}
                 {item.roadAddress && (
                   <span className="flex items-start gap-[8px]">
-                    <AddressChip>도로명</AddressChip>
+                    <AddressChip>{t('roadAddress')}</AddressChip>
                     <span className="text-md-regular flex-1 text-black-400 tablet:text-lg-regular">
                       {item.roadAddress}
                     </span>
@@ -147,7 +148,7 @@ export default function AddressSearchModal({
                 {item.jibunAddress &&
                   item.jibunAddress !== item.roadAddress && (
                     <span className="flex items-start gap-[8px]">
-                      <AddressChip>지번</AddressChip>
+                      <AddressChip>{t('jibunAddress')}</AddressChip>
                       <span className="text-md-regular flex-1 text-black-400 tablet:text-lg-regular">
                         {item.jibunAddress}
                       </span>
@@ -160,7 +161,7 @@ export default function AddressSearchModal({
 
         {isLoading && (
           <p className="text-lg-regular py-[24px] text-center text-gray-400">
-            검색 중입니다...
+            {t('searching')}
           </p>
         )}
 
@@ -172,14 +173,14 @@ export default function AddressSearchModal({
 
         {!isLoading && !error && results !== null && results.length === 0 && (
           <p className="text-lg-regular py-[24px] text-center text-gray-400">
-            검색 결과가 없습니다. 건물번호까지 입력해 보세요.
+            {t('noResultLine1')} {t('noResultLine2')}
           </p>
         )}
 
         {!isLoading && !error && results === null && (
           <p className="text-lg-regular py-[24px] text-center text-gray-400">
-            검색 결과가 없습니다. <br />
-            건물번호까지 입력해 보세요.
+            {t('noResultLine1')} <br />
+            {t('noResultLine2')}
           </p>
         )}
       </div>

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { usePathname, useRouter } from '@/i18n/navigation';
 import type { MyReviewEstimateItem, PendingReview } from '@/types/review';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 
@@ -61,6 +62,7 @@ function PendingReviewCardSkeleton() {
 }
 
 export default function PendingReviewList() {
+  const t = useTranslations('CustomerReviews');
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -114,7 +116,7 @@ export default function PendingReviewList() {
               <div className="absolute top-[-16.29px] left-[-11.04px] size-[260.633px] opacity-50">
                 <Image
                   src={ImgEmpty}
-                  alt="빈 리뷰 이미지"
+                  alt=""
                   fill
                   sizes="261px"
                   className="object-cover"
@@ -122,7 +124,7 @@ export default function PendingReviewList() {
               </div>
             </div>
             <p className="text-lg-regular text-center text-gray-400 tablet:text-2xl-regular">
-              작성 가능한 리뷰가 없어요!
+              {t('pendingEmpty')}
             </p>
           </div>
         </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { REGION_OPTIONS, type Region } from '@/types/region';
+import { useTranslations } from 'next-intl';
 
 import { cn } from '@/utils/cn';
 
@@ -38,11 +39,14 @@ export default function RegionChipGroup({
   className,
   ...props
 }: RegionChipGroupProps) {
+  const t = useTranslations('Common');
+  const tRegion = useTranslations('Region');
+
   return (
     <div
       {...props}
       role="group"
-      aria-label="지역 선택"
+      aria-label={t('regionSelect')}
       className={cn(
         'grid grid-cols-[repeat(5,max-content)] gap-[8px]',
         className,
@@ -56,7 +60,7 @@ export default function RegionChipGroup({
           isSelected={selectedRegions.includes(region.value)}
           onClick={() => onRegionClick(region.value)}
         >
-          {region.label}
+          {tRegion(region.value)}
         </SelectableChip>
       ))}
     </div>

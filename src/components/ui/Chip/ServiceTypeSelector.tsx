@@ -1,10 +1,7 @@
 'use client';
 
-import {
-  SERVICE_TYPE_LABELS,
-  SERVICE_TYPES,
-  type ServiceType,
-} from '@/types/serviceType';
+import { SERVICE_TYPES, type ServiceType } from '@/types/serviceType';
+import { useTranslations } from 'next-intl';
 
 import { cn } from '@/utils/cn';
 
@@ -43,6 +40,9 @@ export default function ServiceTypeSelector({
   className,
   ...props
 }: ServiceTypeSelectorProps) {
+  const t = useTranslations('Common');
+  const tServiceType = useTranslations('ServiceType');
+
   function handleServiceTypeClick(serviceType: ServiceType) {
     const isSelected = selectedServiceTypes.includes(serviceType);
 
@@ -59,7 +59,7 @@ export default function ServiceTypeSelector({
     <div
       {...props}
       role="group"
-      aria-label="이용 서비스 선택"
+      aria-label={t('serviceTypeSelect')}
       className={cn('flex flex-wrap gap-[8px]', className)}
     >
       {SERVICE_TYPES.map((serviceType) => (
@@ -69,7 +69,7 @@ export default function ServiceTypeSelector({
           isSelected={selectedServiceTypes.includes(serviceType)}
           onClick={() => handleServiceTypeClick(serviceType)}
         >
-          {SERVICE_TYPE_LABELS[serviceType]}
+          {tServiceType(serviceType)}
         </SelectableChip>
       ))}
     </div>

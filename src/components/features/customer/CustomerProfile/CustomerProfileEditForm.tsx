@@ -5,8 +5,10 @@ import { Controller } from 'react-hook-form';
 
 import type { AuthProviderName } from '@/types/auth';
 import type { CustomerProfileEditFormValues } from '@/types/customerProfile';
+import { useTranslations } from 'next-intl';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+import { useFormErrorMessage } from '@/hooks/common/useFormErrorMessage';
 import type { CustomerProfileEditPlan } from '@/hooks/features/customer/customerProfileEditPlan';
 import { useCustomerProfileEditForm } from '@/hooks/features/customer/useCustomerProfileEditForm';
 
@@ -74,6 +76,9 @@ export default function CustomerProfileEditForm({
   onSubmit,
   onCancel,
 }: CustomerProfileEditFormProps) {
+  const t = useTranslations('CustomerProfile');
+  const tCommon = useTranslations('Common');
+  const toErrorMessage = useFormErrorMessage();
   const formId = useId();
   const responsiveInputSize = useBreakpointValue('sm', 'sm', 'md');
   const responsiveControlSize = useBreakpointValue('sm', 'sm', 'md');
@@ -92,8 +97,8 @@ export default function CustomerProfileEditForm({
   const isLoading = isSubmitting || isFormSubmitting;
   const areFieldsDisabled = isDisabled || isLoading;
   const isLocalAccount = provider === 'LOCAL';
-  const serviceError = errors.serviceTypes?.message;
-  const regionError = errors.region?.message;
+  const serviceError = toErrorMessage(errors.serviceTypes?.message);
+  const regionError = toErrorMessage(errors.region?.message);
   const serviceDescriptionId = formId + '-service-description';
   const serviceErrorId = serviceError ? formId + '-service-error' : undefined;
   const regionDescriptionId = formId + '-region-description';
@@ -118,7 +123,7 @@ export default function CustomerProfileEditForm({
         >
           <header className="flex items-center">
             <h1 className="text-2lg-bold leading-[26px] text-black-400 desktop:text-3xl-semibold desktop:leading-[46px]">
-              프로필 수정
+              {t('editTitle')}
             </h1>
           </header>
 
@@ -139,7 +144,7 @@ export default function CustomerProfileEditForm({
               */}
               <div className="flex min-w-0 flex-col gap-[20px] desktop:gap-[32px]">
                 <Input
-                  label="이름"
+                  label={t('name')}
                   labelVariant="profile"
                   type="text"
                   autoComplete="name"
@@ -153,7 +158,7 @@ export default function CustomerProfileEditForm({
                 <Divider className="desktop:hidden" />
 
                 <Input
-                  label="이메일"
+                  label={t('email')}
                   labelVariant="profile"
                   type="email"
                   autoComplete="email"
@@ -169,7 +174,7 @@ export default function CustomerProfileEditForm({
                 <Divider className="desktop:hidden" />
 
                 <Input
-                  label="전화번호"
+                  label={t('phoneNumber')}
                   labelVariant="profile"
                   type="tel"
                   inputMode="tel"
@@ -197,11 +202,11 @@ export default function CustomerProfileEditForm({
                     - 확인값은 프론트 검증 전용이며 API에는 전송하지 않는다.
                     */}
                     <Input
-                      label="현재 비밀번호"
+                      label={t('currentPassword')}
                       labelVariant="profile"
                       type="password"
                       autoComplete="current-password"
-                      placeholder="현재 비밀번호를 입력해주세요"
+                      placeholder={t('currentPasswordPlaceholder')}
                       size="sm"
                       disabled={areFieldsDisabled}
                       error={errors.currentPassword?.message}
@@ -211,11 +216,11 @@ export default function CustomerProfileEditForm({
                     <Divider />
 
                     <Input
-                      label="새 비밀번호"
+                      label={t('newPassword')}
                       labelVariant="profile"
                       type="password"
                       autoComplete="new-password"
-                      placeholder="새 비밀번호를 입력해주세요"
+                      placeholder={t('newPasswordPlaceholder')}
                       size="sm"
                       disabled={areFieldsDisabled}
                       error={errors.newPassword?.message}
@@ -225,11 +230,11 @@ export default function CustomerProfileEditForm({
                     <Divider className="desktop:hidden" />
 
                     <Input
-                      label="새 비밀번호 확인"
+                      label={t('newPasswordConfirm')}
                       labelVariant="profile"
                       type="password"
                       autoComplete="new-password"
-                      placeholder="새 비밀번호를 다시 한번 입력해주세요"
+                      placeholder={t('newPasswordConfirmPlaceholder')}
                       size="sm"
                       disabled={areFieldsDisabled}
                       error={errors.newPasswordConfirm?.message}
@@ -244,7 +249,7 @@ export default function CustomerProfileEditForm({
                     - 고정된 마스킹 문자열만 읽기 전용으로 보여주며 비밀번호 API도 호출하지 않는다.
                     */}
                     <Input
-                      label="현재 비밀번호"
+                      label={t('currentPassword')}
                       labelVariant="profile"
                       type="text"
                       value={SOCIAL_PASSWORD_MASK}
@@ -259,7 +264,7 @@ export default function CustomerProfileEditForm({
                     <Divider />
 
                     <Input
-                      label="새 비밀번호"
+                      label={t('newPassword')}
                       labelVariant="profile"
                       type="text"
                       value={SOCIAL_PASSWORD_MASK}
@@ -274,7 +279,7 @@ export default function CustomerProfileEditForm({
                     <Divider className="desktop:hidden" />
 
                     <Input
-                      label="새 비밀번호 확인"
+                      label={t('newPasswordConfirm')}
                       labelVariant="profile"
                       type="text"
                       value={SOCIAL_PASSWORD_MASK}
@@ -304,12 +309,12 @@ export default function CustomerProfileEditForm({
                     variant="profile"
                     className="mb-0"
                   >
-                    프로필 이미지
+                    {t('profileImage')}
                   </Label>
                   <ProfileUpload
                     id={profileImageId}
                     imageUrl={imageUrl}
-                    previewAlt={imageUrl ? '현재 프로필 이미지' : ''}
+                    previewAlt={imageUrl ? t('currentProfileImage') : ''}
                     disabled={areFieldsDisabled}
                     error={errors.profileImage?.message}
                     accept="image/jpeg,image/png,image/webp"
@@ -322,13 +327,13 @@ export default function CustomerProfileEditForm({
 
                 <fieldset disabled={areFieldsDisabled} className="min-w-0">
                   <legend className="text-lg-semibold text-black-300 desktop:text-xl-semibold">
-                    이용 서비스
+                    {t('serviceTypes')}
                   </legend>
                   <p
                     id={serviceDescriptionId}
                     className="mt-[8px] text-xs-regular text-gray-400 desktop:text-lg-regular"
                   >
-                    *견적 요청 시 이용 서비스를 선택할 수 있어요.
+                    {t('serviceTypesEditHint')}
                   </p>
 
                   <Controller
@@ -366,13 +371,13 @@ export default function CustomerProfileEditForm({
 
                 <fieldset disabled={areFieldsDisabled} className="min-w-0">
                   <legend className="text-lg-semibold text-black-300 desktop:text-xl-semibold">
-                    내가 사는 지역
+                    {t('region')}
                   </legend>
                   <p
                     id={regionDescriptionId}
                     className="mt-[8px] text-xs-regular text-gray-400 desktop:text-lg-regular"
                   >
-                    *견적 요청 시 지역을 설정할 수 있어요.
+                    {t('regionEditHint')}
                   </p>
 
                   <Controller
@@ -433,7 +438,7 @@ export default function CustomerProfileEditForm({
             disabled={isDisabled || !isFormComplete || !hasChanges}
             isLoading={isLoading}
           >
-            수정하기
+            {t('edit')}
           </Button>
           <Button
             type="button"
@@ -443,7 +448,7 @@ export default function CustomerProfileEditForm({
             onClick={onCancel}
             className="border-gray-200 text-gray-300"
           >
-            취소
+            {tCommon('cancel')}
           </Button>
         </div>
 
@@ -456,7 +461,7 @@ export default function CustomerProfileEditForm({
             onClick={onCancel}
             className="border-gray-200 text-gray-500"
           >
-            취소
+            {tCommon('cancel')}
           </Button>
           <Button
             type="submit"
@@ -464,7 +469,7 @@ export default function CustomerProfileEditForm({
             disabled={isDisabled || !isFormComplete || !hasChanges}
             isLoading={isLoading}
           >
-            수정하기
+            {t('edit')}
           </Button>
         </div>
       </form>

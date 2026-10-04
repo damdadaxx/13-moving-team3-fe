@@ -23,6 +23,7 @@
 
 import { useEffect, useId, useState } from 'react';
 
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import IcGallery from '@/assets/icons/ic_gallery.svg';
@@ -77,12 +78,13 @@ export default function ProfileUpload({
   const [localPreviewUrl, setLocalPreviewUrl] = useState<string>();
   const previewUrl = localPreviewUrl ?? imageUrl;
   const hasImage = Boolean(previewUrl);
+  const t = useTranslations('Common');
   const toErrorMessage = useFormErrorMessage();
   const hasError = Boolean(error);
   const errorId = hasError ? `${inputId}-error` : undefined;
   const describedBy = [ariaDescribedBy, errorId].filter(Boolean).join(' ');
   const accessibleLabel =
-    ariaLabel ?? (label ? undefined : '프로필 이미지 선택');
+    ariaLabel ?? (label ? undefined : t('profileImageSelect'));
 
   /*
   @ Object URL 정리

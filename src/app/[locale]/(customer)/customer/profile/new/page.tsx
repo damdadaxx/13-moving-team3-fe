@@ -4,6 +4,7 @@
 
 import { useRouter } from '@/i18n/navigation';
 import type { CustomerProfileFormValues } from '@/types/customerProfile';
+import { useTranslations } from 'next-intl';
 
 import { ROUTES } from '@/lib/constants/routes';
 
@@ -13,6 +14,7 @@ import { useCreateCustomerProfileMutation } from '@/hooks/features/customer/quer
 import CustomerProfileForm from '@/components/features/customer/CustomerProfile/CustomerProfileForm';
 
 export default function ProfileNewPage() {
+  const t = useTranslations('CustomerProfile');
   const router = useRouter();
   const { showToast } = useToast();
   const createProfileMutation = useCreateCustomerProfileMutation();
@@ -27,7 +29,7 @@ export default function ProfileNewPage() {
   */
   const handleSubmit = async (values: CustomerProfileFormValues) => {
     await createProfileMutation.mutateAsync(values);
-    showToast('프로필 등록이 완료되었습니다.');
+    showToast(t('created'));
     router.replace(ROUTES.customerHome);
   };
 

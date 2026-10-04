@@ -2,6 +2,7 @@
 // 고객당 진행 중인 요청은 1건뿐이라, 새 요청 대신 안내와 받은 견적으로 가는 CTA만 보여준다.
 'use client';
 
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import imgMovingCar from '@/assets/images/img_moving_car.png';
@@ -15,6 +16,7 @@ import { cn } from '@/utils/cn';
 import Button from '@/components/ui/Button/Button';
 
 export default function EstimateRequestInProgress() {
+  const t = useTranslations('EstimateRequest');
   // 시안상 CTA 높이가 모바일·태블릿 54, 데스크톱 64다
   const buttonSize = useBreakpointValue('sm', 'sm', 'lg');
 
@@ -35,9 +37,9 @@ export default function EstimateRequestInProgress() {
           />
         </div>
         <p className="text-md-regular text-center text-gray-400 desktop:text-xl-regular">
-          현재 진행 중인 이사 견적이 있어요!
+          {t('inProgressLine1')}
           <br />
-          진행 중인 이사 완료 후 새로운 견적을 받아보세요.
+          {t('inProgressLine2')}
         </p>
       </div>
 
@@ -47,7 +49,7 @@ export default function EstimateRequestInProgress() {
         href={ROUTES.customerEstimates}
         className="w-auto px-[24px]"
       >
-        받은 견적 보러가기
+        {t('goReceived')}
       </Button>
     </div>
   );

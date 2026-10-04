@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { routing } from '@/i18n/routing';
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { cookies } from 'next/headers';
 
 import '@/app/globals.css';
@@ -10,12 +11,7 @@ import Providers from '@/app/providers';
 
 import { ACCESS_TOKEN_COOKIE } from '@/lib/constants/auth';
 import { pretendard } from '@/lib/constants/fonts';
-import {
-  SITE_DESCRIPTION,
-  SITE_TITLE,
-  SITE_URL,
-  getOpenGraph,
-} from '@/lib/constants/site';
+import { SITE_URL, getOpenGraph } from '@/lib/constants/site';
 import KakaoScript from '@/lib/providers/KakaoScript';
 
 import { cn } from '@/utils/cn';
@@ -29,12 +25,13 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const t = await getTranslations('Metadata');
 
   return {
     metadataBase: new URL(SITE_URL),
-    title: SITE_TITLE,
-    description: SITE_DESCRIPTION,
-    openGraph: getOpenGraph(locale, '/'),
+    title: t('siteTitle'),
+    description: t('siteDescription'),
+    openGraph: await getOpenGraph(locale, '/'),
   };
 }
 

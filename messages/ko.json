@@ -70,7 +70,8 @@
   },
   "Error": {
     "message": "오류가 발생했어요!",
-    "retry": "다시 시도"
+    "retry": "다시 시도",
+    "profileLoadFailed": "프로필 정보를 확인하지 못했습니다. 다시 시도해주세요."
   },
   "GlobalError": {
     "message": "앱에 오류가 발생했어요!",
@@ -187,7 +188,8 @@
   "Share": {
     "copied": "링크가 복사되었어요",
     "kakaoFailed": "카카오 공유를 실행할 수 없어요",
-    "facebookPublicOnly": "페이스북은 공개된 주소만 미리보기를 가져올 수 있어요"
+    "facebookPublicOnly": "페이스북은 공개된 주소만 미리보기를 가져올 수 있어요",
+    "viewOnWeb": "웹으로 보기"
   },
   "Review": {
     "title": "리뷰",
@@ -545,5 +547,10 @@
     "profileNotFound": "등록된 기사님 프로필을 찾지 못했습니다.",
     "alreadyCreated": "이미 등록된 프로필입니다. 프로필 정보를 다시 확인합니다.",
     "saveFailed": "프로필 저장 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+  },
+  "Metadata": {
+    "siteTitle": "무빙 : 이사 소비자와 이사 전문가 매칭 서비스",
+    "siteDescription": "이사 소비자와 이사 전문가 매칭 서비스",
+    "ogTitle": "무빙 : 복잡한 이사 준비, 무빙 하나면 끝!"
   }
 }

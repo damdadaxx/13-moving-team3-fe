@@ -70,7 +70,8 @@
   },
   "Error": {
     "message": "エラーが発生しました！",
-    "retry": "もう一度試す"
+    "retry": "もう一度試す",
+    "profileLoadFailed": "プロフィール情報を確認できませんでした。もう一度お試しください。"
   },
   "GlobalError": {
     "message": "アプリでエラーが発生しました！",
@@ -187,7 +188,8 @@
   "Share": {
     "copied": "リンクをコピーしました。",
     "kakaoFailed": "KakaoTalk共有を開けませんでした。",
-    "facebookPublicOnly": "Facebookは公開URLのみプレビューできます。"
+    "facebookPublicOnly": "Facebookは公開URLのみプレビューできます。",
+    "viewOnWeb": "Webで見る"
   },
   "Review": {
     "title": "レビュー",
@@ -545,5 +547,10 @@
     "profileNotFound": "登録済みの業者プロフィールが見つかりませんでした。",
     "alreadyCreated": "すでに登録済みのプロフィールです。プロフィール情報を再確認します。",
     "saveFailed": "プロフィールの保存中にエラーが発生しました。しばらくしてから再度お試しください。"
+  },
+  "Metadata": {
+    "siteTitle": "Moving : 引越しをする人と引越しのプロをつなぐサービス",
+    "siteDescription": "引越しをする人と引越しのプロをつなぐマッチングサービス",
+    "ogTitle": "Moving : 面倒な引越し準備も、Movingひとつで完了！"
   }
 }

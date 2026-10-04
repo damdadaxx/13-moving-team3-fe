@@ -70,7 +70,8 @@
   },
   "Error": {
     "message": "出错了！",
-    "retry": "重试"
+    "retry": "重试",
+    "profileLoadFailed": "无法确认资料信息，请重试。"
   },
   "GlobalError": {
     "message": "应用出现错误！",
@@ -187,7 +188,8 @@
   "Share": {
     "copied": "链接已复制。",
     "kakaoFailed": "无法打开 KakaoTalk 分享。",
-    "facebookPublicOnly": "Facebook 只能预览公开的网址。"
+    "facebookPublicOnly": "Facebook 只能预览公开的网址。",
+    "viewOnWeb": "在网页中查看"
   },
   "Review": {
     "title": "评价",
@@ -545,5 +547,10 @@
     "profileNotFound": "未找到已注册的师傅资料。",
     "alreadyCreated": "资料已注册，正在重新确认资料信息。",
     "saveFailed": "保存资料时出错，请稍后再试。"
+  },
+  "Metadata": {
+    "siteTitle": "Moving：搬家用户与搬家师傅匹配服务",
+    "siteDescription": "搬家用户与专业搬家师傅的匹配服务",
+    "ogTitle": "Moving：繁琐的搬家准备，一个 Moving 就够了！"
   }
 }

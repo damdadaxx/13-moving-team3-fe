@@ -11,7 +11,6 @@ import { HttpError } from '@/lib/api/errors';
 import { authKeys } from '@/hooks/features/auth/queries/keys';
 
 import Button from '@/components/ui/Button/Button';
-import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
 /*=================================================
 프로필 등록 여부 가드 (역할 공통)
@@ -161,17 +160,16 @@ export default function ProfileGuard<TProfile>({
   ]);
 
   /*
-  @ 조회·인증 처리·경로 이동 중 화면
-  - 이동 대상 페이지의 children이 잠깐 보이는 깜빡임을 막기 위해 공용 로딩 UI를 유지한다.
-  - 인증 만료 상태에서도 보호된 화면을 잠시 보여주지 않는다.
+  @ 조회·경로 이동 중 화면
+  - 프로필 조회 중에는 페이지를 그린다. 각 페이지가 자기 스켈레톤을 보여 준다
+  - 다른 화면으로 보내는 중에는 내용을 그리지 않는다
   */
-  if (
-    hasUnauthorizedError ||
-    isPending ||
-    shouldMoveToProfileNew ||
-    shouldMoveToHome
-  ) {
-    return <LoadingDisplay />;
+  if (hasUnauthorizedError || shouldMoveToProfileNew || shouldMoveToHome) {
+    return null;
+  }
+
+  if (isPending) {
+    return children;
   }
 
   /*

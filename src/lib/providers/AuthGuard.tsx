@@ -13,8 +13,6 @@ import {
 
 import { useAuth } from '@/hooks/features/auth/useAuth';
 
-import LoadingDisplay from '@/components/ui/LoadingDisplay';
-
 /*
 @ 라우트 그룹 인증 가드
 - guest: (auth) 비로그인 전용. 로그인 사용자는 역할 home(또는 callbackUrl)으로
@@ -60,8 +58,14 @@ export default function AuthGuard({ children, allow }: AuthGuardProps) {
     }
   }, [allow, isLoading, isLoggedIn, pathname, role, router]);
 
+  /*
+  @ 세션 확인 중에는 페이지를 그린다
+  - 각 페이지의 스켈레톤이 보이게 자식까지 통과시킨다
+  - 권한이 없어 다른 화면으로 보내는 중에는 내용을 그리지 않는다
+  */
   if (!canRender) {
-    return <LoadingDisplay />;
+    if (isLoading) return children;
+    return null;
   }
 
   return children;

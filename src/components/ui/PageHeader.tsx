@@ -4,15 +4,25 @@
 import { usePathname } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 
+import { isLoginRequiredPath, isRoleBlockedPath } from '@/lib/constants/routes';
+
+import { useAuth } from '@/hooks/features/auth/useAuth';
+
 import { cn } from '@/utils/cn';
 import getPageHeaderTitleKey from '@/utils/getPageHeaderTitle';
 
 export default function PageHeader() {
   const t = useTranslations('PageHeader');
   const pathname = usePathname();
+  const { role, isLoading, isLoggedIn } = useAuth();
   const titleKey = getPageHeaderTitleKey(pathname);
+  const isBlocked =
+    !isLoading &&
+    (isLoggedIn && role
+      ? isRoleBlockedPath(role, pathname)
+      : isLoginRequiredPath(pathname));
 
-  if (!titleKey) return null;
+  if (!titleKey || isBlocked) return null;
 
   return (
     <div

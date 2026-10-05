@@ -84,6 +84,32 @@ export function getGuestSigninPath(): string {
 */
 const MOVER_PROTECTED_SEGMENTS = new Set(['requests', 'mypage', 'estimates']);
 
+/* 기사님 상세 (/mover/{id}). requests/mypage/estimates 는 기사님 전용 경로라 제외 */
+export function isMoverDetailPath(pathname: string): boolean {
+  const segments = pathname.split('/').filter(Boolean);
+
+  return (
+    segments[0] === 'mover' &&
+    segments.length === 2 &&
+    !MOVER_PROTECTED_SEGMENTS.has(segments[1])
+  );
+}
+
+/*
+@ 기사님이 보면 안 되는 공개 기사님 페이지
+- /mover : 기사님 찾기
+- /mover/{id} : 기사님 상세
+- locale 접두사·쿼리·해시는 빼고 판정한다
+*/
+export function isMoverBrowsePath(pathname: string): boolean {
+  const { path: withoutLocale } = splitLocalePrefix(pathname);
+  const path = withoutLocale.split('?')[0].split('#')[0];
+
+  if (path.includes('/signin') || path.includes('/signup')) return false;
+
+  return path === ROUTES.moverList || isMoverDetailPath(path);
+}
+
 /*
 @ 비회원도 보는 공개 페이지인지 판정 ((public) 라우트 그룹 기준)
 - '/' : 랜딩
@@ -96,7 +122,7 @@ function isPublicPath(pathname: string): boolean {
   if (segments.length === 0) return true; // '/'
   if (segments[0] !== 'mover') return false;
   if (segments.length === 1) return true; // '/mover'
-  if (segments.length === 2) return !MOVER_PROTECTED_SEGMENTS.has(segments[1]); // '/mover/{id}'
+  if (segments.length === 2) return isMoverDetailPath(pathname);
 
   return false;
 }
@@ -112,6 +138,99 @@ export function isProtectedPath(pathname: string): boolean {
     return false;
   }
   return !isPublicPath(pathname);
+}
+
+/*
+@ 이 역할이 머물러도 되는 경로인지
+- 고객: 공개 페이지(/, /mover, /mover/{id})와 /customer/*
+- 기사님: /mover/requests|mypage|estimates. 기사님 찾기·상세와 /customer/* 는 아니다
+- 비회원: 공개 페이지만
+- 직전 경로를 기억할 때, 막힌 페이지가 기록을 덮지 않게 쓴다
+*/
+export function isRoleAllowedPath(
+  role: Role | null,
+  pathname: string,
+): boolean {
+  const path = pathname.split('?')[0].split('#')[0];
+
+  if (path.includes('/signin') || path.includes('/signup')) return false;
+  if (!role) return isPublicPath(path);
+  if (role === 'customer') {
+    return isPublicPath(path) || path.startsWith('/customer');
+  }
+
+  return path.startsWith('/mover') && !isMoverBrowsePath(path);
+}
+
+/*
+@ 비로그인 전용 경로
+- /customer/signin|signup, /mover/signin|signup
+*/
+export function isGuestOnlyPath(pathname: string): boolean {
+  const path = pathname.split('?')[0].split('#')[0];
+
+  return path.includes('/signin') || path.includes('/signup');
+}
+
+/*
+@ 비회원이 로그인해야 들어가는 경로
+- (customer) /customer/* (로그인·회원가입 제외)
+- (mover) /mover/requests|mypage|estimates
+- 공개 페이지와 예시 페이지는 여기 넣지 않는다
+*/
+export function isLoginRequiredPath(pathname: string): boolean {
+  const path = pathname.split('?')[0].split('#')[0];
+
+  if (isGuestOnlyPath(path)) return false;
+  if (path === '/customer' || path.startsWith('/customer/')) return true;
+
+  const segments = path.split('/').filter(Boolean);
+
+  return (
+    segments[0] === 'mover' && MOVER_PROTECTED_SEGMENTS.has(segments[1] ?? '')
+  );
+}
+
+/*
+@ 다른 역할 전용 페이지인지
+- 고객이 /mover/requests|mypage|estimates 로 가는 경우
+- 기사님이 /customer/* 로 가는 경우
+- 로그인·회원가입은 역할이 아니라 비로그인 전용이라 여기 넣지 않는다
+- 기사님 찾기·상세(/mover, /mover/{id})는 고객·비회원 공개 페이지라 여기 넣지 않는다
+*/
+export function isOtherRoleProtectedPath(
+  role: Role,
+  pathname: string,
+): boolean {
+  const path = pathname.split('?')[0].split('#')[0];
+
+  if (isGuestOnlyPath(path)) return false;
+
+  if (role === 'customer') {
+    return (
+      path.startsWith('/mover/') &&
+      path !== ROUTES.moverList &&
+      !isMoverDetailPath(path)
+    );
+  }
+
+  return path.startsWith('/customer');
+}
+
+/*
+@ 로그인한 역할이 보면 안 되는 경로
+- 로그인·회원가입: 이미 로그인한 사용자
+- 고객이 기사님 전용, 기사님이 고객 전용
+- 기사님이 기사님 찾기·상세
+- 페이지 제목과 라우트 로딩을 비울 때 쓴다
+*/
+export function isRoleBlockedPath(role: Role, pathname: string): boolean {
+  const path = pathname.split('?')[0].split('#')[0];
+
+  if (isGuestOnlyPath(path)) return true;
+  if (role === 'mover' && isMoverBrowsePath(path)) return true;
+
+  return isOtherRoleProtectedPath(role, path);
 }
 
 /*
@@ -138,6 +257,7 @@ export function splitLocalePrefix(path: string): {
 - 로그인 루프 방지: signin/signup 은 home 으로 보냄
 - 공개 페이지('/', '/mover', '/mover/{id}')는 역할과 무관하게 허용
   (비회원 상태로 보고 있던 페이지라 로그인 후에도 누구나 돌아갈 수 있어야 함)
+- 예외: 기사님 찾기(/mover)·기사님 상세(/mover/{id})는 기사님 계정으로 돌아가지 않고 받은 요청으로 보낸다
 - 그 외에는 역할 교차 이동 방지: /customer/* ↔ /mover/* 를 섞지 않음
   (예: 고객이 기사님 전용 /mover/requests로 돌아오는 것은 막는다)
 */
@@ -160,7 +280,11 @@ export function getSafeCallbackPath(
 
   const pathname = path.split('?')[0].split('#')[0];
 
-  if (isPublicPath(pathname)) return path;
+  if (isPublicPath(pathname)) {
+    // 기사님 찾기·상세는 비회원·고객 전용. 기사님 로그인 복귀는 받은 요청으로 보낸다
+    if (role === 'mover' && isMoverBrowsePath(pathname)) return homePath;
+    return path;
+  }
 
   const allowedPrefix = role === 'customer' ? '/customer' : '/mover';
   if (!pathname.startsWith(allowedPrefix)) return homePath;

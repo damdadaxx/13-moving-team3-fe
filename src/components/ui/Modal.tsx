@@ -31,7 +31,9 @@
 
 /*
 @ 하단 버튼 영역
-- buttons로 액션 버튼을 받아 flex + gap-[8px]로 정렬한다 (버튼 1개면 gap은 보이지 않음)
+- buttons로 액션 버튼을 받아 같은 너비로 나눈다 (버튼 1개면 한 칸이 가로를 다 쓴다)
+- flex-1은 기준 너비(0%)에 패딩·테두리를 더한 뒤 남는 공간만 나눠서, outlined(px-6+border)가 solid(p-4)보다 넓어진다
+- grid의 1fr 칸은 패딩과 무관하게 칸 너비가 같다
 - 사용: buttons: <> <Button /> <Button /> </>
 */
 
@@ -148,7 +150,7 @@ export default function Modal({
         {buttons && (
           <div
             className={cn(
-              'mt-[24px] flex w-full shrink-0 items-center gap-[8px]',
+              'mt-[24px] grid w-full flex-1 grid-flow-col auto-cols-[minmax(0,1fr)] items-center gap-[8px]',
               isSheet ? 'mt-[26px] desktop:mt-[40px]' : 'tablet:mt-[40px]',
             )}
           >

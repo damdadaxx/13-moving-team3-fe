@@ -16,7 +16,16 @@
     "serviceTypeSelect": "Select services",
     "profileImageSelect": "Select profile image",
     "confirm": "OK",
-    "filter": "Filter"
+    "filter": "Filter",
+    "accessDeniedTitle": "You don't have access to this page.",
+    "accessDeniedDescription": "You don't have permission to view this page, or you need to log in.",
+    "accessDeniedCheckAddress": "Please check the address you entered.",
+    "goToMain": "Go to main",
+    "goToPrevious": "Previous page",
+    "loginRequiredTitle": "This service requires you to log in.",
+    "loginRequiredMessage": "You can use this feature after logging in.",
+    "alreadyLoggedInTitle": "You're already logged in.",
+    "alreadyLoggedInDescription": "You can't use the sign-in or sign-up page while logged in."
   },
   "Header": {
     "home": "Moving home",

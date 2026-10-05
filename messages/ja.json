@@ -16,7 +16,16 @@
     "serviceTypeSelect": "利用サービスを選択",
     "profileImageSelect": "プロフィール画像を選択",
     "confirm": "OK",
-    "filter": "絞り込み"
+    "filter": "絞り込み",
+    "accessDeniedTitle": "このページへのアクセス権限がありません。",
+    "accessDeniedDescription": "このページを閲覧する権限がないか、ログインが必要です。",
+    "accessDeniedCheckAddress": "入力したアドレスをもう一度ご確認ください。",
+    "goToMain": "メインへ移動",
+    "goToPrevious": "前のページへ",
+    "loginRequiredTitle": "ログインが必要なサービスです。",
+    "loginRequiredMessage": "この機能はログイン後にご利用いただけます。",
+    "alreadyLoggedInTitle": "すでにログインしています。",
+    "alreadyLoggedInDescription": "ログイン中はログイン・会員登録ページを利用できません。"
   },
   "Header": {
     "home": "Moving ホーム",

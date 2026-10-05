@@ -1,13 +1,13 @@
 'use client';
 
-import { usePathname, useRouter } from '@/i18n/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 
 import { HttpError } from '@/lib/api/errors';
-import { getGuestSigninPath, ROUTES } from '@/lib/constants/routes';
+import { ROUTES } from '@/lib/constants/routes';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+import { useLoginRequiredModal } from '@/hooks/common/useLoginRequiredModal';
 import { useModal } from '@/hooks/common/useModal';
 import { useToast } from '@/hooks/common/useToast';
 import { useAuth } from '@/hooks/features/auth/useAuth';
@@ -28,8 +28,7 @@ import Button from '@/components/ui/Button/Button';
 export function useMoverLike(moverId: string, initialLikeCount: number) {
   const t = useTranslations('MoverLike');
   const tCommon = useTranslations('Common');
-  const router = useRouter();
-  const pathname = usePathname();
+  const openLoginRequiredModal = useLoginRequiredModal();
   const queryClient = useQueryClient();
   const { isLoggedIn, isLoading: isAuthLoading, role } = useAuth();
   const { showToast } = useToast();
@@ -89,9 +88,7 @@ export function useMoverLike(moverId: string, initialLikeCount: number) {
     if (isAuthLoading || isPending) return;
 
     if (!isLoggedIn) {
-      /** 게스트 로그인 후 콜백 URL 설정 */
-      const callbackUrl = encodeURIComponent(pathname);
-      router.push(`${getGuestSigninPath()}?callbackUrl=${callbackUrl}`);
+      openLoginRequiredModal();
       return;
     }
 

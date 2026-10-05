@@ -16,7 +16,16 @@
     "serviceTypeSelect": "이용 서비스 선택",
     "profileImageSelect": "프로필 이미지 선택",
     "confirm": "확인",
-    "filter": "필터"
+    "filter": "필터",
+    "accessDeniedTitle": "접근 권한이 없는 페이지입니다.",
+    "accessDeniedDescription": "요청하신 페이지를 보실 수 있는 권한이 없거나, 로그인이 필요합니다.",
+    "accessDeniedCheckAddress": "입력하신 주소를 다시 한번 확인해 주세요.",
+    "goToMain": "메인으로 이동",
+    "goToPrevious": "이전 페이지로",
+    "loginRequiredTitle": "로그인이 필요한 서비스입니다.",
+    "loginRequiredMessage": "이 기능은 로그인 후 이용할 수 있어요.",
+    "alreadyLoggedInTitle": "이미 로그인되어 있습니다.",
+    "alreadyLoggedInDescription": "로그인된 상태에서는 로그인·회원가입 페이지를 이용할 수 없습니다."
   },
   "Header": {
     "home": "무빙 홈",

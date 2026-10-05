@@ -7,13 +7,13 @@ import { useMoverDetailQuery } from '@/hooks/features/mover/queries/queries';
 import { cn } from '@/utils/cn';
 
 import MoverActionButtonGroup from '@/components/features/common/MoverDetail/MoverActionButtonGroup';
+import MoverDetailSkeleton from '@/components/features/common/MoverDetail/MoverDetailSkeleton';
 import MoverDetailTopSection from '@/components/features/common/MoverDetail/MoverDetailTopSection';
 import MoverInfo from '@/components/features/common/MoverDetail/MoverInfo';
 import MoverStickyActionBar from '@/components/features/common/MoverDetail/MoverStickyActionBar';
 import ShareMoverInfo from '@/components/features/common/MoverDetail/ShareMoverInfo';
 import MoverReviewList from '@/components/features/common/MoverReview/MoverReviewList';
 import EmptyState from '@/components/ui/EmptyState';
-import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
 /**
  * @ 기사님 상세 페이지 컨텐츠 컴포넌트
@@ -28,7 +28,7 @@ export default function MoverDetailPageContent({
   const { data: mover, isPending, isError } = useMoverDetailQuery(moverId);
 
   if (isPending) {
-    return <LoadingDisplay />;
+    return <MoverDetailSkeleton />;
   }
 
   if (isError || !mover) {

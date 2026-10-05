@@ -35,13 +35,22 @@ interface NotificationDropdownProps {
 }
 
 interface NotificationStatusItemProps {
+  className?: string;
   message: string;
 }
 
 /** 알림 상태 아이템 컴포넌트 */
-function NotificationStatusItem({ message }: NotificationStatusItemProps) {
+function NotificationStatusItem({
+  className,
+  message,
+}: NotificationStatusItemProps) {
   return (
-    <li className={cn('px-[32px] py-[24px] text-md-medium text-gray-400')}>
+    <li
+      className={cn(
+        'px-[32px] py-[24px] text-md-medium text-gray-400',
+        className,
+      )}
+    >
       {message}
     </li>
   );
@@ -167,12 +176,17 @@ export default function NotificationDropdown({
           </button>
         </div>
       </div>
-      <div className={cn('flex min-h-0 w-full flex-1 flex-col')}>
+      <div className={cn('flex min-h-0 w-full flex-1 flex-col min-h-[352px]')}>
         <ul
           ref={listRef}
           className={cn('min-h-0 flex-1 overflow-y-auto scrollbar-gray-300')}
         >
-          {isLoading ? <NotificationStatusItem message={t('loading')} /> : null}
+          {isLoading ? (
+            <NotificationStatusItem
+              className={cn('pt-[100px] text-center')}
+              message={t('loading')}
+            />
+          ) : null}
           {isError ? <NotificationStatusItem message={t('error')} /> : null}
           {!isLoading && !isError && notifications.length === 0 ? (
             <NotificationStatusItem message={t('empty')} />

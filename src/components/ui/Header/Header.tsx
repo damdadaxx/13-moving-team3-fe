@@ -46,7 +46,7 @@ const MENU_DATA: Record<
     { menuKey: 'findMover', href: ROUTES.moverList },
     {
       menuKey: 'myEstimates',
-      href: ROUTES.customerEstimates,
+      href: ROUTES.customerEstimatesPending,
       activePrefix: ROUTES.customerEstimatesRoot,
     },
   ],

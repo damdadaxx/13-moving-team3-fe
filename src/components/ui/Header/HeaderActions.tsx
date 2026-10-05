@@ -4,9 +4,9 @@ import type { RefObject } from 'react';
 import type { AuthUser } from '@/types/auth';
 import { useTranslations } from 'next-intl';
 
-import IcAlarm from '@/assets/icons/ic_alarm.svg';
-import IcMenu from '@/assets/icons/ic_menu.svg';
-import IcProfile from '@/assets/icons/ic_profile.svg';
+import IcAlarm from '@/assets/icons/ic_alarm_dark.svg';
+import IcMenu from '@/assets/icons/ic_menu_dark.svg';
+import IcProfile from '@/assets/icons/ic_profile_dark.svg';
 
 import { cn } from '@/utils/cn';
 

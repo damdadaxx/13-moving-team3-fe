@@ -102,7 +102,6 @@ export default function MobileMenu({
   return (
     <div
       id={HEADER_PANEL_IDS.mobile}
-      aria-hidden={!isOpen}
       inert={!isOpen}
       className={mobileMenuLayer({ open: isOpen })}
     >

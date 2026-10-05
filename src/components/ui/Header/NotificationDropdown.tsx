@@ -131,7 +131,6 @@ export default function NotificationDropdown({
   return (
     <div
       id={HEADER_PANEL_IDS.notification}
-      aria-hidden={!isOpen}
       inert={!isOpen}
       className={notificationDropdownPanel({ open: isOpen })}
     >

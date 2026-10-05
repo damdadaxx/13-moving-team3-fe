@@ -115,7 +115,6 @@ export default function ProfileDropdown({
   return (
     <div
       id={HEADER_PANEL_IDS.profile}
-      aria-hidden={!isOpen}
       inert={!isOpen}
       className={profileDropdownPanel({ open: isOpen })}
     >

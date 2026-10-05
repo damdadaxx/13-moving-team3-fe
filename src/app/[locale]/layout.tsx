@@ -74,6 +74,10 @@ export default async function RootLayout({
             {children}
           </Providers>
         </NextIntlClientProvider>
+
+        {/* Modal, Toast 렌더링 위치 */}
+        <div id="modal-root" />
+        <div id="toast-root" />
       </body>
     </html>
   );

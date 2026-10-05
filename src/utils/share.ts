@@ -1,9 +1,13 @@
+import { routing } from '@/i18n/routing';
+import { hasLocale } from 'next-intl';
+
 import {
   KAKAO_JAVASCRIPT_KEY,
   OG_IMAGE_HEIGHT,
-  OG_IMAGE_PATH,
   OG_IMAGE_WIDTH,
+  getOgImagePath,
 } from '@/lib/constants/kakao';
+import { splitLocalePrefix } from '@/lib/constants/routes';
 
 const FACEBOOK_SHARE_WINDOW_FEATURES = 'width=800,height=600';
 
@@ -34,7 +38,13 @@ export function isLocalShareUrl(url = getCurrentPageUrl()) {
 }
 
 function getShareImageUrl() {
-  return new URL(OG_IMAGE_PATH, window.location.origin).href;
+  const { locale } = splitLocalePrefix(window.location.pathname);
+  const currentLocale =
+    locale && hasLocale(routing.locales, locale)
+      ? locale
+      : routing.defaultLocale;
+
+  return new URL(getOgImagePath(currentLocale), window.location.origin).href;
 }
 
 function copyWithTextarea(text: string) {

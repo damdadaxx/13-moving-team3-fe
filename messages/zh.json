@@ -23,6 +23,7 @@
     "menu": "菜单",
     "closeMobileMenu": "关闭菜单",
     "profileMenu": "个人菜单",
+    "language": "选择语言",
     "notifications": "通知",
     "notificationsWithCount": "通知 {count} 条",
     "nav": {

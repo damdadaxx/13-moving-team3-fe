@@ -23,6 +23,7 @@
     "menu": "メニュー",
     "closeMobileMenu": "メニューを閉じる",
     "profileMenu": "プロフィールメニュー",
+    "language": "言語を選択",
     "notifications": "お知らせ",
     "notificationsWithCount": "お知らせ {count}件",
     "nav": {

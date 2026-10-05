@@ -1,4 +1,4 @@
-// 헤더 우측 액션 (로그인 / 알림 / 프로필 / 햄버거)
+// 헤더 우측 액션 (언어 / 로그인 / 알림 / 프로필 / 햄버거)
 import type { RefObject } from 'react';
 
 import type { AuthUser } from '@/types/auth';
@@ -12,6 +12,7 @@ import { cn } from '@/utils/cn';
 
 import ButtonLogin from '@/components/ui/Button/ButtonLogin';
 import GuestActionsSkeleton from '@/components/ui/Header/GuestActionsSkeleton';
+import LocaleSelect from '@/components/ui/Header/LocaleSelect';
 import LoggedInActionsSkeleton from '@/components/ui/Header/LoggedInActionsSkeleton';
 import NotificationDropdown from '@/components/ui/Header/NotificationDropdown';
 import ProfileDropdown from '@/components/ui/Header/ProfileDropdown';
@@ -19,6 +20,7 @@ import {
   HEADER_PANEL_IDS,
   type HeaderPanel,
 } from '@/components/ui/Header/types';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 interface HeaderActionsProps {
   isLoading: boolean;
@@ -90,6 +92,19 @@ export default function HeaderActions({
         'desktop:gap-[32px]',
       )}
     >
+      {isLoading ? (
+        <span
+          className={cn(
+            'inline-block h-[20px] w-[39px] shrink-0',
+            'desktop:h-[24px] desktop:w-[50px]',
+          )}
+        >
+          <Skeleton width="100%" height="100%" borderRadius={8} />
+        </span>
+      ) : (
+        <LocaleSelect />
+      )}
+
       {isLoading ? (
         isLoggedInHint ? (
           <LoggedInActionsSkeleton />

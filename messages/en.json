@@ -23,6 +23,7 @@
     "menu": "Menu",
     "closeMobileMenu": "Close mobile menu",
     "profileMenu": "Profile menu",
+    "language": "Select language",
     "notifications": "Notifications",
     "notificationsWithCount": "Notifications ({count})",
     "nav": {

@@ -18,6 +18,7 @@ import { cn } from '@/utils/cn';
 
 import Header from '@/components/ui/Header/Header';
 import PageHeader from '@/components/ui/PageHeader';
+import TopButton from '@/components/ui/TopButton';
 
 export async function generateMetadata({
   params,
@@ -72,6 +73,7 @@ export default async function RootLayout({
             <Header hasSessionCookie={hasSessionCookie} />
             <PageHeader />
             {children}
+            <TopButton />
           </Providers>
         </NextIntlClientProvider>
 

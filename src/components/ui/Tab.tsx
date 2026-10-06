@@ -44,19 +44,23 @@ export default function Tab({ tabs }: { tabs: Tabs[] }) {
     ? `${pathname}?${searchParams.toString()}`
     : pathname;
 
+  /* 탭 href와 경로가 정확히 일치할 때만 표시.*/
+  const isValidPath = tabs.some((tab) => pathname === tab.href.split('?')[0]);
+  if (!isValidPath) return null;
+
   return (
     <nav
       role="tablist"
       className={cn(
-        'flex w-full items-stretch border-b border-line-100 bg-gray-50 h-[54px] px-[24px]',
+        'sticky top-[54px] z-10 flex h-[54px] w-full items-stretch border-b border-line-100 bg-gray-50 px-[24px]',
         'tablet:px-[72px] tablet:shadow-[0px_2px_10px_rgba(248,248,248,0.2)]',
-        'desktop:h-[80px] desktop:gap-[32px] desktop:shadow-[0px_2px_1px_rgba(248,248,248,0.1)]',
+        'desktop:top-[88px] desktop:h-[80px] desktop:gap-[32px] desktop:shadow-[0px_2px_1px_rgba(248,248,248,0.1)]',
       )}
     >
       <div
         className={cn(
           'flex h-full w-full items-stretch gap-[24px]',
-          'desktop:mx-auto desktop:max-w-[1600px] desktop:pl-[196px]',
+          'desktop:mx-auto desktop:max-w-[1200px]',
         )}
       >
         {tabs.map((tab) => {

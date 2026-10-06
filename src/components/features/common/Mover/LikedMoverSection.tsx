@@ -1,6 +1,8 @@
 // 찜한 기사님 (기사님 찾기 데스크톱 오른쪽 영역)
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { LIKED_MOVER_ID_PAGE_SIZE } from '@/lib/constants/mover';
 
 import { useAuth } from '@/hooks/features/auth/useAuth';
@@ -21,6 +23,7 @@ export default function LikedMoverSection({
 }: {
   className?: string;
 }) {
+  const t = useTranslations('MoverFind');
   const { role } = useAuth();
   const isCustomer = role === 'customer';
   const { data } = useLikedMoversQuery({
@@ -40,7 +43,7 @@ export default function LikedMoverSection({
         id="liked-movers-title"
         className="shrink-0 text-xl-semibold text-black-400"
       >
-        찜한 기사님
+        {t('likedTitle')}
       </h2>
       {/* 제목은 고정하고 카드만 스크롤. 영역이 뷰포트보다 길어도 sticky가 풀리지 않게 */}
       <ul className="flex min-h-0 flex-col gap-4 overflow-y-auto scrollbar-gray-300">

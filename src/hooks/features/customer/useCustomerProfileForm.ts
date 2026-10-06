@@ -10,6 +10,7 @@ import {
 
 import type { CustomerProfileFormValues } from '@/types/customerProfile';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { z } from 'zod';
 
 import { HttpError } from '@/lib/api/errors';
@@ -59,21 +60,13 @@ function toCustomerProfileFieldName(
 - 백엔드 message를 기본으로 사용하되 인증·권한·중복 등록은 사용자가 다음 행동을
   바로 이해할 수 있도록 등록 화면 문맥에 맞는 문구로 정리한다.
 - NETWORK_ERROR와 500 계열 오류는 clientFetch가 만든 안전한 안내 문구를 그대로 사용한다.
+- 정리한 문구는 messages > CustomerProfile 번역 키로 돌려주고, 없으면 null(백엔드 message 사용)
 */
-function getCustomerProfileSubmitErrorMessage(error: HttpError): string {
-  if (error.status === 401) {
-    return '로그인 정보가 만료되었습니다. 다시 로그인한 뒤 시도해주세요.';
-  }
-
-  if (error.status === 403) {
-    return '고객 계정만 프로필을 등록할 수 있습니다.';
-  }
-
-  if (error.status === 409) {
-    return '이미 등록된 프로필입니다. 프로필 정보를 다시 확인합니다.';
-  }
-
-  return error.message;
+function getCustomerProfileSubmitErrorKey(error: HttpError) {
+  if (error.status === 401) return 'sessionExpired';
+  if (error.status === 403) return 'customerOnly';
+  if (error.status === 409) return 'alreadyCreated';
+  return null;
 }
 
 /*=================================================
@@ -94,6 +87,7 @@ export function useCustomerProfileForm({
   defaultValues,
   onSubmit,
 }: UseCustomerProfileFormOptions) {
+  const t = useTranslations('CustomerProfile');
   const [submitError, setSubmitError] = useState('');
   const form = useForm<
     CustomerProfileSchemaInput,
@@ -156,14 +150,13 @@ export function useCustomerProfileForm({
         });
 
         if (!hasMappedFieldError) {
-          setSubmitError(getCustomerProfileSubmitErrorMessage(error));
+          const errorKey = getCustomerProfileSubmitErrorKey(error);
+          setSubmitError(errorKey ? t(errorKey) : error.message);
         }
         return;
       }
 
-      setSubmitError(
-        '프로필 저장 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
-      );
+      setSubmitError(t('saveFailed'));
     }
   };
 

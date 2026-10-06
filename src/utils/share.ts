@@ -4,13 +4,14 @@ import {
   OG_IMAGE_PATH,
   OG_IMAGE_WIDTH,
 } from '@/lib/constants/kakao';
-import { OG_TITLE } from '@/lib/constants/site';
 
 const FACEBOOK_SHARE_WINDOW_FEATURES = 'width=800,height=600';
 
+/* 문구는 화면(현재 언어)에서 번역해 넘긴다 */
 interface KakaoFeedShareOptions {
-  title?: string;
-  description?: string;
+  title: string;
+  description: string;
+  buttonTitle: string;
   imageUrl?: string;
 }
 
@@ -81,7 +82,7 @@ export async function copyPageUrl() {
 - 공유 버튼이 페이지에 두 번 렌더되므로 container id 바인딩 대신 sendDefault 를 쓴다
 - Kakao.Share 는 init 이후에만 생기므로, 클릭 핸들러에서 한 번 더 init 한다
 */
-export function shareToKakao(options: KakaoFeedShareOptions = {}) {
+export function shareToKakao(options: KakaoFeedShareOptions) {
   const Kakao = window.Kakao;
   if (!Kakao || !KAKAO_JAVASCRIPT_KEY) {
     throw new Error('카카오 공유를 실행할 수 없습니다.');
@@ -100,9 +101,8 @@ export function shareToKakao(options: KakaoFeedShareOptions = {}) {
   Kakao.Share.sendDefault({
     objectType: 'feed',
     content: {
-      title: options.title ?? '김코드 기사님',
-      description:
-        options.description ?? '고객님의 물품을 안전하게 운송해 드립니다.',
+      title: options.title,
+      description: options.description,
       imageUrl: options.imageUrl ?? getShareImageUrl(),
       imageWidth: OG_IMAGE_WIDTH,
       imageHeight: OG_IMAGE_HEIGHT,
@@ -110,7 +110,7 @@ export function shareToKakao(options: KakaoFeedShareOptions = {}) {
     },
     buttons: [
       {
-        title: '웹으로 보기',
+        title: options.buttonTitle,
         link,
       },
     ],
@@ -123,11 +123,12 @@ export function shareToKakao(options: KakaoFeedShareOptions = {}) {
 - localhost / 사설망은 페이스북이 접근하지 못해 미리보기가 비어 있다
 - quote 는 미리보기 실패 시 본문에 넣을 보조 문구다
 */
-export function shareToFacebook() {
+/** quote: 화면에서 번역해 넘기는 보조 문구 */
+export function shareToFacebook(quote: string) {
   const sendUrl = getCurrentPageUrl();
   const shareUrl = new URL('https://www.facebook.com/sharer/sharer.php');
   shareUrl.searchParams.set('u', sendUrl);
-  shareUrl.searchParams.set('quote', OG_TITLE);
+  shareUrl.searchParams.set('quote', quote);
 
   const popup = window.open(
     shareUrl.toString(),

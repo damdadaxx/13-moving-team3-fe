@@ -4,6 +4,8 @@
 import { useState } from 'react';
 import ReactCalendar from 'react-calendar';
 
+import { useLocale, useTranslations } from 'next-intl';
+
 import IcChevronLeft from '@/assets/icons/ic_chevron_left.svg';
 import IcChevronRight from '@/assets/icons/ic_chevron_right.svg';
 
@@ -14,7 +16,6 @@ import Button from '@/components/ui/Button/Button';
 import styles from './Calendar.module.css';
 
 /* 헤더·요일 줄 스타일은 Calendar.module.css에 있다 (이유는 그 파일 주석 참고) */
-const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
 interface CalendarProps {
   /** 선택된 날짜. 넘기지 않으면 컴포넌트가 자체 상태로 관리한다 */
@@ -44,13 +45,18 @@ export default function Calendar({
   value,
   onChange,
   onConfirm,
-  confirmLabel = '선택완료',
+  confirmLabel,
   size = 'sm',
   showConfirm,
   minDate,
   maxDate,
   className,
 }: CalendarProps) {
+  const t = useTranslations('Common');
+  const locale = useLocale();
+  /* 날짜 표기는 현재 언어의 Intl 형식을 따른다 (ko는 기존과 같은 "7월", "2025년 7월") */
+  const format = (date: Date, options: Intl.DateTimeFormatOptions) =>
+    new Intl.DateTimeFormat(locale, options).format(date);
   const [internalValue, setInternalValue] = useState<Date | null>(null);
   const selected = value !== undefined ? value : internalValue;
 
@@ -81,7 +87,7 @@ export default function Calendar({
         onChange={handleChange}
         minDate={minDate}
         maxDate={maxDate}
-        locale="ko-KR"
+        locale={locale}
         /* 일요일 시작 (Figma 요일 순서: 일~토) */
         calendarType="gregory"
         /* 헤더 라벨을 누르면 월 → 연(월 12칸) → 연대(연 10칸)로 드릴업한다.
@@ -100,18 +106,20 @@ export default function Calendar({
             return `${date.getFullYear()} – ${date.getFullYear() + 9}`;
           }
           if (view === 'year') {
-            return `${date.getFullYear()}년`;
+            return format(date, { year: 'numeric' });
           }
           return `${date.getFullYear()}. ${String(date.getMonth() + 1).padStart(2, '0')}`;
         }}
         /* 기본 포맷은 "12일" / "일요일"이라 Figma대로 숫자·한 글자만 남긴다.
-           배열로 직접 만들어 서버·클라이언트 locale 차이로 인한 hydration 불일치도 막는다 */
+           react-calendar가 넘기는 locale 대신 next-intl locale을 써서 서버·클라이언트 표기를 맞춘다 */
         formatDay={(_locale, date) => String(date.getDate())}
-        formatShortWeekday={(_locale, date) => WEEKDAYS[date.getDay()]}
+        formatShortWeekday={(_locale, date) =>
+          format(date, { weekday: 'narrow' })
+        }
         /* 연 뷰 칸은 "7월", 연대 뷰 칸은 "2025". formatMonthYear는 월 칸의 aria-label로 쓰인다 */
-        formatMonth={(_locale, date) => `${date.getMonth() + 1}월`}
+        formatMonth={(_locale, date) => format(date, { month: 'short' })}
         formatMonthYear={(_locale, date) =>
-          `${date.getFullYear()}년 ${date.getMonth() + 1}월`
+          format(date, { year: 'numeric', month: 'long' })
         }
         formatYear={(_locale, date) => String(date.getFullYear())}
         tileClassName={({ date, view, activeStartDate }) => {
@@ -193,7 +201,7 @@ export default function Calendar({
           onClick={() => selected && onConfirm?.(selected)}
           className="w-[279px] max-w-full"
         >
-          {confirmLabel}
+          {confirmLabel ?? t('selectComplete')}
         </Button>
       )}
     </div>

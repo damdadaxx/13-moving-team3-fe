@@ -1,4 +1,6 @@
+import { routing } from '@/i18n/routing';
 import type { Role } from '@/types/role';
+import { type Locale, hasLocale } from 'next-intl';
 
 /*
 @ 앱 경로
@@ -113,7 +115,25 @@ export function isProtectedPath(pathname: string): boolean {
 }
 
 /*
+@ 경로 앞의 locale 접두사 분리
+- '/en/customer/x?a=1' → { locale: 'en', path: '/customer/x?a=1' }
+- 접두사가 없으면 locale 은 undefined, path 는 그대로
+- callbackUrl 처럼 locale 이 붙어 들어올 수 있는 값을 검사·이동하기 전에 쓴다
+*/
+export function splitLocalePrefix(path: string): {
+  locale?: Locale;
+  path: string;
+} {
+  const match = path.match(/^\/([^/?#]+)(?=$|[/?#])/);
+  if (!match || !hasLocale(routing.locales, match[1])) return { path };
+
+  const rest = path.slice(match[0].length);
+  return { locale: match[1], path: rest.startsWith('/') ? rest : `/${rest}` };
+}
+
+/*
 @ callbackUrl 검증
+- 반환값은 locale 접두사가 없는 경로다 (이동할 때 @/i18n/navigation 라우터가 locale 을 붙인다)
 - open redirect 방지: 상대 경로만 허용
 - 로그인 루프 방지: signin/signup 은 home 으로 보냄
 - 공개 페이지('/', '/mover', '/mover/{id}')는 역할과 무관하게 허용
@@ -130,16 +150,20 @@ export function getSafeCallbackPath(
   if (!callbackUrl) return homePath;
   if (!callbackUrl.startsWith('/')) return homePath;
   if (callbackUrl.startsWith('//')) return homePath;
-  if (callbackUrl.includes('/signin') || callbackUrl.includes('/signup')) {
+
+  // '/en/customer/...' 처럼 locale 이 붙어 와도 같은 기준으로 검사한다
+  const { path } = splitLocalePrefix(callbackUrl);
+  if (path.startsWith('//')) return homePath;
+  if (path.includes('/signin') || path.includes('/signup')) {
     return homePath;
   }
 
-  const pathname = callbackUrl.split('?')[0].split('#')[0];
+  const pathname = path.split('?')[0].split('#')[0];
 
-  if (isPublicPath(pathname)) return callbackUrl;
+  if (isPublicPath(pathname)) return path;
 
   const allowedPrefix = role === 'customer' ? '/customer' : '/mover';
   if (!pathname.startsWith(allowedPrefix)) return homePath;
 
-  return callbackUrl;
+  return path;
 }

@@ -4,6 +4,7 @@ import { useId } from 'react';
 
 import type { AuthProviderName } from '@/types/auth';
 import type { MoverAccountFormValues } from '@/types/moverAccount';
+import { useTranslations } from 'next-intl';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import type { MoverAccountEditPlan } from '@/hooks/features/mover/moverAccountEditPlan';
@@ -66,6 +67,10 @@ export default function MoverAccountForm({
   isDisabled = false,
   onSubmit,
 }: MoverAccountFormProps) {
+  const t = useTranslations('MoverAccount');
+  /* 이름·비밀번호 등 입력 라벨은 고객 프로필 수정과 같은 문구를 쓴다 */
+  const tField = useTranslations('CustomerProfile');
+  const tCommon = useTranslations('Common');
   const formId = useId();
   const responsiveInputSize = useBreakpointValue('sm', 'sm', 'md');
   const responsiveButtonSize = useBreakpointValue('sm', 'sm', 'md');
@@ -103,7 +108,7 @@ export default function MoverAccountForm({
           */}
           <header>
             <h1 className="text-2lg-bold leading-[26px] text-black-400 desktop:text-3xl-semibold desktop:leading-[46px]">
-              기본정보 수정
+              {t('title')}
             </h1>
           </header>
 
@@ -117,12 +122,12 @@ export default function MoverAccountForm({
             - 전화번호는 모바일 숫자 키보드를 제공하되 하이픈 입력도 허용한다.
             */}
             <section
-              aria-label="기본정보"
+              aria-label={t('sectionBasic')}
               className="flex min-w-0 flex-col gap-[20px] desktop:max-w-[500px] desktop:gap-[32px]"
             >
               <Input
                 id={formId + '-name'}
-                label="이름"
+                label={tField('name')}
                 labelVariant="profile"
                 type="text"
                 autoComplete="name"
@@ -138,7 +143,7 @@ export default function MoverAccountForm({
 
               <Input
                 id={formId + '-email'}
-                label="이메일"
+                label={tField('email')}
                 labelVariant="profile"
                 type="email"
                 autoComplete="email"
@@ -153,7 +158,7 @@ export default function MoverAccountForm({
 
               <Input
                 id={formId + '-phone-number'}
-                label="전화번호"
+                label={tField('phoneNumber')}
                 labelVariant="profile"
                 type="tel"
                 inputMode="tel"
@@ -170,7 +175,7 @@ export default function MoverAccountForm({
             </section>
 
             <section
-              aria-label="비밀번호 변경"
+              aria-label={t('sectionPassword')}
               className="flex min-w-0 flex-col gap-[20px] desktop:max-w-[500px] desktop:gap-[32px]"
             >
               {isLocalAccount ? (
@@ -183,11 +188,11 @@ export default function MoverAccountForm({
                   */}
                   <Input
                     id={formId + '-current-password'}
-                    label="현재 비밀번호"
+                    label={tField('currentPassword')}
                     labelVariant="profile"
                     type="password"
                     autoComplete="current-password"
-                    placeholder="현재 비밀번호를 입력해주세요"
+                    placeholder={tField('currentPasswordPlaceholder')}
                     size="sm"
                     disabled={areFieldsDisabled}
                     className="desktop:text-2lg-regular"
@@ -199,11 +204,11 @@ export default function MoverAccountForm({
 
                   <Input
                     id={formId + '-new-password'}
-                    label="새 비밀번호"
+                    label={tField('newPassword')}
                     labelVariant="profile"
                     type="password"
                     autoComplete="new-password"
-                    placeholder="새 비밀번호를 입력해주세요"
+                    placeholder={tField('newPasswordPlaceholder')}
                     size="sm"
                     disabled={areFieldsDisabled}
                     className="desktop:text-2lg-regular"
@@ -215,11 +220,11 @@ export default function MoverAccountForm({
 
                   <Input
                     id={formId + '-new-password-confirm'}
-                    label="새 비밀번호 확인"
+                    label={tField('newPasswordConfirm')}
                     labelVariant="profile"
                     type="password"
                     autoComplete="new-password"
-                    placeholder="새 비밀번호를 다시 한번 입력해주세요"
+                    placeholder={tField('newPasswordConfirmPlaceholder')}
                     size="sm"
                     disabled={areFieldsDisabled}
                     className="desktop:text-2lg-regular"
@@ -236,9 +241,9 @@ export default function MoverAccountForm({
                     별도 안내 문구로 바꿀지 결정한다.
                   */}
                   {[
-                    ['current-password', '현재 비밀번호'],
-                    ['new-password', '새 비밀번호'],
-                    ['new-password-confirm', '새 비밀번호 확인'],
+                    ['current-password', tField('currentPassword')],
+                    ['new-password', tField('newPassword')],
+                    ['new-password-confirm', tField('newPasswordConfirm')],
                   ].map(([idSuffix, label], index) => (
                     <div key={idSuffix} className="contents">
                       {index > 0 && (
@@ -286,7 +291,7 @@ export default function MoverAccountForm({
               isLoading={isLoading}
               className="desktop:order-2 desktop:flex-1"
             >
-              수정하기
+              {tField('edit')}
             </Button>
 
             <Button
@@ -301,7 +306,7 @@ export default function MoverAccountForm({
                 'desktop:order-1 desktop:flex-1',
               )}
             >
-              취소
+              {tCommon('cancel')}
             </Button>
           </div>
         </div>

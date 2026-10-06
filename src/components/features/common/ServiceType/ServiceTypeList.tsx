@@ -1,6 +1,7 @@
 'use client';
 
-import { SERVICE_TYPE_LABELS, type ServiceType } from '@/types/serviceType';
+import type { ServiceType } from '@/types/serviceType';
+import { useTranslations } from 'next-intl';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
@@ -17,11 +18,13 @@ export default function ServiceTypeList({
 }: {
   serviceTypes: ServiceType[];
 }) {
+  const t = useTranslations('MoverDetail');
+  const tServiceType = useTranslations('ServiceType');
   const currentBreakpoint = useBreakpointValue('sm', 'md', 'md');
 
   return (
     <div>
-      <SectionTitle>제공 서비스</SectionTitle>
+      <SectionTitle>{t('serviceTypes')}</SectionTitle>
       <div className={cn('flex gap-[8px]', 'tablet:gap-[12px]')}>
         {serviceTypes.map((serviceType) => (
           <SelectableChip
@@ -31,7 +34,7 @@ export default function ServiceTypeList({
             isSelected={true}
             className="cursor-default"
           >
-            {SERVICE_TYPE_LABELS[serviceType]}
+            {tServiceType(serviceType)}
           </SelectableChip>
         ))}
       </div>

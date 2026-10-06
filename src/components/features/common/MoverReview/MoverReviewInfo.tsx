@@ -1,10 +1,13 @@
 // 기사님 진행/리뷰/경력 정보 컴포넌트
 import { cva, type VariantProps } from 'class-variance-authority';
+import { useTranslations } from 'next-intl';
 
 import IcStarFill from '@/assets/icons/ic_star_fill.svg';
 
+import { useFormatCareer } from '@/hooks/common/useFormatCareer';
+
 import { cn } from '@/utils/cn';
-import { formatCareerLabel, formatRating } from '@/utils/formatMover';
+import { formatRating } from '@/utils/formatMover';
 
 import SectionTitle from '@/components/ui/SectionTitle';
 
@@ -83,10 +86,15 @@ export default function MoverReviewInfo({
   variant = 'default',
   className,
 }: MoverReviewInfoProps) {
+  const t = useTranslations('MoverDetail');
+  const formatCareer = useFormatCareer();
   const stats = [
-    { title: '진행', value: `${confirmedCount}건` },
     {
-      title: '리뷰',
+      title: t('statConfirmed'),
+      value: t('statConfirmedCount', { count: confirmedCount }),
+    },
+    {
+      title: t('statReview'),
       value:
         variant === 'mypage' ? (
           formatRating(averageRating)
@@ -103,7 +111,7 @@ export default function MoverReviewInfo({
           </>
         ),
     },
-    { title: '총 경력', value: formatCareerLabel(careerMonths) },
+    { title: t('statCareer'), value: formatCareer(careerMonths) },
   ];
 
   return (

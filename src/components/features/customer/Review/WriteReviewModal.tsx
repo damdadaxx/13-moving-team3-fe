@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import type { PendingReview } from '@/types/review';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import IcArrowRight from '@/assets/icons/ic_arrow_right.svg';
@@ -13,11 +14,11 @@ import ImgMoverCharacter from '@/assets/images/img_profile_example.png';
 import { HttpError } from '@/lib/api/errors';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+import { useFormatDate } from '@/hooks/common/useFormatDate';
 import { useToast } from '@/hooks/common/useToast';
 import { useCreateReviewMutation } from '@/hooks/features/review/queries/mutations';
 
 import { cn } from '@/utils/cn';
-import formatDate from '@/utils/formatDate';
 
 import Button from '@/components/ui/Button/Button';
 import Textarea from '@/components/ui/Form/Textarea';
@@ -51,6 +52,11 @@ export default function WriteReviewModal({
   isOpen,
   onClose,
 }: WriteReviewModalProps) {
+  const t = useTranslations('CustomerReviews');
+  const tReview = useTranslations('Review');
+  const tCard = useTranslations('MoverCard');
+  const tEstimate = useTranslations('Estimate');
+  const formatDateLocale = useFormatDate();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const tagSize = useBreakpointValue('sm', 'sm', 'md');
@@ -73,14 +79,12 @@ export default function WriteReviewModal({
       },
       {
         onSuccess: () => {
-          showToast('리뷰가 등록되었어요.');
+          showToast(t('created'));
           handleClose();
         },
         onError: (error) => {
           const message =
-            error instanceof HttpError
-              ? error.message
-              : '리뷰 등록에 실패했어요. 다시 시도해주세요.';
+            error instanceof HttpError ? error.message : t('createFailed');
           showToast(message);
         },
       },
@@ -99,7 +103,7 @@ export default function WriteReviewModal({
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      title="리뷰 쓰기"
+      title={t('modalTitle')}
       variant="sheet"
       buttons={
         <Button
@@ -108,7 +112,7 @@ export default function WriteReviewModal({
           isLoading={isSubmitting}
           onClick={handleSubmit}
         >
-          리뷰 등록
+          {t('submit')}
         </Button>
       }
     >
@@ -138,8 +142,9 @@ export default function WriteReviewModal({
                   />
                 </span>
                 <p className="text-lg-semibold flex items-center gap-[4px] text-black-300 desktop:text-2lg-semibold">
-                  <span>{review.moverName}</span>
-                  <span>기사님</span>
+                  <span>
+                    {tCard('nickname', { nickname: review.moverName })}
+                  </span>
                 </p>
               </div>
               <div className="relative size-[50px] shrink-0 overflow-hidden rounded-[12px] bg-black-300">
@@ -158,16 +163,22 @@ export default function WriteReviewModal({
 
             <div className="flex items-start justify-between desktop:justify-start desktop:gap-[40px]">
               <div className="flex items-end gap-[12px]">
-                <MetaItem label="출발지" value={review.fromRegion} />
+                <MetaItem
+                  label={tEstimate('departure')}
+                  value={review.fromRegion}
+                />
                 <IcArrowRight
                   aria-hidden="true"
                   className="h-[23px] w-[12px] shrink-0 desktop:w-[16px]"
                 />
-                <MetaItem label="도착지" value={review.toRegion} />
+                <MetaItem
+                  label={tEstimate('arrival')}
+                  value={review.toRegion}
+                />
               </div>
               <MetaItem
-                label="이사일"
-                value={formatDate(review.moveDate, 'korean')}
+                label={tEstimate('moveDate')}
+                value={formatDateLocale(review.moveDate, 'korean')}
               />
             </div>
 
@@ -177,10 +188,14 @@ export default function WriteReviewModal({
 
         <div className="flex flex-col gap-[12px]">
           <p className="text-lg-semibold text-black-300 desktop:text-2lg-semibold">
-            평점을 선택해 주세요
+            {t('ratingTitle')}
           </p>
           {/* 배열로 별점 컴포넌트 만들기 */}
-          <div className="flex items-start" role="radiogroup" aria-label="평점">
+          <div
+            className="flex items-start"
+            role="radiogroup"
+            aria-label={t('ratingAria')}
+          >
             {Array.from({ length: STAR_COUNT }, (_, index) => {
               const starValue = index + 1;
               const isActive = starValue <= rating;
@@ -191,7 +206,7 @@ export default function WriteReviewModal({
                   type="button"
                   role="radio"
                   aria-checked={rating === starValue}
-                  aria-label={`${starValue}점`}
+                  aria-label={tReview('ratingAria', { value: starValue })}
                   onClick={() => setRating(starValue)}
                   className="size-[24px] cursor-pointer overflow-hidden desktop:size-[36px]"
                 >
@@ -213,11 +228,11 @@ export default function WriteReviewModal({
 
         <Textarea
           id="write-review-comment"
-          label="상세 후기를 작성해 주세요"
+          label={t('commentLabel')}
           labelVariant="modal"
           value={comment}
           onChange={(event) => setComment(event.target.value)}
-          placeholder="최소 10자 이상 입력해주세요"
+          placeholder={t('commentPlaceholder')}
         />
       </div>
     </Modal>

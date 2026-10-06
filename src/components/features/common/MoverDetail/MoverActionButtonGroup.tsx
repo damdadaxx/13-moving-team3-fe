@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl';
+
 import { cn } from '@/utils/cn';
 
 import DesignatedEstimateRequestButton from '@/components/features/common/Estimate/DesignatedEstimateRequestButton';
@@ -20,12 +22,14 @@ export default function MoverActionButtonGroup({
   nickname,
   likeCount,
 }: MoverActionButtonGroupProps) {
+  const t = useTranslations('MoverDetail');
+
   return (
     <div className={cn('w-full', className)}>
       <p className="mb-[16px] text-2lg-semibold text-black-400">
-        {nickname} 기사님에게
+        {t('requestLine1', { nickname })}
         <br />
-        지정 견적을 요청해보세요!
+        {t('requestLine2')}
       </p>
       <div className="flex w-full flex-col gap-[16px]">
         <DesignatedEstimateRequestButton moverId={moverId} size="lg" />

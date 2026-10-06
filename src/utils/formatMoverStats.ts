@@ -1,28 +1,7 @@
-// 기사님 카드에 들어가는 수치(경력·평점) 표기 유틸
+// 기사님 카드에 들어가는 수치(평점) 표기 유틸
 //
-// 백엔드는 경력을 개월(careerMonths), 평점을 평균값(averageRating)으로 내려준다.
-// 둘 다 화면 문구와 단위가 달라 카드마다 변환하지 않도록 여기서 한 번에 처리한다.
-
-/**
- * 경력 개월 수를 '7년' 형태로 바꾼다.
- *
- * 1년이 안 되면 '0년' 대신 '1년 미만'으로 보여준다.
- *
- * @param {number | null | undefined} careerMonths - 경력 개월 수 (MoverProfile.careerMonths)
- * @returns {string} 화면용 경력 (예: '7년'). 값이 없으면 빈 문자열
- *
- * @example
- * formatCareer(88); // '7년'
- * formatCareer(6);  // '1년 미만'
- */
-export function formatCareer(careerMonths: number | null | undefined): string {
-  if (careerMonths == null || !Number.isFinite(careerMonths)) return '';
-  if (careerMonths < 0) return '';
-
-  const years = Math.floor(careerMonths / 12);
-
-  return years > 0 ? `${years}년` : '1년 미만';
-}
+// 백엔드는 평점을 평균값(averageRating)으로 내려준다.
+// 경력 표기는 언어별 단위가 필요해 useFormatCareer(hooks/common)와 messages > Common 이 맡는다.
 
 /**
  * 평균 평점을 '5.0' 형태로 바꾼다.

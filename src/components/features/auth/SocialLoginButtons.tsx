@@ -10,27 +10,30 @@
 */
 'use client';
 
+import { getPathname } from '@/i18n/navigation';
 import type { SocialProvider } from '@/types/auth';
 import type { Role } from '@/types/role';
+import { type Messages, useLocale, useTranslations } from 'next-intl';
 
 import IcLoginGoogle from '@/assets/icons/ic_login_google.svg';
 import IcLoginKakao from '@/assets/icons/ic_login_kakao.svg';
 import IcLoginNaver from '@/assets/icons/ic_login_naver.svg';
 
 import { getSocialLoginUrl } from '@/lib/api/auth';
+import { getHomePath } from '@/lib/constants/routes';
 
 import { cn } from '@/utils/cn';
 
 import ButtonElement from '@/components/ui/Button/ButtonElement';
 
 const SOCIAL_BUTTONS = [
-  { provider: 'google', Icon: IcLoginGoogle, label: '구글로 시작하기' },
-  { provider: 'kakao', Icon: IcLoginKakao, label: '카카오로 시작하기' },
-  { provider: 'naver', Icon: IcLoginNaver, label: '네이버로 시작하기' },
+  { provider: 'google', Icon: IcLoginGoogle, labelKey: 'socialGoogle' },
+  { provider: 'kakao', Icon: IcLoginKakao, labelKey: 'socialKakao' },
+  { provider: 'naver', Icon: IcLoginNaver, labelKey: 'socialNaver' },
 ] as const satisfies ReadonlyArray<{
   provider: SocialProvider;
   Icon: React.FC<React.SVGProps<SVGSVGElement>>;
-  label: string;
+  labelKey: keyof Messages['Auth'];
 }>;
 
 interface SocialLoginButtonsProps {
@@ -38,17 +41,27 @@ interface SocialLoginButtonsProps {
 }
 
 export default function SocialLoginButtons({ role }: SocialLoginButtonsProps) {
+  const t = useTranslations('Auth');
+  const locale = useLocale();
+
   /*
   @ 소셜 로그인 시작
   - 가드가 붙여준 ?callbackUrl 을 프로바이더 왕복 뒤에도 쓰도록 넘긴다
+  - 백엔드는 locale 없는 /auth/callback 으로 돌려보내므로, callbackUrl 에 현재 locale 을 붙여(/ko 포함) 보낸다
+    (callbackUrl 이 없으면 역할 home). 돌아온 뒤 SocialCallback 이 이 locale 로 이동한다
   - 백엔드 302 를 따라가야 하므로 router.push 가 아닌 전체 페이지 이동으로 프록시(/api)에 요청한다
   */
   function handleClick(provider: SocialProvider) {
     const callbackUrl = new URLSearchParams(window.location.search).get(
       'callbackUrl',
     );
+    const localizedCallbackUrl = getPathname({
+      locale,
+      href: callbackUrl ?? getHomePath(role),
+      forcePrefix: true,
+    });
     const url = new URL(
-      getSocialLoginUrl(provider, role, callbackUrl),
+      getSocialLoginUrl(provider, role, localizedCallbackUrl),
       window.location.origin,
     );
     window.location.assign(url);
@@ -62,14 +75,14 @@ export default function SocialLoginButtons({ role }: SocialLoginButtonsProps) {
           'tablet:text-xl-regular tablet:text-black-200',
         )}
       >
-        SNS 계정으로 간편 가입하기
+        {t('socialTitle')}
       </h2>
       <ul className={cn('flex gap-6', 'tablet:gap-8')}>
-        {SOCIAL_BUTTONS.map(({ provider, Icon, label }) => (
+        {SOCIAL_BUTTONS.map(({ provider, Icon, labelKey }) => (
           <li key={provider}>
             <ButtonElement
               type="button"
-              aria-label={label}
+              aria-label={t(labelKey)}
               onClick={() => handleClick(provider)}
               className={cn(
                 'size-[54px] overflow-hidden rounded-full',

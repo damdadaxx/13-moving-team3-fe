@@ -2,6 +2,7 @@ import type { AuthProviderName } from '@/types/auth';
 import { z } from 'zod';
 
 import { signupSchema } from '@/lib/validations/authValidation';
+import { validationKey } from '@/lib/validations/validationMessage';
 
 /*=================================================
 기사님 기본정보 수정 폼 검증
@@ -16,13 +17,13 @@ import { signupSchema } from '@/lib/validations/authValidation';
 const moverNameSchema = z
   .string()
   .trim()
-  .min(2, '이름은 2자 이상이어야 합니다.')
-  .max(20, '이름은 20자 이하여야 합니다.');
+  .min(2, validationKey('nameMin'))
+  .max(20, validationKey('nameMax'));
 
 const moverPhoneNumberSchema = z
   .string()
   .trim()
-  .regex(/^01[016789]-?\d{3,4}-?\d{4}$/, '올바른 전화번호 형식이 아닙니다.');
+  .regex(/^01[016789]-?\d{3,4}-?\d{4}$/, validationKey('phoneInvalid'));
 
 /*
 @ 공용 비밀번호 규칙 재사용
@@ -33,7 +34,7 @@ const moverPhoneNumberSchema = z
 */
 const moverNewPasswordSchema = signupSchema.shape.password.max(
   64,
-  '새 비밀번호는 64자 이하여야 합니다.',
+  validationKey('newPasswordMax'),
 );
 
 interface CreateMoverAccountSchemaOptions {
@@ -54,7 +55,7 @@ export function createMoverAccountSchema({
   return z
     .object({
       name: moverNameSchema,
-      email: z.email('이메일 형식이 아닙니다.'),
+      email: z.email(validationKey('emailInvalid')),
       phoneNumber: z.string(),
       currentPassword: z.string(),
       newPassword: z.string(),
@@ -72,7 +73,7 @@ export function createMoverAccountSchema({
             path: ['phoneNumber'],
             message:
               phoneNumberResult.error.issues[0]?.message ??
-              '전화번호를 입력해주세요.',
+              validationKey('phoneRequired'),
           });
         }
       }
@@ -87,7 +88,7 @@ export function createMoverAccountSchema({
         context.addIssue({
           code: 'custom',
           path: ['currentPassword'],
-          message: '현재 비밀번호를 입력해주세요.',
+          message: validationKey('currentPasswordRequired'),
         });
       }
 
@@ -101,7 +102,7 @@ export function createMoverAccountSchema({
           path: ['newPassword'],
           message:
             newPasswordResult.error.issues[0]?.message ??
-            '새 비밀번호 형식을 확인해주세요.',
+            validationKey('newPasswordInvalid'),
         });
       }
 
@@ -109,13 +110,13 @@ export function createMoverAccountSchema({
         context.addIssue({
           code: 'custom',
           path: ['newPasswordConfirm'],
-          message: '새 비밀번호 확인을 입력해주세요.',
+          message: validationKey('newPasswordConfirmRequired'),
         });
       } else if (values.newPassword !== values.newPasswordConfirm) {
         context.addIssue({
           code: 'custom',
           path: ['newPasswordConfirm'],
-          message: '새 비밀번호가 일치하지 않습니다.',
+          message: validationKey('newPasswordMismatch'),
         });
       }
     });

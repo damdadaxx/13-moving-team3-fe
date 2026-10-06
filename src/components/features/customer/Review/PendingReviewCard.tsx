@@ -1,16 +1,18 @@
 'use client';
 
+import { useRouter } from '@/i18n/navigation';
 import type { PendingReview } from '@/types/review';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 
 import IcDriverMark from '@/assets/icons/ic_driver.png';
 import ImgMoverCharacter from '@/assets/images/img_profile_example.png';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+import { useFormatDate } from '@/hooks/common/useFormatDate';
+import { useFormatPrice } from '@/hooks/common/useFormatPrice';
 
 import { cn } from '@/utils/cn';
-import formatDate from '@/utils/formatDate';
 
 import Button from '@/components/ui/Button/Button';
 import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
@@ -18,10 +20,6 @@ import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
 interface PendingReviewCardProps {
   review: PendingReview;
   onWrite?: (review: PendingReview) => void;
-}
-
-function formatWon(price: number) {
-  return `${price.toLocaleString('ko-KR')}원`;
 }
 
 function MetaItem({ label, value }: { label: string; value: string }) {
@@ -48,8 +46,13 @@ export default function PendingReviewCard({
   const tagSize = useBreakpointValue('sm', 'sm', 'md');
   const profileImageSrc = review.imgUrl ?? ImgMoverCharacter;
   const router = useRouter();
-  const moveDate = formatDate(review.moveDate, 'korean');
-  const priceLabel = formatWon(review.price);
+  const t = useTranslations('CustomerReviews');
+  const tCard = useTranslations('MoverCard');
+  const tEstimate = useTranslations('Estimate');
+  const formatDateLocale = useFormatDate();
+  const formatPrice = useFormatPrice();
+  const moveDate = formatDateLocale(review.moveDate, 'korean');
+  const priceLabel = formatPrice(review.price);
 
   return (
     <article
@@ -94,8 +97,7 @@ export default function PendingReviewCard({
                   />
                 </span>
                 <p className="min-w-0 w-full break-all text-lg-semibold text-black-300 group-hover:underline tablet:w-auto tablet:flex-1 tablet:text-2lg-bold">
-                  {review.moverName}
-                  <span> 기사님</span>
+                  {tCard('nickname', { nickname: review.moverName })}
                 </p>
               </div>
               <p className="truncate text-xs-regular text-gray-500 group-hover:underline tablet:text-md-regular">
@@ -105,7 +107,7 @@ export default function PendingReviewCard({
             <div className="relative size-[64px] shrink-0 overflow-hidden rounded-[12px] bg-black-300">
               <Image
                 src={profileImageSrc}
-                alt={`${review.moverName} 기사님 프로필`}
+                alt={tCard('profileAlt', { nickname: review.moverName })}
                 fill
                 unoptimized={typeof profileImageSrc === 'string'}
                 className="object-cover object-[center_20%]"
@@ -115,14 +117,19 @@ export default function PendingReviewCard({
           </div>
           <div className="flex flex-col">
             <div className="mb-[12px] flex w-full items-center gap-[16px]">
-              <MetaItem label="출발지" value={review.fromRegion} />
-              <MetaItem label="도착지" value={review.toRegion} />
+              <MetaItem
+                label={tEstimate('departure')}
+                value={review.fromRegion}
+              />
+              <MetaItem label={tEstimate('arrival')} value={review.toRegion} />
             </div>
-            <MetaItem label="이사일" value={moveDate} />
+            <MetaItem label={tEstimate('moveDate')} value={moveDate} />
           </div>
           <div className="flex border-t border-line-200 py-[20px] tablet:hidden">
             <div className="flex w-full items-end justify-between">
-              <span className="text-md-medium text-gray-300">견적 금액</span>
+              <span className="text-md-medium text-gray-300">
+                {tEstimate('priceAmount')}
+              </span>
               <span className="text-2lg-bold text-black-400">{priceLabel}</span>
             </div>
           </div>
@@ -134,7 +141,7 @@ export default function PendingReviewCard({
             onWrite?.(review);
           }}
         >
-          리뷰 작성하기
+          {t('write')}
         </Button>
       </div>
 
@@ -152,7 +159,7 @@ export default function PendingReviewCard({
             <div className="relative size-[80px] shrink-0 overflow-hidden rounded-[12px] bg-black-300">
               <Image
                 src={profileImageSrc}
-                alt={`${review.moverName} 기사님 프로필`}
+                alt={tCard('profileAlt', { nickname: review.moverName })}
                 fill
                 unoptimized={typeof profileImageSrc === 'string'}
                 className="object-cover object-[center_20%]"
@@ -171,8 +178,7 @@ export default function PendingReviewCard({
                   />
                 </span>
                 <p className="min-w-0 w-full break-all text-lg-semibold text-black-300 group-hover:underline tablet:w-auto tablet:flex-1 tablet:text-2lg-bold">
-                  {review.moverName}
-                  <span> 기사님</span>
+                  {tCard('nickname', { nickname: review.moverName })}
                 </p>
               </div>
               <p className="truncate text-xs-regular text-gray-500 group-hover:underline tablet:text-md-regular  tablet:mb-[8px]">
@@ -191,13 +197,18 @@ export default function PendingReviewCard({
             </div>
           </div>
           <div className="flex items-center gap-[16px]">
-            <MetaItem label="출발지" value={review.fromRegion} />
-            <MetaItem label="도착지" value={review.toRegion} />
+            <MetaItem
+              label={tEstimate('departure')}
+              value={review.fromRegion}
+            />
+            <MetaItem label={tEstimate('arrival')} value={review.toRegion} />
             <MetaDivider />
-            <MetaItem label="이사일" value={moveDate} />
+            <MetaItem label={tEstimate('moveDate')} value={moveDate} />
             <MetaDivider />
             <div className="ml-auto flex flex-col items-end">
-              <span className="text-md-regular text-gray-500">견적금액</span>
+              <span className="text-md-regular text-gray-500">
+                {tEstimate('priceAmount')}
+              </span>
               <span className="text-2lg-bold whitespace-nowrap text-black-500">
                 {priceLabel}
               </span>
@@ -211,7 +222,7 @@ export default function PendingReviewCard({
             onWrite?.(review);
           }}
         >
-          리뷰 작성하기
+          {t('write')}
         </Button>
       </div>
 
@@ -229,7 +240,7 @@ export default function PendingReviewCard({
             <div className="relative size-[100px] shrink-0 overflow-hidden rounded-[12px] bg-black-300">
               <Image
                 src={profileImageSrc}
-                alt={`${review.moverName} 기사님 프로필`}
+                alt={tCard('profileAlt', { nickname: review.moverName })}
                 fill
                 unoptimized={typeof profileImageSrc === 'string'}
                 className="object-cover object-[center_20%]"
@@ -248,8 +259,7 @@ export default function PendingReviewCard({
                   />
                 </span>
                 <p className="min-w-0 w-full break-all text-lg-semibold text-black-300 group-hover:underline tablet:w-auto tablet:flex-1 tablet:text-2lg-bold">
-                  {review.moverName}
-                  <span> 기사님</span>
+                  {tCard('nickname', { nickname: review.moverName })}
                 </p>
               </div>
               <p className="truncate text-xs-regular text-gray-500 group-hover:underline tablet:text-md-regular  tablet:mb-[8px]">
@@ -270,7 +280,7 @@ export default function PendingReviewCard({
           <div className="flex w-[160px] shrink-0 flex-col items-end">
             <div className="flex h-[32px] w-full items-center justify-end">
               <span className="text-lg-medium w-full text-right text-gray-500">
-                견적 금액
+                {tEstimate('priceAmount')}
               </span>
             </div>
             <span className="text-2xl-bold w-full text-right text-black-400">
@@ -280,11 +290,14 @@ export default function PendingReviewCard({
         </div>
         <div className="flex w-full items-start justify-between">
           <div className="flex items-center gap-[20px]">
-            <MetaItem label="출발지" value={review.fromRegion} />
+            <MetaItem
+              label={tEstimate('departure')}
+              value={review.fromRegion}
+            />
             <MetaDivider />
-            <MetaItem label="도착지" value={review.toRegion} />
+            <MetaItem label={tEstimate('arrival')} value={review.toRegion} />
             <MetaDivider />
-            <MetaItem label="이사일" value={moveDate} />
+            <MetaItem label={tEstimate('moveDate')} value={moveDate} />
           </div>
           <div className="h-[54px] w-[160px] shrink-0">
             <Button
@@ -294,7 +307,7 @@ export default function PendingReviewCard({
                 onWrite?.(review);
               }}
             >
-              리뷰 작성하기
+              {t('write')}
             </Button>
           </div>
         </div>

@@ -1,5 +1,6 @@
 // [공용] 기사님 상세 상단 섹션
 import type { MoverListItem } from '@/types/mover';
+import { useTranslations } from 'next-intl';
 
 import { cn } from '@/utils/cn';
 
@@ -17,6 +18,8 @@ export default function MoverDetailTopSection({
   hasProfileImage?: boolean;
   className?: string;
 }) {
+  const t = useTranslations('MoverDetail');
+
   return (
     <section
       className={cn(
@@ -38,7 +41,7 @@ export default function MoverDetailTopSection({
             <ProfileImage
               className={cn('absolute bottom-0 l-0 z-20')}
               imageUrl={imageUrl ?? undefined}
-              alt={nickname ? `${nickname} 프로필 사진` : ''}
+              alt={nickname ? t('profileAlt', { nickname }) : ''}
             />
           </div>
         </div>

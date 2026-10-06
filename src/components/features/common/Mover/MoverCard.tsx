@@ -1,8 +1,9 @@
 // 기사님 카드
 // Figma: Card-list/기사님 찾기 (size=md 모바일 / 태블릿·데스크톱 큰 카드 / size=sm 찜한 기사님)
+import { Link } from '@/i18n/navigation';
 import type { MoverListItem } from '@/types/mover';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import Link from 'next/link';
 
 import IcMoverBadge from '@/assets/icons/ic_driver.png';
 import IcLikeActive from '@/assets/icons/ic_like_active.svg';
@@ -11,6 +12,7 @@ import IcStarActive from '@/assets/icons/ic_star_active.svg';
 import ImgProfileDefault from '@/assets/images/img_profile_default.png';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+import { useFormatCareer } from '@/hooks/common/useFormatCareer';
 
 import { cn } from '@/utils/cn';
 
@@ -31,12 +33,6 @@ interface MoverCardProps {
 const CARD_BASE =
   'block rounded-2xl border-[0.5px] border-line-100 bg-gray-50 p-5 shadow-[-2px_-2px_10px_rgb(220_220_220_/_0.2),2px_2px_10px_rgb(220_220_220_/_0.2)]';
 
-/** 경력은 개월 수로 내려온다. 1년 미만은 개월, 그 이상은 년 단위로 내림 */
-function formatCareer(careerMonths: number) {
-  if (careerMonths < 12) return `${careerMonths}개월`;
-  return `${Math.floor(careerMonths / 12)}년`;
-}
-
 /*
 @ 프로필 이미지
 - 이미지가 없으면 Figma 기본 캐릭터를 black-300 배경 위에 크게 잘라서 보여준다
@@ -54,6 +50,8 @@ function MoverProfileImage({
   className?: string;
   defaultImageClassName: string;
 }) {
+  const t = useTranslations('MoverCard');
+
   return (
     <div
       className={cn(
@@ -64,7 +62,7 @@ function MoverProfileImage({
       {imgUrl ? (
         <Image
           src={imgUrl}
-          alt={`${nickname} 기사님 프로필`}
+          alt={t('profileAlt', { nickname })}
           fill
           unoptimized
           className="object-cover"
@@ -93,6 +91,9 @@ function MoverStats({
   mover: MoverListItem;
   className?: string;
 }) {
+  const t = useTranslations('MoverCard');
+  const formatCareer = useFormatCareer();
+
   return (
     <div
       className={cn(
@@ -102,21 +103,23 @@ function MoverStats({
     >
       <p className="flex items-center gap-0.5">
         <IcStarActive aria-hidden className="size-5 shrink-0" />
-        <span className="sr-only">평점</span>
+        <span className="sr-only">{t('rating')}</span>
         <span className="text-black-300">{mover.averageRating.toFixed(1)}</span>
         <span className="text-gray-300">({mover.reviewCount})</span>
       </p>
       <StatDivider />
       <p className="flex items-center gap-1">
-        <span className="text-gray-300">경력</span>
+        <span className="text-gray-300">{t('career')}</span>
         <span className="text-black-300">
           {formatCareer(mover.careerMonths)}
         </span>
       </p>
       <StatDivider />
       <p className="flex items-center gap-1">
-        <span className="text-black-300">{mover.confirmedCount}건</span>
-        <span className="text-gray-300">확정</span>
+        <span className="text-black-300">
+          {t('confirmedCount', { count: mover.confirmedCount })}
+        </span>
+        <span className="text-gray-300">{t('confirmed')}</span>
       </p>
     </div>
   );
@@ -139,6 +142,7 @@ function LikeHeart({
 }
 
 export default function MoverCard({ mover, variant = 'list' }: MoverCardProps) {
+  const t = useTranslations('MoverCard');
   const href = `/mover/${mover.id}`;
   // 기사님 찾기 카드 태그: 26 / 32 / 32 (ServiceTypeTag 주석의 페이지별 조합)
   const tagSize = useBreakpointValue<'sm' | 'md'>('sm', 'md', 'md');
@@ -178,7 +182,7 @@ export default function MoverCard({ mover, variant = 'list' }: MoverCardProps) {
                   className="h-[18px] w-4 shrink-0"
                 />
                 <p className="truncate text-md-semibold text-black-300">
-                  {mover.nickname} 기사님
+                  {t('nickname', { nickname: mover.nickname })}
                 </p>
                 <LikeHeart isLiked={isLiked} className="size-5 shrink-0" />
               </div>
@@ -276,7 +280,7 @@ export default function MoverCard({ mover, variant = 'list' }: MoverCardProps) {
               'tablet:text-lg-semibold',
             )}
           >
-            {mover.nickname} 기사님
+            {t('nickname', { nickname: mover.nickname })}
           </p>
         </div>
         <p
@@ -286,7 +290,7 @@ export default function MoverCard({ mover, variant = 'list' }: MoverCardProps) {
           )}
         >
           <LikeHeart isLiked={isLiked} className="size-6 shrink-0" />
-          <span className="sr-only">{isLiked ? '찜함' : '찜'}</span>
+          <span className="sr-only">{isLiked ? t('liked') : t('like')}</span>
           {mover.likeCount}
         </p>
         <MoverStats

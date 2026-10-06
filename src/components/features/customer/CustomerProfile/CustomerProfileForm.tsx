@@ -4,8 +4,10 @@ import { useId } from 'react';
 import { Controller } from 'react-hook-form';
 
 import type { CustomerProfileFormValues } from '@/types/customerProfile';
+import { useTranslations } from 'next-intl';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+import { useFormErrorMessage } from '@/hooks/common/useFormErrorMessage';
 import { useCustomerProfileForm } from '@/hooks/features/customer/useCustomerProfileForm';
 
 import Button from '@/components/ui/Button/Button';
@@ -13,11 +15,12 @@ import RegionChipGroup from '@/components/ui/Chip/RegionChipGroup';
 import ServiceTypeSelector from '@/components/ui/Chip/ServiceTypeSelector';
 import ProfileUpload from '@/components/ui/ProfileUpload';
 
+/* 모드별 문구 번역 키 (messages > CustomerProfile) */
 const FORM_COPY = {
   create: {
-    title: '프로필 등록',
-    description: '추가 정보를 입력하여 회원가입을 완료해주세요.',
-    submitLabel: '시작하기',
+    titleKey: 'createTitle',
+    descriptionKey: 'createDescription',
+    submitLabelKey: 'start',
   },
 } as const;
 
@@ -50,6 +53,8 @@ export default function CustomerProfileForm({
   isDisabled = false,
   onSubmit,
 }: CustomerProfileFormProps) {
+  const t = useTranslations('CustomerProfile');
+  const toErrorMessage = useFormErrorMessage();
   const formId = useId();
   const copy = FORM_COPY[mode];
   const controlSize = useBreakpointValue('sm', 'sm', 'md');
@@ -68,8 +73,8 @@ export default function CustomerProfileForm({
   const isLoading = isSubmitting || isFormSubmitting;
   const areFieldsDisabled = isDisabled || isLoading;
 
-  const serviceError = errors.serviceTypes?.message;
-  const regionError = errors.region?.message;
+  const serviceError = toErrorMessage(errors.serviceTypes?.message);
+  const regionError = toErrorMessage(errors.region?.message);
   const serviceDescriptionId = `${formId}-service-description`;
   const serviceErrorId = serviceError ? `${formId}-service-error` : undefined;
   const regionDescriptionId = `${formId}-region-description`;
@@ -90,10 +95,10 @@ export default function CustomerProfileForm({
           */}
           <header className="flex flex-col gap-[16px] desktop:gap-[28px]">
             <h1 className="text-2lg-bold text-black-400 desktop:text-3xl-semibold desktop:leading-[46px]">
-              {copy.title}
+              {t(copy.titleKey)}
             </h1>
             <p className="text-xs-regular text-black-100 desktop:text-xl-regular desktop:text-black-200">
-              {copy.description}
+              {t(copy.descriptionKey)}
             </p>
             <div aria-hidden="true" className="h-px w-full bg-line-100" />
           </header>
@@ -106,7 +111,7 @@ export default function CustomerProfileForm({
           <div className="flex flex-col gap-[20px] desktop:gap-[32px]">
             <ProfileUpload
               id={`${formId}-profile-image`}
-              label="프로필 이미지"
+              label={t('profileImage')}
               labelVariant="profile"
               imageUrl={imageUrl}
               disabled={areFieldsDisabled}
@@ -125,13 +130,13 @@ export default function CustomerProfileForm({
             */}
             <fieldset disabled={areFieldsDisabled} className="min-w-0">
               <legend className="text-lg-semibold text-black-300 desktop:text-xl-semibold">
-                이용 서비스
+                {t('serviceTypes')}
               </legend>
               <p
                 id={serviceDescriptionId}
                 className="mt-[8px] text-xs-regular text-gray-400 desktop:mt-[4px] desktop:text-lg-regular"
               >
-                * 이용 서비스는 중복 선택 가능하며, 언제든 수정 가능해요!
+                {t('serviceTypesCreateHint')}
               </p>
 
               <Controller
@@ -174,13 +179,13 @@ export default function CustomerProfileForm({
             */}
             <fieldset disabled={areFieldsDisabled} className="min-w-0">
               <legend className="text-lg-semibold text-black-300 desktop:text-xl-semibold">
-                내가 사는 지역
+                {t('region')}
               </legend>
               <p
                 id={regionDescriptionId}
                 className="mt-[8px] text-xs-regular text-gray-400 desktop:mt-[4px] desktop:text-lg-regular"
               >
-                *내가 사는 지역은 언제든 수정 가능해요!
+                {t('regionCreateHint')}
               </p>
 
               <Controller
@@ -233,7 +238,7 @@ export default function CustomerProfileForm({
             disabled={isDisabled || !isFormComplete}
             isLoading={isLoading}
           >
-            {copy.submitLabel}
+            {t(copy.submitLabelKey)}
           </Button>
         </div>
       </form>

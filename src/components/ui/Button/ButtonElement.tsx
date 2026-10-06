@@ -3,7 +3,8 @@
 
 import { TailSpin } from 'react-loader-spinner';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 
 import { cn } from '@/utils/cn';
 
@@ -53,6 +54,7 @@ export default function ButtonElement({
   'aria-label': ariaLabel,
   ...props
 }: ButtonElementProps) {
+  const t = useTranslations('Common');
   const isDisabled = Boolean(disabled) || isLoading;
   const isLink = href !== undefined;
   const classes = cn(BUTTON_BASE_CLASS, className);
@@ -101,7 +103,7 @@ export default function ButtonElement({
           height={24}
           width={24}
           color="currentColor"
-          ariaLabel="로딩 중"
+          ariaLabel={t('loading')}
           radius={1}
         />
       ) : (

@@ -6,9 +6,12 @@
 import { useId, useState } from 'react';
 
 import { cva, type VariantProps } from 'class-variance-authority';
+import { useTranslations } from 'next-intl';
 
 import IcVisibilityOff from '@/assets/icons/ic_visibility_off.svg';
 import IcVisibilityOn from '@/assets/icons/ic_visibility_on.svg';
+
+import { useFormErrorMessage } from '@/hooks/common/useFormErrorMessage';
 
 import { cn } from '@/utils/cn';
 
@@ -129,6 +132,8 @@ export default function Input({
 }: InputProps) {
   const generatedId = useId();
   const inputId = id ?? generatedId;
+  const t = useTranslations('Auth');
+  const toErrorMessage = useFormErrorMessage();
   const hasError = Boolean(error);
 
   // password 타입일 때만 눈 아이콘을 노출하고, 토글에 따라 실제 type을 바꾼다
@@ -159,7 +164,9 @@ export default function Input({
           <button
             type="button"
             onClick={() => setIsPasswordVisible((prev) => !prev)}
-            aria-label={isPasswordVisible ? '비밀번호 숨기기' : '비밀번호 표시'}
+            aria-label={
+              isPasswordVisible ? t('hidePassword') : t('showPassword')
+            }
             aria-pressed={isPasswordVisible}
             className="shrink-0 cursor-pointer"
           >
@@ -170,7 +177,7 @@ export default function Input({
 
       {error && (
         <p id={`${inputId}-error`} className={inputErrorVariants({ size })}>
-          {error}
+          {toErrorMessage(error)}
         </p>
       )}
     </div>

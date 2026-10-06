@@ -1,8 +1,9 @@
 // @ 지정 견적 요청 버튼 컴포넌트
 'use client';
 
+import { usePathname, useRouter } from '@/i18n/navigation';
 import type { EstimateRequestDetail, EstimateSummary } from '@/types/estimate';
-import { usePathname, useRouter } from 'next/navigation';
+import { type Messages, useTranslations } from 'next-intl';
 
 import { HttpError } from '@/lib/api/errors';
 import { getGuestSigninPath, ROUTES } from '@/lib/constants/routes';
@@ -30,18 +31,18 @@ function findMoverEstimate(
 }
 
 /*
-@ 지정 견적 버튼 문구
+@ 지정 견적 버튼 문구 (번역 키, messages > DesignatedEstimate)
 - 잠그는 조건은 그대로다. 해당 기사님 견적이 하나라도 있으면 비활성화한다.
 - 지정 견적(isDesignated: true): 지정 견적 요청 완료
 - 일반 견적만 있는 기사님: 이미 견적을 받았어요
 - 견적이 없음: 지정 견적 요청하기
 */
-function getDesignatedButtonLabel(
+function getDesignatedButtonLabelKey(
   estimate: EstimateSummary | undefined,
-): string {
-  if (!estimate) return '지정 견적 요청하기';
-  if (estimate.isDesignated) return '지정 견적 요청 완료';
-  return '이미 견적을 받았어요';
+): keyof Messages['DesignatedEstimate'] {
+  if (!estimate) return 'request';
+  if (estimate.isDesignated) return 'requested';
+  return 'alreadyReceived';
 }
 
 interface DesignatedEstimateRequestButtonProps {
@@ -55,6 +56,8 @@ export default function DesignatedEstimateRequestButton({
   size,
   className,
 }: DesignatedEstimateRequestButtonProps) {
+  const t = useTranslations('DesignatedEstimate');
+  const tCommon = useTranslations('Common');
   const router = useRouter();
   const pathname = usePathname();
   const { isLoggedIn, isLoading: isAuthLoading, role } = useAuth();
@@ -77,18 +80,14 @@ export default function DesignatedEstimateRequestButton({
         estimateRequestId,
         moverId,
       });
-      showToast('지정 견적 요청이 완료되었어요');
+      showToast(t('success'));
     } catch (error) {
       if (error instanceof HttpError && error.status === 404) {
         openNeedEstimateRequestModal();
         return;
       }
 
-      showToast(
-        error instanceof HttpError
-          ? error.message
-          : '지정 견적 요청에 실패했어요.',
-      );
+      showToast(error instanceof HttpError ? error.message : t('failed'));
     }
   }
 
@@ -98,12 +97,9 @@ export default function DesignatedEstimateRequestButton({
   */
   function openIrreversibleRequestModal(estimateRequestId: string) {
     openModal(
-      <p className="text-2lg-medium text-black-300">
-        지정 견적 요청을 취소하시겠습니까? 취소한 요청은 다시 복구할 수
-        없습니다.
-      </p>,
+      <p className="text-2lg-medium text-black-300">{t('confirmMessage')}</p>,
       {
-        title: '지정 견적 요청하기',
+        title: t('request'),
         variant: 'popup',
         buttons: (
           <>
@@ -113,7 +109,7 @@ export default function DesignatedEstimateRequestButton({
               className="flex-1"
               onClick={closeModal}
             >
-              취소
+              {tCommon('cancel')}
             </Button>
             <Button
               size={modalButtonSize}
@@ -123,7 +119,7 @@ export default function DesignatedEstimateRequestButton({
                 void submitDesignatedEstimate(estimateRequestId);
               }}
             >
-              지정 견적 요청하기
+              {t('request')}
             </Button>
           </>
         ),
@@ -135,10 +131,10 @@ export default function DesignatedEstimateRequestButton({
   function openNeedEstimateRequestModal() {
     openModal(
       <p className="text-2lg-medium whitespace-nowrap text-black-300">
-        일반 견적 요청을 먼저 진행해 주세요.
+        {t('needRequestMessage')}
       </p>,
       {
-        title: '지정 견적 요청하기',
+        title: t('request'),
         variant: 'popup',
         buttons: (
           <Button
@@ -146,7 +142,7 @@ export default function DesignatedEstimateRequestButton({
             href={ROUTES.customerHome}
             onClick={closeModal}
           >
-            일반 견적 요청 하기
+            {t('goGeneralRequest')}
           </Button>
         ),
       },
@@ -165,7 +161,7 @@ export default function DesignatedEstimateRequestButton({
     }
 
     if (role !== 'customer') {
-      showToast('고객 계정으로 로그인해주세요.');
+      showToast(tCommon('customerOnly'));
       return;
     }
 
@@ -175,7 +171,7 @@ export default function DesignatedEstimateRequestButton({
     if (!request || request.status !== 'PENDING') {
       // 이미 확정된 이사 견적이 있는 경우
       if (request?.status === 'CONFIRMED') {
-        showToast('이미 확정된 이사 견적이 있어요.');
+        showToast(t('alreadyConfirmed'));
         return;
       }
       // 일반 견적 요청 모달 열기
@@ -187,8 +183,8 @@ export default function DesignatedEstimateRequestButton({
     if (existingEstimate) {
       showToast(
         existingEstimate.isDesignated
-          ? '이미 지정 견적을 요청한 기사님이에요.'
-          : '이미 견적을 받은 기사님이에요.',
+          ? t('alreadyDesignated')
+          : t('alreadyHasEstimate'),
       );
       return;
     }
@@ -205,7 +201,7 @@ export default function DesignatedEstimateRequestButton({
       disabled={isRequested}
       isLoading={isSubmitting}
     >
-      {getDesignatedButtonLabel(moverEstimate)}
+      {t(getDesignatedButtonLabelKey(moverEstimate))}
     </Button>
   );
 }

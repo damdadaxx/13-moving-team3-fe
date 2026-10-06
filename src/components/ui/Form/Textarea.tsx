@@ -2,6 +2,8 @@ import { useId, type ComponentProps } from 'react';
 
 import { cva } from 'class-variance-authority';
 
+import { useFormErrorMessage } from '@/hooks/common/useFormErrorMessage';
+
 import { cn } from '@/utils/cn';
 
 import Label, { type LabelVariant } from '@/components/ui/Form/Label';
@@ -125,6 +127,7 @@ export default function Textarea({
 }: TextareaProps) {
   const generatedId = useId();
   const textareaId = id ?? generatedId;
+  const toErrorMessage = useFormErrorMessage();
   const hasError = Boolean(error);
   const errorId = hasError ? `${textareaId}-error` : undefined;
   const describedBy = [ariaDescribedBy, errorId].filter(Boolean).join(' ');
@@ -169,7 +172,7 @@ export default function Textarea({
             role="alert"
             className="pl-[8px] text-sm-medium text-red-200 tablet:text-lg-medium"
           >
-            {error}
+            {toErrorMessage(error)}
           </p>
         )}
       </div>

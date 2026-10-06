@@ -4,10 +4,15 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import { useRouter } from '@/i18n/navigation';
 import type { Role } from '@/types/role';
-import { useRouter } from 'next/navigation';
+import { type Messages, useLocale, useTranslations } from 'next-intl';
 
-import { getSafeCallbackPath, getSigninPath } from '@/lib/constants/routes';
+import {
+  getSafeCallbackPath,
+  getSigninPath,
+  splitLocalePrefix,
+} from '@/lib/constants/routes';
 
 import { useAuth } from '@/hooks/features/auth/useAuth';
 
@@ -22,31 +27,35 @@ interface SocialCallbackProps {
   callbackUrl: string | null;
 }
 
-const DEFAULT_ERROR_MESSAGE = '소셜 로그인에 실패했습니다. 다시 시도해주세요.';
-
 /*
 @ 백엔드 에러 코드 → 안내 문구
 - 백엔드는 메시지가 아닌 코드만 쿼리로 넘긴다 (BE authController.redirectSocialError)
-- 모르는 코드는 기본 문구로 보여준다
+- 모르는 코드는 기본 문구(failed)로 보여준다
+- 문구는 messages > SocialLogin (키 = 백엔드 에러 코드)
 */
-const SOCIAL_ERROR_MESSAGES: Record<string, string> = {
-  CANCELLED: '소셜 로그인이 취소되었습니다.',
-  STATE_MISMATCH:
-    '로그인 요청이 만료되었거나 올바르지 않습니다. 다시 시도해주세요.',
-  EMAIL_REQUIRED:
-    '소셜 계정에서 이메일을 가져올 수 없습니다. 이메일 제공에 동의해주세요.',
-  EMAIL_CONFLICT:
-    '같은 이메일로 가입된 계정이 이미 있습니다. 이메일로 로그인해주세요.',
-  NOT_CONFIGURED: '현재 사용할 수 없는 소셜 로그인입니다.',
-  TOO_MANY_REQUESTS: '요청이 너무 많습니다. 잠시 후 다시 시도해주세요.',
-};
+const SOCIAL_ERROR_CODES = [
+  'CANCELLED',
+  'STATE_MISMATCH',
+  'EMAIL_REQUIRED',
+  'EMAIL_CONFLICT',
+  'NOT_CONFIGURED',
+  'TOO_MANY_REQUESTS',
+] as const satisfies ReadonlyArray<keyof Messages['SocialLogin']>;
+
+function isSocialErrorCode(
+  code: string,
+): code is (typeof SOCIAL_ERROR_CODES)[number] {
+  return (SOCIAL_ERROR_CODES as readonly string[]).includes(code);
+}
 
 export default function SocialCallback({
   error,
   role,
   callbackUrl,
 }: SocialCallbackProps) {
+  const t = useTranslations('SocialLogin');
   const router = useRouter();
+  const locale = useLocale();
   const { syncSession } = useAuth();
   const [syncErrorMessage, setSyncErrorMessage] = useState<string | null>(null);
 
@@ -60,16 +69,22 @@ export default function SocialCallback({
     syncSession()
       .then((user) => {
         if (!user) {
-          setSyncErrorMessage(DEFAULT_ERROR_MESSAGE);
+          setSyncErrorMessage(t('failed'));
           return;
         }
-        router.replace(getSafeCallbackPath(user.role, callbackUrl));
+        // 시작할 때 callbackUrl 에 붙여 보낸 locale 로 돌아간다 (없으면 지금 locale)
+        const targetLocale = splitLocalePrefix(callbackUrl ?? '').locale;
+        router.replace(getSafeCallbackPath(user.role, callbackUrl), {
+          locale: targetLocale ?? locale,
+        });
       })
-      .catch(() => setSyncErrorMessage(DEFAULT_ERROR_MESSAGE));
-  }, [callbackUrl, error, router, syncSession]);
+      .catch(() => setSyncErrorMessage(t('failed')));
+  }, [callbackUrl, error, locale, router, syncSession, t]);
 
   const message = error
-    ? (SOCIAL_ERROR_MESSAGES[error] ?? DEFAULT_ERROR_MESSAGE)
+    ? isSocialErrorCode(error)
+      ? t(error)
+      : t('failed')
     : syncErrorMessage;
 
   if (!message) {
@@ -87,8 +102,8 @@ export default function SocialCallback({
         {message}
       </p>
       <AuthLinkText
-        text="다시 로그인하시겠어요?"
-        linkLabel="로그인 페이지로 이동"
+        text={t('retryText')}
+        linkLabel={t('goLogin')}
         href={getSigninPath(role ?? 'customer')}
       />
     </section>

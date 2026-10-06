@@ -4,6 +4,7 @@
 import { useEffect, useRef } from 'react';
 
 import type { MoverListQuery } from '@/types/mover';
+import { useTranslations } from 'next-intl';
 
 import { LIKED_MOVER_ID_PAGE_SIZE } from '@/lib/constants/mover';
 
@@ -27,6 +28,7 @@ interface MoverListProps {
 const LIST_GAP = 'gap-6';
 
 export default function MoverList({ params, className }: MoverListProps) {
+  const t = useTranslations('MoverFind');
   const {
     data,
     isPending,
@@ -98,7 +100,7 @@ export default function MoverList({ params, className }: MoverListProps) {
           className,
         )}
       >
-        조건에 맞는 기사님이 없어요.
+        {t('empty')}
       </p>
     );
   }

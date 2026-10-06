@@ -1,5 +1,6 @@
 // 헤더 로그인 버튼 (링크)
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 
 import { getGuestSigninPath } from '@/lib/constants/routes';
 
@@ -25,12 +26,14 @@ interface ButtonLoginProps {
 export default function ButtonLogin({
   href = getGuestSigninPath(),
   className,
-  children = '로그인',
+  children,
   disabled,
   isLoading,
   onClick,
   'aria-label': ariaLabel,
 }: ButtonLoginProps) {
+  const t = useTranslations('Common');
+
   return (
     <ButtonElement
       href={href}
@@ -43,7 +46,7 @@ export default function ButtonLogin({
         className,
       )}
     >
-      {children}
+      {children ?? t('login')}
     </ButtonElement>
   );
 }

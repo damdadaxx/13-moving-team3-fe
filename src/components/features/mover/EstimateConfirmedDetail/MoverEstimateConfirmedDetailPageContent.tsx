@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { ROUTES } from '@/lib/constants/routes';
 
 import { useEstimateDetailWithMover } from '@/hooks/features/estimate/queries/queries';
@@ -13,6 +15,9 @@ export default function MoverEstimateConfirmedDetailPageContent({
 }: {
   estimateId: string;
 }) {
+  const tEstimate = useTranslations('Estimate');
+  const tMover = useTranslations('MoverDetail');
+  const t = useTranslations('MoverEstimates');
   // 견적 상세 + 기사님 상세 조회
   const detail = useEstimateDetailWithMover(estimateId);
 
@@ -23,12 +28,12 @@ export default function MoverEstimateConfirmedDetailPageContent({
 
   // 견적 조회 실패
   if (detail.status === 'estimate-error') {
-    return <EmptyState message="견적 정보를 찾을 수 없어요." />;
+    return <EmptyState message={tEstimate('notFound')} />;
   }
 
   // 기사님 조회 실패
   if (detail.status === 'mover-error') {
-    return <EmptyState message="기사님 정보를 찾을 수 없어요." />;
+    return <EmptyState message={tMover('notFound')} />;
   }
 
   // 견적 상세 + 기사님 상세 조회 성공
@@ -38,8 +43,8 @@ export default function MoverEstimateConfirmedDetailPageContent({
   if (estimate.status !== 'ACCEPTED') {
     return (
       <EmptyState
-        message="확정된 견적이 아니에요."
-        buttonLabel="보낸 견적 보기"
+        message={t('notConfirmed')}
+        buttonLabel={t('goSent')}
         href={ROUTES.moverEstimates}
       />
     );

@@ -2,6 +2,7 @@
 import type { RefObject } from 'react';
 
 import type { AuthUser } from '@/types/auth';
+import { useTranslations } from 'next-intl';
 
 import IcAlarm from '@/assets/icons/ic_alarm.svg';
 import IcMenu from '@/assets/icons/ic_menu.svg';
@@ -79,6 +80,7 @@ export default function HeaderActions({
   onClosePanel,
   onLogout,
 }: HeaderActionsProps) {
+  const t = useTranslations('Header');
   const unreadCountLabel = formatUnreadCount(unreadCount);
 
   return (
@@ -113,7 +115,9 @@ export default function HeaderActions({
               aria-expanded={isNotificationOpen}
               aria-controls={HEADER_PANEL_IDS.notification}
               aria-label={
-                unreadCountLabel ? `알림 ${unreadCountLabel}개` : '알림'
+                unreadCountLabel
+                  ? t('notificationsWithCount', { count: unreadCountLabel })
+                  : t('notifications')
               }
               onMouseDown={(e) => e.stopPropagation()}
               onClick={() => onTogglePanel('notification')}
@@ -144,7 +148,7 @@ export default function HeaderActions({
               type="button"
               aria-expanded={isProfileOpen}
               aria-controls={HEADER_PANEL_IDS.profile}
-              aria-label="프로필 메뉴"
+              aria-label={t('profileMenu')}
               onMouseDown={(e) => e.stopPropagation()}
               onClick={() => onTogglePanel('profile')}
               className={cn('flex cursor-pointer items-center gap-[16px]')}
@@ -182,7 +186,7 @@ export default function HeaderActions({
         type="button"
         aria-expanded={isMobileMenuOpen}
         aria-controls={HEADER_PANEL_IDS.mobile}
-        aria-label="메뉴"
+        aria-label={t('menu')}
         className={cn('cursor-pointer', 'desktop:hidden')}
         onMouseDown={(e) => e.stopPropagation()}
         onClick={() => onTogglePanel('mobile')}

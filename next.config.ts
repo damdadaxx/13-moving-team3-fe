@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import createNextIntlPlugin from 'next-intl/plugin';
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
@@ -53,4 +54,7 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// next-intl 플러그인: src/i18n/request.ts를 요청별 i18n 설정으로 연결한다
+const withNextIntl = createNextIntlPlugin();
+
+export default withNextIntl(nextConfig);

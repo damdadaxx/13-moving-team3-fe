@@ -3,6 +3,7 @@ import { SERVICE_TYPES } from '@/types/serviceType';
 import { z } from 'zod';
 
 import { optionalProfileImageSchema } from '@/lib/validations/profileImageValidation';
+import { validationKey } from '@/lib/validations/validationMessage';
 
 /*=================================================
 기사님 프로필 등록·수정 폼 검증
@@ -17,23 +18,23 @@ import { optionalProfileImageSchema } from '@/lib/validations/profileImageValida
 const careerYearsSchema = z
   .string()
   .trim()
-  .min(1, '경력 연수를 입력해주세요.')
-  .regex(/^\d+$/, '숫자만 입력해주세요.');
+  .min(1, validationKey('careerYearsRequired'))
+  .regex(/^\d+$/, validationKey('numberOnly'));
 
 const careerRemainderMonthsSchema = z
   .string()
   .trim()
-  .min(1, '경력 개월 수를 입력해주세요.')
-  .regex(/^\d+$/, '숫자만 입력해주세요.')
+  .min(1, validationKey('careerMonthsRequired'))
+  .regex(/^\d+$/, validationKey('numberOnly'))
   .refine(
     (value) => !/^\d+$/.test(value) || Number(value) <= 11,
-    '개월은 0에서 11 사이로 입력해주세요.',
+    validationKey('careerMonthsRange'),
   );
 
 const moverPhoneNumberSchema = z
   .string()
   .trim()
-  .regex(/^01[016789]-?\d{3,4}-?\d{4}$/, '올바른 전화번호 형식이 아닙니다.');
+  .regex(/^01[016789]-?\d{3,4}-?\d{4}$/, validationKey('phoneInvalid'));
 
 /*
 @ 폼 스키마
@@ -47,34 +48,34 @@ const moverProfileFields = {
   nickname: z
     .string()
     .trim()
-    .min(2, '별명을 입력해주세요.')
-    .max(10, '별명은 최대 10자까지 입력할 수 있습니다.'),
+    .min(2, validationKey('nicknameRequired'))
+    .max(10, validationKey('nicknameMax')),
   careerYears: careerYearsSchema,
   careerRemainderMonths: careerRemainderMonthsSchema,
   shortIntro: z
     .string()
     .trim()
-    .min(8, '한 줄 소개는 8자 이상 입력해주세요.')
-    .max(50, '한 줄 소개는 최대 50자까지 입력할 수 있습니다.'),
+    .min(8, validationKey('shortIntroMin'))
+    .max(50, validationKey('shortIntroMax')),
   description: z
     .string()
     .trim()
-    .min(10, '상세 설명은 10자 이상 입력해주세요.')
-    .max(300, '상세 설명은 최대 300자까지 입력할 수 있습니다.'),
+    .min(10, validationKey('descriptionMin'))
+    .max(300, validationKey('descriptionMax')),
   serviceTypes: z
     .array(z.enum(SERVICE_TYPES))
-    .min(1, '1개 이상 선택해주세요.')
+    .min(1, validationKey('selectAtLeastOne'))
     .refine(
       (serviceTypes) => new Set(serviceTypes).size === serviceTypes.length,
-      '같은 서비스를 중복해서 선택할 수 없습니다.',
+      validationKey('serviceTypeDuplicate'),
     ),
   serviceRegions: z
     .array(z.enum(REGIONS))
-    .min(1, '1개 이상 선택해주세요.')
+    .min(1, validationKey('selectAtLeastOne'))
     .refine(
       (serviceRegions) =>
         new Set(serviceRegions).size === serviceRegions.length,
-      '같은 지역을 중복해서 선택할 수 없습니다.',
+      validationKey('regionDuplicate'),
     ),
   removeImage: z.boolean(),
 };
@@ -86,7 +87,7 @@ const moverProfileBaseSchema = z
       context.addIssue({
         code: 'custom',
         path: ['profileImage'],
-        message: '프로필 이미지 교체와 삭제를 동시에 요청할 수 없습니다.',
+        message: validationKey('profileImageConflict'),
       });
     }
   });
@@ -112,7 +113,7 @@ export function createMoverProfileSchema(isPhoneNumberRequired: boolean) {
         path: ['phoneNumber'],
         message:
           phoneNumberResult.error.issues[0]?.message ??
-          '전화번호를 입력해주세요.',
+          validationKey('phoneRequired'),
       });
     }
   });

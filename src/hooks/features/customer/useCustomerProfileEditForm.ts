@@ -11,6 +11,7 @@ import {
 import type { AuthProviderName } from '@/types/auth';
 import type { CustomerProfileEditFormValues } from '@/types/customerProfile';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { z } from 'zod';
 
 import { HttpError } from '@/lib/api/errors';
@@ -92,20 +93,12 @@ function getPasswordErrorField(
   return null;
 }
 
-function getEditSubmitErrorMessage(error: HttpError): string {
-  if (error.status === 401) {
-    return '로그인 정보가 만료되었습니다. 다시 로그인한 뒤 시도해주세요.';
-  }
-
-  if (error.status === 403) {
-    return '현재 계정에서는 요청한 정보를 수정할 수 없습니다.';
-  }
-
-  if (error.status === 404) {
-    return '등록된 고객 프로필을 찾지 못했습니다.';
-  }
-
-  return error.message;
+/* 정리한 문구는 messages > CustomerProfile 번역 키로 돌려주고, 없으면 null(백엔드 message 사용) */
+function getEditSubmitErrorKey(error: HttpError) {
+  if (error.status === 401) return 'sessionExpired';
+  if (error.status === 403) return 'editForbidden';
+  if (error.status === 404) return 'profileNotFound';
+  return null;
 }
 
 /*=================================================
@@ -124,6 +117,7 @@ export function useCustomerProfileEditForm({
   provider,
   onSubmit,
 }: UseCustomerProfileEditFormOptions) {
+  const t = useTranslations('CustomerProfile');
   const [submitError, setSubmitError] = useState('');
   const form = useForm<
     CustomerProfileEditSchemaInput,
@@ -191,7 +185,7 @@ export function useCustomerProfileEditForm({
       );
 
       if (!plan.hasChanges) {
-        throw new Error('변경된 정보가 없습니다.');
+        throw new Error(t('noChanges'));
       }
 
       await onSubmit?.(plan);
@@ -217,16 +211,13 @@ export function useCustomerProfileEditForm({
         }
 
         if (!hasMappedFieldError) {
-          setSubmitError(getEditSubmitErrorMessage(error));
+          const errorKey = getEditSubmitErrorKey(error);
+          setSubmitError(errorKey ? t(errorKey) : error.message);
         }
         return;
       }
 
-      setSubmitError(
-        error instanceof Error
-          ? error.message
-          : '프로필 수정 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
-      );
+      setSubmitError(error instanceof Error ? error.message : t('editFailed'));
     }
   };
 

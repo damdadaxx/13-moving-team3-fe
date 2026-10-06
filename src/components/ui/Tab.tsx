@@ -1,8 +1,8 @@
 'use client';
 
+import { Link, usePathname } from '@/i18n/navigation';
 import { cva } from 'class-variance-authority';
-import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 import { cn } from '@/utils/cn';
 

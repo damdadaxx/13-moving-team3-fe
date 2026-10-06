@@ -1,8 +1,9 @@
 'use client';
 
+import { Link } from '@/i18n/navigation';
 import type { ServiceType } from '@/types/serviceType';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import Link from 'next/link';
 
 import IcDriverMark from '@/assets/icons/ic_driver.png';
 import IcLike from '@/assets/icons/ic_like.svg';
@@ -41,6 +42,9 @@ export default function LikedMoverCard({
   isSelected,
   onSelectChange,
 }: LikedMoverCardProps) {
+  const t = useTranslations('LikedMovers');
+  const tCard = useTranslations('MoverCard');
+  const tCommon = useTranslations('Common');
   // 반응형에 맞는 태그 사이즈
   const tagSize = useBreakpointValue('sm', 'md', 'md');
   const profileImageSrc = mover.imgUrl ? mover.imgUrl : ImgMoverCharacter;
@@ -55,7 +59,7 @@ export default function LikedMoverCard({
     >
       <Image
         src={profileImageSrc}
-        alt={`${mover.name} 기사님 프로필 이미지`}
+        alt={tCard('profileAlt', { nickname: mover.name })}
         fill
         unoptimized={typeof profileImageSrc === 'string'}
         className="object-cover object-[center_20%]"
@@ -75,8 +79,7 @@ export default function LikedMoverCard({
         />
       </span>
       <p className="text-md-semibold text-black-300 tablet:text-lg-semibold">
-        {mover.name}
-        <span> 기사님</span>
+        {tCard('nickname', { nickname: mover.name })}
       </p>
     </div>
   );
@@ -99,15 +102,19 @@ export default function LikedMoverCard({
 
   const career = (
     <p className="whitespace-nowrap text-sm-medium">
-      <span className="text-gray-300">경력 </span>
-      <span className="text-black-300">{mover.careerYears}년</span>
+      <span className="text-gray-300">{tCard('career')} </span>
+      <span className="text-black-300">
+        {tCommon('careerYears', { count: mover.careerYears })}
+      </span>
     </p>
   );
 
   const confirmed = (
     <p className="whitespace-nowrap text-sm-medium">
-      <span className="text-black-300">{mover.confirmedCount}건</span>
-      <span className="text-gray-300"> 확정</span>
+      <span className="text-black-300">
+        {tCard('confirmedCount', { count: mover.confirmedCount })}
+      </span>
+      <span className="text-gray-300"> {tCard('confirmed')}</span>
     </p>
   );
 
@@ -152,7 +159,7 @@ export default function LikedMoverCard({
         <Checkbox
           checked={isSelected}
           onChange={onSelectChange}
-          label={`${mover.name} 기사님 선택`}
+          label={t('selectMover', { nickname: mover.name })}
           className="[&>span:last-child]:sr-only"
         />
       </div>

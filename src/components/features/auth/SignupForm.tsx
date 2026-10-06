@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useWatch } from 'react-hook-form';
 
 import type { Role } from '@/types/role';
+import { useTranslations } from 'next-intl';
 
 import { HttpError } from '@/lib/api/errors';
 import { getSigninPath } from '@/lib/constants/routes';
@@ -36,6 +37,7 @@ const AUTH_SIDE_BUTTON_CLASS = cn(
 );
 
 export default function SignupForm({ role }: SignupFormProps) {
+  const t = useTranslations('Auth');
   const { signup } = useAuth();
   const {
     register,
@@ -92,9 +94,7 @@ export default function SignupForm({ role }: SignupFormProps) {
       setCode('');
     } catch (error) {
       setCodeError(
-        error instanceof HttpError
-          ? error.message
-          : '인증번호 발송에 실패했습니다. 다시 시도해주세요.',
+        error instanceof HttpError ? error.message : t('sendCodeFailed'),
       );
     }
   }
@@ -119,9 +119,7 @@ export default function SignupForm({ role }: SignupFormProps) {
       });
     } catch (error) {
       setCodeError(
-        error instanceof HttpError
-          ? error.message
-          : '인증번호 확인에 실패했습니다. 다시 시도해주세요.',
+        error instanceof HttpError ? error.message : t('confirmCodeFailed'),
       );
     }
   }
@@ -139,7 +137,7 @@ export default function SignupForm({ role }: SignupFormProps) {
 
     // 버튼이 막고 있지만, 상태가 어긋난 경우에도 잘못된 요청을 보내지 않는다
     if (!verifiedToken || verification?.email !== data.email) {
-      setSubmitError('이메일 인증을 먼저 완료해주세요.');
+      setSubmitError(t('verifyEmailFirst'));
       return;
     }
 
@@ -154,9 +152,7 @@ export default function SignupForm({ role }: SignupFormProps) {
       });
     } catch (error) {
       setSubmitError(
-        error instanceof HttpError
-          ? error.message
-          : '회원가입에 실패했습니다. 다시 시도해주세요.',
+        error instanceof HttpError ? error.message : t('signupFailed'),
       );
     }
   }
@@ -171,20 +167,20 @@ export default function SignupForm({ role }: SignupFormProps) {
         <div className={cn('flex flex-col gap-8', 'tablet:gap-14')}>
           <div className={cn('flex flex-col gap-4', 'tablet:gap-8')}>
             <Input
-              label="이름"
+              label={t('name')}
               type="text"
               autoComplete="name"
-              placeholder="성함을 입력해 주세요"
+              placeholder={t('namePlaceholder')}
               size={errors.name ? errorSize : 'sm'}
               error={errors.name?.message}
               {...register('name')}
             />
             <div className="flex flex-col gap-2">
               <Input
-                label="이메일"
+                label={t('email')}
                 type="email"
                 autoComplete="email"
-                placeholder="이메일을 입력해 주세요"
+                placeholder={t('emailPlaceholder')}
                 size={errors.email ? errorSize : 'sm'}
                 error={errors.email?.message}
                 {...emailField}
@@ -203,9 +199,9 @@ export default function SignupForm({ role }: SignupFormProps) {
                   )}
                 >
                   {isEmailVerified
-                    ? '이메일 인증이 완료되었습니다.'
+                    ? t('emailVerified')
                     : verificationState
-                      ? '메일로 받은 인증번호를 입력해 주세요.'
+                      ? t('enterCode')
                       : ''}
                 </p>
                 <button
@@ -217,10 +213,10 @@ export default function SignupForm({ role }: SignupFormProps) {
                   className={AUTH_SIDE_BUTTON_CLASS}
                 >
                   {sendCodeMutation.isPending
-                    ? '발송 중'
+                    ? t('sendingCode')
                     : verificationState
-                      ? '재발송'
-                      : '인증번호 받기'}
+                      ? t('resendCode')
+                      : t('sendCode')}
                 </button>
               </div>
 
@@ -232,7 +228,7 @@ export default function SignupForm({ role }: SignupFormProps) {
                     type="text"
                     inputMode="numeric"
                     maxLength={6}
-                    placeholder="인증번호 6자리"
+                    placeholder={t('codePlaceholder')}
                     value={code}
                     onChange={(event) =>
                       setCode(event.target.value.replace(/\D/g, ''))
@@ -245,7 +241,9 @@ export default function SignupForm({ role }: SignupFormProps) {
                     disabled={code.length < 6 || confirmCodeMutation.isPending}
                     className={cn(AUTH_SIDE_BUTTON_CLASS, 'h-[54px] shrink-0')}
                   >
-                    {confirmCodeMutation.isPending ? '확인 중' : '인증 확인'}
+                    {confirmCodeMutation.isPending
+                      ? t('confirmingCode')
+                      : t('confirmCode')}
                   </button>
                 </div>
               )}
@@ -258,11 +256,11 @@ export default function SignupForm({ role }: SignupFormProps) {
             </div>
             {/* 입력하는 동안 010-1234-5678 형태로 바꾸고 11자리까지만 받는다 */}
             <Input
-              label="전화번호"
+              label={t('phone')}
               type="tel"
               inputMode="numeric"
               autoComplete="tel"
-              placeholder="숫자만 입력해 주세요"
+              placeholder={t('phonePlaceholder')}
               maxLength={13}
               size={errors.phoneNumber ? errorSize : 'sm'}
               error={errors.phoneNumber?.message}
@@ -273,19 +271,19 @@ export default function SignupForm({ role }: SignupFormProps) {
               }}
             />
             <Input
-              label="비밀번호"
+              label={t('password')}
               type="password"
               autoComplete="new-password"
-              placeholder="비밀번호를 입력해 주세요"
+              placeholder={t('passwordPlaceholder')}
               size={errors.password ? errorSize : 'sm'}
               error={errors.password?.message}
               {...register('password')}
             />
             <Input
-              label="비밀번호 확인"
+              label={t('passwordConfirm')}
               type="password"
               autoComplete="new-password"
-              placeholder="비밀번호 다시 한번 입력해 주세요"
+              placeholder={t('passwordConfirmPlaceholder')}
               size={errors.passwordConfirm ? errorSize : 'sm'}
               error={errors.passwordConfirm?.message}
               {...register('passwordConfirm')}
@@ -297,12 +295,12 @@ export default function SignupForm({ role }: SignupFormProps) {
             isLoading={isSubmitting}
             error={submitError}
           >
-            시작하기
+            {t('start')}
           </AuthSubmitButton>
         </div>
         <AuthLinkText
-          text="이미 무빙 회원이신가요?"
-          linkLabel="로그인"
+          text={t('hasAccount')}
+          linkLabel={t('goLogin')}
           href={getSigninPath(role)}
         />
       </form>

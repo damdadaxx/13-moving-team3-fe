@@ -5,9 +5,11 @@
 
 import { useMemo, useState } from 'react';
 
-import { SERVICE_TYPE_LABELS, type ServiceType } from '@/types/serviceType';
+import { useRouter } from '@/i18n/navigation';
+import type { ServiceType } from '@/types/serviceType';
+import type { Messages } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import type { StaticImageData } from 'next/image';
-import { useRouter } from 'next/navigation';
 
 import imgMovingHome from '@/assets/images/img_moving_home.png';
 import imgMovingOffice from '@/assets/images/img_moving_office.png';
@@ -31,36 +33,38 @@ import MovingTypeCard from './MovingTypeCard';
 const MOVING_TYPES = [
   {
     value: 'SMALL_MOVE',
-    description: '원룸, 투룸, 20평대 미만',
+    descriptionKey: 'smallMoveDescription',
     image: imgMovingSmall,
     imageClassName: 'p-[5px]',
   },
   {
     value: 'HOME_MOVE',
-    description: '쓰리룸, 20평대 이상',
+    descriptionKey: 'homeMoveDescription',
     image: imgMovingHome,
   },
   {
     value: 'OFFICE_MOVE',
-    description: '사무실, 상업공간',
+    descriptionKey: 'officeMoveDescription',
     image: imgMovingOffice,
   },
 ] as const satisfies readonly {
   value: ServiceType;
-  description: string;
+  descriptionKey: keyof Messages['EstimateRequest'];
   image: StaticImageData;
   imageClassName?: string;
 }[];
 
-const STEP_TITLES: Record<number, string> = {
-  1: '이사 유형을 선택해주세요',
-  2: '이사 예정일을 선택해주세요',
-  3: '이사 지역을 선택해주세요',
-};
-
-const SUB_TITLE = '견적을 요청하면 최대 5개의 견적을 받을 수 있어요 :)';
+/* 모바일 위저드 단계별 제목 (messages > EstimateRequest) */
+const STEP_TITLE_KEYS = {
+  1: 'step1Title',
+  2: 'step2Title',
+  3: 'step3Title',
+} as const satisfies Record<number, keyof Messages['EstimateRequest']>;
 
 export default function EstimateRequestForm() {
+  const t = useTranslations('EstimateRequest');
+  const tCommon = useTranslations('Common');
+  const tServiceType = useTranslations('ServiceType');
   const [step, setStep] = useState(1); // 모바일 위저드 단계
   const [movingType, setMovingType] = useState<ServiceType | null>(null);
   const [moveDate, setMoveDate] = useState<Date | null>(null);
@@ -122,9 +126,7 @@ export default function EstimateRequestForm() {
     } catch (error) {
       /* 이미 진행 중인 요청이 있으면 409로 온다 */
       setSubmitError(
-        error instanceof HttpError
-          ? error.message
-          : '견적 요청에 실패했습니다. 잠시 후 다시 시도해주세요.',
+        error instanceof HttpError ? error.message : t('submitFailed'),
       );
     }
   };
@@ -134,8 +136,8 @@ export default function EstimateRequestForm() {
       {MOVING_TYPES.map((type) => (
         <MovingTypeCard
           key={type.value}
-          label={SERVICE_TYPE_LABELS[type.value]}
-          description={type.description}
+          label={tServiceType(type.value)}
+          description={t(type.descriptionKey)}
           image={type.image}
           imageClassName={
             'imageClassName' in type ? type.imageClassName : undefined
@@ -154,12 +156,12 @@ export default function EstimateRequestForm() {
   const addressFields = (
     <>
       <AddressField
-        label="출발지"
+        label={t('departure')}
         address={fromAddress}
         onSelect={() => handleSelectAddress('from')}
       />
       <AddressField
-        label="도착지"
+        label={t('arrival')}
         address={toAddress}
         onSelect={() => handleSelectAddress('to')}
       />
@@ -192,8 +194,10 @@ export default function EstimateRequestForm() {
             ))}
           </div>
           <div className="flex flex-col items-center whitespace-nowrap">
-            <p className="text-xl-bold text-black-500">{STEP_TITLES[step]}</p>
-            <p className="text-md-regular text-gray-400">{SUB_TITLE}</p>
+            <p className="text-xl-bold text-black-500">
+              {t(STEP_TITLE_KEYS[step as keyof typeof STEP_TITLE_KEYS])}
+            </p>
+            <p className="text-md-regular text-gray-400">{t('subtitle')}</p>
           </div>
         </div>
 
@@ -232,7 +236,7 @@ export default function EstimateRequestForm() {
                 size="sm"
                 onClick={() => setStep(step - 1)}
               >
-                이전
+                {tCommon('previous')}
               </Button>
             )}
             {step === 1 && (
@@ -242,7 +246,7 @@ export default function EstimateRequestForm() {
                 disabled={movingType === null}
                 onClick={() => setStep(2)}
               >
-                다음
+                {tCommon('next')}
               </Button>
             )}
             {step === 2 && (
@@ -251,7 +255,7 @@ export default function EstimateRequestForm() {
                 disabled={moveDate === null}
                 onClick={() => setStep(3)}
               >
-                다음
+                {tCommon('next')}
               </Button>
             )}
             {step === 3 && (
@@ -260,7 +264,7 @@ export default function EstimateRequestForm() {
                 disabled={!isComplete || isSubmitting}
                 onClick={handleSubmit}
               >
-                견적 요청하기
+                {t('submit')}
               </Button>
             )}
           </div>
@@ -277,30 +281,27 @@ export default function EstimateRequestForm() {
         )}
       >
         <div className="flex flex-col items-center gap-[8px] whitespace-nowrap">
-          <p className="text-2xl-bold text-black-500">
-            이사 유형, 예정일과 지역을 선택해주세요
-          </p>
-          <p className="text-lg-regular text-gray-400">{SUB_TITLE}</p>
+          <p className="text-2xl-bold text-black-500">{t('title')}</p>
+          <p className="text-lg-regular text-gray-400">{t('subtitle')}</p>
         </div>
 
         <div className="mt-[64px] flex flex-col gap-[48px] desktop:mt-[80px] desktop:gap-[64px]">
           <div className="flex flex-col gap-[16px]">
-            <p className="text-2lg-bold text-black-300">이사 유형</p>
+            <p className="text-2lg-bold text-black-300">{t('moveType')}</p>
             {movingTypeCards}
           </div>
 
           <div className="flex flex-col gap-[32px]">
             <div className="flex items-start justify-between">
-              <p className="text-2lg-bold text-black-300">이사 예정일</p>
+              <p className="text-2lg-bold text-black-300">{t('moveDate')}</p>
               {/* 시안상 달력이 트리거와 같은 400px라 calendarClassName으로 넓힌다 */}
               <DateDropdown
                 value={moveDate}
                 onChange={setMoveDate}
                 onConfirm={setMoveDate}
-                placeholder="이사 예정일 선택하기"
-                confirmLabel="선택완료"
+                placeholder={t('moveDatePlaceholder')}
                 minDate={minMoveDate}
-                aria-label="이사 예정일"
+                aria-label={t('moveDate')}
                 className="w-[400px]"
                 calendarClassName="w-[400px]"
               />
@@ -309,7 +310,7 @@ export default function EstimateRequestForm() {
             <div className="mx-auto w-full max-w-[705px] border-t border-line-100" />
 
             <div className="flex items-start justify-between">
-              <p className="text-2lg-bold text-black-300">이사 지역</p>
+              <p className="text-2lg-bold text-black-300">{t('moveRegion')}</p>
               <div className="flex w-[400px] flex-col gap-[16px] desktop:w-[520px] desktop:flex-row">
                 {addressFields}
               </div>
@@ -327,7 +328,7 @@ export default function EstimateRequestForm() {
             disabled={!isComplete || isSubmitting}
             onClick={handleSubmit}
           >
-            견적 요청하기
+            {t('submit')}
           </Button>
         </div>
       </div>
@@ -340,14 +341,14 @@ export default function EstimateRequestForm() {
           disabled={!isComplete || isSubmitting}
           onClick={handleSubmit}
         >
-          견적 요청하기
+          {t('submit')}
         </Button>
       </div>
 
       <AddressSearchModal
         isOpen={addressTarget !== null}
         onClose={() => setAddressTarget(null)}
-        label={addressTarget === 'to' ? '도착지' : '출발지'}
+        label={addressTarget === 'to' ? t('arrival') : t('departure')}
         onSelect={handleAddressSelected}
       />
     </div>
@@ -361,6 +362,8 @@ interface AddressFieldProps {
 }
 
 function AddressField({ label, address, onSelect }: AddressFieldProps) {
+  const t = useTranslations('EstimateRequest');
+
   return (
     <div className="flex min-w-0 flex-col gap-[12px] desktop:flex-1">
       <p className="text-lg-medium text-black-400">{label}</p>
@@ -374,7 +377,7 @@ function AddressField({ label, address, onSelect }: AddressFieldProps) {
         className="text-lg-semibold flex h-[54px] w-full cursor-pointer items-center rounded-[12px] border border-orange-400 px-[24px] text-left text-orange-400 shadow-[4px_4px_10px_0_rgba(195,217,242,0.2)] transition hover:bg-orange-100"
       >
         <span className="truncate">
-          {address?.roadAddress ?? `${label} 선택하기`}
+          {address?.roadAddress ?? t('selectAddress', { label })}
         </span>
       </button>
     </div>

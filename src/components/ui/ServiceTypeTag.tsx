@@ -1,5 +1,6 @@
-import { SERVICE_TYPE_LABELS, type ServiceType } from '@/types/serviceType';
+import type { ServiceType } from '@/types/serviceType';
 import { cva } from 'class-variance-authority';
+import { useTranslations } from 'next-intl';
 
 import IcSolidBox from '@/assets/icons/ic_solid_box.svg';
 import IcSolidCompany from '@/assets/icons/ic_solid_company.svg';
@@ -15,12 +16,12 @@ type ServiceTypeTagContent = ServiceType | 'DESIGNATED_ESTIMATE';
 
 interface ServiceTypeTagConfig {
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  label: string;
 }
 
 /*
 @ 표시 태그 콘텐츠 설정
-- 아이콘과 라벨처럼 CSS로 표현할 수 없는 콘텐츠만 설정 객체에서 관리합니다.
+- 아이콘처럼 CSS로 표현할 수 없는 콘텐츠만 설정 객체에서 관리합니다.
+- 라벨은 messages > ServiceType 에서 현재 언어로 가져옵니다 (키 = 콘텐츠 값).
 - 색상은 variant, 간격·높이·여백은 size에서 관리합니다.
 */
 const SERVICE_TYPE_TAG_CONFIG: Record<
@@ -29,19 +30,15 @@ const SERVICE_TYPE_TAG_CONFIG: Record<
 > = {
   SMALL_MOVE: {
     icon: IcSolidBox,
-    label: SERVICE_TYPE_LABELS.SMALL_MOVE,
   },
   HOME_MOVE: {
     icon: IcSolidHome,
-    label: SERVICE_TYPE_LABELS.HOME_MOVE,
   },
   OFFICE_MOVE: {
     icon: IcSolidCompany,
-    label: SERVICE_TYPE_LABELS.OFFICE_MOVE,
   },
   DESIGNATED_ESTIMATE: {
     icon: IcSolidDocument,
-    label: '지정 견적 요청',
   },
 };
 
@@ -136,6 +133,7 @@ export default function ServiceTypeTag({
   className,
   ...props
 }: ServiceTypeTagProps) {
+  const t = useTranslations('ServiceType');
   const content: ServiceTypeTagContent =
     variant === 'service' ? serviceType : 'DESIGNATED_ESTIMATE';
   const config = SERVICE_TYPE_TAG_CONFIG[content];
@@ -151,7 +149,7 @@ export default function ServiceTypeTag({
         focusable="false"
         className="size-[20px] shrink-0"
       />
-      <span>{config.label}</span>
+      <span>{t(content)}</span>
     </span>
   );
 }

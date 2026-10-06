@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 import { signupSchema } from '@/lib/validations/authValidation';
 import { optionalProfileImageSchema } from '@/lib/validations/profileImageValidation';
+import { validationKey } from '@/lib/validations/validationMessage';
 
 /*=================================================
 고객 프로필 등록·수정 폼 검증
@@ -13,11 +14,11 @@ const customerProfileFields = {
   profileImage: optionalProfileImageSchema,
   serviceTypes: z
     .array(z.enum(SERVICE_TYPES))
-    .min(1, '이용 서비스를 한 개 이상 선택해주세요.'),
+    .min(1, validationKey('serviceTypeRequired')),
   region: z
     .enum(REGIONS)
     .nullable()
-    .refine((region) => region !== null, '지역을 선택해주세요.'),
+    .refine((region) => region !== null, validationKey('regionRequired')),
 };
 
 export const customerProfileSchema = z.object(customerProfileFields);
@@ -37,13 +38,13 @@ export const customerProfileSchema = z.object(customerProfileFields);
 const customerNameSchema = z
   .string()
   .trim()
-  .min(2, '이름은 2자 이상이어야 합니다.')
-  .max(20, '이름은 20자 이하여야 합니다.');
+  .min(2, validationKey('nameMin'))
+  .max(20, validationKey('nameMax'));
 
 const customerPhoneNumberSchema = z
   .string()
   .trim()
-  .regex(/^01[016789]-?\d{3,4}-?\d{4}$/, '올바른 전화번호 형식이 아닙니다.');
+  .regex(/^01[016789]-?\d{3,4}-?\d{4}$/, validationKey('phoneInvalid'));
 
 /*
 @ 새 비밀번호 공통 규칙
@@ -53,7 +54,7 @@ const customerPhoneNumberSchema = z
 */
 const customerNewPasswordSchema = signupSchema.shape.password.max(
   64,
-  '새 비밀번호는 64자 이하여야 합니다.',
+  validationKey('newPasswordMax'),
 );
 
 /*
@@ -67,7 +68,7 @@ export const customerProfileEditSchema = z
   .object({
     ...customerProfileFields,
     name: customerNameSchema,
-    email: z.email('이메일 형식이 아닙니다.'),
+    email: z.email(validationKey('emailInvalid')),
     phoneNumber: customerPhoneNumberSchema,
     currentPassword: z.string(),
     newPassword: z.string(),
@@ -84,7 +85,7 @@ export const customerProfileEditSchema = z
       context.addIssue({
         code: 'custom',
         path: ['currentPassword'],
-        message: '현재 비밀번호를 입력해주세요.',
+        message: validationKey('currentPasswordRequired'),
       });
     }
 
@@ -104,7 +105,7 @@ export const customerProfileEditSchema = z
         path: ['newPassword'],
         message:
           newPasswordResult.error.issues[0]?.message ??
-          '새 비밀번호 형식을 확인해주세요.',
+          validationKey('newPasswordInvalid'),
       });
     }
 
@@ -112,13 +113,13 @@ export const customerProfileEditSchema = z
       context.addIssue({
         code: 'custom',
         path: ['newPasswordConfirm'],
-        message: '새 비밀번호 확인을 입력해주세요.',
+        message: validationKey('newPasswordConfirmRequired'),
       });
     } else if (values.newPassword !== values.newPasswordConfirm) {
       context.addIssue({
         code: 'custom',
         path: ['newPasswordConfirm'],
-        message: '새 비밀번호가 일치하지 않습니다.',
+        message: validationKey('newPasswordMismatch'),
       });
     }
   });

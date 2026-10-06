@@ -1,6 +1,7 @@
 'use client';
 
 import { Rating } from 'next-flex-rating';
+import { useTranslations } from 'next-intl';
 
 import IcStarFill from '@/assets/icons/ic_star_fill.svg';
 
@@ -28,13 +29,14 @@ export default function StarRating({
   size = 20,
   className,
 }: StarRatingProps) {
+  const t = useTranslations('Review');
   const isReadOnly = readOnly ?? !onChange;
   const starIcon = <IcStarFill aria-hidden className="size-full" />;
 
   return (
     <div
       className={cn('inline-flex h-[20px]', className)}
-      aria-label={isReadOnly ? `${value}점` : undefined}
+      aria-label={isReadOnly ? t('ratingAria', { value }) : undefined}
     >
       <Rating
         value={value}

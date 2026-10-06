@@ -2,9 +2,11 @@
 
 import { useCallback, useEffect } from 'react';
 
+import { usePathname, useRouter } from '@/i18n/navigation';
 import { CompletedReview, MyReviewEstimateItem } from '@/types/review';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 import ImgEmpty from '@/assets/images/img_empty.png';
 
@@ -69,6 +71,8 @@ function CompletedReviewCardSkeleton() {
 }
 
 export default function CompletedReviewList() {
+  const t = useTranslations('CustomerReviews');
+  const tReview = useTranslations('Review');
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -129,11 +133,11 @@ export default function CompletedReviewList() {
               </div>
             </div>
             <p className="text-center text-lg-regular text-gray-400 tablet:text-2xl-regular">
-              아직 등록된 리뷰가 없어요!
+              {tReview('empty')}
             </p>
             <div className="w-full max-w-[327px] tablet:w-[196px]">
               <Button href={ROUTES.customerReviewsPending} size={buttonSize}>
-                리뷰 작성하러 가기
+                {t('goWrite')}
               </Button>
             </div>
           </div>

@@ -17,10 +17,11 @@
 */
 'use client';
 
+import { Link } from '@/i18n/navigation';
 import type { MyEstimateSummary } from '@/types/estimate';
 import type { ServiceType } from '@/types/serviceType';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import Link from 'next/link';
 
 import IcCheckCircle from '@/assets/icons/ic_check_circle.svg';
 import ImgLogoM from '@/assets/icons/ic_driver.png';
@@ -32,9 +33,10 @@ import ImgAvatarBeaver from '@/assets/images/img_avatar_beaver.png';
 import { resolveMoverImageUrl } from '@/lib/api/estimate';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+import { useFormatCareer } from '@/hooks/common/useFormatCareer';
+import { useFormatPrice } from '@/hooks/common/useFormatPrice';
 
 import { cn } from '@/utils/cn';
-import { formatCareerLabel } from '@/utils/formatDate';
 
 import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
 
@@ -51,6 +53,8 @@ function StatusLabel({
   isConfirmed: boolean;
   className?: string;
 }) {
+  const t = useTranslations('EstimateStatus');
+
   if (isConfirmed) {
     return (
       <span
@@ -60,7 +64,7 @@ function StatusLabel({
         )}
       >
         <IcCheckCircle aria-hidden className="size-[20px] shrink-0" />
-        확정견적
+        {t('ACCEPTED')}
       </span>
     );
   }
@@ -72,7 +76,7 @@ function StatusLabel({
         className,
       )}
     >
-      견적대기
+      {t('PROPOSED')}
     </span>
   );
 }
@@ -81,10 +85,15 @@ export default function ReceivedEstimateCard({
   estimate,
   serviceType,
 }: ReceivedEstimateCardProps) {
+  const t = useTranslations('MoverCard');
+  const tEstimate = useTranslations('Estimate');
+  const tLike = useTranslations('MoverLike');
+  const formatCareer = useFormatCareer();
+  const formatPrice = useFormatPrice();
   const tagSize = useBreakpointValue('sm', 'md', 'md');
   const { mover } = estimate;
   const isConfirmed = estimate.status === 'ACCEPTED';
-  const careerLabel = formatCareerLabel(mover.careerMonths);
+  const careerLabel = formatCareer(mover.careerMonths);
 
   // 값이 있는 항목만 세로 구분선으로 이어 붙인다
   const moverStats: { key: string; node: React.ReactNode }[] = [];
@@ -110,7 +119,7 @@ export default function ReceivedEstimateCard({
     key: 'career',
     node: (
       <span className="flex items-center gap-[4px]">
-        <span className="text-gray-300">경력</span>
+        <span className="text-gray-300">{t('career')}</span>
         <span className="text-black-300">{careerLabel}</span>
       </span>
     ),
@@ -121,8 +130,10 @@ export default function ReceivedEstimateCard({
       key: 'confirmed',
       node: (
         <span className="flex items-center gap-[4px]">
-          <span className="text-black-300">{mover.confirmedCount}건</span>
-          <span className="text-gray-300">확정</span>
+          <span className="text-black-300">
+            {t('confirmedCount', { count: mover.confirmedCount })}
+          </span>
+          <span className="text-gray-300">{t('confirmed')}</span>
         </span>
       ),
     });
@@ -186,12 +197,16 @@ export default function ReceivedEstimateCard({
                       aria-hidden
                       className="size-[20px] shrink-0 tablet:hidden"
                     />
-                    <span className="truncate">{mover.nickname} 기사님</span>
+                    <span className="truncate">
+                      {t('nickname', { nickname: mover.nickname })}
+                    </span>
                   </p>
 
                   {mover.likeCount !== undefined && (
                     <span
-                      aria-label={`찜 ${mover.likeCount}`}
+                      aria-label={tLike('countLabel', {
+                        count: mover.likeCount,
+                      })}
                       className="flex shrink-0 items-center gap-[2px] text-md-regular text-gray-500 tablet:text-black-500"
                     >
                       {mover.isLiked ? (
@@ -228,11 +243,11 @@ export default function ReceivedEstimateCard({
         <div className="flex h-[32px] w-full items-center justify-between tablet:justify-end tablet:gap-[12px]">
           <StatusLabel isConfirmed={isConfirmed} className="tablet:hidden" />
           <span className="flex items-center gap-[12px] whitespace-nowrap">
-            <span className="text-md-medium text-gray-500">견적 금액</span>
+            <span className="text-md-medium text-gray-500">
+              {tEstimate('priceAmount')}
+            </span>
             <span className="text-2lg-bold text-black-400 tablet:text-2xl-bold">
-              {estimate.price === null
-                ? '-'
-                : `${estimate.price.toLocaleString('ko-KR')}원`}
+              {estimate.price === null ? '-' : formatPrice(estimate.price)}
             </span>
           </span>
         </div>

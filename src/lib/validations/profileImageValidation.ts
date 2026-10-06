@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { validationKey } from '@/lib/validations/validationMessage';
+
 /*=================================================
 프로필 이미지 공용 검증
 =================================================*/
@@ -26,13 +28,13 @@ export const optionalProfileImageSchema = z
     (value) =>
       value === undefined ||
       (typeof FileList !== 'undefined' && value instanceof FileList),
-    '프로필 이미지 값이 올바르지 않습니다.',
+    validationKey('profileImageInvalid'),
   )
   .refine((files) => {
     const file = files?.[0];
     return !file || profileImageMimeTypeSet.has(file.type);
-  }, 'JPEG, PNG, WEBP 이미지만 업로드할 수 있습니다.')
+  }, validationKey('profileImageType'))
   .refine((files) => {
     const file = files?.[0];
     return !file || file.size <= MAX_PROFILE_IMAGE_SIZE;
-  }, '프로필 이미지는 5MB 이하만 업로드할 수 있습니다.');
+  }, validationKey('profileImageSize'));

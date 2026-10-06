@@ -1,11 +1,14 @@
 'use client';
 
+import { useRouter } from '@/i18n/navigation';
 import type { CompletedReview } from '@/types/review';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 
 import IcDriverMark from '@/assets/icons/ic_driver.png';
 import ImgMoverCharacter from '@/assets/images/img_profile_example.png';
+
+import { useFormatDate } from '@/hooks/common/useFormatDate';
 
 import { cn } from '@/utils/cn';
 import formatDate from '@/utils/formatDate';
@@ -20,11 +23,6 @@ interface CompletedReviewCardProps {
 function formatWrittenDate(date: string) {
   const formatted = formatDate(date, 'review');
   return formatted.replaceAll('-', '. ');
-}
-
-function formatMoveDateMobile(date: string) {
-  const formatted = formatDate(date, 'korean');
-  return formatted.replace(/\s*\([^)]*\)\s*$/, '');
 }
 
 function MobileMetaItem({ label, value }: { label: string; value: string }) {
@@ -78,10 +76,15 @@ function ServiceTags({
 export default function CompletedReviewCard({
   review,
 }: CompletedReviewCardProps) {
+  const t = useTranslations('CustomerReviews');
+  const tCard = useTranslations('MoverCard');
+  const tEstimate = useTranslations('Estimate');
+  const formatDateLocale = useFormatDate();
   const router = useRouter();
   const profileImageSrc = review.imgUrl ?? ImgMoverCharacter;
-  const moveDate = formatDate(review.moveDate, 'korean');
-  const moveDateMobile = formatMoveDateMobile(review.moveDate);
+  const moveDate = formatDateLocale(review.moveDate, 'korean');
+  /* 모바일은 좁아서 끝의 요일 "(월)"을 뺀다 */
+  const moveDateMobile = moveDate.replace(/\s*\([^)]*\)\s*$/, '');
   const writtenDate = formatWrittenDate(review.createdAt);
 
   const goToMover = () => {
@@ -120,14 +123,15 @@ export default function CompletedReviewCard({
                 />
               </span>
               <p className="flex min-w-0 items-center gap-[4px] text-lg-semibold text-black-300 group-hover:underline">
-                <span className="min-w-0 break-all">{review.moverName}</span>
-                <span className="shrink-0">기사님</span>
+                <span className="min-w-0 break-all">
+                  {tCard('nickname', { nickname: review.moverName })}
+                </span>
               </p>
             </div>
             <div className="relative size-[50px] shrink-0 overflow-hidden rounded-[12px] bg-black-300">
               <Image
                 src={profileImageSrc}
-                alt={`${review.moverName} 기사님 프로필`}
+                alt={tCard('profileAlt', { nickname: review.moverName })}
                 fill
                 unoptimized={typeof profileImageSrc === 'string'}
                 className="object-cover object-[center_20%]"
@@ -138,9 +142,18 @@ export default function CompletedReviewCard({
         </div>
         <div className="h-px w-full bg-line-100" />
         <div className="flex min-w-0 items-center gap-[16px]">
-          <MobileMetaItem label="출발지" value={review.fromRegion} />
-          <MobileMetaItem label="도착지" value={review.toRegion} />
-          <MobileMetaItem label="이사일" value={moveDateMobile} />
+          <MobileMetaItem
+            label={tEstimate('departure')}
+            value={review.fromRegion}
+          />
+          <MobileMetaItem
+            label={tEstimate('arrival')}
+            value={review.toRegion}
+          />
+          <MobileMetaItem
+            label={tEstimate('moveDate')}
+            value={moveDateMobile}
+          />
         </div>
         <div className="h-px w-full bg-line-100" />
         <div className="flex w-full flex-col gap-[12px]">
@@ -150,7 +163,7 @@ export default function CompletedReviewCard({
           </p>
         </div>
         <div className="flex items-center justify-end gap-[6px] text-xs-regular text-gray-300">
-          <span>작성일</span>
+          <span>{t('writtenAt')}</span>
           <span>{writtenDate}</span>
         </div>
       </div>
@@ -165,7 +178,7 @@ export default function CompletedReviewCard({
           <div className="relative size-[80px] shrink-0 overflow-hidden rounded-[12px] bg-black-300">
             <Image
               src={profileImageSrc}
-              alt={`${review.moverName} 기사님 프로필`}
+              alt={tCard('profileAlt', { nickname: review.moverName })}
               fill
               unoptimized={typeof profileImageSrc === 'string'}
               className="object-cover object-[center_20%]"
@@ -185,8 +198,9 @@ export default function CompletedReviewCard({
                   />
                 </span>
                 <p className="flex min-w-0 items-center gap-[4px] text-2lg-bold text-black-300 group-hover:underline">
-                  <span className="min-w-0 break-all">{review.moverName}</span>
-                  <span className="shrink-0">기사님</span>
+                  <span className="min-w-0 break-all">
+                    {tCard('nickname', { nickname: review.moverName })}
+                  </span>
                 </p>
               </div>
               {review.description ? (
@@ -202,11 +216,11 @@ export default function CompletedReviewCard({
           </div>
         </button>
         <div className="flex w-full items-center gap-[20px]">
-          <MetaItem label="출발지" value={review.fromRegion} />
+          <MetaItem label={tEstimate('departure')} value={review.fromRegion} />
           <MetaDivider />
-          <MetaItem label="도착지" value={review.toRegion} />
+          <MetaItem label={tEstimate('arrival')} value={review.toRegion} />
           <MetaDivider />
-          <MetaItem label="이사일" value={moveDate} />
+          <MetaItem label={tEstimate('moveDate')} value={moveDate} />
         </div>
         <div className="flex w-full flex-col gap-[12px]">
           <StarRating value={review.rating} readOnly size={20} />
@@ -215,7 +229,7 @@ export default function CompletedReviewCard({
           </p>
         </div>
         <div className="flex items-center justify-end gap-[6px] text-xs-regular text-gray-300">
-          <span>작성일</span>
+          <span>{t('writtenAt')}</span>
           <span>{writtenDate}</span>
         </div>
       </div>

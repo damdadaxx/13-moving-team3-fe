@@ -60,7 +60,7 @@ const mobileMenuPanel = cva(
 );
 
 const mobileMenuItem = cva(
-  'flex h-[74px] w-full cursor-pointer items-center px-[24px] py-[20px] text-lg-medium text-black-500',
+  'flex h-[74px] w-full cursor-pointer items-center text-lg-medium text-black-500',
 );
 
 /**
@@ -124,7 +124,13 @@ export default function MobileMenu({
           <ul className={cn('h-full w-full')}>
             {menus.map((item) => (
               <li key={item.menu} className={mobileMenuItem()}>
-                <Link href={item.href} onClick={onClose}>
+                <Link
+                  className={cn(
+                    'flex items-center w-full h-full px-[24px] py-[20px]',
+                  )}
+                  href={item.href}
+                  onClick={onClose}
+                >
                   {item.menu}
                 </Link>
               </li>

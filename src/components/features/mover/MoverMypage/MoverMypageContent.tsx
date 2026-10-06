@@ -25,6 +25,7 @@ import MoverReviewInfo from '@/components/features/common/MoverReview/MoverRevie
 import MoverReviewList from '@/components/features/common/MoverReview/MoverReviewList';
 import ServiceRegionList from '@/components/features/common/ServiceRegion/ServiceRegionList';
 import ServiceTypeList from '@/components/features/common/ServiceType/ServiceTypeList';
+import MoverMypageSkeleton from '@/components/features/mover/MoverMypage/MoverMypageSkeleton';
 import Button from '@/components/ui/Button/Button';
 import EmptyState from '@/components/ui/EmptyState';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
@@ -92,7 +93,7 @@ export default function MoverMypageContent() {
   }
 
   if (isPending) {
-    return <LoadingDisplay />;
+    return <MoverMypageSkeleton />;
   }
 
   // 기사님 프로필 미등록 체크

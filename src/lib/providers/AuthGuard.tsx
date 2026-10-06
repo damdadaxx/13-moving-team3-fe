@@ -16,8 +16,6 @@ import { useAccessDeniedModal } from '@/hooks/common/useAccessDeniedModal';
 import { useLoginRequiredModal } from '@/hooks/common/useLoginRequiredModal';
 import { useAuth } from '@/hooks/features/auth/useAuth';
 
-import LoadingDisplay from '@/components/ui/LoadingDisplay';
-
 /*
 @ 라우트 그룹 인증 가드
 - guest: (auth) 비로그인 전용
@@ -173,8 +171,14 @@ export default function AuthGuard({ children, allow }: AuthGuardProps) {
     return <div className="fixed inset-0 z-toast bg-gray-50" />;
   }
 
+  /*
+  @ 세션 확인 중에는 페이지를 그린다
+  - 각 페이지의 스켈레톤이 보이게 자식까지 통과시킨다
+  - 권한이 없어 다른 화면으로 보내는 중에는 내용을 그리지 않는다
+  */
   if (!canRender) {
-    return <LoadingDisplay />;
+    if (isLoading) return children;
+    return null;
   }
 
   return children;

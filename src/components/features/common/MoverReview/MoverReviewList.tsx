@@ -14,8 +14,8 @@ import {
 } from '@/utils/formatReview';
 
 import MoverReviewItem from '@/components/features/common/MoverReview/MoverReviewItem';
+import MoverReviewListSkeleton from '@/components/features/common/MoverReview/MoverReviewListSkeleton';
 import MoverReviewSummary from '@/components/features/common/MoverReview/MoverReviewSummary';
-import LoadingDisplay from '@/components/ui/LoadingDisplay';
 import Pagination from '@/components/ui/Pagination';
 import SectionTitle from '@/components/ui/SectionTitle';
 
@@ -42,6 +42,10 @@ export default function MoverReviewList({ moverId }: { moverId: string }) {
   const reviewCount = data?.reviewCount ?? 0;
   const distribution = toRatingDistribution(data?.ratingDistribution ?? []);
 
+  if (isPending && !data) {
+    return <MoverReviewListSkeleton />;
+  }
+
   /** 리뷰 목록 렌더링 */
   return (
     <div className="flex w-full flex-col gap-[16px]">
@@ -56,9 +60,7 @@ export default function MoverReviewList({ moverId }: { moverId: string }) {
         ) : null}
       </div>
 
-      {isPending && !data ? (
-        <LoadingDisplay size={40} fullHeight={false} className="py-[40px]" />
-      ) : isError ? (
+      {isError ? (
         <p className="py-[40px] text-center text-lg-regular text-gray-400">
           {t('loadFailed')}
         </p>

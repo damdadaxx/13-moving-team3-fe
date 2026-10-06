@@ -157,7 +157,6 @@
     "clear": "Clear search"
   },
   "MoverDetail": {
-    "metaTitle": "Mover Details",
     "notFound": "We couldn't find this mover.",
     "requestLine1": "Send {nickname}",
     "requestLine2": "a designated estimate request!",
@@ -321,7 +320,6 @@
     "EXPIRED": "Expired"
   },
   "Estimate": {
-    "metaTitle": "Estimate Details",
     "notFound": "We couldn't find this estimate.",
     "info": "Estimate Info",
     "requestedAt": "Requested on",
@@ -505,7 +503,6 @@
     "sendFailed": "Failed to send the estimate. Please try again later."
   },
   "MoverMypage": {
-    "metaTitle": "My Page",
     "editProfile": "Edit My Profile",
     "editAccount": "Edit Account Info",
     "profileRequiredTitle": "Create Profile",
@@ -562,6 +559,28 @@
   "Metadata": {
     "siteTitle": "Moving : Matching movers with people on the move",
     "siteDescription": "A service that matches customers with professional movers",
-    "ogTitle": "Moving : Complicated moves made simple with Moving!"
+    "ogTitle": "Moving : Complicated moves made simple with Moving!",
+    "customerSignin": "Log in",
+    "customerSignup": "Sign up",
+    "moverSignin": "Mover log in",
+    "moverSignup": "Mover sign up",
+    "socialLogin": "Social login",
+    "estimateRequest": "Request Estimate",
+    "moverFind": "Find Movers",
+    "moverDetail": "Mover Details",
+    "likedMovers": "Liked Movers",
+    "profileNew": "Create Profile",
+    "moverProfileNew": "Create Mover Profile",
+    "profileEdit": "Edit Profile",
+    "accountEdit": "Edit Account Info",
+    "estimatesPending": "Pending Estimates",
+    "estimatesReceived": "Received Estimates",
+    "estimateDetail": "Estimate Details",
+    "estimatesSent": "Sent Estimates",
+    "estimatesRejected": "Rejected Requests",
+    "reviewsPending": "To Review",
+    "reviewsCompleted": "My Reviews",
+    "moverRequests": "Received Requests",
+    "mypage": "My Page"
   }
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useState } from 'react';
+import { createContext, useRef, useState } from 'react';
 
 import Modal from '@/components/ui/Modal';
 
@@ -14,6 +14,8 @@ export interface ModalOptions {
   title: string;
   variant?: 'popup' | 'sheet';
   buttons?: React.ReactNode;
+  /* 확인·닫기·바깥 클릭·ESC 모두 이 콜백을 한 번 호출한다 */
+  onClose?: () => void;
 }
 
 export interface ModalContextType {
@@ -33,11 +35,13 @@ export default function ModalProvider({ children }: ModalProviderProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [content, setContent] = useState<React.ReactNode>(null);
   const [options, setOptions] = useState<ModalOptions>({ title: '' });
+  const optionsRef = useRef(options);
 
   function openModal(
     modalContent: React.ReactNode,
     modalOptions: ModalOptions,
   ): void {
+    optionsRef.current = modalOptions;
     setContent(modalContent);
     setOptions(modalOptions);
     setIsOpen(true);
@@ -45,6 +49,14 @@ export default function ModalProvider({ children }: ModalProviderProps) {
 
   function closeModal(): void {
     setIsOpen(false);
+
+    const handleClose = optionsRef.current.onClose;
+    if (!handleClose) return;
+
+    const nextOptions = { ...optionsRef.current, onClose: undefined };
+    optionsRef.current = nextOptions;
+    setOptions(nextOptions);
+    handleClose();
   }
 
   return (

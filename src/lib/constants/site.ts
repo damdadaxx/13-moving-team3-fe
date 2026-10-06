@@ -6,8 +6,8 @@ import { getTranslations } from 'next-intl/server';
 
 import {
   OG_IMAGE_HEIGHT,
-  OG_IMAGE_PATH,
   OG_IMAGE_WIDTH,
+  getOgImagePath,
 } from '@/lib/constants/kakao';
 
 /*
@@ -22,18 +22,10 @@ export const SITE_URL = (
 
 export const SITE_NAME = '무빙';
 
-/* 제목·설명 문구는 언어별로 messages > Metadata 에 있다 (getOpenGraph에서 채운다) */
+/* 제목·설명·이미지는 언어별로 getOpenGraph에서 채운다 */
 export const OPEN_GRAPH_DEFAULT = {
   type: 'website',
   siteName: SITE_NAME,
-  images: [
-    {
-      url: OG_IMAGE_PATH,
-      width: OG_IMAGE_WIDTH,
-      height: OG_IMAGE_HEIGHT,
-      type: 'image/png',
-    },
-  ],
 } satisfies Metadata['openGraph'];
 
 /*
@@ -53,6 +45,7 @@ const OG_LOCALE: Record<Locale, string> = {
 - og:locale은 현재 locale, og:locale:alternate는 나머지 지원 언어
 - og:url은 현재 locale 주소 (ko는 접두사 없음, 그 외 /en 등)
 - og:title·og:description은 현재 locale 문구 (messages > Metadata)
+- og:image는 public/og/{locale}.png
 - 페이지의 openGraph는 레이아웃 openGraph를 통째로 덮어쓰므로, openGraph를 쓰는 곳은 모두 이 함수를 쓴다
 */
 export async function getOpenGraph(
@@ -69,6 +62,14 @@ export async function getOpenGraph(
 
   return {
     ...OPEN_GRAPH_DEFAULT,
+    images: [
+      {
+        url: getOgImagePath(currentLocale),
+        width: OG_IMAGE_WIDTH,
+        height: OG_IMAGE_HEIGHT,
+        type: 'image/png',
+      },
+    ],
     title: t('ogTitle'),
     description: t('siteDescription'),
     locale: OG_LOCALE[currentLocale],

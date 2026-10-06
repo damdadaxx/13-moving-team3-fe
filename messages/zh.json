@@ -16,7 +16,16 @@
     "serviceTypeSelect": "选择服务",
     "profileImageSelect": "选择头像",
     "confirm": "确定",
-    "filter": "筛选"
+    "filter": "筛选",
+    "accessDeniedTitle": "您没有访问此页面的权限。",
+    "accessDeniedDescription": "您没有查看该页面的权限，或需要登录。",
+    "accessDeniedCheckAddress": "请再次确认您输入的地址。",
+    "goToMain": "前往主页",
+    "goToPrevious": "返回上一页",
+    "loginRequiredTitle": "此服务需要登录。",
+    "loginRequiredMessage": "登录后才能使用此功能。",
+    "alreadyLoggedInTitle": "您已登录。",
+    "alreadyLoggedInDescription": "登录状态下无法使用登录或注册页面。"
   },
   "Header": {
     "home": "Moving 首页",

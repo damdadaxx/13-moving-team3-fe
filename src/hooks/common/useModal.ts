@@ -7,7 +7,8 @@ import { ModalContext } from '@/lib/providers/ModalProvider';
 @ useModal
 - ModalProvider 하위에서 openModal(content, options) / closeModal 로 모달을 제어한다.
 - options.variant: 'popup'(기본, 중앙 팝업) | 'sheet'(모바일 바텀시트, 태블릿 이상은 popup과 동일)
-- options.buttons: <> <Button /> <Button /> </> 형태로 전달. flex + gap 정렬 (1개면 gap 없음)
+- options.buttons: <> <Button /> <Button /> </> 형태로 전달. 칸을 같은 너비로 나누고, 1개면 가로를 다 쓴다
+- options.onClose: 확인·닫기·바깥 클릭·ESC 중 무엇이든 모달이 닫힐 때 한 번 호출된다
 - 버튼이 폼 상태(입력값 등)에 묶여 있으면 useModal 대신 도메인 컴포넌트가 Modal을 직접 렌더링하고
   buttons prop으로 넘긴다 (예: SendEstimateModal)
 

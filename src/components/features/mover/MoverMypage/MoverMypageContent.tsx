@@ -142,7 +142,7 @@ export default function MoverMypageContent() {
   - !mover는 프로필 유무가 아니라, 그릴 객체가 없어 mover를 좁히기 위한 조건
   */
   if (isError || !mover) {
-    return <EmptyState message={t('notFound')} />;
+    return <EmptyState fit="title" message={t('notFound')} />;
   }
 
   return (

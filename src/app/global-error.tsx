@@ -66,6 +66,7 @@ function GlobalErrorContent({ onReset }: { onReset: () => void }) {
 
   return (
     <EmptyState
+      as="main"
       message={t('message')}
       buttonLabel={t('reload')}
       onClick={onReset}

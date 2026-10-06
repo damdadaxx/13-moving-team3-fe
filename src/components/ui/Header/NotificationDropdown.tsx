@@ -141,7 +141,10 @@ export default function NotificationDropdown({
     <div
       id={HEADER_PANEL_IDS.notification}
       inert={!isOpen}
-      className={notificationDropdownPanel({ open: isOpen })}
+      className={cn(
+        notificationDropdownPanel({ open: isOpen }),
+        isLoading && 'min-h-[314px] desktop:min-h-[352px]',
+      )}
     >
       <div
         className={cn(
@@ -176,7 +179,7 @@ export default function NotificationDropdown({
           </button>
         </div>
       </div>
-      <div className={cn('flex min-h-0 w-full flex-1 flex-col min-h-[352px]')}>
+      <div className={cn('flex min-h-0 w-full flex-1 flex-col')}>
         <ul
           ref={listRef}
           className={cn('min-h-0 flex-1 overflow-y-auto scrollbar-gray-300')}

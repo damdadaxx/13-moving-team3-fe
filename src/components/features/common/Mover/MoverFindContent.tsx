@@ -1,12 +1,14 @@
 // 기사님 찾기 페이지 본문 (검색 / 필터 / 목록 / 찜한 기사님)
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
+import { usePathname, useRouter } from '@/i18n/navigation';
 import type { MoverListSortBy } from '@/types/mover';
-import type { Region } from '@/types/region';
-import type { ServiceType } from '@/types/serviceType';
+import { REGIONS, type Region } from '@/types/region';
+import { SERVICE_TYPES, type ServiceType } from '@/types/serviceType';
 import { useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 
 import { LIKED_MOVER_ID_PAGE_SIZE } from '@/lib/constants/mover';
 
@@ -17,9 +19,29 @@ import { useLikedMoversQuery } from '@/hooks/features/mover/queries/queries';
 import { cn } from '@/utils/cn';
 
 import LikedMoverSection from '@/components/features/common/Mover/LikedMoverSection';
-import MoverFilterBar from '@/components/features/common/Mover/MoverFilterBar';
+import MoverFilterBar, {
+  SORT_VALUES,
+} from '@/components/features/common/Mover/MoverFilterBar';
 import MoverList from '@/components/features/common/Mover/MoverList';
 import InputSearchbar from '@/components/ui/Form/InputSearchbar';
+
+const DEFAULT_SORT_BY: MoverListSortBy = 'reviewCount';
+
+function toRegion(value: string | null): Region | undefined {
+  return REGIONS.includes(value as Region) ? (value as Region) : undefined;
+}
+
+function toServiceType(value: string | null): ServiceType | undefined {
+  return SERVICE_TYPES.includes(value as ServiceType)
+    ? (value as ServiceType)
+    : undefined;
+}
+
+function toSortBy(value: string | null): MoverListSortBy {
+  return SORT_VALUES.includes(value as MoverListSortBy)
+    ? (value as MoverListSortBy)
+    : DEFAULT_SORT_BY;
+}
 
 /*
 @ 레이아웃 (Figma 기사님 찾기, Mobile First) — 값은 전부 Figma 좌표 기준
@@ -33,11 +55,47 @@ import InputSearchbar from '@/components/ui/Form/InputSearchbar';
 */
 export default function MoverFindContent() {
   const t = useTranslations('MoverFind');
-  const [keyword, setKeyword] = useState('');
-  const [region, setRegion] = useState<Region>();
-  const [serviceType, setServiceType] = useState<ServiceType>();
-  const [sortBy, setSortBy] = useState<MoverListSortBy>('reviewCount');
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  /*
+  @ 검색어·필터·정렬을 URL 쿼리로 들고 다닌다
+  - 전에는 useState에만 있어서, 상세 페이지로 갔다가 돌아오면(특히 브라우저
+    뒤로가기로 이 컴포넌트가 다시 마운트되는 경우) 조건이 초기값으로 리셋됐다.
+    URL에 실어 두면 같은 주소로 돌아오는 순간 그대로 복원된다.
+  - 검색어만 예외: 타이핑마다 URL을 바꾸면 history/네트워크가 들썩이므로
+    입력은 로컬 state로 받고, debounce가 끝난 값만 URL에 반영한다
+    (목록에 넘기는 값도 로컬에서 바로 계산한 debouncedKeyword를 쓴다 — URL
+    왕복을 한 번 더 기다리지 않는다).
+  */
+  const region = toRegion(searchParams.get('region'));
+  const serviceType = toServiceType(searchParams.get('serviceType'));
+  const sortBy = toSortBy(searchParams.get('sortBy'));
+  const urlKeyword = searchParams.get('q') ?? '';
+
+  const [keyword, setKeyword] = useState(urlKeyword);
   const debouncedKeyword = useDebounce(keyword.trim(), 300);
+
+  const updateQuery = useCallback(
+    (updates: Record<string, string | undefined>) => {
+      const params = new URLSearchParams(searchParams.toString());
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value) params.set(key, value);
+        else params.delete(key);
+      });
+      const query = params.toString();
+      router.replace(query ? `${pathname}?${query}` : pathname);
+    },
+    [pathname, router, searchParams],
+  );
+
+  // debounce가 끝난 검색어가 URL과 달라졌을 때만 반영한다 (매 렌더 반복 방지)
+  useEffect(() => {
+    if (debouncedKeyword === urlKeyword) return;
+    updateQuery({ q: debouncedKeyword || undefined });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedKeyword]);
 
   /*
   @ 찜한 기사님 영역 노출 여부 (그리드 열 구성에 씀)
@@ -54,8 +112,7 @@ export default function MoverFindContent() {
   const hasLikedSection = isCustomer && (likedPage?.list.length ?? 0) > 0;
 
   function handleReset() {
-    setRegion(undefined);
-    setServiceType(undefined);
+    updateQuery({ region: undefined, serviceType: undefined });
   }
 
   return (
@@ -100,9 +157,13 @@ export default function MoverFindContent() {
             region={region}
             serviceType={serviceType}
             sortBy={sortBy}
-            onRegionChange={setRegion}
-            onServiceTypeChange={setServiceType}
-            onSortChange={setSortBy}
+            onRegionChange={(next) => updateQuery({ region: next })}
+            onServiceTypeChange={(next) => updateQuery({ serviceType: next })}
+            onSortChange={(next) =>
+              updateQuery({
+                sortBy: next === DEFAULT_SORT_BY ? undefined : next,
+              })
+            }
             onReset={handleReset}
             className={cn(
               'py-4',

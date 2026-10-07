@@ -3,10 +3,12 @@
 
 'use client';
 
-import { createContext, useMemo } from 'react';
+import { createContext, useEffect, useMemo } from 'react';
 
 import type { AuthUser, LoginInput, SignupInput } from '@/types/auth';
 import type { Role } from '@/types/role';
+
+import { writeStoredAuthUser } from '@/lib/storage/authUserStorage';
 
 import {
   useLoginMutation,
@@ -40,6 +42,18 @@ export default function AuthProvider({
   const signupMutation = useSignupMutation();
   const logoutMutation = useLogoutMutation();
   const syncSessionMutation = useSyncSessionMutation();
+
+  /*
+  @ 로그인 사용자 정보를 localStorage와 동기화
+  - 로그인/회원가입/로그아웃/소셜 세션 동기화뿐 아니라, 새로고침 후 백그라운드로
+    다시 확인한 결과(user가 바뀌거나 null로 떨어지는 경우)까지 한 곳에서 반영한다.
+  - isLoading 중에는 건드리지 않는다 — 아직 로딩 중(initialData도 없는 진짜 첫 로드)
+    인데 undefined/null로 먼저 지워버리면 깜빡임 방지 목적과 어긋난다.
+  */
+  useEffect(() => {
+    if (isLoading) return;
+    writeStoredAuthUser(user);
+  }, [user, isLoading]);
 
   const value = useMemo<AuthContextValue>(
     () => ({

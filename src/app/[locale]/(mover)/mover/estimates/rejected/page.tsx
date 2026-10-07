@@ -15,9 +15,9 @@ import { useMyEstimatesQuery } from '@/hooks/features/estimate/queries/queries';
 
 import { cn } from '@/utils/cn';
 
+import MoverEstimateListSkeleton from '@/components/features/mover/EstimateRequest/MoverEstimateListSkeleton';
 import RejectedRequestCard from '@/components/features/mover/EstimateRequest/RejectedRequestCard';
 import Button from '@/components/ui/Button/Button';
-import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
 const PAGE_SIZE = 10;
 
@@ -69,7 +69,7 @@ export default function MoverEstimateRejectedPage() {
         'desktop:max-w-[1200px] desktop:py-[54px_84px]',
       )}
     >
-      {isPending && <LoadingDisplay />}
+      {isPending && <MoverEstimateListSkeleton variant="rejected" />}
 
       {isError && items.length === 0 && (
         <p className="py-[40px] text-center text-lg-regular text-red-200">

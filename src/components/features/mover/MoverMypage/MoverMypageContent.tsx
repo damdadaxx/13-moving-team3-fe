@@ -2,13 +2,14 @@
 
 'use client';
 
+import { useState } from 'react';
+
 import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import IcWriting from '@/assets/icons/ic_writing.svg';
 import IcWritingGray from '@/assets/icons/ic_writing_gray.svg';
-import ImgDefaultProfile from '@/assets/images/img_default_profile.png';
 
 import { HttpError } from '@/lib/api/errors';
 import { ROUTES } from '@/lib/constants/routes';
@@ -18,6 +19,7 @@ import { useAuth } from '@/hooks/features/auth/useAuth';
 import { useMoverDetailQuery } from '@/hooks/features/mover/queries/queries';
 
 import { cn } from '@/utils/cn';
+import { resolveImageUrl } from '@/utils/resolveImageUrl';
 
 import LikeButton from '@/components/features/common/MoverDetail/LikeButton';
 import MoverNickname from '@/components/features/common/MoverProfile/MoverNickname';
@@ -30,6 +32,7 @@ import Button from '@/components/ui/Button/Button';
 import EmptyState from '@/components/ui/EmptyState';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 import Modal from '@/components/ui/Modal';
+import NoImage from '@/components/ui/NoImage';
 import PageBanner from '@/components/ui/PageBanner';
 
 function ButtonGroup({ className }: { className?: string }) {
@@ -87,6 +90,9 @@ export default function MoverMypageContent() {
   } = useMoverDetailQuery(moverUser?.id ?? '');
 
   const isProfileMissing = isMoverProfileNotFound(error);
+  const imageUrl = resolveImageUrl(mover?.imgUrl ?? null);
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const showPhoto = imageUrl !== null && failedUrl !== imageUrl;
 
   function leaveMypage() {
     router.replace(ROUTES.moverHome);
@@ -174,13 +180,21 @@ export default function MoverMypageContent() {
                   'tablet:w-[80px] tablet:h-[85px] tablet:rounded-[20px]',
                 )}
               >
-                <Image
-                  src={mover.imgUrl || ImgDefaultProfile.src}
-                  alt={t('profileImageAlt', { nickname: mover.nickname })}
-                  fill
-                  sizes="(min-width: 744px) 80px, 60px"
-                  className={cn('object-cover')}
-                />
+                {showPhoto ? (
+                  <Image
+                    src={imageUrl}
+                    alt={t('profileImageAlt', { nickname: mover.nickname })}
+                    fill
+                    unoptimized // TODO: 업로드 호스트가 remotePatterns 추가 시 삭제
+                    sizes="(min-width: 744px) 80px, 60px"
+                    className="object-cover"
+                    onError={() => setFailedUrl(imageUrl)}
+                  />
+                ) : (
+                  <NoImage
+                    alt={t('profileImageAlt', { nickname: mover.nickname })}
+                  />
+                )}
               </div>
               <div className={cn('flex flex-col', 'tablet:gap-[8px]')}>
                 {/* 기사님 닉네임 */}

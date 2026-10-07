@@ -1,9 +1,18 @@
+'use client';
+
+import { useState } from 'react';
+
 import Image from 'next/image';
 
-import ImgDefaultProfile from '@/assets/images/img_default_profile.png';
-
 import { cn } from '@/utils/cn';
+import { resolveImageUrl } from '@/utils/resolveImageUrl';
 
+import NoImage from '@/components/ui/NoImage';
+
+/*
+@ 프로필 이미지
+- 없거나 불러오지 못하면 NoImage
+*/
 export default function ProfileImage({
   imageUrl,
   alt = '',
@@ -13,6 +22,10 @@ export default function ProfileImage({
   alt?: string;
   className?: string;
 }) {
+  const resolvedUrl = resolveImageUrl(imageUrl ?? null);
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const showPhoto = resolvedUrl !== null && failedUrl !== resolvedUrl;
+
   return (
     <div
       className={cn(
@@ -22,13 +35,19 @@ export default function ProfileImage({
         className,
       )}
     >
-      <Image
-        src={imageUrl || ImgDefaultProfile.src}
-        alt={alt}
-        fill
-        sizes="(min-width: 1024px) 134px, (min-width: 744px) 100px, 64px"
-        className={cn('object-cover')}
-      />
+      {showPhoto ? (
+        <Image
+          src={resolvedUrl}
+          alt={alt}
+          fill
+          unoptimized // TODO: 업로드 호스트가 remotePatterns 추가 시 삭제
+          sizes="(min-width: 1024px) 134px, (min-width: 744px) 100px, 64px"
+          className="object-cover"
+          onError={() => setFailedUrl(resolvedUrl)}
+        />
+      ) : (
+        <NoImage alt={alt} />
+      )}
     </div>
   );
 }

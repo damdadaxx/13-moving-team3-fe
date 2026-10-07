@@ -1,5 +1,7 @@
 // 기사님 카드
 // Figma: Card-list/기사님 찾기 (size=md 모바일 / 태블릿·데스크톱 큰 카드 / size=sm 찜한 기사님)
+import { useState } from 'react';
+
 import { Link } from '@/i18n/navigation';
 import type { MoverListItem } from '@/types/mover';
 import { useTranslations } from 'next-intl';
@@ -9,13 +11,14 @@ import IcMoverBadge from '@/assets/icons/ic_driver.png';
 import IcLikeActive from '@/assets/icons/ic_like_active.svg';
 import IcLikeInactive from '@/assets/icons/ic_like_inactive.svg';
 import IcStarActive from '@/assets/icons/ic_star_active.svg';
-import ImgProfileDefault from '@/assets/images/img_profile_default.png';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useFormatCareer } from '@/hooks/common/useFormatCareer';
 
 import { cn } from '@/utils/cn';
+import { resolveImageUrl } from '@/utils/resolveImageUrl';
 
+import NoImage from '@/components/ui/NoImage';
 import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
 
 /*
@@ -35,45 +38,41 @@ const CARD_BASE =
 
 /*
 @ 프로필 이미지
-- 이미지가 없으면 Figma 기본 캐릭터를 black-300 배경 위에 크게 잘라서 보여준다
-  (Figma: 50px 박스에 75px 이미지 left -12.5 / top -7, 134px 박스에 192px 이미지 left -29 / top -16)
+- 없거나 불러오지 못하면 NoImage
 - 업로드 이미지 도메인(S3 등)이 next.config에 등록돼 있지 않아 unoptimized로 그린다
 */
 function MoverProfileImage({
   imgUrl,
   nickname,
   className,
-  defaultImageClassName,
 }: {
   imgUrl: string | null;
   nickname: string;
   className?: string;
-  defaultImageClassName: string;
 }) {
   const t = useTranslations('MoverCard');
+  const imageUrl = resolveImageUrl(imgUrl);
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const showPhoto = imageUrl !== null && failedUrl !== imageUrl;
 
   return (
     <div
       className={cn(
-        'relative shrink-0 overflow-hidden rounded-xl bg-black-300',
+        'relative shrink-0 overflow-hidden rounded-xl bg-gray-100',
         className,
       )}
     >
-      {imgUrl ? (
+      {showPhoto ? (
         <Image
-          src={imgUrl}
+          src={imageUrl}
           alt={t('profileAlt', { nickname })}
           fill
-          unoptimized
+          unoptimized // TODO: 업로드 호스트가 remotePatterns 추가 시 삭제
           className="object-cover"
+          onError={() => setFailedUrl(imageUrl)}
         />
       ) : (
-        <Image
-          src={ImgProfileDefault}
-          alt=""
-          sizes="192px"
-          className={cn('absolute max-w-none', defaultImageClassName)}
-        />
+        <NoImage alt={t('profileAlt', { nickname })} />
       )}
     </div>
   );
@@ -171,7 +170,6 @@ export default function MoverCard({ mover, variant = 'list' }: MoverCardProps) {
               imgUrl={mover.imgUrl}
               nickname={mover.nickname}
               className="size-[50px]"
-              defaultImageClassName="size-[150%] left-[-25%] top-[-14%]"
             />
             <div className="flex min-w-0 flex-1 flex-col gap-1">
               <div className="flex items-center gap-1">
@@ -258,7 +256,6 @@ export default function MoverCard({ mover, variant = 'list' }: MoverCardProps) {
           'mt-4 size-[50px]',
           'tablet:col-start-1 tablet:row-span-2 tablet:row-start-2 tablet:mt-3 tablet:size-[134px]',
         )}
-        defaultImageClassName="size-[150%] left-[-25%] top-[-14%] tablet:size-[143%] tablet:left-[-21.6%] tablet:top-[-12%]"
       />
 
       <div

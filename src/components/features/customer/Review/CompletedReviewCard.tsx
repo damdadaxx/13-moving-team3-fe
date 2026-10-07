@@ -1,18 +1,21 @@
 'use client';
 
+import { useState } from 'react';
+
 import { useRouter } from '@/i18n/navigation';
 import type { CompletedReview } from '@/types/review';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import IcDriverMark from '@/assets/icons/ic_driver.png';
-import ImgMoverCharacter from '@/assets/images/img_profile_example.png';
 
 import { useFormatDate } from '@/hooks/common/useFormatDate';
 
 import { cn } from '@/utils/cn';
 import formatDate from '@/utils/formatDate';
+import { resolveImageUrl } from '@/utils/resolveImageUrl';
 
+import NoImage from '@/components/ui/NoImage';
 import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
 import StarRating from '@/components/ui/StarRating';
 
@@ -43,6 +46,45 @@ function MetaItem({ label, value }: { label: string; value: string }) {
       <span className="text-md-medium whitespace-nowrap text-black-100">
         {value}
       </span>
+    </div>
+  );
+}
+
+function CompletedReviewProfile({
+  imgUrl,
+  alt,
+  className,
+  sizes,
+}: {
+  imgUrl: string | null;
+  alt: string;
+  className: string;
+  sizes: string;
+}) {
+  const imageUrl = resolveImageUrl(imgUrl);
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const showPhoto = imageUrl !== null && failedUrl !== imageUrl;
+
+  return (
+    <div
+      className={cn(
+        'relative shrink-0 overflow-hidden rounded-[12px]',
+        className,
+      )}
+    >
+      {showPhoto ? (
+        <Image
+          src={imageUrl}
+          alt={alt}
+          fill
+          unoptimized // TODO: 업로드 호스트가 remotePatterns 추가 시 삭제
+          className="object-cover"
+          sizes={sizes}
+          onError={() => setFailedUrl(imageUrl)}
+        />
+      ) : (
+        <NoImage alt={alt} />
+      )}
     </div>
   );
 }
@@ -81,7 +123,6 @@ export default function CompletedReviewCard({
   const tEstimate = useTranslations('Estimate');
   const formatDateLocale = useFormatDate();
   const router = useRouter();
-  const profileImageSrc = review.imgUrl ?? ImgMoverCharacter;
   const moveDate = formatDateLocale(review.moveDate, 'korean');
   /* 모바일은 좁아서 끝의 요일 "(월)"을 뺀다 */
   const moveDateMobile = moveDate.replace(/\s*\([^)]*\)\s*$/, '');
@@ -128,16 +169,12 @@ export default function CompletedReviewCard({
                 </span>
               </p>
             </div>
-            <div className="relative size-[50px] shrink-0 overflow-hidden rounded-[12px] bg-black-300">
-              <Image
-                src={profileImageSrc}
-                alt={tCard('profileAlt', { nickname: review.moverName })}
-                fill
-                unoptimized={typeof profileImageSrc === 'string'}
-                className="object-cover object-[center_20%]"
-                sizes="50px"
-              />
-            </div>
+            <CompletedReviewProfile
+              imgUrl={review.imgUrl}
+              alt={tCard('profileAlt', { nickname: review.moverName })}
+              className="size-[50px]"
+              sizes="50px"
+            />
           </button>
         </div>
         <div className="h-px w-full bg-line-100" />
@@ -175,16 +212,12 @@ export default function CompletedReviewCard({
           className="group flex min-w-0 items-start gap-[20px] text-left cursor-pointer"
           onClick={goToMover}
         >
-          <div className="relative size-[80px] shrink-0 overflow-hidden rounded-[12px] bg-black-300">
-            <Image
-              src={profileImageSrc}
-              alt={tCard('profileAlt', { nickname: review.moverName })}
-              fill
-              unoptimized={typeof profileImageSrc === 'string'}
-              className="object-cover object-[center_20%]"
-              sizes="80px"
-            />
-          </div>
+          <CompletedReviewProfile
+            imgUrl={review.imgUrl}
+            alt={tCard('profileAlt', { nickname: review.moverName })}
+            className="size-[80px]"
+            sizes="80px"
+          />
           <div className="flex min-w-0 flex-1 flex-col gap-[8px]">
             <div className="flex w-full flex-col items-start">
               <div className="flex min-w-0 items-center gap-[6px]">

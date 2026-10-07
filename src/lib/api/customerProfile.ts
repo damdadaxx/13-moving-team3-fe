@@ -8,22 +8,16 @@ import { createCustomerProfileFormData } from '@/lib/api/customerProfileFormData
 import { ENDPOINTS } from '@/lib/api/endpoints';
 import { HttpError } from '@/lib/api/errors';
 
+import { resolveImageUrl } from '@/utils/resolveImageUrl';
+
 /*=================================================
 고객 프로필 API
 =================================================*/
 
-/*
-@ 프로필 이미지 URL 정규화
-- 로컬 저장 이미지는 백엔드가 /uploads/... 경로로 반환한다.
-- 브라우저가 백엔드에 직접 접근하지 않고 Next 프록시를 사용하도록 /api를 붙인다.
-- 이후 S3로 변경되어 절대 URL이 내려오면 값을 그대로 사용한다.
-*/
 function toCustomerProfile(profile: CustomerProfile): CustomerProfile {
-  const { imgUrl } = profile;
-
   return {
     ...profile,
-    imgUrl: imgUrl && imgUrl.startsWith('/uploads/') ? `/api${imgUrl}` : imgUrl,
+    imgUrl: resolveImageUrl(profile.imgUrl),
   };
 }
 

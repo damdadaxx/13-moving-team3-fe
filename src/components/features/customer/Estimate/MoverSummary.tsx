@@ -2,14 +2,19 @@
 // Figma: Card-list/대기중인내역 Desktop(510:43173) · Mobile(510:43224)
 //
 // 크기는 mobile·tablet·desktop이 모두 같고, 아래 구분선까지 이 컴포넌트가 그린다.
+import { useState } from 'react';
+
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 
 import IcLike from '@/assets/icons/ic_like.svg';
 import IcMoverMark from '@/assets/icons/ic_mover_mark.svg';
 import IcStar from '@/assets/icons/ic_star.svg';
-import ImgProfileExample from '@/assets/images/img_profile_example.png';
 
 import { formatRating } from '@/utils/formatMoverStats';
+import { resolveImageUrl } from '@/utils/resolveImageUrl';
+
+import NoImage from '@/components/ui/NoImage';
 
 interface MoverSummaryProps {
   name: string;
@@ -41,6 +46,9 @@ export default function MoverSummary({
   const t = useTranslations('MoverCard');
   const tCommon = useTranslations('Common');
   const tLike = useTranslations('MoverLike');
+  const imageUrl = resolveImageUrl(imgUrl);
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const showPhoto = imageUrl !== null && failedUrl !== imageUrl;
   // 이 카드는 1년 미만을 "1년 미만"으로 보여준다 (N개월 아님)
   const careerYears = Math.floor(careerMonths / 12);
   const careerLabel =
@@ -52,15 +60,22 @@ export default function MoverSummary({
     <div className="flex items-center gap-[8px] border-b border-line-200 pt-[12px] pb-[20px]">
       {/*
       @ 프로필 이미지
-      - imgUrl은 백엔드 업로드 경로이거나 S3 주소라 호스트가 정해져 있지 않다.
-        next/image는 remotePatterns 설정이 필요해서 여기서는 img를 쓴다.
+      - 없거나 불러오지 못하면 NoImage
+      - unoptimized: 업로드 호스트가 remotePatterns에 없어서 원본 주소를 그대로 요청한다
       */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={imgUrl ?? ImgProfileExample.src}
-        alt=""
-        className="size-[50px] shrink-0 rounded-[12px] bg-black-300 object-cover"
-      />
+      {showPhoto ? (
+        <Image
+          src={imageUrl}
+          alt=""
+          width={50}
+          height={50}
+          unoptimized // TODO: 업로드 호스트가 remotePatterns 추가 시 삭제
+          className="size-[50px] shrink-0 rounded-[12px] object-cover"
+          onError={() => setFailedUrl(imageUrl)}
+        />
+      ) : (
+        <NoImage className="size-[50px] shrink-0 rounded-[12px]" />
+      )}
 
       <div className="flex min-w-0 flex-1 flex-col gap-[4px]">
         <div className="flex items-center justify-between">

@@ -3,6 +3,7 @@
 // root 레벨 공통 에러 UI
 import { useEffect } from 'react';
 
+import * as Sentry from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 
 import EmptyState from '@/components/ui/EmptyState';
@@ -17,7 +18,7 @@ export default function Error({ error, reset }: ErrorProps) {
   const t = useTranslations('Error');
 
   useEffect(() => {
-    console.error(error);
+    Sentry.captureException(error);
   }, [error]);
 
   return (

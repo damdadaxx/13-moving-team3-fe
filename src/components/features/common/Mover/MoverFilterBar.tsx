@@ -15,8 +15,12 @@ import Sort, { type SortOption } from '@/components/ui/Sort';
 /** '전체'는 필터를 해제하는 값. 선택하면 undefined로 바꿔 트리거에 placeholder(지역/서비스)가 보이게 한다 */
 const ALL = 'ALL';
 
-/** 정렬 옵션 표시 순서 (라벨은 messages > MoverSort) */
-const SORT_VALUES: MoverListSortBy[] = [
+/*
+@ 정렬 옵션 표시 순서 (라벨은 messages > MoverSort)
+- MoverFindContent가 URL 쿼리(sortBy)에 들어온 값이 이 네 개 중 하나인지
+  검증할 때도 그대로 가져다 쓴다
+*/
+export const SORT_VALUES: MoverListSortBy[] = [
   'reviewCount',
   'rating',
   'career',

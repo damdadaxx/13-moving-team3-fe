@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useWatch } from 'react-hook-form';
 
 import type { Role } from '@/types/role';
@@ -30,9 +30,28 @@ interface SignupFormProps {
   role: Role;
 }
 
-/** 입력칸 옆 보조 버튼 (인증번호) */
+/*
+@ 재발송 대기시간
+- 끝나는 즉시 다시 누를 수 있어서 누를 때마다 새 번호가 나가 이전 번호와 헷갈리기 쉬웠다.
+- 30초 동안 버튼을 막고, 그동안은 방금 보낸 번호를 입력하라는 안내로 바꾼다.
+*/
+const RESEND_COOLDOWN_SECONDS = 30;
+
+/** 초를 "3:05" 형태로 바꾼다 (인증번호 만료까지 남은 시간 표시용) */
+function formatRemainingTime(totalSeconds: number): string {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${String(seconds).padStart(2, '0')}`;
+}
+
+/*
+@ 입력칸 옆 보조 버튼 (인증번호 받기/재발송, 인증 확인)
+- h-[54px]: sm Input(54px)과 같은 높이로 맞춘다. 전에는 인증 확인 버튼에만
+  h-[54px]를 따로 붙여서, 이메일 옆 상태 텍스트와 나란한 "받기/재발송" 버튼은
+  패딩만으로 정해진 더 낮은 높이로 떠 있었다. 공통 클래스에 넣어 둘 다 같게 만든다
+*/
 const AUTH_SIDE_BUTTON_CLASS = cn(
-  'shrink-0 cursor-pointer rounded-lg border border-orange-400 px-3 py-1.5 text-sm-medium text-orange-400',
+  'flex h-[54px] shrink-0 cursor-pointer items-center justify-center rounded-lg border border-orange-400 px-3 text-sm-medium text-orange-400',
   'disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-300',
 );
 
@@ -56,10 +75,15 @@ export default function SignupForm({ role }: SignupFormProps) {
   @ 이메일 인증번호
   - 인증을 마쳐야 회원가입이 된다 (서버도 같은 기준으로 막는다).
   - 이메일을 고치면 발송·인증 상태를 모두 비워 옛 인증이 남지 않게 한다.
+  - sendError와 codeError를 나눈 이유: 둘 다 같은 state를 썼더니, 한 번 발송한 뒤
+    (verificationState가 남아 있는 동안) 재발송이 실패해도 그 메시지가 인증번호
+    Input의 error로 붙어서 "번호가 틀렸다"는 말처럼 보였다. 발송 실패는 버튼 옆에,
+    확인 실패는 Input 밑에 각각 둔다.
   */
   const sendCodeMutation = useSendEmailVerificationMutation();
   const confirmCodeMutation = useConfirmEmailVerificationMutation();
   const [code, setCode] = useState('');
+  const [sendError, setSendError] = useState('');
   const [codeError, setCodeError] = useState('');
   // React Compiler 에서는 watch() 가 리렌더를 일으키지 않아 useWatch 로 구독한다
   const emailValue = useWatch({ control, name: 'email' });
@@ -68,32 +92,62 @@ export default function SignupForm({ role }: SignupFormProps) {
     challengeToken: string;
     verifiedToken: string | null;
   } | null>(null);
+  // 만료·재발송 쿨다운은 절대시각(ms)으로 들고, 1초 interval로 남은 시간만 다시 계산한다
+  const [expiresAt, setExpiresAt] = useState<number | null>(null);
+  const [resendAvailableAt, setResendAvailableAt] = useState<number | null>(
+    null,
+  );
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    if (!expiresAt && !resendAvailableAt) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [expiresAt, resendAvailableAt]);
+
   const verificationState =
     verification && verification.email === emailValue ? verification : null;
   const isEmailVerified = Boolean(verificationState?.verifiedToken);
+  const remainingSeconds = expiresAt
+    ? Math.max(0, Math.ceil((expiresAt - now) / 1000))
+    : null;
+  const isCodeExpired = verificationState !== null && remainingSeconds === 0;
+  const cooldownSeconds = resendAvailableAt
+    ? Math.max(0, Math.ceil((resendAvailableAt - now) / 1000))
+    : 0;
+  const isResendCoolingDown = cooldownSeconds > 0;
 
   function resetEmailState() {
     setVerification(null);
     setCode('');
+    setSendError('');
     setCodeError('');
+    setExpiresAt(null);
+    setResendAvailableAt(null);
   }
 
   async function handleSendCode() {
     const email = emailValue?.trim();
-    if (!email) return;
+    if (!email || isResendCoolingDown) return;
 
     // 형식이 틀린 이메일로는 발송 요청을 보내지 않는다 (오류 문구는 trigger 가 띄운다)
     const isEmailValid = await trigger('email');
     if (!isEmailValid) return;
 
+    setSendError('');
     setCodeError('');
 
     try {
-      const { token } = await sendCodeMutation.mutateAsync({ email, role });
+      const { token, expiresInMinutes } = await sendCodeMutation.mutateAsync({
+        email,
+        role,
+      });
       setVerification({ email, challengeToken: token, verifiedToken: null });
       setCode('');
+      setExpiresAt(Date.now() + expiresInMinutes * 60_000);
+      setResendAvailableAt(Date.now() + RESEND_COOLDOWN_SECONDS * 1000);
     } catch (error) {
-      setCodeError(
+      setSendError(
         error instanceof HttpError ? error.message : t('sendCodeFailed'),
       );
     }
@@ -101,7 +155,9 @@ export default function SignupForm({ role }: SignupFormProps) {
 
   async function handleConfirmCode() {
     const email = emailValue?.trim();
-    if (!email || code.length === 0 || !verificationState) return;
+    if (!email || code.length === 0 || !verificationState || isCodeExpired) {
+      return;
+    }
 
     setCodeError('');
 
@@ -200,58 +256,85 @@ export default function SignupForm({ role }: SignupFormProps) {
                 >
                   {isEmailVerified
                     ? t('emailVerified')
-                    : verificationState
-                      ? t('enterCode')
-                      : ''}
+                    : isCodeExpired
+                      ? t('codeExpired')
+                      : isResendCoolingDown
+                        ? t('justSentCodeHint')
+                        : verificationState
+                          ? t('enterCode')
+                          : ''}
                 </p>
                 <button
                   type="button"
                   onClick={handleSendCode}
                   disabled={
-                    !emailValue || sendCodeMutation.isPending || isEmailVerified
+                    !emailValue ||
+                    sendCodeMutation.isPending ||
+                    isEmailVerified ||
+                    isResendCoolingDown
                   }
                   className={AUTH_SIDE_BUTTON_CLASS}
                 >
                   {sendCodeMutation.isPending
                     ? t('sendingCode')
-                    : verificationState
-                      ? t('resendCode')
-                      : t('sendCode')}
+                    : isResendCoolingDown
+                      ? t('resendCooldownButton', { seconds: cooldownSeconds })
+                      : verificationState
+                        ? t('resendCode')
+                        : t('sendCode')}
                 </button>
               </div>
 
-              {/* 인증번호 발송 후에만 입력칸을 보여준다 */}
-              {verificationState && !isEmailVerified && (
-                <div className="flex items-start gap-2">
-                  <Input
-                    label=""
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={6}
-                    placeholder={t('codePlaceholder')}
-                    value={code}
-                    onChange={(event) =>
-                      setCode(event.target.value.replace(/\D/g, ''))
-                    }
-                    error={codeError}
-                  />
-                  <button
-                    type="button"
-                    onClick={handleConfirmCode}
-                    disabled={code.length < 6 || confirmCodeMutation.isPending}
-                    className={cn(AUTH_SIDE_BUTTON_CLASS, 'h-[54px] shrink-0')}
-                  >
-                    {confirmCodeMutation.isPending
-                      ? t('confirmingCode')
-                      : t('confirmCode')}
-                  </button>
-                </div>
+              {/* 재발송 실패도 포함한다 — verificationState가 남아 있는 동안 재발송이
+              실패해도 "번호가 틀렸다"는 뜻으로 보이지 않도록 Input과는 분리해 둔다 */}
+              {sendError && (
+                <p role="alert" className="text-sm-medium text-red-200">
+                  {sendError}
+                </p>
               )}
 
-              {codeError && !verificationState && (
-                <p role="alert" className="text-sm-medium text-red-200">
-                  {codeError}
-                </p>
+              {/* 인증번호 발송 후에만 입력칸을 보여준다 */}
+              {verificationState && !isEmailVerified && (
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-start gap-2">
+                    <Input
+                      label=""
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={6}
+                      placeholder={t('codePlaceholder')}
+                      value={code}
+                      disabled={isCodeExpired}
+                      onChange={(event) =>
+                        setCode(event.target.value.replace(/\D/g, ''))
+                      }
+                      error={codeError}
+                    />
+                    <button
+                      type="button"
+                      onClick={handleConfirmCode}
+                      disabled={
+                        code.length < 6 ||
+                        confirmCodeMutation.isPending ||
+                        isCodeExpired
+                      }
+                      className={AUTH_SIDE_BUTTON_CLASS}
+                    >
+                      {confirmCodeMutation.isPending
+                        ? t('confirmingCode')
+                        : t('confirmCode')}
+                    </button>
+                  </div>
+
+                  {/* 만료 전까지 남은 시간을 보여준다. 실제 만료 판정은 서버(challenge 토큰)가 한다 */}
+                  {!isCodeExpired && remainingSeconds !== null && (
+                    <p className="text-sm-medium text-gray-500">
+                      {t('codeExpiresIn', {
+                        time: formatRemainingTime(remainingSeconds),
+                      })}
+                    </p>
+                  )}
+                </div>
               )}
             </div>
             {/* 입력하는 동안 010-1234-5678 형태로 바꾸고 11자리까지만 받는다 */}

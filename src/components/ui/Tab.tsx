@@ -49,36 +49,38 @@ export default function Tab({ tabs }: { tabs: Tabs[] }) {
   if (!isValidPath) return null;
 
   return (
-    <nav
-      role="tablist"
-      className={cn(
-        'sticky top-[54px] z-10 flex h-[54px] w-full items-stretch border-b border-line-100 bg-gray-50 px-[24px]',
-        'tablet:px-[72px] tablet:shadow-[0px_2px_10px_rgba(248,248,248,0.2)]',
-        'desktop:top-[88px] desktop:h-[80px] desktop:gap-[32px] desktop:shadow-[0px_2px_1px_rgba(248,248,248,0.1)]',
-      )}
-    >
-      <div
+    <div aria-hidden className="h-[54px] desktop:h-[80px]">
+      <nav
+        role="tablist"
         className={cn(
-          'flex h-full w-full items-stretch gap-[24px]',
-          'desktop:mx-auto desktop:max-w-[1200px]',
+          'fixed z-tab h-[54px] flex w-full items-stretch border-b border-line-100 bg-gray-50 px-[24px]',
+          'tablet:px-[72px] tablet:shadow-[0px_2px_10px_rgba(248,248,248,0.2)]',
+          'desktop:h-[80px] desktop:gap-[32px] desktop:shadow-[0px_2px_1px_rgba(248,248,248,0.1)]',
         )}
       >
-        {tabs.map((tab) => {
-          const isActive = currentPath.includes(tab.href);
+        <div
+          className={cn(
+            'flex h-full w-full items-stretch gap-[24px] ',
+            'desktop:mx-auto desktop:max-w-[1200px]',
+          )}
+        >
+          {tabs.map((tab) => {
+            const isActive = currentPath.includes(tab.href);
 
-          return (
-            <Link
-              key={tab.label}
-              href={tab.href}
-              role="tab"
-              aria-selected={isActive}
-              className={tabItemClassName({ isActive })}
-            >
-              {tab.value}
-            </Link>
-          );
-        })}
-      </div>
-    </nav>
+            return (
+              <Link
+                key={tab.label}
+                href={tab.href}
+                role="tab"
+                aria-selected={isActive}
+                className={tabItemClassName({ isActive })}
+              >
+                {tab.value}
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
+    </div>
   );
 }

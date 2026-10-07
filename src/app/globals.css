@@ -9,6 +9,7 @@
   /* --breakpoint-desktop: 1920px; */
 
   /* -------- z-index -------- */
+  --z-index-tab: 50;
   --z-index-dropdown: 60;
   --z-index-header: 70;
   --z-index-header-m: 80;

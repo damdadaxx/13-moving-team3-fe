@@ -1,17 +1,22 @@
-// 헤더 우측 액션 (로그인 / 알림 / 프로필 / 햄버거)
+// 헤더 우측 액션 (언어 / 로그인 / 알림 / 프로필 / 햄버거)
 import type { RefObject } from 'react';
 
 import type { AuthUser } from '@/types/auth';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 
-import IcAlarm from '@/assets/icons/ic_alarm.svg';
-import IcMenu from '@/assets/icons/ic_menu.svg';
-import IcProfile from '@/assets/icons/ic_profile.svg';
+import IcAlarm from '@/assets/icons/ic_alarm_dark.svg';
+import IcMenu from '@/assets/icons/ic_menu_dark.svg';
+import IcProfile from '@/assets/icons/ic_profile_dark.svg';
+
+import { useCustomerProfileQuery } from '@/hooks/features/customer/queries/queries';
+import { useMoverProfileQuery } from '@/hooks/features/mover/queries/queries';
 
 import { cn } from '@/utils/cn';
 
 import ButtonLogin from '@/components/ui/Button/ButtonLogin';
 import GuestActionsSkeleton from '@/components/ui/Header/GuestActionsSkeleton';
+import LocaleSelect from '@/components/ui/Header/LocaleSelect';
 import LoggedInActionsSkeleton from '@/components/ui/Header/LoggedInActionsSkeleton';
 import NotificationDropdown from '@/components/ui/Header/NotificationDropdown';
 import ProfileDropdown from '@/components/ui/Header/ProfileDropdown';
@@ -19,6 +24,7 @@ import {
   HEADER_PANEL_IDS,
   type HeaderPanel,
 } from '@/components/ui/Header/types';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 interface HeaderActionsProps {
   isLoading: boolean;
@@ -82,6 +88,12 @@ export default function HeaderActions({
 }: HeaderActionsProps) {
   const t = useTranslations('Header');
   const unreadCountLabel = formatUnreadCount(unreadCount);
+  const { data: customerProfile } = useCustomerProfileQuery(
+    user?.role === 'customer',
+  );
+  const { data: moverProfile } = useMoverProfileQuery(user?.role === 'mover');
+  const profileImageUrl =
+    user?.role === 'customer' ? customerProfile?.imgUrl : moverProfile?.imgUrl;
 
   return (
     <div
@@ -90,6 +102,19 @@ export default function HeaderActions({
         'desktop:gap-[32px]',
       )}
     >
+      {isLoading ? (
+        <span
+          className={cn(
+            'inline-block h-[20px] w-[39px] shrink-0',
+            'desktop:h-[24px] desktop:w-[50px]',
+          )}
+        >
+          <Skeleton width="100%" height="100%" borderRadius={8} />
+        </span>
+      ) : (
+        <LocaleSelect />
+      )}
+
       {isLoading ? (
         isLoggedInHint ? (
           <LoggedInActionsSkeleton />
@@ -153,13 +178,27 @@ export default function HeaderActions({
               onClick={() => onTogglePanel('profile')}
               className={cn('flex cursor-pointer items-center gap-[16px]')}
             >
-              <IcProfile
-                aria-hidden
-                className={cn(
-                  'h-[24px] w-[24px]',
-                  'desktop:h-[36px] desktop:w-[36px]',
-                )}
-              />
+              {profileImageUrl ? (
+                <Image
+                  src={profileImageUrl}
+                  alt=""
+                  width={36}
+                  height={36}
+                  unoptimized
+                  className={cn(
+                    'h-[24px] w-[24px] rounded-full object-cover',
+                    'desktop:h-[36px] desktop:w-[36px]',
+                  )}
+                />
+              ) : (
+                <IcProfile
+                  aria-hidden
+                  className={cn(
+                    'h-[24px] w-[24px]',
+                    'desktop:h-[36px] desktop:w-[36px]',
+                  )}
+                />
+              )}
               <p
                 className={cn(
                   'max-w-[200px] truncate',

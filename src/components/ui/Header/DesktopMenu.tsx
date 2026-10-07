@@ -15,7 +15,7 @@ interface DesktopMenuProps {
 }
 
 const headerMenuItem = cva(
-  'text-2lg-bold transition-colors duration-300 hover:text-black-500',
+  'flex h-full text-2lg-bold transition-colors duration-300 hover:text-black-500',
   {
     variants: {
       tone: {
@@ -118,7 +118,7 @@ export default function DesktopMenu({ menus }: DesktopMenuProps) {
   const pathname = usePathname();
 
   return (
-    <nav className={cn('hidden', 'desktop:block')}>
+    <nav className={cn('hidden', 'desktop:block desktop:h-full desktop:flex')}>
       <ul className={cn('flex items-center gap-[32px]')}>
         {menus.map((item) => {
           const isActive = isMenuActive(pathname, item, menus);
@@ -131,6 +131,7 @@ export default function DesktopMenu({ menus }: DesktopMenuProps) {
               })}
             >
               <Link
+                className="flex items-center h-full"
                 href={item.href}
                 aria-current={isActive ? 'page' : undefined}
               >

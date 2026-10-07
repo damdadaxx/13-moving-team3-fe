@@ -268,3 +268,21 @@
     font-family: var(--font-pretendard);
   }
 }
+
+/*
+@ 배경 스크롤 잠금
+- overflow:hidden만 주면 스크롤 위치가 0으로 사라져
+- body를 고정하고 top은 스크립트가 현재 스크롤만큼 올림
+- 레이어 밖에 둬서 body의 h-full(height: 100%)보다 우선
+*/
+body.is-scroll-locked {
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: auto;
+}
+
+html:has(body.is-scroll-locked) {
+  overflow: hidden;
+}

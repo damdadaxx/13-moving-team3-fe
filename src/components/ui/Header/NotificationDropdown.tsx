@@ -35,13 +35,22 @@ interface NotificationDropdownProps {
 }
 
 interface NotificationStatusItemProps {
+  className?: string;
   message: string;
 }
 
 /** 알림 상태 아이템 컴포넌트 */
-function NotificationStatusItem({ message }: NotificationStatusItemProps) {
+function NotificationStatusItem({
+  className,
+  message,
+}: NotificationStatusItemProps) {
   return (
-    <li className={cn('px-[32px] py-[24px] text-md-medium text-gray-400')}>
+    <li
+      className={cn(
+        'px-[32px] py-[24px] text-md-medium text-gray-400',
+        className,
+      )}
+    >
       {message}
     </li>
   );
@@ -131,9 +140,11 @@ export default function NotificationDropdown({
   return (
     <div
       id={HEADER_PANEL_IDS.notification}
-      aria-hidden={!isOpen}
       inert={!isOpen}
-      className={notificationDropdownPanel({ open: isOpen })}
+      className={cn(
+        notificationDropdownPanel({ open: isOpen }),
+        isLoading && 'min-h-[314px] desktop:min-h-[352px]',
+      )}
     >
       <div
         className={cn(
@@ -173,7 +184,12 @@ export default function NotificationDropdown({
           ref={listRef}
           className={cn('min-h-0 flex-1 overflow-y-auto scrollbar-gray-300')}
         >
-          {isLoading ? <NotificationStatusItem message={t('loading')} /> : null}
+          {isLoading ? (
+            <NotificationStatusItem
+              className={cn('pt-[100px] text-center')}
+              message={t('loading')}
+            />
+          ) : null}
           {isError ? <NotificationStatusItem message={t('error')} /> : null}
           {!isLoading && !isError && notifications.length === 0 ? (
             <NotificationStatusItem message={t('empty')} />

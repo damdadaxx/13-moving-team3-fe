@@ -32,6 +32,7 @@
     "menu": "메뉴",
     "closeMobileMenu": "모바일 메뉴 닫기",
     "profileMenu": "프로필 메뉴",
+    "language": "언어 선택",
     "notifications": "알림",
     "notificationsWithCount": "알림 {count}개",
     "nav": {

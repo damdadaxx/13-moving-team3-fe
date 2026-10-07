@@ -60,7 +60,7 @@ const mobileMenuPanel = cva(
 );
 
 const mobileMenuItem = cva(
-  'flex h-[74px] w-full cursor-pointer items-center px-[24px] py-[20px] text-lg-medium text-black-500',
+  'flex h-[74px] w-full cursor-pointer items-center text-lg-medium text-black-500',
 );
 
 /**
@@ -85,24 +85,21 @@ export default function MobileMenu({
   useEffect(() => {
     if (!isOpen) return;
 
-    const html = document.documentElement;
+    const scrollY = window.scrollY;
     const { body } = document;
-    const prevHtmlOverflow = html.style.overflow;
-    const prevBodyOverflow = body.style.overflow;
-
-    html.style.overflow = 'hidden';
-    body.style.overflow = 'hidden';
+    body.style.top = `-${scrollY}px`;
+    body.classList.add('is-scroll-locked');
 
     return () => {
-      html.style.overflow = prevHtmlOverflow;
-      body.style.overflow = prevBodyOverflow;
+      body.classList.remove('is-scroll-locked');
+      body.style.top = '';
+      window.scrollTo(0, scrollY);
     };
   }, [isOpen]);
 
   return (
     <div
       id={HEADER_PANEL_IDS.mobile}
-      aria-hidden={!isOpen}
       inert={!isOpen}
       className={mobileMenuLayer({ open: isOpen })}
     >
@@ -125,7 +122,13 @@ export default function MobileMenu({
           <ul className={cn('h-full w-full')}>
             {menus.map((item) => (
               <li key={item.menu} className={mobileMenuItem()}>
-                <Link href={item.href} onClick={onClose}>
+                <Link
+                  className={cn(
+                    'flex items-center w-full h-full px-[24px] py-[20px]',
+                  )}
+                  href={item.href}
+                  onClick={onClose}
+                >
                   {item.menu}
                 </Link>
               </li>

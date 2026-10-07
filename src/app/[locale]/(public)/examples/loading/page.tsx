@@ -15,7 +15,8 @@ export default function LoadingExamplePage() {
         <h1 className="text-xl-bold">로딩 UI 용도별 예시</h1>
         <p className="mt-2 text-md-regular text-gray-500">
           데이터 형태를 이미 알면 Skeleton, 영역 전체가 비어 있으면
-          LoadingDisplay, 페이지 이동 중이면 app/loading.tsx 를 사용합니다.
+          LoadingDisplay를 사용합니다. 앱 라우트에는 loading.tsx가 없고, 페이지
+          이동 중에는 도착한 화면의 스켈레톤이 보입니다.
         </p>
       </div>
 
@@ -54,9 +55,9 @@ export default function LoadingExamplePage() {
             <tr className="align-top">
               <td className="py-2 pr-3">라우트 전환</td>
               <td className="py-2 pr-3">
-                <code>app/loading.tsx</code>
+                <code>Skeleton</code>
               </td>
-              <td className="py-2">페이지 이동 시 Next가 자동 표시</td>
+              <td className="py-2">도착한 페이지의 스켈레톤</td>
             </tr>
           </tbody>
         </table>
@@ -111,11 +112,13 @@ export default function LoadingExamplePage() {
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-lg-semibold">4. 라우트 전환 — app/loading.tsx</h2>
+        <h2 className="text-lg-semibold">
+          4. 라우트 전환 데모 — route-demo/loading.tsx
+        </h2>
         <p className="text-md-regular text-gray-500">
-          페이지 파일을 직접 넣지 않고, 해당 폴더의 <code>loading.tsx</code>가
-          이동하는 동안 자동으로 보입니다. 루트 <code>src/app/loading.tsx</code>
-          는 지금 <code>LoadingDisplay</code>를 쓰고 있습니다.
+          이 데모만 폴더의 <code>loading.tsx</code>로 이동 중 스피너를 보여
+          줍니다. 앱 라우트에는 <code>loading.tsx</code>가 없고, 페이지가
+          준비되면 각 화면의 스켈레톤이 보입니다.
         </p>
         <Link
           href="/examples/loading/route-demo"

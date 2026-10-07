@@ -3,10 +3,14 @@ import type { RefObject } from 'react';
 
 import type { AuthUser } from '@/types/auth';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 
 import IcAlarm from '@/assets/icons/ic_alarm_dark.svg';
 import IcMenu from '@/assets/icons/ic_menu_dark.svg';
 import IcProfile from '@/assets/icons/ic_profile_dark.svg';
+
+import { useCustomerProfileQuery } from '@/hooks/features/customer/queries/queries';
+import { useMoverProfileQuery } from '@/hooks/features/mover/queries/queries';
 
 import { cn } from '@/utils/cn';
 
@@ -84,6 +88,12 @@ export default function HeaderActions({
 }: HeaderActionsProps) {
   const t = useTranslations('Header');
   const unreadCountLabel = formatUnreadCount(unreadCount);
+  const { data: customerProfile } = useCustomerProfileQuery(
+    user?.role === 'customer',
+  );
+  const { data: moverProfile } = useMoverProfileQuery(user?.role === 'mover');
+  const profileImageUrl =
+    user?.role === 'customer' ? customerProfile?.imgUrl : moverProfile?.imgUrl;
 
   return (
     <div
@@ -168,13 +178,27 @@ export default function HeaderActions({
               onClick={() => onTogglePanel('profile')}
               className={cn('flex cursor-pointer items-center gap-[16px]')}
             >
-              <IcProfile
-                aria-hidden
-                className={cn(
-                  'h-[24px] w-[24px]',
-                  'desktop:h-[36px] desktop:w-[36px]',
-                )}
-              />
+              {profileImageUrl ? (
+                <Image
+                  src={profileImageUrl}
+                  alt=""
+                  width={36}
+                  height={36}
+                  unoptimized
+                  className={cn(
+                    'h-[24px] w-[24px] rounded-full object-cover',
+                    'desktop:h-[36px] desktop:w-[36px]',
+                  )}
+                />
+              ) : (
+                <IcProfile
+                  aria-hidden
+                  className={cn(
+                    'h-[24px] w-[24px]',
+                    'desktop:h-[36px] desktop:w-[36px]',
+                  )}
+                />
+              )}
               <p
                 className={cn(
                   'max-w-[200px] truncate',

@@ -9,7 +9,9 @@
 - 기사님 이름 앞 로고 마크는 mobile 전용
 
 @ 카드 전체가 견적 상세(/customer/estimates/received/{estimateId}) 링크다
-- 카드 안에 버튼이 없어서 Link 하나로 감싼다. 버튼이 생기면 중첩 인터랙티브가 되니 구조를 바꾼다
+- 하트(찜하기) 버튼이 있어서 Link로 카드를 감싸지 않는다 (링크 안 버튼 = 중첩 인터랙티브)
+- 링크는 카드 위에 투명하게 깔고(absolute inset-0), 내용은 클릭이 링크로 지나가게 pointer-events-none
+- 하트 버튼만 pointer-events-auto로 링크 위에서 눌린다
 
 @ 기사님 집계값 (별점·리뷰수·확정건수·찜)
 - GET /estimates 목록 응답의 mover에는 아직 careerMonths만 있다
@@ -35,6 +37,7 @@ import { resolveMoverImageUrl } from '@/lib/api/estimate';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useFormatCareer } from '@/hooks/common/useFormatCareer';
 import { useFormatPrice } from '@/hooks/common/useFormatPrice';
+import { useMoverLike } from '@/hooks/features/like/useMoverLike';
 
 import { cn } from '@/utils/cn';
 
@@ -94,6 +97,12 @@ export default function ReceivedEstimateCard({
   const { mover } = estimate;
   const isConfirmed = estimate.status === 'ACCEPTED';
   const careerLabel = formatCareer(mover.careerMonths);
+  // 요청 중 연속 클릭은 훅이 무시하므로 버튼은 disabled로 막지 않는다 (금지 커서가 깜빡이지 않게)
+  const { isLiked, likeCount, toggleLike } = useMoverLike(
+    mover.moverId,
+    mover.likeCount,
+    mover.isLiked,
+  );
 
   // 값이 있는 항목만 세로 구분선으로 이어 붙인다
   const moverStats: { key: string; node: React.ReactNode }[] = [];
@@ -140,11 +149,19 @@ export default function ReceivedEstimateCard({
   }
 
   return (
-    <Link
-      href={`/customer/estimates/received/${estimate.estimateId}`}
-      className="block rounded-[16px] transition-colors hover:bg-background-200 focus-visible:outline-2 focus-visible:outline-orange-400"
+    <div
+      className={cn(
+        'relative rounded-[16px] transition-[background-color,box-shadow] hover:bg-background-200',
+        // 다른 카드(기사님 카드 등)와 같은 그림자를 hover 때만 준다
+        'hover:shadow-[-2px_-2px_10px_rgb(220_220_220_/_0.2),2px_2px_10px_rgb(220_220_220_/_0.2)]',
+      )}
     >
-      <article className="flex w-full flex-col gap-[16px] py-[20px] tablet:gap-[20px] tablet:px-[8px]">
+      <Link
+        href={`/customer/estimates/received/${estimate.estimateId}`}
+        aria-label={tEstimate('viewEstimateDetail')}
+        className="absolute inset-0 rounded-[16px] focus-visible:outline-2 focus-visible:outline-orange-400"
+      />
+      <article className="pointer-events-none relative flex w-full flex-col gap-[16px] py-[20px] tablet:gap-[20px] tablet:px-[8px]">
         <div className="flex items-center gap-[8px]">
           <ServiceTypeTag
             variant="service"
@@ -202,24 +219,26 @@ export default function ReceivedEstimateCard({
                     </span>
                   </p>
 
-                  {mover.likeCount !== undefined && (
-                    <span
-                      aria-label={tLike('countLabel', {
-                        count: mover.likeCount,
-                      })}
-                      className="flex shrink-0 items-center gap-[2px] text-md-regular text-gray-500 tablet:text-black-500"
-                    >
-                      {mover.isLiked ? (
-                        <IcLike
-                          aria-hidden
-                          className="size-[24px] text-red-200"
-                        />
-                      ) : (
-                        <IcLikeLine aria-hidden className="size-[24px]" />
-                      )}
-                      {mover.likeCount}
+                  <button
+                    type="button"
+                    onClick={toggleLike}
+                    aria-pressed={isLiked}
+                    aria-label={isLiked ? tLike('unlike') : tLike('like')}
+                    className="pointer-events-auto flex shrink-0 cursor-pointer items-center gap-[2px] text-md-regular text-gray-500 tablet:text-black-500"
+                  >
+                    {isLiked ? (
+                      <IcLike
+                        aria-hidden
+                        className="size-[24px] text-red-200"
+                      />
+                    ) : (
+                      <IcLikeLine aria-hidden className="size-[24px]" />
+                    )}
+                    <span aria-hidden>{likeCount}</span>
+                    <span className="sr-only">
+                      {tLike('countLabel', { count: likeCount })}
                     </span>
-                  )}
+                  </button>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-[8px] text-sm-medium">
@@ -252,6 +271,6 @@ export default function ReceivedEstimateCard({
           </span>
         </div>
       </article>
-    </Link>
+    </div>
   );
 }

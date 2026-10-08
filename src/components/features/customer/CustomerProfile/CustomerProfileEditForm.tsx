@@ -119,7 +119,7 @@ export default function CustomerProfileEditForm({
         <div
           className={cn(
             'flex flex-col gap-[32px] w-full max-w[327px] mx-auto',
-            'desktop:max-w-[1200px] desktop:gap-[40px]',
+            'desktop:max-w-[1120px] desktop:gap-[40px]',
           )}
         >
           <header className="flex items-center">
@@ -400,6 +400,7 @@ export default function CustomerProfileEditForm({
                         onRegionClick={field.onChange}
                         onBlur={field.onBlur}
                         size={responsiveControlSize}
+                        englishTabletSixColumns
                         aria-describedby={
                           [regionDescriptionId, regionErrorId]
                             .filter(Boolean)
@@ -463,25 +464,34 @@ export default function CustomerProfileEditForm({
           </Button>
         </div>
 
-        <div className="hidden w-full max-w-[500px] gap-[20px] self-end desktop:flex">
-          <Button
-            type="button"
-            variant="outlined"
-            size={responsiveButtonSize}
-            disabled={areFieldsDisabled}
-            onClick={onCancel}
-            className="border-gray-200 text-gray-500"
-          >
-            {tCommon('cancel')}
-          </Button>
-          <Button
-            type="submit"
-            size={responsiveButtonSize}
-            disabled={isDisabled || !isFormComplete || !hasChanges}
-            isLoading={isLoading}
-          >
-            {t('edit')}
-          </Button>
+        {/*
+        @ Desktop 버튼 위치
+        - Figma의 1200px 바깥 영역에서 좌우 40px 여백을 제외한 실제 내용 폭은 1120px이다.
+        - 입력 영역과 같은 2열·간격을 사용하고 두 번째 열에 버튼을 넣는다.
+          데스크톱에서는 오른쪽 입력 열과 버튼의 시작점·끝점이 같아지고,
+          화면이 좁아지면 두 열과 버튼이 같은 비율로 줄어든다.
+        */}
+        <div className="mx-auto hidden w-full max-w-[1120px] desktop:grid desktop:grid-cols-2 desktop:gap-x-[clamp(40px,6.25vw,120px)]">
+          <div className="col-start-2 flex w-full gap-[20px]">
+            <Button
+              type="button"
+              variant="outlined"
+              size={responsiveButtonSize}
+              disabled={areFieldsDisabled}
+              onClick={onCancel}
+              className="border-gray-200 text-gray-500"
+            >
+              {tCommon('cancel')}
+            </Button>
+            <Button
+              type="submit"
+              size={responsiveButtonSize}
+              disabled={isDisabled || !isFormComplete || !hasChanges}
+              isLoading={isLoading}
+            >
+              {t('edit')}
+            </Button>
+          </div>
         </div>
       </form>
     </main>

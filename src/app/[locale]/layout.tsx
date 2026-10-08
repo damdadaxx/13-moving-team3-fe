@@ -16,6 +16,7 @@ import KakaoScript from '@/lib/providers/KakaoScript';
 
 import { cn } from '@/utils/cn';
 
+import ChatFloatingButton from '@/components/features/chat/ChatFloatingButton';
 import Header from '@/components/ui/Header/Header';
 import PageHeader from '@/components/ui/PageHeader';
 import TopButton from '@/components/ui/TopButton';
@@ -74,6 +75,7 @@ export default async function RootLayout({
             <PageHeader />
             {children}
             <TopButton />
+            <ChatFloatingButton />
           </Providers>
         </NextIntlClientProvider>
 

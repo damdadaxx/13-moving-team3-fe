@@ -21,6 +21,12 @@ const nextConfig: NextConfig = {
         hostname: 'i.picsum.photos',
         pathname: '/**',
       },
+      {
+        // 채팅 이미지(Supabase Storage 공개 URL), 상대방 프로필 이미지 표시용
+        protocol: 'https',
+        hostname: 'riphxsdecygfvtadyixk.supabase.co',
+        pathname: '/**',
+      },
     ],
   },
   // SVG를 React 컴포넌트로 import: import IcArrow from '@/assets/icons/ic_arrow.svg'

@@ -47,10 +47,34 @@ const customerPhoneNumberSchema = z
   .regex(/^01[016789]-?\d{3,4}-?\d{4}$/, validationKey('phoneInvalid'));
 
 /*
+@ 최초 등록 전화번호
+- LOCAL 계정은 회원가입에서 전화번호를 받았으므로 등록 폼에 다시 입력하지 않는다.
+- 소셜 계정은 제공된 번호가 있어도 화면에서 확인·변경할 수 있게 하며,
+  최초 등록 시 유효한 전화번호가 반드시 있어야 한다.
+*/
+export function createCustomerProfileSchema(isPhoneNumberRequired: boolean) {
+  return customerProfileSchema
+    .extend({ phoneNumber: z.string() })
+    .superRefine((values, context) => {
+      if (!isPhoneNumberRequired) return;
+
+      const result = customerPhoneNumberSchema.safeParse(values.phoneNumber);
+      if (!result.success) {
+        context.addIssue({
+          code: 'custom',
+          path: ['phoneNumber'],
+          message:
+            result.error.issues[0]?.message ?? validationKey('phoneRequired'),
+        });
+      }
+    });
+}
+
+/*
 @ 새 비밀번호 공통 규칙
 - 회원가입 signupSchema의 password 규칙을 재사용해 화면별 검증 기준이 달라지지 않게 한다.
-- 따라서 프로필 수정에서도 8자 이상이고 숫자를 1자 이상 포함해야 한다.
-- 백엔드 비밀번호 수정 계약에 맞춰 64자 상한은 수정 화면에서 추가로 검증한다.
+- 현재 공통 규칙은 8~64자, 숫자 1개 이상, ASCII 특수문자 1개 이상이다.
+- 향후 QA에서 규칙을 변경하면 authValidation을 기준으로 Customer와 Mover를 함께 확인한다.
 */
 const customerNewPasswordSchema = signupSchema.shape.password.max(
   64,
@@ -64,62 +88,80 @@ const customerNewPasswordSchema = signupSchema.shape.password.max(
 - 현재 비밀번호는 변경할 정보가 아니라 본인 확인값이므로 단독 입력만으로 변경 모드를 시작하지 않는다.
 - 새 비밀번호 확인은 프론트엔드에서만 사용하며 서버에는 전송하지 않는다.
 */
-export const customerProfileEditSchema = z
-  .object({
-    ...customerProfileFields,
-    name: customerNameSchema,
-    email: z.email(validationKey('emailInvalid')),
-    phoneNumber: customerPhoneNumberSchema,
-    currentPassword: z.string(),
-    newPassword: z.string(),
-    newPasswordConfirm: z.string(),
-  })
-  .superRefine((values, context) => {
-    const hasPasswordInput = Boolean(
-      values.newPassword || values.newPasswordConfirm,
-    );
+export function createCustomerProfileEditSchema(
+  isPhoneNumberRequired: boolean,
+) {
+  return z
+    .object({
+      ...customerProfileFields,
+      name: customerNameSchema,
+      email: z.email(validationKey('emailInvalid')),
+      phoneNumber: z.string(),
+      currentPassword: z.string(),
+      newPassword: z.string(),
+      newPasswordConfirm: z.string(),
+    })
+    .superRefine((values, context) => {
+      // 기존 소셜 전화번호가 null이면 다른 프로필 수정은 허용한다.
+      // 새 번호를 입력하거나 기존 번호가 있으면 형식 검증을 유지한다.
+      if (values.phoneNumber || isPhoneNumberRequired) {
+        const result = customerPhoneNumberSchema.safeParse(values.phoneNumber);
+        if (!result.success) {
+          context.addIssue({
+            code: 'custom',
+            path: ['phoneNumber'],
+            message:
+              result.error.issues[0]?.message ?? validationKey('phoneRequired'),
+          });
+        }
+      }
 
-    if (!hasPasswordInput) return;
+      const hasPasswordInput = Boolean(
+        values.newPassword || values.newPasswordConfirm,
+      );
 
-    if (!values.currentPassword) {
-      context.addIssue({
-        code: 'custom',
-        path: ['currentPassword'],
-        message: validationKey('currentPasswordRequired'),
-      });
-    }
+      if (!hasPasswordInput) return;
 
-    /*
+      if (!values.currentPassword) {
+        context.addIssue({
+          code: 'custom',
+          path: ['currentPassword'],
+          message: validationKey('currentPasswordRequired'),
+        });
+      }
+
+      /*
     @ 새 비밀번호 검증
     - 비밀번호를 변경하는 경우에만 회원가입과 같은 규칙을 검사한다.
     - safeParse를 사용해 회원가입 스키마의 규칙과 오류 메시지를 직접 재사용한다.
     - 여러 규칙이 동시에 실패해도 사용자에게는 가장 먼저 고쳐야 할 오류 하나만 표시한다.
     */
-    const newPasswordResult = customerNewPasswordSchema.safeParse(
-      values.newPassword,
-    );
+      const newPasswordResult = customerNewPasswordSchema.safeParse(
+        values.newPassword,
+      );
 
-    if (!newPasswordResult.success) {
-      context.addIssue({
-        code: 'custom',
-        path: ['newPassword'],
-        message:
-          newPasswordResult.error.issues[0]?.message ??
-          validationKey('newPasswordInvalid'),
-      });
-    }
+      if (!newPasswordResult.success) {
+        context.addIssue({
+          code: 'custom',
+          path: ['newPassword'],
+          message:
+            newPasswordResult.error.issues[0]?.message ??
+            validationKey('newPasswordInvalid'),
+        });
+      }
 
-    if (!values.newPasswordConfirm) {
-      context.addIssue({
-        code: 'custom',
-        path: ['newPasswordConfirm'],
-        message: validationKey('newPasswordConfirmRequired'),
-      });
-    } else if (values.newPassword !== values.newPasswordConfirm) {
-      context.addIssue({
-        code: 'custom',
-        path: ['newPasswordConfirm'],
-        message: validationKey('newPasswordMismatch'),
-      });
-    }
-  });
+      if (!values.newPasswordConfirm) {
+        context.addIssue({
+          code: 'custom',
+          path: ['newPasswordConfirm'],
+          message: validationKey('newPasswordConfirmRequired'),
+        });
+      } else if (values.newPassword !== values.newPasswordConfirm) {
+        context.addIssue({
+          code: 'custom',
+          path: ['newPasswordConfirm'],
+          message: validationKey('newPasswordMismatch'),
+        });
+      }
+    });
+}

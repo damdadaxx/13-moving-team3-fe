@@ -8,13 +8,13 @@ import {
   type SubmitHandler,
 } from 'react-hook-form';
 
-import type { CustomerProfileFormValues } from '@/types/customerProfile';
+import type { CustomerProfileCreateFormValues } from '@/types/customerProfile';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { z } from 'zod';
 
 import { HttpError } from '@/lib/api/errors';
-import { customerProfileSchema } from '@/lib/validations/customerProfileValidation';
+import { createCustomerProfileSchema } from '@/lib/validations/customerProfileValidation';
 
 /*
 @ Zod 입력·출력 타입 분리
@@ -22,23 +22,26 @@ import { customerProfileSchema } from '@/lib/validations/customerProfileValidati
 - 검증 후에는 FileList | undefined로 좁혀진다.
 - React Hook Form의 첫 번째 제네릭은 검증 전 입력, 세 번째 제네릭은 검증 후 값을 뜻한다.
 */
-type CustomerProfileSchemaInput = z.input<typeof customerProfileSchema>;
-type CustomerProfileSchemaOutput = z.output<typeof customerProfileSchema>;
+type CustomerProfileSchema = ReturnType<typeof createCustomerProfileSchema>;
+type CustomerProfileSchemaInput = z.input<CustomerProfileSchema>;
+type CustomerProfileSchemaOutput = z.output<CustomerProfileSchema>;
 
 interface UseCustomerProfileFormOptions {
-  defaultValues?: Partial<CustomerProfileFormValues>;
-  onSubmit?: (values: CustomerProfileFormValues) => void | Promise<void>;
+  defaultValues?: Partial<CustomerProfileCreateFormValues>;
+  isPhoneNumberRequired: boolean;
+  onSubmit?: (values: CustomerProfileCreateFormValues) => void | Promise<void>;
 }
 
-const EMPTY_CUSTOMER_PROFILE_FORM_VALUES: CustomerProfileFormValues = {
+const EMPTY_CUSTOMER_PROFILE_FORM_VALUES: CustomerProfileCreateFormValues = {
   profileImage: undefined,
+  phoneNumber: '',
   serviceTypes: [],
   region: null,
 };
 
 const CUSTOMER_PROFILE_FIELD_NAMES = new Set<
   FieldPath<CustomerProfileSchemaInput>
->(['profileImage', 'serviceTypes', 'region']);
+>(['profileImage', 'phoneNumber', 'serviceTypes', 'region']);
 
 /*
 @ 백엔드 필드 이름 변환
@@ -85,6 +88,7 @@ function getCustomerProfileSubmitErrorKey(error: HttpError) {
 */
 export function useCustomerProfileForm({
   defaultValues,
+  isPhoneNumberRequired,
   onSubmit,
 }: UseCustomerProfileFormOptions) {
   const t = useTranslations('CustomerProfile');
@@ -94,7 +98,7 @@ export function useCustomerProfileForm({
     unknown,
     CustomerProfileSchemaOutput
   >({
-    resolver: zodResolver(customerProfileSchema),
+    resolver: zodResolver(createCustomerProfileSchema(isPhoneNumberRequired)),
     defaultValues: {
       ...EMPTY_CUSTOMER_PROFILE_FORM_VALUES,
       ...defaultValues,
@@ -109,6 +113,8 @@ export function useCustomerProfileForm({
 
   const selectedServiceTypes =
     useWatch({ control: form.control, name: 'serviceTypes' }) ?? [];
+  const phoneNumber =
+    useWatch({ control: form.control, name: 'phoneNumber' }) ?? '';
   const selectedRegion =
     useWatch({ control: form.control, name: 'region' }) ?? null;
 
@@ -119,7 +125,9 @@ export function useCustomerProfileForm({
   - handleSubmit도 다시 Zod 검증을 수행하므로 버튼 상태와 별개로 잘못된 값은 제출되지 않는다.
   */
   const hasRequiredValues =
-    selectedServiceTypes.length > 0 && selectedRegion !== null;
+    (!isPhoneNumberRequired || Boolean(phoneNumber.trim())) &&
+    selectedServiceTypes.length > 0 &&
+    selectedRegion !== null;
   const hasValidationError = Object.keys(form.formState.errors).length > 0;
   const isFormComplete = hasRequiredValues && !hasValidationError;
 

@@ -19,11 +19,12 @@ import { useAuth } from '@/hooks/features/auth/useAuth';
 import { createCustomerProfileCreatePlan } from '@/hooks/features/customer/customerProfileCreatePlan';
 import { customerProfileKeys } from '@/hooks/features/customer/queries/keys';
 import { useCreateCustomerProfileMutation } from '@/hooks/features/customer/queries/mutations';
+import { useCustomerProfileQuery } from '@/hooks/features/customer/queries/queries';
 
 import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
 
 import CustomerProfileForm from '@/components/features/customer/CustomerProfile/CustomerProfileForm';
-import LoadingDisplay from '@/components/ui/LoadingDisplay';
+import CustomerProfileSkeleton from '@/components/features/customer/CustomerProfile/CustomerProfileSkeleton';
 
 export default function ProfileNewPage() {
   const t = useTranslations('CustomerProfile');
@@ -34,6 +35,8 @@ export default function ProfileNewPage() {
   const { user } = useAuth();
   const updateMeMutation = useUpdateMeMutation();
   const createProfileMutation = useCreateCustomerProfileMutation();
+  // Guard와 같은 Query key를 구독하므로 요청은 공유된다. 등록 여부 확인 전에는 빈 폼을 노출하지 않는다.
+  const { isPending: isProfilePending } = useCustomerProfileQuery();
   const defaultValues = useMemo<
     Partial<CustomerProfileCreateFormValues> | undefined
   >(
@@ -44,8 +47,13 @@ export default function ProfileNewPage() {
     [user],
   );
 
-  if (!user || !defaultValues) {
-    return <LoadingDisplay />;
+  if (!user || !defaultValues || isProfilePending) {
+    return (
+      <CustomerProfileSkeleton
+        mode="create"
+        showPhoneNumber={Boolean(user && user.provider !== 'LOCAL')}
+      />
+    );
   }
 
   /*

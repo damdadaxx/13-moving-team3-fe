@@ -15,17 +15,18 @@ import { useTranslations } from 'next-intl';
 import { z } from 'zod';
 
 import { HttpError } from '@/lib/api/errors';
-import { customerProfileEditSchema } from '@/lib/validations/customerProfileValidation';
+import { createCustomerProfileEditSchema } from '@/lib/validations/customerProfileValidation';
 
 import {
   createCustomerProfileEditPlan,
   type CustomerProfileEditPlan,
 } from '@/hooks/features/customer/customerProfileEditPlan';
 
-type CustomerProfileEditSchemaInput = z.input<typeof customerProfileEditSchema>;
-type CustomerProfileEditSchemaOutput = z.output<
-  typeof customerProfileEditSchema
+type CustomerProfileEditSchema = ReturnType<
+  typeof createCustomerProfileEditSchema
 >;
+type CustomerProfileEditSchemaInput = z.input<CustomerProfileEditSchema>;
+type CustomerProfileEditSchemaOutput = z.output<CustomerProfileEditSchema>;
 
 interface UseCustomerProfileEditFormOptions {
   defaultValues?: Partial<CustomerProfileEditFormValues>;
@@ -119,12 +120,16 @@ export function useCustomerProfileEditForm({
 }: UseCustomerProfileEditFormOptions) {
   const t = useTranslations('CustomerProfile');
   const [submitError, setSubmitError] = useState('');
+  const isPhoneNumberRequired =
+    provider === 'LOCAL' || Boolean(defaultValues?.phoneNumber?.trim());
   const form = useForm<
     CustomerProfileEditSchemaInput,
     unknown,
     CustomerProfileEditSchemaOutput
   >({
-    resolver: zodResolver(customerProfileEditSchema),
+    resolver: zodResolver(
+      createCustomerProfileEditSchema(isPhoneNumberRequired),
+    ),
     defaultValues: {
       ...EMPTY_CUSTOMER_PROFILE_EDIT_VALUES,
       ...defaultValues,
@@ -161,7 +166,7 @@ export function useCustomerProfileEditForm({
   const hasRequiredValues = Boolean(
     currentValues.name.trim() &&
     currentValues.email.trim() &&
-    currentValues.phoneNumber.trim() &&
+    (!isPhoneNumberRequired || currentValues.phoneNumber.trim()) &&
     currentValues.serviceTypes.length &&
     currentValues.region,
   );
@@ -225,6 +230,7 @@ export function useCustomerProfileEditForm({
     ...form,
     hasChanges: updatePlan.hasChanges,
     isFormComplete: hasRequiredValues && form.formState.isValid,
+    isPhoneNumberRequired,
     submitError,
     handleFormSubmit: form.handleSubmit(handleValidSubmit),
   };

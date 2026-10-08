@@ -89,6 +89,7 @@ export default function CustomerProfileEditForm({
     formState: { errors, isSubmitting: isFormSubmitting },
     hasChanges,
     isFormComplete,
+    isPhoneNumberRequired,
     submitError,
     handleFormSubmit,
   } = useCustomerProfileEditForm({ defaultValues, provider, onSubmit });
@@ -181,7 +182,7 @@ export default function CustomerProfileEditForm({
                   autoComplete="tel"
                   size={responsiveInputSize}
                   disabled={areFieldsDisabled}
-                  aria-required="true"
+                  required={isPhoneNumberRequired}
                   maxLength={13}
                   error={errors.phoneNumber?.message}
                   {...phoneNumberField}
@@ -246,50 +247,56 @@ export default function CustomerProfileEditForm({
                     {/*
                     @ 소셜 계정 비밀번호 표시
                     - 실제 비밀번호를 API에서 조회하거나 폼 값으로 등록하지 않는다.
-                    - 고정된 마스킹 문자열만 읽기 전용으로 보여주며 비밀번호 API도 호출하지 않는다.
+                    - 안내 문구만 보조 기술에 노출하고, 장식용 마스킹 입력은
+                      Tab 순서와 스크린 리더 탐색에서 제외한다.
                     */}
-                    <Input
-                      label={t('currentPassword')}
-                      labelVariant="profile"
-                      type="text"
-                      value={SOCIAL_PASSWORD_MASK}
-                      autoComplete="off"
-                      size="sm"
-                      readOnly
-                      disabled={areFieldsDisabled}
-                      aria-readonly="true"
-                      className="text-gray-400"
-                    />
+                    <p className="text-sm-regular text-gray-400">
+                      {t('socialPasswordUnavailable')}
+                    </p>
+                    <div aria-hidden="true" className="contents">
+                      <Input
+                        label={t('currentPassword')}
+                        labelVariant="profile"
+                        type="text"
+                        value={SOCIAL_PASSWORD_MASK}
+                        autoComplete="off"
+                        size="sm"
+                        readOnly
+                        disabled
+                        tabIndex={-1}
+                        className="text-gray-400"
+                      />
 
-                    <Divider />
+                      <Divider />
 
-                    <Input
-                      label={t('newPassword')}
-                      labelVariant="profile"
-                      type="text"
-                      value={SOCIAL_PASSWORD_MASK}
-                      autoComplete="off"
-                      size="sm"
-                      readOnly
-                      disabled={areFieldsDisabled}
-                      aria-readonly="true"
-                      className="text-gray-400"
-                    />
+                      <Input
+                        label={t('newPassword')}
+                        labelVariant="profile"
+                        type="text"
+                        value={SOCIAL_PASSWORD_MASK}
+                        autoComplete="off"
+                        size="sm"
+                        readOnly
+                        disabled
+                        tabIndex={-1}
+                        className="text-gray-400"
+                      />
 
-                    <Divider className="desktop:hidden" />
+                      <Divider className="desktop:hidden" />
 
-                    <Input
-                      label={t('newPasswordConfirm')}
-                      labelVariant="profile"
-                      type="text"
-                      value={SOCIAL_PASSWORD_MASK}
-                      autoComplete="off"
-                      size="sm"
-                      readOnly
-                      disabled={areFieldsDisabled}
-                      aria-readonly="true"
-                      className="text-gray-400"
-                    />
+                      <Input
+                        label={t('newPasswordConfirm')}
+                        labelVariant="profile"
+                        type="text"
+                        value={SOCIAL_PASSWORD_MASK}
+                        autoComplete="off"
+                        size="sm"
+                        readOnly
+                        disabled
+                        tabIndex={-1}
+                        className="text-gray-400"
+                      />
+                    </div>
                   </>
                 )}
 
@@ -317,6 +324,10 @@ export default function CustomerProfileEditForm({
                     previewAlt={imageUrl ? t('currentProfileImage') : ''}
                     disabled={areFieldsDisabled}
                     error={errors.profileImage?.message}
+                    hints={[
+                      tCommon('profileImageFormatHint'),
+                      tCommon('profileImageSizeHint'),
+                    ]}
                     accept="image/jpeg,image/png,image/webp"
                     className="tablet:size-[100px] tablet:[&_svg]:size-[32px] desktop:size-[160px] desktop:[&_svg]:size-[40px]"
                     {...register('profileImage')}

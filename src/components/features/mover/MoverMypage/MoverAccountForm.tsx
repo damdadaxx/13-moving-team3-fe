@@ -235,37 +235,42 @@ export default function MoverAccountForm({
               ) : (
                 <>
                   {/*
-                  @ TODO(QA: 소셜 계정 비밀번호 표시 접근성)
-                  - 현재는 Customer 화면과 같은 읽기 전용 마스킹 UI를 유지한다.
-                  - QA에서 Tab 순서와 스크린 리더 안내를 확인한 뒤 비대화형 표시와
-                    별도 안내 문구로 바꿀지 결정한다.
+                  @ 소셜 계정 비밀번호 표시 접근성
+                  - 실제 비밀번호는 폼과 API에서 다루지 않는다.
+                  - 장식용 마스킹 입력은 비활성화하고 Tab·스크린 리더 탐색에서 제외한다.
+                    변경 불가 안내만 보조 기술에 노출한다.
                   */}
-                  {[
-                    ['current-password', tField('currentPassword')],
-                    ['new-password', tField('newPassword')],
-                    ['new-password-confirm', tField('newPasswordConfirm')],
-                  ].map(([idSuffix, label], index) => (
-                    <div key={idSuffix} className="contents">
-                      {index > 0 && (
-                        <Divider
-                          className={cn(index === 2 && 'desktop:hidden')}
+                  <p className="text-sm-regular text-gray-400">
+                    {tField('socialPasswordUnavailable')}
+                  </p>
+                  <div aria-hidden="true" className="contents">
+                    {[
+                      ['current-password', tField('currentPassword')],
+                      ['new-password', tField('newPassword')],
+                      ['new-password-confirm', tField('newPasswordConfirm')],
+                    ].map(([idSuffix, label], index) => (
+                      <div key={idSuffix} className="contents">
+                        {index > 0 && (
+                          <Divider
+                            className={cn(index === 2 && 'desktop:hidden')}
+                          />
+                        )}
+                        <Input
+                          id={formId + '-' + idSuffix}
+                          label={label}
+                          labelVariant="profile"
+                          type="text"
+                          value={SOCIAL_PASSWORD_MASK}
+                          autoComplete="off"
+                          size="sm"
+                          readOnly
+                          disabled
+                          tabIndex={-1}
+                          className="text-gray-400 desktop:text-2lg-regular"
                         />
-                      )}
-                      <Input
-                        id={formId + '-' + idSuffix}
-                        label={label}
-                        labelVariant="profile"
-                        type="text"
-                        value={SOCIAL_PASSWORD_MASK}
-                        autoComplete="off"
-                        size="sm"
-                        readOnly
-                        disabled={areFieldsDisabled}
-                        aria-readonly="true"
-                        className="text-gray-400 desktop:text-2lg-regular"
-                      />
-                    </div>
-                  ))}
+                      </div>
+                    ))}
+                  </div>
                 </>
               )}
             </section>

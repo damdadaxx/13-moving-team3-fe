@@ -6,6 +6,8 @@
 - imageUrl이 있으면 서버에 저장된 이미지를 먼저 보여주고, 새 파일을 선택하면
   브라우저가 만든 임시 URL을 사용해 선택한 이미지로 미리보기를 교체한다.
 - label과 error를 전달하면 공용 Label, 오류 메시지와 접근성 속성을 함께 처리한다.
+- hints는 화면이 전달한 업로드 안내를 파일 선택 영역 아래에 줄별로 표시한다.
+  안내와 오류를 aria-describedby에 함께 연결해 키보드·스크린 리더 사용자도 확인할 수 있다.
 
 @ 최소 사용 예시
 <ProfileUpload
@@ -46,6 +48,8 @@ interface ProfileUploadProps extends Omit<
   required?: boolean;
   /** 업로드 영역 아래에 표시하고 file input과 연결할 오류 메시지 */
   error?: string;
+  /** 업로드 영역 아래에 각각 별도 줄로 표시할 안내 문구 */
+  hints?: readonly string[];
   /** 서버 또는 S3에서 불러온 기존 프로필 이미지 URL */
   imageUrl?: string;
   /** 미리보기 이미지의 대체 텍스트. 장식 이미지라면 기본값인 빈 문자열을 사용한다. */
@@ -59,6 +63,7 @@ export default function ProfileUpload({
   labelVariant = 'profile',
   required,
   error,
+  hints,
   imageUrl,
   previewAlt = '',
   className,
@@ -82,7 +87,10 @@ export default function ProfileUpload({
   const toErrorMessage = useFormErrorMessage();
   const hasError = Boolean(error);
   const errorId = hasError ? `${inputId}-error` : undefined;
-  const describedBy = [ariaDescribedBy, errorId].filter(Boolean).join(' ');
+  const hintId = hints?.length ? `${inputId}-hints` : undefined;
+  const describedBy = [ariaDescribedBy, hintId, errorId]
+    .filter(Boolean)
+    .join(' ');
   const accessibleLabel =
     ariaLabel ?? (label ? undefined : t('profileImageSelect'));
 
@@ -111,7 +119,7 @@ export default function ProfileUpload({
   };
 
   return (
-    <div className="flex flex-col items-start">
+    <div className="flex w-full min-w-0 flex-col items-start">
       {label && (
         <Label htmlFor={inputId} variant={labelVariant} required={required}>
           {label}
@@ -148,7 +156,9 @@ export default function ProfileUpload({
             'relative flex size-full items-center justify-center overflow-hidden rounded-[6px]',
             hasImage ? 'bg-transparent' : 'bg-background-200',
             'peer-focus-visible:ring-2 peer-focus-visible:ring-orange-400 peer-focus-visible:ring-offset-2',
-            disabled ? 'cursor-not-allowed' : 'cursor-pointer',
+            disabled
+              ? 'cursor-not-allowed'
+              : 'cursor-pointer transition-shadow hover:ring-2 hover:ring-orange-400 hover:ring-offset-2',
           )}
         >
           {previewUrl ? (
@@ -178,6 +188,17 @@ export default function ProfileUpload({
         >
           {toErrorMessage(error)}
         </p>
+      )}
+
+      {hintId && (
+        <div
+          id={hintId}
+          className="mt-[8px] flex w-full flex-col gap-[4px] text-xs-regular text-gray-400 desktop:text-lg-regular"
+        >
+          {hints?.map((hint, index) => (
+            <p key={`${inputId}-hint-${index}`}>{hint}</p>
+          ))}
+        </div>
       )}
     </div>
   );

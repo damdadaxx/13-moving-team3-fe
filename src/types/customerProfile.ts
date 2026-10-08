@@ -28,6 +28,11 @@ export interface CustomerProfileFormValues {
   region: Region | null;
 }
 
+/** 최초 등록 화면에서만 받는 전화번호는 프로필이 아닌 /auth/me의 필드다. */
+export interface CustomerProfileCreateFormValues extends CustomerProfileFormValues {
+  phoneNumber: string;
+}
+
 /*=================================================
 고객 프로필 수정 화면 타입
 =================================================*/

@@ -28,11 +28,13 @@ export interface ChatMessageListQuery {
 }
 
 /** POST /chat/rooms/:estimateId/messages 요청 본문
- * - content만, imageUrl만, 혹은 둘 다 보낼 수 있다 (백엔드 예시 기준)
+ * - content 또는 imagePath 중 하나는 있어야 한다 (둘 다 보낼 수도 있다)
+ * - imagePath는 Storage 경로(ChatImageUploadUrl.path)다. 응답 ChatMessage.imageUrl은
+ *   서버가 발급한 signed URL(짧은 만료)이라 요청 바디에는 쓰지 않는다
  */
 export interface SendChatMessageInput {
   content?: string;
-  imageUrl?: string;
+  imagePath?: string;
 }
 
 export interface ChatUnreadCount {
@@ -40,7 +42,7 @@ export interface ChatUnreadCount {
 }
 
 /** POST /chat/rooms/:estimateId/image 응답
- * - uploadUrl(PUT)로 직접 업로드 후, path를 공개 URL로 변환해 imageUrl로 쓴다
+ * - uploadUrl(PUT)로 Storage에 직접 업로드한 뒤, path를 메시지 전송(imagePath)에 쓴다
  */
 export interface ChatImageUploadUrl {
   uploadUrl: string;

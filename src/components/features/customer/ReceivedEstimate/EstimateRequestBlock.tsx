@@ -52,7 +52,7 @@ export default function EstimateRequestBlock({
     <section
       className={cn(
         'w-full max-w-[1120px] mx-auto bg-gray-50 px-[24px] pt-[32px] pb-[24px]',
-        'tablet:rounded-[16px] tablet:px-[28px] tablet:py-[32px]',
+        'tablet:rounded-[16px] tablet:px-[18px] tablet:py-[32px]',
         'tablet:shadow-[-2px_-2px_10px_0_rgba(220,220,220,0.2),2px_2px_10px_0_rgba(220,220,220,0.2)]',
         'desktop:px-[40px] desktop:py-[44px]',
       )}
@@ -60,11 +60,11 @@ export default function EstimateRequestBlock({
       <div
         className={cn(
           'flex flex-col gap-[28px]',
-          'tablet:gap-[40px]',
-          'desktop:flex-row desktop:gap-[60px]',
+          'tablet:gap-[30px]',
+          'desktop:flex-row desktop:gap-[40px]',
         )}
       >
-        <div className="desktop:w-[260px] desktop:shrink-0">
+        <div className={cn('desktop:w-[260px] desktop:shrink-0')}>
           <EstimateInfoSummary
             serviceType={estimateRequest.serviceType}
             fromAddress={estimateRequest.departureAddress}
@@ -80,7 +80,13 @@ export default function EstimateRequestBlock({
         />
 
         <div className="flex min-w-px flex-1 flex-col gap-[16px] desktop:gap-[20px]">
-          <h2 className="flex items-center gap-[8px] text-lg-semibold text-black-400 tablet:text-xl-semibold">
+          <h2
+            className={cn(
+              'flex items-center gap-[8px] text-lg-semibold text-black-400 tablet:text-xl-semibold',
+              'tablet:px-[10px]',
+              'desktop:px-[20px]',
+            )}
+          >
             {t('listTitle')}
             <span className="text-orange-400">{visibleEstimates.length}</span>
           </h2>
@@ -91,7 +97,7 @@ export default function EstimateRequestBlock({
               value={statusFilter}
               onChange={setStatusFilter}
               aria-label={t('filterLabel')}
-              className="self-start"
+              className="self-start tablet:pl-[10px] desktop:pl-[20px]"
             />
 
             {visibleEstimates.length > 0 ? (

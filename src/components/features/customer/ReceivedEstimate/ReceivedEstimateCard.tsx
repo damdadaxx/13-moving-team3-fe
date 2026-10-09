@@ -149,11 +149,13 @@ export default function ReceivedEstimateCard({
   }
 
   return (
-    <div
+    <article
       className={cn(
-        'relative rounded-[16px] transition-[background-color,box-shadow] hover:bg-background-200',
+        'relative my-[10px] rounded-[16px] py-[20px]',
+        'transition-[background-color,box-shadow]',
         // 다른 카드(기사님 카드 등)와 같은 그림자를 hover 때만 준다
-        'hover:shadow-[-2px_-2px_10px_rgb(220_220_220_/_0.2),2px_2px_10px_rgb(220_220_220_/_0.2)]',
+        'tablet:px-[10px] tablet:py-[10px] tablet:hover:shadow-[-2px_-2px_10px_rgb(220_220_220_/_0.2),2px_2px_10px_rgb(220_220_220_/_0.2)]',
+        'desktop:px-[20px] desktop:py-[20px]',
       )}
     >
       <Link
@@ -161,7 +163,7 @@ export default function ReceivedEstimateCard({
         aria-label={tEstimate('viewEstimateDetail')}
         className="absolute inset-0 rounded-[16px] focus-visible:outline-2 focus-visible:outline-orange-400"
       />
-      <article className="pointer-events-none relative flex w-full flex-col gap-[16px] py-[20px] tablet:gap-[20px] tablet:px-[8px]">
+      <div className="pointer-events-none relative flex w-full flex-col gap-[16px] tablet:gap-[20px]">
         <div className="flex items-center gap-[8px]">
           <ServiceTypeTag
             variant="service"
@@ -270,7 +272,7 @@ export default function ReceivedEstimateCard({
             </span>
           </span>
         </div>
-      </article>
-    </div>
+      </div>
+    </article>
   );
 }

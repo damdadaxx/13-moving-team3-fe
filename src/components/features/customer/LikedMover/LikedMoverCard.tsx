@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-
 import { Link } from '@/i18n/navigation';
 import type { ServiceType } from '@/types/serviceType';
 import { useTranslations } from 'next-intl';
@@ -14,10 +12,9 @@ import IcStar from '@/assets/icons/ic_star.svg';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
 import { cn } from '@/utils/cn';
-import { resolveImageUrl } from '@/utils/resolveImageUrl';
 
 import Checkbox from '@/components/ui/Checkbox';
-import NoImage from '@/components/ui/NoImage';
+import ProfileImage from '@/components/ui/ProfileImage';
 import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
 
 export interface LikedMover {
@@ -50,37 +47,14 @@ export default function LikedMoverCard({
   const tCommon = useTranslations('Common');
   // 반응형에 맞는 태그 사이즈
   const tagSize = useBreakpointValue('sm', 'md', 'md');
-  const imageUrl = resolveImageUrl(mover.imgUrl);
-  const [failedUrl, setFailedUrl] = useState<string | null>(null);
-  const showPhoto = imageUrl !== null && failedUrl !== imageUrl;
 
   const profile = (
-    <div
-      className={cn(
-        'relative shrink-0 overflow-hidden rounded-[12px]',
-        'size-[50px]',
-        'tablet:size-[134px]',
-      )}
-    >
-      {/*
-      @ 프로필 이미지
-      - 없거나 불러오지 못하면 NoImage
-      - unoptimized: 업로드 호스트가 remotePatterns에 없어서 원본 주소를 그대로 요청한다
-      */}
-      {showPhoto ? (
-        <Image
-          src={imageUrl}
-          alt={tCard('profileAlt', { nickname: mover.name })}
-          fill
-          unoptimized // TODO: 업로드 호스트가 remotePatterns 추가 시 삭제
-          className="object-cover"
-          sizes="(min-width: 744px) 134px, 50px"
-          onError={() => setFailedUrl(imageUrl)}
-        />
-      ) : (
-        <NoImage alt={tCard('profileAlt', { nickname: mover.name })} />
-      )}
-    </div>
+    <ProfileImage
+      imageUrl={mover.imgUrl}
+      alt={tCard('profileAlt', { nickname: mover.name })}
+      className="size-[50px] tablet:size-[134px]"
+      sizes="(min-width: 744px) 134px, 50px"
+    />
   );
 
   const driverName = (

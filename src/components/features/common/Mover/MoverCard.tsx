@@ -1,7 +1,5 @@
 // 기사님 카드
 // Figma: Card-list/기사님 찾기 (size=md 모바일 / 태블릿·데스크톱 큰 카드 / size=sm 찜한 기사님)
-import { useState } from 'react';
-
 import { Link } from '@/i18n/navigation';
 import type { MoverListItem } from '@/types/mover';
 import { useTranslations } from 'next-intl';
@@ -16,9 +14,8 @@ import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useFormatCareer } from '@/hooks/common/useFormatCareer';
 
 import { cn } from '@/utils/cn';
-import { resolveImageUrl } from '@/utils/resolveImageUrl';
 
-import NoImage from '@/components/ui/NoImage';
+import ProfileImage from '@/components/ui/ProfileImage';
 import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
 
 /*
@@ -35,48 +32,6 @@ interface MoverCardProps {
 
 const CARD_BASE =
   'block rounded-2xl border-[0.5px] border-line-100 bg-gray-50 p-5 shadow-[-2px_-2px_10px_rgb(220_220_220_/_0.2),2px_2px_10px_rgb(220_220_220_/_0.2)]';
-
-/*
-@ 프로필 이미지
-- 없거나 불러오지 못하면 NoImage
-- 업로드 이미지 도메인(S3 등)이 next.config에 등록돼 있지 않아 unoptimized로 그린다
-*/
-function MoverProfileImage({
-  imgUrl,
-  nickname,
-  className,
-}: {
-  imgUrl: string | null;
-  nickname: string;
-  className?: string;
-}) {
-  const t = useTranslations('MoverCard');
-  const imageUrl = resolveImageUrl(imgUrl);
-  const [failedUrl, setFailedUrl] = useState<string | null>(null);
-  const showPhoto = imageUrl !== null && failedUrl !== imageUrl;
-
-  return (
-    <div
-      className={cn(
-        'relative shrink-0 overflow-hidden rounded-xl bg-gray-100',
-        className,
-      )}
-    >
-      {showPhoto ? (
-        <Image
-          src={imageUrl}
-          alt={t('profileAlt', { nickname })}
-          fill
-          unoptimized // TODO: 업로드 호스트가 remotePatterns 추가 시 삭제
-          className="object-cover"
-          onError={() => setFailedUrl(imageUrl)}
-        />
-      ) : (
-        <NoImage alt={t('profileAlt', { nickname })} />
-      )}
-    </div>
-  );
-}
 
 function StatDivider() {
   return <span aria-hidden className="h-3.5 w-px shrink-0 bg-line-200" />;
@@ -166,10 +121,11 @@ export default function MoverCard({ mover, variant = 'list' }: MoverCardProps) {
         <div className="flex flex-col gap-4">
           <p className="text-lg-semibold text-black-300">{mover.shortIntro}</p>
           <div className="flex items-center gap-2">
-            <MoverProfileImage
-              imgUrl={mover.imgUrl}
-              nickname={mover.nickname}
+            <ProfileImage
+              imageUrl={mover.imgUrl}
+              alt={t('profileAlt', { nickname: mover.nickname })}
               className="size-[50px]"
+              sizes="50px"
             />
             <div className="flex min-w-0 flex-1 flex-col gap-1">
               <div className="flex items-center gap-1">
@@ -249,13 +205,14 @@ export default function MoverCard({ mover, variant = 'list' }: MoverCardProps) {
 
       <hr className={cn('col-span-2 mt-4 border-line-100', 'tablet:hidden')} />
 
-      <MoverProfileImage
-        imgUrl={mover.imgUrl}
-        nickname={mover.nickname}
+      <ProfileImage
+        imageUrl={mover.imgUrl}
+        alt={t('profileAlt', { nickname: mover.nickname })}
         className={cn(
           'mt-4 size-[50px]',
           'tablet:col-start-1 tablet:row-span-2 tablet:row-start-2 tablet:mt-3 tablet:size-[134px]',
         )}
+        sizes="(min-width: 744px) 134px, 50px"
       />
 
       <div

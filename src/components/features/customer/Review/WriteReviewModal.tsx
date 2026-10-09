@@ -18,12 +18,11 @@ import { useToast } from '@/hooks/common/useToast';
 import { useCreateReviewMutation } from '@/hooks/features/review/queries/mutations';
 
 import { cn } from '@/utils/cn';
-import { resolveImageUrl } from '@/utils/resolveImageUrl';
 
 import Button from '@/components/ui/Button/Button';
 import Textarea from '@/components/ui/Form/Textarea';
 import Modal from '@/components/ui/Modal';
-import NoImage from '@/components/ui/NoImage';
+import ProfileImage from '@/components/ui/ProfileImage';
 import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
 
 interface WriteReviewModalProps {
@@ -64,9 +63,6 @@ export default function WriteReviewModal({
   const buttonSize = useBreakpointValue('sm', 'sm', 'lg');
   const { showToast } = useToast();
   const createReviewMutation = useCreateReviewMutation();
-  const imageUrl = resolveImageUrl(review?.imgUrl ?? null);
-  const [failedUrl, setFailedUrl] = useState<string | null>(null);
-  const showPhoto = imageUrl !== null && failedUrl !== imageUrl;
   const isValid = rating > 0 && comment.trim().length >= MIN_COMMENT_LENGTH;
   const isSubmitting = createReviewMutation.isPending;
 
@@ -149,21 +145,11 @@ export default function WriteReviewModal({
                   </span>
                 </p>
               </div>
-              <div className="relative size-[50px] shrink-0 overflow-hidden rounded-[12px]">
-                {showPhoto ? (
-                  <Image
-                    src={imageUrl}
-                    alt=""
-                    fill
-                    unoptimized // TODO: 업로드 호스트가 remotePatterns 추가 시 삭제
-                    className="object-cover"
-                    sizes="50px"
-                    onError={() => setFailedUrl(imageUrl)}
-                  />
-                ) : (
-                  <NoImage />
-                )}
-              </div>
+              <ProfileImage
+                imageUrl={review.imgUrl}
+                className="size-[50px]"
+                sizes="50px"
+              />
             </div>
 
             <div className="h-px w-full bg-line-100" />

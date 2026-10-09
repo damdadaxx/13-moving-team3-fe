@@ -47,7 +47,8 @@ export default function MoverBrowseGuard({
     });
   }, [isLoading, isMover, openAccessDeniedModal, router]);
 
-  if (isMover) {
+  /* 세션 확인 전에는 목록을 그리지 않아 기사님 계정에 찾기 화면이 잠깐 보이지 않게 한다 */
+  if (isLoading || isMover) {
     return <div className="fixed inset-0 z-modal bg-gray-50" />;
   }
 

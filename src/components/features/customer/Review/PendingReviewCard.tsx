@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-
 import { useRouter } from '@/i18n/navigation';
 import type { PendingReview } from '@/types/review';
 import { useTranslations } from 'next-intl';
@@ -14,10 +12,9 @@ import { useFormatDate } from '@/hooks/common/useFormatDate';
 import { useFormatPrice } from '@/hooks/common/useFormatPrice';
 
 import { cn } from '@/utils/cn';
-import { resolveImageUrl } from '@/utils/resolveImageUrl';
 
 import Button from '@/components/ui/Button/Button';
-import NoImage from '@/components/ui/NoImage';
+import ProfileImage from '@/components/ui/ProfileImage';
 import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
 
 interface PendingReviewCardProps {
@@ -32,45 +29,6 @@ function MetaItem({ label, value }: { label: string; value: string }) {
       <span className="text-md-regular whitespace-nowrap text-black-500 tablet:text-lg-regular">
         {value}
       </span>
-    </div>
-  );
-}
-
-function PendingReviewProfile({
-  imgUrl,
-  alt,
-  className,
-  sizes,
-}: {
-  imgUrl: string | null;
-  alt: string;
-  className: string;
-  sizes: string;
-}) {
-  const imageUrl = resolveImageUrl(imgUrl);
-  const [failedUrl, setFailedUrl] = useState<string | null>(null);
-  const showPhoto = imageUrl !== null && failedUrl !== imageUrl;
-
-  return (
-    <div
-      className={cn(
-        'relative shrink-0 overflow-hidden rounded-[12px]',
-        className,
-      )}
-    >
-      {showPhoto ? (
-        <Image
-          src={imageUrl}
-          alt={alt}
-          fill
-          unoptimized // TODO: 업로드 호스트가 remotePatterns 추가 시 삭제
-          className="object-cover"
-          sizes={sizes}
-          onError={() => setFailedUrl(imageUrl)}
-        />
-      ) : (
-        <NoImage alt={alt} />
-      )}
     </div>
   );
 }
@@ -145,8 +103,8 @@ export default function PendingReviewCard({
                 {review.description}
               </p>
             </div>
-            <PendingReviewProfile
-              imgUrl={review.imgUrl}
+            <ProfileImage
+              imageUrl={review.imgUrl}
               alt={tCard('profileAlt', { nickname: review.moverName })}
               className="size-[64px]"
               sizes="64px"
@@ -193,8 +151,8 @@ export default function PendingReviewCard({
               router.push(`/mover/${review.moverId}`);
             }}
           >
-            <PendingReviewProfile
-              imgUrl={review.imgUrl}
+            <ProfileImage
+              imageUrl={review.imgUrl}
               alt={tCard('profileAlt', { nickname: review.moverName })}
               className="size-[80px]"
               sizes="80px"
@@ -270,8 +228,8 @@ export default function PendingReviewCard({
               router.push(`/mover/${review.moverId}`);
             }}
           >
-            <PendingReviewProfile
-              imgUrl={review.imgUrl}
+            <ProfileImage
+              imageUrl={review.imgUrl}
               alt={tCard('profileAlt', { nickname: review.moverName })}
               className="size-[100px]"
               sizes="100px"

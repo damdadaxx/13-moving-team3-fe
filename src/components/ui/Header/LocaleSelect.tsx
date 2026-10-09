@@ -11,9 +11,16 @@ import Sort, { type SortOption } from '@/components/ui/Sort';
 
 type AppLocale = (typeof routing.locales)[number];
 
+const LOCALE_LABELS: Record<AppLocale, string> = {
+  ko: '한국어',
+  en: 'English',
+  zh: '中文',
+  ja: '日本語',
+};
+
 const LOCALE_OPTIONS: SortOption<AppLocale>[] = routing.locales.map((code) => ({
   value: code,
-  label: code.toUpperCase(),
+  label: LOCALE_LABELS[code],
 }));
 
 export default function LocaleSelect() {

@@ -28,12 +28,12 @@ export default function MoverEstimateConfirmedDetailPageContent({
 
   // 견적 조회 실패
   if (detail.status === 'estimate-error') {
-    return <EmptyState message={tEstimate('notFound')} />;
+    return <EmptyState fit="title" message={tEstimate('notFound')} />;
   }
 
   // 기사님 조회 실패
   if (detail.status === 'mover-error') {
-    return <EmptyState message={tMover('notFound')} />;
+    return <EmptyState fit="title" message={tMover('notFound')} />;
   }
 
   // 견적 상세 + 기사님 상세 조회 성공
@@ -43,6 +43,7 @@ export default function MoverEstimateConfirmedDetailPageContent({
   if (estimate.status !== 'ACCEPTED') {
     return (
       <EmptyState
+        fit="title"
         message={t('notConfirmed')}
         buttonLabel={t('goSent')}
         href={ROUTES.moverEstimates}

@@ -186,17 +186,3 @@ export function createDesignatedEstimate(
     },
   );
 }
-
-/*
-@ 기사님 프로필 이미지 URL
-- 백엔드는 '/uploads/movers/xxx.webp' 같은 백엔드 기준 상대 경로를 저장한다
-  → 프록시(/api)를 타도록 앞에 붙인다
-- ponytail: S3로 바뀌어 절대 URL이 내려오면 next.config의 images.remotePatterns에
-  그 도메인을 추가해야 next/image가 렌더한다
-*/
-export function resolveMoverImageUrl(imgUrl: string | null): string | null {
-  if (!imgUrl) return null;
-  if (imgUrl.startsWith('http')) return imgUrl;
-
-  return `/api${imgUrl.startsWith('/') ? '' : '/'}${imgUrl}`;
-}

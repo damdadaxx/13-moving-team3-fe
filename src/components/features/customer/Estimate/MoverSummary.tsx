@@ -7,9 +7,10 @@ import { useTranslations } from 'next-intl';
 import IcLike from '@/assets/icons/ic_like.svg';
 import IcMoverMark from '@/assets/icons/ic_mover_mark.svg';
 import IcStar from '@/assets/icons/ic_star.svg';
-import ImgProfileExample from '@/assets/images/img_profile_example.png';
 
 import { formatRating } from '@/utils/formatMoverStats';
+
+import ProfileImage from '@/components/ui/ProfileImage';
 
 interface MoverSummaryProps {
   name: string;
@@ -50,17 +51,7 @@ export default function MoverSummary({
 
   return (
     <div className="flex items-center gap-[8px] border-b border-line-200 pt-[12px] pb-[20px]">
-      {/*
-      @ 프로필 이미지
-      - imgUrl은 백엔드 업로드 경로이거나 S3 주소라 호스트가 정해져 있지 않다.
-        next/image는 remotePatterns 설정이 필요해서 여기서는 img를 쓴다.
-      */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={imgUrl ?? ImgProfileExample.src}
-        alt=""
-        className="size-[50px] shrink-0 rounded-[12px] bg-black-300 object-cover"
-      />
+      <ProfileImage imageUrl={imgUrl} className="size-[50px]" sizes="50px" />
 
       <div className="flex min-w-0 flex-1 flex-col gap-[4px]">
         <div className="flex items-center justify-between">

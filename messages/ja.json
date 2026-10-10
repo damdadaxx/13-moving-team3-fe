@@ -9,6 +9,7 @@
     "price": "{price}ウォン",
     "careerUnderOneYear": "1年未満",
     "close": "閉じる",
+    "scrollToTop": "ページ上部へ",
     "selectComplete": "選択完了",
     "previous": "戻る",
     "next": "次へ",
@@ -48,6 +49,7 @@
     "likedMovers": "お気に入りの業者",
     "reviews": "引越しレビュー",
     "mypage": "マイページ",
+    "editInfo": "自分の情報を編集",
     "logout": "ログアウト"
   },
   "Notification": {
@@ -156,7 +158,6 @@
     "clear": "検索語を消去"
   },
   "MoverDetail": {
-    "metaTitle": "業者詳細",
     "notFound": "業者の情報が見つかりません。",
     "requestLine1": "{nickname}に",
     "requestLine2": "指定見積もりを依頼しましょう！",
@@ -320,7 +321,6 @@
     "EXPIRED": "期限切れ"
   },
   "Estimate": {
-    "metaTitle": "見積もり詳細",
     "notFound": "見積もり情報が見つかりません。",
     "info": "見積もり情報",
     "requestedAt": "見積もり依頼日",
@@ -504,7 +504,6 @@
     "sendFailed": "見積もりの送信に失敗しました。しばらくしてから再度お試しください。"
   },
   "MoverMypage": {
-    "metaTitle": "マイページ",
     "editProfile": "プロフィールを編集",
     "editAccount": "基本情報を編集",
     "profileRequiredTitle": "プロフィール登録",
@@ -561,6 +560,28 @@
   "Metadata": {
     "siteTitle": "Moving : 引越しをする人と引越しのプロをつなぐサービス",
     "siteDescription": "引越しをする人と引越しのプロをつなぐマッチングサービス",
-    "ogTitle": "Moving : 面倒な引越し準備も、Movingひとつで完了！"
+    "ogTitle": "Moving : 面倒な引越し準備も、Movingひとつで完了！",
+    "customerSignin": "ログイン",
+    "customerSignup": "会員登録",
+    "moverSignin": "業者ログイン",
+    "moverSignup": "業者会員登録",
+    "socialLogin": "ソーシャルログイン",
+    "estimateRequest": "見積もり依頼",
+    "moverFind": "引越し業者を探す",
+    "moverDetail": "業者詳細",
+    "likedMovers": "お気に入りの業者",
+    "profileNew": "プロフィール登録",
+    "moverProfileNew": "業者プロフィール登録",
+    "profileEdit": "プロフィール編集",
+    "accountEdit": "基本情報の編集",
+    "estimatesPending": "保留中の見積もり",
+    "estimatesReceived": "受け取った見積もり",
+    "estimateDetail": "見積もり詳細",
+    "estimatesSent": "送信した見積もり",
+    "estimatesRejected": "お断りした依頼",
+    "reviewsPending": "投稿できるレビュー",
+    "reviewsCompleted": "投稿したレビュー",
+    "moverRequests": "受信した依頼",
+    "mypage": "マイページ"
   }
 }

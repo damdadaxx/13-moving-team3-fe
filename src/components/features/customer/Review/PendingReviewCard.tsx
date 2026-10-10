@@ -6,7 +6,6 @@ import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import IcDriverMark from '@/assets/icons/ic_driver.png';
-import ImgMoverCharacter from '@/assets/images/img_profile_example.png';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useFormatDate } from '@/hooks/common/useFormatDate';
@@ -15,6 +14,7 @@ import { useFormatPrice } from '@/hooks/common/useFormatPrice';
 import { cn } from '@/utils/cn';
 
 import Button from '@/components/ui/Button/Button';
+import ProfileImage from '@/components/ui/ProfileImage';
 import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
 
 interface PendingReviewCardProps {
@@ -44,7 +44,6 @@ export default function PendingReviewCard({
   onWrite,
 }: PendingReviewCardProps) {
   const tagSize = useBreakpointValue('sm', 'sm', 'md');
-  const profileImageSrc = review.imgUrl ?? ImgMoverCharacter;
   const router = useRouter();
   const t = useTranslations('CustomerReviews');
   const tCard = useTranslations('MoverCard');
@@ -104,16 +103,12 @@ export default function PendingReviewCard({
                 {review.description}
               </p>
             </div>
-            <div className="relative size-[64px] shrink-0 overflow-hidden rounded-[12px] bg-black-300">
-              <Image
-                src={profileImageSrc}
-                alt={tCard('profileAlt', { nickname: review.moverName })}
-                fill
-                unoptimized={typeof profileImageSrc === 'string'}
-                className="object-cover object-[center_20%]"
-                sizes="64px"
-              />
-            </div>
+            <ProfileImage
+              imageUrl={review.imgUrl}
+              alt={tCard('profileAlt', { nickname: review.moverName })}
+              className="size-[64px]"
+              sizes="64px"
+            />
           </div>
           <div className="flex flex-col">
             <div className="mb-[12px] flex w-full items-center gap-[16px]">
@@ -156,16 +151,12 @@ export default function PendingReviewCard({
               router.push(`/mover/${review.moverId}`);
             }}
           >
-            <div className="relative size-[80px] shrink-0 overflow-hidden rounded-[12px] bg-black-300">
-              <Image
-                src={profileImageSrc}
-                alt={tCard('profileAlt', { nickname: review.moverName })}
-                fill
-                unoptimized={typeof profileImageSrc === 'string'}
-                className="object-cover object-[center_20%]"
-                sizes="80px"
-              />
-            </div>
+            <ProfileImage
+              imageUrl={review.imgUrl}
+              alt={tCard('profileAlt', { nickname: review.moverName })}
+              className="size-[80px]"
+              sizes="80px"
+            />
             <div className="flex min-w-0 flex-1 flex-col">
               <div className="flex min-w-0 w-full flex-col items-start gap-[4px] tablet:flex-row tablet:items-start tablet:gap-[6px]">
                 <span className="relative flex h-[18.2px] w-[16px] shrink-0 items-center justify-center tablet:mt-[4px]">
@@ -237,16 +228,12 @@ export default function PendingReviewCard({
               router.push(`/mover/${review.moverId}`);
             }}
           >
-            <div className="relative size-[100px] shrink-0 overflow-hidden rounded-[12px] bg-black-300">
-              <Image
-                src={profileImageSrc}
-                alt={tCard('profileAlt', { nickname: review.moverName })}
-                fill
-                unoptimized={typeof profileImageSrc === 'string'}
-                className="object-cover object-[center_20%]"
-                sizes="100px"
-              />
-            </div>
+            <ProfileImage
+              imageUrl={review.imgUrl}
+              alt={tCard('profileAlt', { nickname: review.moverName })}
+              className="size-[100px]"
+              sizes="100px"
+            />
             <div className="flex min-w-0 flex-1 flex-col">
               <div className="flex min-w-0 w-full flex-col items-start gap-[4px] tablet:flex-row tablet:items-start tablet:gap-[6px]">
                 <span className="relative flex h-[18.2px] w-[16px] shrink-0 items-center justify-center tablet:mt-[4px]">

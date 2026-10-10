@@ -1,4 +1,6 @@
 // 헤더 프로필 드롭다운
+import { useLayoutEffect, useRef } from 'react';
+
 import { Link } from '@/i18n/navigation';
 import type { AuthUser } from '@/types/auth';
 import type { Role } from '@/types/role';
@@ -45,6 +47,14 @@ const PROFILE_MENU_DATA: Record<
       labelKey: 'mypage',
       href: ROUTES.moverMypage,
     },
+    {
+      labelKey: 'editProfile',
+      href: ROUTES.moverProfileEdit,
+    },
+    {
+      labelKey: 'editInfo',
+      href: ROUTES.moverAccount,
+    },
   ],
 };
 
@@ -71,6 +81,26 @@ const profileDropdownItem = cva(
     },
   },
 );
+
+/* 헤더 px-[24px] 와 같은 우측 여백. 이 안쪽에 패널 오른쪽 끝을 둔다 */
+const VIEWPORT_EDGE_INSET = 24;
+
+/*
+@ 우측 공간에 맞춰 패널을 당긴다
+- 기본 right 는 버튼 오른쪽으로 내밀어 헤더 끝에 붙이려는 값이다
+- 그 값이 화면을 넘치면, 넘친 만큼만 right 를 키워 안으로 들인다
+*/
+function placeWithinViewport(panel: HTMLElement) {
+  panel.style.right = '';
+  const overflow =
+    panel.getBoundingClientRect().right -
+    (window.innerWidth - VIEWPORT_EDGE_INSET);
+
+  if (overflow <= 0) return;
+
+  const currentRight = Number.parseFloat(getComputedStyle(panel).right) || 0;
+  panel.style.right = `${currentRight + overflow}px`;
+}
 
 const profileDropdownPanel = cva(
   cn(
@@ -106,6 +136,18 @@ export default function ProfileDropdown({
   onLogout,
 }: ProfileDropdownProps) {
   const t = useTranslations('ProfileMenu');
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+
+    const place = () => placeWithinViewport(panel);
+
+    place();
+    window.addEventListener('resize', place);
+    return () => window.removeEventListener('resize', place);
+  }, [isOpen]);
 
   const handleLogout = () => {
     onLogout?.();
@@ -114,6 +156,7 @@ export default function ProfileDropdown({
 
   return (
     <div
+      ref={panelRef}
       id={HEADER_PANEL_IDS.profile}
       inert={!isOpen}
       className={profileDropdownPanel({ open: isOpen })}

@@ -23,6 +23,7 @@ export default function Error({ error, reset }: ErrorProps) {
 
   return (
     <EmptyState
+      as="main"
       message={t('message')}
       buttonLabel={t('retry')}
       onClick={reset}

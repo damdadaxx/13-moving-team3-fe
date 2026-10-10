@@ -9,6 +9,7 @@
     "price": "{price}원",
     "careerUnderOneYear": "1년 미만",
     "close": "닫기",
+    "scrollToTop": "맨 위로",
     "selectComplete": "선택완료",
     "previous": "이전",
     "next": "다음",
@@ -48,6 +49,7 @@
     "likedMovers": "찜한 기사님",
     "reviews": "이사 리뷰",
     "mypage": "마이페이지",
+    "editInfo": "내 정보 수정",
     "logout": "로그아웃"
   },
   "Notification": {
@@ -156,7 +158,6 @@
     "clear": "검색어 지우기"
   },
   "MoverDetail": {
-    "metaTitle": "기사님 상세",
     "notFound": "기사님 정보를 찾을 수 없어요.",
     "requestLine1": "{nickname} 기사님에게",
     "requestLine2": "지정 견적을 요청해보세요!",
@@ -320,7 +321,6 @@
     "EXPIRED": "견적 만료"
   },
   "Estimate": {
-    "metaTitle": "견적 상세",
     "notFound": "견적 정보를 찾을 수 없어요.",
     "info": "견적 정보",
     "requestedAt": "견적 요청일",
@@ -504,7 +504,6 @@
     "sendFailed": "견적 전송에 실패했어요. 잠시 후 다시 시도해 주세요."
   },
   "MoverMypage": {
-    "metaTitle": "마이페이지",
     "editProfile": "내 프로필 수정",
     "editAccount": "기본 정보 수정",
     "profileRequiredTitle": "프로필 등록",
@@ -561,6 +560,28 @@
   "Metadata": {
     "siteTitle": "무빙 : 이사 소비자와 이사 전문가 매칭 서비스",
     "siteDescription": "이사 소비자와 이사 전문가 매칭 서비스",
-    "ogTitle": "무빙 : 복잡한 이사 준비, 무빙 하나면 끝!"
+    "ogTitle": "무빙 : 복잡한 이사 준비, 무빙 하나면 끝!",
+    "customerSignin": "일반 유저 로그인",
+    "customerSignup": "일반 유저 회원가입",
+    "moverSignin": "기사님 로그인",
+    "moverSignup": "기사님 회원가입",
+    "socialLogin": "소셜 로그인",
+    "estimateRequest": "견적 요청",
+    "moverFind": "기사님 찾기",
+    "moverDetail": "기사님 상세",
+    "likedMovers": "찜한 기사님",
+    "profileNew": "프로필 등록",
+    "moverProfileNew": "기사님 프로필 등록",
+    "profileEdit": "프로필 수정",
+    "accountEdit": "기본 정보 수정",
+    "estimatesPending": "대기 중인 견적",
+    "estimatesReceived": "받았던 견적",
+    "estimateDetail": "견적 상세",
+    "estimatesSent": "보낸 견적 조회",
+    "estimatesRejected": "반려 요청",
+    "reviewsPending": "작성 가능한 리뷰",
+    "reviewsCompleted": "내가 작성한 리뷰",
+    "moverRequests": "받은 요청",
+    "mypage": "마이페이지"
   }
 }

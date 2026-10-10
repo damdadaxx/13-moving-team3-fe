@@ -19,6 +19,7 @@ import { cn } from '@/utils/cn';
 
 import EstimateRequestHeader from '@/components/features/customer/Estimate/EstimateRequestHeader';
 import PendingEstimateCard from '@/components/features/customer/Estimate/PendingEstimateCard';
+import EmptyListNotice from '@/components/ui/EmptyListNotice';
 import EmptyState from '@/components/ui/EmptyState';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
@@ -49,6 +50,7 @@ export default function EstimatePendingPage() {
   if (activeQuery.isError) {
     return (
       <EmptyState
+        fit="tab"
         message={t('loadFailed')}
         buttonLabel={tError('retry')}
         onClick={() => activeQuery.refetch()}
@@ -61,6 +63,7 @@ export default function EstimatePendingPage() {
   if (!activeRequest) {
     return (
       <EmptyState
+        fit="tab"
         message={t('noActiveRequest')}
         buttonLabel={t('goRequest')}
         href={ROUTES.customerHome}
@@ -100,11 +103,13 @@ export default function EstimatePendingPage() {
         )}
       >
         {pendingEstimates.length === 0 ? (
-          <p className="text-lg-regular text-center text-gray-400 tablet:text-2xl-regular">
-            {activeRequest.status === 'CONFIRMED'
-              ? t('confirmedNotice')
-              : t('waiting')}
-          </p>
+          <EmptyListNotice
+            message={
+              activeRequest.status === 'CONFIRMED'
+                ? t('confirmedNotice')
+                : t('waiting')
+            }
+          />
         ) : (
           <ul
             className={cn(

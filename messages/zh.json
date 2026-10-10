@@ -9,6 +9,7 @@
     "price": "{price}韩元",
     "careerUnderOneYear": "不到1年",
     "close": "关闭",
+    "scrollToTop": "回到顶部",
     "selectComplete": "完成",
     "previous": "上一步",
     "next": "下一步",
@@ -48,6 +49,7 @@
     "likedMovers": "收藏的师傅",
     "reviews": "搬家评价",
     "mypage": "我的页面",
+    "editInfo": "修改我的信息",
     "logout": "退出登录"
   },
   "Notification": {
@@ -156,7 +158,6 @@
     "clear": "清除搜索"
   },
   "MoverDetail": {
-    "metaTitle": "师傅详情",
     "notFound": "找不到该师傅的信息。",
     "requestLine1": "向 {nickname} 师傅",
     "requestLine2": "发送指定报价请求吧！",
@@ -320,7 +321,6 @@
     "EXPIRED": "已过期"
   },
   "Estimate": {
-    "metaTitle": "报价详情",
     "notFound": "找不到报价信息。",
     "info": "报价信息",
     "requestedAt": "报价申请日",
@@ -504,7 +504,6 @@
     "sendFailed": "报价发送失败，请稍后再试。"
   },
   "MoverMypage": {
-    "metaTitle": "我的页面",
     "editProfile": "编辑我的资料",
     "editAccount": "修改基本信息",
     "profileRequiredTitle": "注册资料",
@@ -561,6 +560,28 @@
   "Metadata": {
     "siteTitle": "Moving：搬家用户与搬家师傅匹配服务",
     "siteDescription": "搬家用户与专业搬家师傅的匹配服务",
-    "ogTitle": "Moving：繁琐的搬家准备，一个 Moving 就够了！"
+    "ogTitle": "Moving：繁琐的搬家准备，一个 Moving 就够了！",
+    "customerSignin": "登录",
+    "customerSignup": "注册",
+    "moverSignin": "师傅登录",
+    "moverSignup": "师傅注册",
+    "socialLogin": "社交登录",
+    "estimateRequest": "申请报价",
+    "moverFind": "寻找搬家师傅",
+    "moverDetail": "师傅详情",
+    "likedMovers": "收藏的师傅",
+    "profileNew": "注册资料",
+    "moverProfileNew": "注册师傅资料",
+    "profileEdit": "编辑资料",
+    "accountEdit": "修改基本信息",
+    "estimatesPending": "待处理的报价",
+    "estimatesReceived": "收到的报价",
+    "estimateDetail": "报价详情",
+    "estimatesSent": "已发送的报价",
+    "estimatesRejected": "已拒绝的请求",
+    "reviewsPending": "待评价",
+    "reviewsCompleted": "我的评价",
+    "moverRequests": "收到的请求",
+    "mypage": "我的页面"
   }
 }

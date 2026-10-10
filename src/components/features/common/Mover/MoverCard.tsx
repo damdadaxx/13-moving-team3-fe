@@ -9,13 +9,13 @@ import IcMoverBadge from '@/assets/icons/ic_driver.png';
 import IcLikeActive from '@/assets/icons/ic_like_active.svg';
 import IcLikeInactive from '@/assets/icons/ic_like_inactive.svg';
 import IcStarActive from '@/assets/icons/ic_star_active.svg';
-import ImgProfileDefault from '@/assets/images/img_profile_default.png';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useFormatCareer } from '@/hooks/common/useFormatCareer';
 
 import { cn } from '@/utils/cn';
 
+import ProfileImage from '@/components/ui/ProfileImage';
 import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
 
 /*
@@ -32,52 +32,6 @@ interface MoverCardProps {
 
 const CARD_BASE =
   'block rounded-2xl border-[0.5px] border-line-100 bg-gray-50 p-5 shadow-[-2px_-2px_10px_rgb(220_220_220_/_0.2),2px_2px_10px_rgb(220_220_220_/_0.2)]';
-
-/*
-@ 프로필 이미지
-- 이미지가 없으면 Figma 기본 캐릭터를 black-300 배경 위에 크게 잘라서 보여준다
-  (Figma: 50px 박스에 75px 이미지 left -12.5 / top -7, 134px 박스에 192px 이미지 left -29 / top -16)
-- 업로드 이미지 도메인(S3 등)이 next.config에 등록돼 있지 않아 unoptimized로 그린다
-*/
-function MoverProfileImage({
-  imgUrl,
-  nickname,
-  className,
-  defaultImageClassName,
-}: {
-  imgUrl: string | null;
-  nickname: string;
-  className?: string;
-  defaultImageClassName: string;
-}) {
-  const t = useTranslations('MoverCard');
-
-  return (
-    <div
-      className={cn(
-        'relative shrink-0 overflow-hidden rounded-xl bg-black-300',
-        className,
-      )}
-    >
-      {imgUrl ? (
-        <Image
-          src={imgUrl}
-          alt={t('profileAlt', { nickname })}
-          fill
-          unoptimized
-          className="object-cover"
-        />
-      ) : (
-        <Image
-          src={ImgProfileDefault}
-          alt=""
-          sizes="192px"
-          className={cn('absolute max-w-none', defaultImageClassName)}
-        />
-      )}
-    </div>
-  );
-}
 
 function StatDivider() {
   return <span aria-hidden className="h-3.5 w-px shrink-0 bg-line-200" />;
@@ -167,11 +121,11 @@ export default function MoverCard({ mover, variant = 'list' }: MoverCardProps) {
         <div className="flex flex-col gap-4">
           <p className="text-lg-semibold text-black-300">{mover.shortIntro}</p>
           <div className="flex items-center gap-2">
-            <MoverProfileImage
-              imgUrl={mover.imgUrl}
-              nickname={mover.nickname}
+            <ProfileImage
+              imageUrl={mover.imgUrl}
+              alt={t('profileAlt', { nickname: mover.nickname })}
               className="size-[50px]"
-              defaultImageClassName="size-[150%] left-[-25%] top-[-14%]"
+              sizes="50px"
             />
             <div className="flex min-w-0 flex-1 flex-col gap-1">
               <div className="flex items-center gap-1">
@@ -251,14 +205,14 @@ export default function MoverCard({ mover, variant = 'list' }: MoverCardProps) {
 
       <hr className={cn('col-span-2 mt-4 border-line-100', 'tablet:hidden')} />
 
-      <MoverProfileImage
-        imgUrl={mover.imgUrl}
-        nickname={mover.nickname}
+      <ProfileImage
+        imageUrl={mover.imgUrl}
+        alt={t('profileAlt', { nickname: mover.nickname })}
         className={cn(
           'mt-4 size-[50px]',
           'tablet:col-start-1 tablet:row-span-2 tablet:row-start-2 tablet:mt-3 tablet:size-[134px]',
         )}
-        defaultImageClassName="size-[150%] left-[-25%] top-[-14%] tablet:size-[143%] tablet:left-[-21.6%] tablet:top-[-12%]"
+        sizes="(min-width: 744px) 134px, 50px"
       />
 
       <div

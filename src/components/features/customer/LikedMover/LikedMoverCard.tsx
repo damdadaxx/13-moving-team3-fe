@@ -8,13 +8,13 @@ import Image from 'next/image';
 import IcDriverMark from '@/assets/icons/ic_driver.png';
 import IcLike from '@/assets/icons/ic_like.svg';
 import IcStar from '@/assets/icons/ic_star.svg';
-import ImgMoverCharacter from '@/assets/images/img_profile_example.png';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
 import { cn } from '@/utils/cn';
 
 import Checkbox from '@/components/ui/Checkbox';
+import ProfileImage from '@/components/ui/ProfileImage';
 import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
 
 export interface LikedMover {
@@ -47,25 +47,14 @@ export default function LikedMoverCard({
   const tCommon = useTranslations('Common');
   // 반응형에 맞는 태그 사이즈
   const tagSize = useBreakpointValue('sm', 'md', 'md');
-  const profileImageSrc = mover.imgUrl ? mover.imgUrl : ImgMoverCharacter;
 
   const profile = (
-    <div
-      className={cn(
-        'relative shrink-0 overflow-hidden rounded-[12px] bg-black-300',
-        'size-[50px]',
-        'tablet:size-[134px]',
-      )}
-    >
-      <Image
-        src={profileImageSrc}
-        alt={tCard('profileAlt', { nickname: mover.name })}
-        fill
-        unoptimized={typeof profileImageSrc === 'string'}
-        className="object-cover object-[center_20%]"
-        sizes="(min-width: 744px) 134px, 50px"
-      />
-    </div>
+    <ProfileImage
+      imageUrl={mover.imgUrl}
+      alt={tCard('profileAlt', { nickname: mover.name })}
+      className="size-[50px] tablet:size-[134px]"
+      sizes="(min-width: 744px) 134px, 50px"
+    />
   );
 
   const driverName = (

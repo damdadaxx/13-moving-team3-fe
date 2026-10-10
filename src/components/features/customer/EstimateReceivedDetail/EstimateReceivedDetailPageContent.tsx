@@ -37,12 +37,12 @@ export default function EstimateReceivedDetailPageContent({
 
   // 견적 조회 실패
   if (detail.status === 'estimate-error') {
-    return <EmptyState message={tEstimate('notFound')} />;
+    return <EmptyState fit="titleAndTab" message={tEstimate('notFound')} />;
   }
 
   // 기사님 조회 실패
   if (detail.status === 'mover-error') {
-    return <EmptyState message={tMover('notFound')} />;
+    return <EmptyState fit="titleAndTab" message={tMover('notFound')} />;
   }
 
   // 견적 상세 + 기사님 상세 조회 성공
@@ -52,6 +52,7 @@ export default function EstimateReceivedDetailPageContent({
   if (!RECEIVED_ESTIMATE_STATUSES.includes(estimate.status)) {
     return (
       <EmptyState
+        fit="titleAndTab"
         message={t('notReceived')}
         buttonLabel={t('goReceived')}
         href={ROUTES.customerEstimates}

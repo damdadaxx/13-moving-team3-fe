@@ -1,7 +1,7 @@
 import { getPathname } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
 import type { Metadata } from 'next';
-import { type Locale, hasLocale } from 'next-intl';
+import { type Locale, type Messages, hasLocale } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 
 import {
@@ -82,8 +82,6 @@ export async function getOpenGraph(
 
 /*
 @ 페이지 공통 메타데이터 (제목 + locale별 OG + 트위터 카드)
-- 페이지의 generateMetadata에서 locale과 경로만 넘긴다
-  return createPageMetadata(locale, { title: '기사님 상세', path: `/mover/${id}` });
 */
 export async function createPageMetadata(
   locale: string,
@@ -95,5 +93,41 @@ export async function createPageMetadata(
     twitter: {
       card: 'summary_large_image',
     },
+  };
+}
+
+type PageMetaKey = Exclude<
+  keyof Messages['Metadata'],
+  'siteTitle' | 'siteDescription' | 'ogTitle'
+>;
+
+/*
+@ 페이지 generateMetadata
+- 정적 경로: export const generateMetadata = pageMetadata('likedMovers', '/customer/liked-movers')
+- id가 있는 경로: export const generateMetadata = pageMetadata('moverDetail', ({ id }) => `/mover/${id}`)
+- 'use client' 페이지는 같은 폴더의 layout.tsx(서버)에서 내보낸다
+*/
+export function pageMetadata(
+  titleKey: PageMetaKey,
+  path: string | ((params: { id: string }) => string),
+) {
+  return async function generateMetadata({
+    params,
+  }: {
+    params: Promise<{ locale: string; id?: string }>;
+  }): Promise<Metadata> {
+    const { locale, id } = await params;
+    const currentLocale = hasLocale(routing.locales, locale)
+      ? locale
+      : routing.defaultLocale;
+    const t = await getTranslations({
+      locale: currentLocale,
+      namespace: 'Metadata',
+    });
+
+    return createPageMetadata(currentLocale, {
+      title: t(titleKey),
+      path: typeof path === 'string' ? path : path({ id: id ?? '' }),
+    });
   };
 }

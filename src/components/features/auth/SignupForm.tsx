@@ -98,10 +98,31 @@ export default function SignupForm({ role }: SignupFormProps) {
     null,
   );
   const [now, setNow] = useState(() => Date.now());
+  // expiresAt이 0초가 된 뒤에도 남겨두면 아래 effect가 setInterval을 계속 돈다.
+  // remainingSeconds는 expiresAt에서 다시 계산하므로, 만료 여부는 따로 들고 있는다
+  const [isCodeExpired, setIsCodeExpired] = useState(false);
 
+  /*
+  @ 1초 tick마다 now를 갱신하고, 카운트다운이 0에 닿으면 그 자리에서 바로 비운다
+  - expiresAt/resendAvailableAt을 0초가 된 뒤에도 들고 있으면 이 effect가 계속
+    setInterval을 돌린다. tick 콜백 안에서 비워야 effect가 재실행되며 멈춘다
+    (effect 바디에서 바로 setState하면 리렌더가 리렌더를 부르는 모양이 돼 린트가 막는다)
+  */
   useEffect(() => {
     if (!expiresAt && !resendAvailableAt) return;
-    const id = setInterval(() => setNow(Date.now()), 1000);
+
+    const id = setInterval(() => {
+      const nowValue = Date.now();
+      setNow(nowValue);
+      if (expiresAt !== null && nowValue >= expiresAt) {
+        setIsCodeExpired(true);
+        setExpiresAt(null);
+      }
+      if (resendAvailableAt !== null && nowValue >= resendAvailableAt) {
+        setResendAvailableAt(null);
+      }
+    }, 1000);
+
     return () => clearInterval(id);
   }, [expiresAt, resendAvailableAt]);
 
@@ -111,7 +132,6 @@ export default function SignupForm({ role }: SignupFormProps) {
   const remainingSeconds = expiresAt
     ? Math.max(0, Math.ceil((expiresAt - now) / 1000))
     : null;
-  const isCodeExpired = verificationState !== null && remainingSeconds === 0;
   const cooldownSeconds = resendAvailableAt
     ? Math.max(0, Math.ceil((resendAvailableAt - now) / 1000))
     : 0;
@@ -124,6 +144,7 @@ export default function SignupForm({ role }: SignupFormProps) {
     setCodeError('');
     setExpiresAt(null);
     setResendAvailableAt(null);
+    setIsCodeExpired(false);
   }
 
   async function handleSendCode() {
@@ -144,6 +165,7 @@ export default function SignupForm({ role }: SignupFormProps) {
       });
       setVerification({ email, challengeToken: token, verifiedToken: null });
       setCode('');
+      setIsCodeExpired(false);
       setExpiresAt(Date.now() + expiresInMinutes * 60_000);
       setResendAvailableAt(Date.now() + RESEND_COOLDOWN_SECONDS * 1000);
     } catch (error) {
@@ -232,38 +254,23 @@ export default function SignupForm({ role }: SignupFormProps) {
               {...register('name')}
             />
             <div className="flex flex-col gap-2">
-              <Input
-                label={t('email')}
-                type="email"
-                autoComplete="email"
-                placeholder={t('emailPlaceholder')}
-                size={errors.email ? errorSize : 'sm'}
-                error={errors.email?.message}
-                {...emailField}
-                onChange={(event) => {
-                  // 이메일을 고치면 이전 발송·인증 결과는 더 이상 유효하지 않다
-                  resetEmailState();
-                  return emailField.onChange(event);
-                }}
-              />
-              <div className="flex items-center justify-between gap-2">
-                <p
-                  role="status"
-                  className={cn(
-                    'text-sm-medium',
-                    isEmailVerified ? 'text-orange-400' : 'text-black-200',
-                  )}
-                >
-                  {isEmailVerified
-                    ? t('emailVerified')
-                    : isCodeExpired
-                      ? t('codeExpired')
-                      : isResendCoolingDown
-                        ? t('justSentCodeHint')
-                        : verificationState
-                          ? t('enterCode')
-                          : ''}
-                </p>
+              {/* 이메일 입력칸과 발송 버튼을 한 줄에 둔다. 라벨이 있어서 items-start가 아닌
+              items-end로 맞춰야 버튼이 입력칸 박스와 같은 높이로 붙는다 */}
+              <div className="flex items-end gap-2">
+                <Input
+                  label={t('email')}
+                  type="email"
+                  autoComplete="email"
+                  placeholder={t('emailPlaceholder')}
+                  size={errors.email ? errorSize : 'sm'}
+                  error={errors.email?.message}
+                  {...emailField}
+                  onChange={(event) => {
+                    // 이메일을 고치면 이전 발송·인증 결과는 더 이상 유효하지 않다
+                    resetEmailState();
+                    return emailField.onChange(event);
+                  }}
+                />
                 <button
                   type="button"
                   onClick={handleSendCode}
@@ -284,6 +291,23 @@ export default function SignupForm({ role }: SignupFormProps) {
                         : t('sendCode')}
                 </button>
               </div>
+              <p
+                role="status"
+                className={cn(
+                  'text-sm-medium',
+                  isEmailVerified ? 'text-orange-400' : 'text-black-200',
+                )}
+              >
+                {isEmailVerified
+                  ? t('emailVerified')
+                  : isCodeExpired
+                    ? t('codeExpired')
+                    : isResendCoolingDown
+                      ? t('justSentCodeHint')
+                      : verificationState
+                        ? t('enterCode')
+                        : ''}
+              </p>
 
               {/* 재발송 실패도 포함한다 — verificationState가 남아 있는 동안 재발송이
               실패해도 "번호가 틀렸다"는 뜻으로 보이지 않도록 Input과는 분리해 둔다 */}

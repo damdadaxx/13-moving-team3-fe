@@ -2,9 +2,9 @@
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
-import ImgMoveTypeBox from '@/assets/images/landing/img_move_type_box.png';
-import ImgMoveTypeBuilding from '@/assets/images/landing/img_move_type_building.png';
-import ImgMoveTypeTruck from '@/assets/images/landing/img_move_type_truck.png';
+import ImgMoveTypeBox from '@/assets/images/landing/img_move_type_box.webp';
+import ImgMoveTypeBuilding from '@/assets/images/landing/img_move_type_building.webp';
+import ImgMoveTypeTruck from '@/assets/images/landing/img_move_type_truck.webp';
 
 import { cn } from '@/utils/cn';
 

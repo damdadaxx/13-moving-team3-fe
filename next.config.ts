@@ -1,3 +1,4 @@
+import { withSentryConfig } from '@sentry/nextjs/config';
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
@@ -57,4 +58,17 @@ const nextConfig: NextConfig = {
 // next-intl 플러그인: src/i18n/request.ts를 요청별 i18n 설정으로 연결한다
 const withNextIntl = createNextIntlPlugin();
 
-export default withNextIntl(nextConfig);
+/*
+@ Sentry 빌드 설정
+- 빌드할 때 소스맵을 Sentry에 올려, 에러 위치가 압축 전 코드로 보이게 한다
+- SENTRY_AUTH_TOKEN이 없으면(로컬 빌드 등) 업로드만 건너뛰고 빌드는 그대로 된다
+*/
+export default withSentryConfig(withNextIntl(nextConfig), {
+  org: 'e538612af030',
+  project: 'moving-fe',
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  // CI가 아닐 때는 업로드 로그를 숨긴다
+  silent: !process.env.CI,
+  // 클라이언트 소스맵을 더 넓게 올려 스택 트레이스를 더 읽기 좋게 한다 (공식 권장)
+  widenClientFileUpload: true,
+});

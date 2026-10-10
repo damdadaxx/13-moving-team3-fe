@@ -27,8 +27,8 @@ import Image from 'next/image';
 
 import IcCheckCircle from '@/assets/icons/ic_check_circle.svg';
 import ImgLogoM from '@/assets/icons/ic_driver.png';
-import IcLike from '@/assets/icons/ic_like.svg';
-import IcLikeLine from '@/assets/icons/ic_like_line.svg';
+import IcLikeActive from '@/assets/icons/ic_like_active.svg';
+import IcLikeInactive from '@/assets/icons/ic_like_inactive.svg';
 import IcStar from '@/assets/icons/ic_star.svg';
 import ImgAvatarBeaver from '@/assets/images/img_avatar_beaver.png';
 
@@ -151,9 +151,10 @@ export default function ReceivedEstimateCard({
   return (
     <div
       className={cn(
-        'relative rounded-[16px] transition-[background-color,box-shadow] hover:bg-background-200',
-        // 다른 카드(기사님 카드 등)와 같은 그림자를 hover 때만 준다
-        'hover:shadow-[-2px_-2px_10px_rgb(220_220_220_/_0.2),2px_2px_10px_rgb(220_220_220_/_0.2)]',
+        'relative rounded-[16px] transition-shadow',
+        // 다른 카드(기사님 카드 등)와 같은 그림자를 hover 때만 준다 (배경색 변화 없이 그림자만)
+        // 모바일은 터치라 hover를 두지 않는다
+        'tablet:hover:shadow-[-2px_-2px_10px_rgb(220_220_220_/_0.2),2px_2px_10px_rgb(220_220_220_/_0.2)]',
       )}
     >
       <Link
@@ -226,13 +227,17 @@ export default function ReceivedEstimateCard({
                     aria-label={isLiked ? tLike('unlike') : tLike('like')}
                     className="pointer-events-auto flex shrink-0 cursor-pointer items-center gap-[2px] text-md-regular text-gray-500 tablet:text-black-500"
                   >
+                    {/* 기사님 찾기 카드(MoverCard)와 같은 하트 짝 아이콘·크기 */}
                     {isLiked ? (
-                      <IcLike
+                      <IcLikeActive
                         aria-hidden
-                        className="size-[24px] text-red-200"
+                        className="size-[24px] shrink-0"
                       />
                     ) : (
-                      <IcLikeLine aria-hidden className="size-[24px]" />
+                      <IcLikeInactive
+                        aria-hidden
+                        className="size-[24px] shrink-0"
+                      />
                     )}
                     <span aria-hidden>{likeCount}</span>
                     <span className="sr-only">

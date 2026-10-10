@@ -11,6 +11,7 @@ import IcAlarmClose from '@/assets/icons/ic_alarm_close.svg';
 import IcChat from '@/assets/icons/ic_chat.svg';
 
 import { useOutsideClick } from '@/hooks/common/useOutsideClick';
+import { useShowTopButton } from '@/hooks/common/useShowTopButton';
 import { useAuth } from '@/hooks/features/auth/useAuth';
 import { useChatRoomsQuery } from '@/hooks/features/chat/queries/queries';
 import { useChatRealtimeSync } from '@/hooks/features/chat/useChatRealtimeSync';
@@ -113,6 +114,7 @@ function ChatRoomItem({ room, onClick }: ChatRoomItemProps) {
 export default function ChatFloatingButton() {
   const t = useTranslations('Chat');
   const { isLoggedIn } = useAuth();
+  const showTopButton = useShowTopButton();
   const [isOpen, setIsOpen] = useState(false);
   const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -145,9 +147,13 @@ export default function ChatFloatingButton() {
       className={cn(
         // 모바일에서 패널이 전체화면(z-modal)으로 뜨므로, 패널을 품은 이 래퍼도
         // 같은 스태킹 컨텍스트 상 z-modal이어야 헤더(z-header) 위로 뜬다
-        'fixed right-[16px] bottom-[76px] z-modal',
-        'tablet:right-[24px] tablet:bottom-[92px] tablet:z-dropdown',
-        'desktop:right-[40px] desktop:bottom-[104px]',
+        // 기본 위치는 맨 위로 버튼 자리. 그 버튼이 보이면 버튼 높이(48/56) + 간격 12만큼 올라간다
+        'fixed right-[16px] bottom-[24px] z-modal transition-transform duration-300 ease-out',
+        'tablet:right-[24px] tablet:bottom-[32px] tablet:z-dropdown',
+        'desktop:right-[40px] desktop:bottom-[40px]',
+        showTopButton
+          ? '-translate-y-[60px] desktop:-translate-y-[68px]'
+          : 'translate-y-0',
       )}
     >
       {/*
@@ -238,7 +244,7 @@ export default function ChatFloatingButton() {
                 {isError ? (
                   <li
                     className={cn(
-                      'px-[20px] py-[24px] text-md-medium text-gray-400',
+                      'px-[20px] py-[24px] text-md-medium text-gray-400 text-center',
                     )}
                   >
                     {t('error')}
@@ -247,7 +253,7 @@ export default function ChatFloatingButton() {
                 {!isLoading && !isError && rooms.length === 0 ? (
                   <li
                     className={cn(
-                      'px-[20px] py-[24px] text-md-medium text-gray-400',
+                      'px-[20px] py-[24px] text-md-medium text-gray-400 text-center',
                     )}
                   >
                     {t('empty')}

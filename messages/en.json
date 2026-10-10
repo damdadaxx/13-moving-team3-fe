@@ -61,7 +61,122 @@
     "empty": "No notifications yet."
   },
   "Footer": {
-    "tagline": "Complicated move? Moving handles it all!"
+    "tagline": "Complicated move? Moving handles it all!",
+    "copyright": "© {year} {siteName}. All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "cookiePolicy": "Cookie Policy"
+  },
+  "PrivacyPolicy": {
+    "intro": "Moving (the 'Company') values your personal information and complies with applicable data protection laws, including the Personal Information Protection Act. This policy explains what personal data we collect while you use our moving-quote brokerage service (the 'Service'), why we collect it, and how we store it.",
+    "sections": [
+      {
+        "title": "1. Personal information we collect",
+        "items": [
+          "Email sign-up: email, password, name, phone number",
+          "Social login (Google, Kakao, Naver): email, name, social account identifier",
+          "Customer profile: profile photo, service types used, region",
+          "Mover profile: profile photo, nickname, career, introduction, service types offered, service regions",
+          "Quote requests: preferred moving date, departure/arrival address and postal code",
+          "Reviews: rating, review text",
+          "Automatically collected: access logs, service usage records, cookies"
+        ]
+      },
+      {
+        "title": "2. How we collect personal information",
+        "items": [
+          "Entered directly by users during sign-up, profile registration/editing, quote requests, and review writing",
+          "Received from Google, Kakao, or Naver during social login"
+        ]
+      },
+      {
+        "title": "3. Purpose of use",
+        "items": [
+          "Identifying members and maintaining login sessions, preventing fraudulent use",
+          "Providing the moving-quote matching and brokerage service between customers and movers",
+          "Verifying identity through email verification",
+          "Managing quote/review history and responding to customer inquiries",
+          "Improving service quality and developing new features"
+        ]
+      },
+      {
+        "title": "4. Retention period",
+        "before": "We delete personal information without delay when an account is withdrawn. However, where related laws such as the Act on Consumer Protection in Electronic Commerce require retention for a set period, we keep the information for that period."
+      },
+      {
+        "title": "5. Sharing with third parties",
+        "before": "Only when a user requests a quote, we share the information needed to provide the service (departure/arrival location, moving date, contact information, etc.) with the matched mover. Otherwise, we do not share personal information with third parties except where required by law or with the user's separate consent."
+      },
+      {
+        "title": "6. Outsourced processing",
+        "before": "We use the following external services to provide the Service, and personal information may be processed according to each provider's own policy.",
+        "items": [
+          "Google, Kakao, Naver: social login authentication",
+          "Kakao Address Search API: searching departure/arrival addresses for moves"
+        ]
+      },
+      {
+        "title": "7. User rights",
+        "before": "Users may view or correct their personal information at any time, and may request deletion of collected personal information by withdrawing their membership."
+      },
+      {
+        "title": "8. Measures to protect personal information",
+        "items": [
+          "Passwords are stored encrypted.",
+          "Login sessions are managed with a short-lived access token and an httpOnly cookie, so they cannot be read directly from JavaScript."
+        ]
+      },
+      {
+        "title": "9. Notice obligation",
+        "before": "This policy may be revised following changes in law or to the Service. Any changes will be announced through the notice board within the Service."
+      }
+    ]
+  },
+  "CookiePolicy": {
+    "intro": "Moving (the 'Company') uses cookies only for purposes strictly necessary to provide the Service, such as keeping you signed in. We do not use separate advertising or analytics cookies.",
+    "cookieDuration": "Retention period: {duration}",
+    "sections": [
+      {
+        "title": "1. What is a cookie",
+        "before": "A cookie is a small data file stored in your browser when you visit a website. It is used to identify users or keep them signed in."
+      },
+      {
+        "title": "2. Cookies we use",
+        "cookies": [
+          {
+            "name": "accessToken",
+            "purpose": "An authentication token that keeps you signed in. It is httpOnly, so it cannot be read by JavaScript.",
+            "duration": "15 minutes (reissued via refreshToken on expiry)"
+          },
+          {
+            "name": "refreshToken",
+            "purpose": "A token used to continue your session without signing in again after accessToken expires. It is httpOnly and is only sent with authentication requests (/api/auth).",
+            "duration": "7 days"
+          },
+          {
+            "name": "NEXT_LOCALE",
+            "purpose": "Remembers the language you selected in the header (Korean, English, Chinese, Japanese) so the same language is shown on your next visit.",
+            "duration": "1 year"
+          }
+        ],
+        "after": "accessToken and refreshToken are essential cookies required for login functionality; blocking them will prevent you from staying signed in. NEXT_LOCALE only remembers your language setting, and blocking it does not affect your use of the Service."
+      },
+      {
+        "title": "3. Cookies used during social login (Google · Kakao · Naver)",
+        "items": [
+          "Clicking a social login button takes you to that platform's login screen. During this process, Google, Kakao, or Naver may issue their own cookies according to their own policies. These are managed by each platform and are not accessed or controlled by the Company.",
+          "An oauthState cookie is issued to verify that the login request is legitimate. It is kept only for the brief moment you are redirected to the social login screen and is deleted immediately once the login process finishes.",
+          "Once you successfully log in and return to the Company's service, the Company issues the accessToken and refreshToken cookies from that point on to keep you signed in."
+        ]
+      },
+      {
+        "title": "4. When filling out profile registration or quote request forms",
+        "before": "Values you enter in forms such as sign-up, mover/customer profile registration (nickname, career, introduction, region, profile photo, etc.), and moving quote requests (departure/arrival location, preferred moving date, etc.) are not stored in cookies. While you are typing, they are held only temporarily in your browser's memory, and are sent to and stored on the server only when you press the 'Register' or 'Save' button."
+      },
+      {
+        "title": "5. Managing cookies",
+        "before": "Most browsers let you refuse or delete cookies from their settings menu. However, accessToken and refreshToken are required to stay signed in, so blocking them will prevent you from using features that require login (quote requests, profile management, etc.)."
+      }
+    ]
   },
   "IconButton": {
     "like": "Like",
@@ -95,8 +210,17 @@
     "heroDescLine2": "and makes choosing a mover simple",
     "moveTypeLine1": "Skip the hassle,",
     "moveTypeLine2": "start by choosing your move type",
+    "moveTypeSmallDesc": "Studio, 1-bedroom, under ~20 pyeong",
+    "moveTypeHomeDesc": "3-bedroom, under ~20 pyeong",
+    "moveTypeOfficeDesc": "Offices, commercial spaces",
     "compareLine1": "Compare estimates",
     "compareLine2": "at a glance",
+    "compareCardComment": "We'll transport your belongings safely.",
+    "compareCardMover": "Kim Code",
+    "compareCardFrom": "Jung-gu, Seoul",
+    "compareCardTo": "Suwon, Gyeonggi",
+    "requestCardFrom": "343 Samil-daero, Jung-gu, Seoul",
+    "requestCardTo": "428 Seolleung-ro, Gangnam-gu, Seoul",
     "requestLine1": "Request your move",
     "requestLine2": "and get estimates",
     "requestImageAlt": "Moving estimate request"

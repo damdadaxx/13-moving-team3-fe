@@ -14,6 +14,8 @@ import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
 import { cn } from '@/utils/cn';
 
+import ScrollReveal from '@/components/ui/ScrollReveal';
+
 export default function Hero() {
   const t = useTranslations('Landing');
   /*
@@ -61,22 +63,24 @@ export default function Hero() {
             aria-hidden
             className={cn('hidden h-[100px] w-[160px] desktop:block')}
           />
-          <h1
-            className={cn(
-              'mb-[8px] text-xl-bold text-gray-50',
-              'tablet:text-3xl-bold',
-            )}
-          >
-            {t('heroTitle')}
-          </h1>
-          <p
-            className={cn(
-              'text-lg-regular text-gray-200',
-              'tablet:text-2lg-regular',
-            )}
-          >
-            {t('heroDescLine1')} <br /> {t('heroDescLine2')}
-          </p>
+          <ScrollReveal delay={0.2}>
+            <h1
+              className={cn(
+                'mb-[8px] text-xl-bold text-gray-50',
+                'tablet:text-3xl-bold',
+              )}
+            >
+              {t('heroTitle')}
+            </h1>
+            <p
+              className={cn(
+                'text-lg-regular text-gray-200',
+                'tablet:text-2lg-regular',
+              )}
+            >
+              {t('heroDescLine1')} <br /> {t('heroDescLine2')}
+            </p>
+          </ScrollReveal>
         </div>
       </div>
     </section>

@@ -61,7 +61,122 @@
     "empty": "暂无通知。"
   },
   "Footer": {
-    "tagline": "繁琐的搬家准备，一个 Moving 就搞定！"
+    "tagline": "繁琐的搬家准备，一个 Moving 就搞定！",
+    "copyright": "© {year} {siteName}. All rights reserved.",
+    "privacyPolicy": "隐私政策",
+    "cookiePolicy": "Cookie 政策"
+  },
+  "PrivacyPolicy": {
+    "intro": "Moving（以下简称“本公司”）重视用户的个人信息，并遵守《个人信息保护法》等相关法律法规。本政策说明用户在使用本公司提供的搬家报价中介服务（以下简称“服务”）过程中，本公司收集的个人信息项目、使用目的及保存方式。",
+    "sections": [
+      {
+        "title": "1. 收集的个人信息项目",
+        "items": [
+          "邮箱注册：邮箱、密码、姓名、手机号码",
+          "社交登录（Google、Kakao、Naver）：邮箱、姓名、社交账号识别信息",
+          "客户资料：头像、使用的服务类型、所在地区",
+          "司机师傅资料：头像、昵称、从业经历、自我介绍、提供的服务类型、可服务地区",
+          "申请报价时：预计搬家日期、出发地·到达地地址及邮政编码",
+          "撰写评价时：评分、评价内容",
+          "自动收集：访问日志、服务使用记录、Cookie"
+        ]
+      },
+      {
+        "title": "2. 个人信息收集方式",
+        "items": [
+          "用户在注册、资料登记与修改、申请报价、撰写评价时直接输入",
+          "社交登录时由 Google、Kakao、Naver 提供"
+        ]
+      },
+      {
+        "title": "3. 个人信息的使用目的",
+        "items": [
+          "会员身份识别及登录状态维持，防止不当使用",
+          "为客户与司机师傅之间提供搬家报价匹配及中介服务",
+          "通过邮箱验证进行身份确认",
+          "管理报价、评价等服务使用记录，处理客户咨询",
+          "改善服务质量，开发新功能"
+        ]
+      },
+      {
+        "title": "4. 个人信息的保存及使用期限",
+        "before": "会员注销账户后将立即销毁其个人信息。但若《电子商务消费者保护法》等相关法律法规要求保存一定期限，则在该期限内予以保存。"
+      },
+      {
+        "title": "5. 个人信息的第三方提供",
+        "before": "仅当用户申请报价时，本公司会向匹配的司机师傅提供提供服务所需范围内的信息（出发地·到达地、预计搬家日期、联系方式等）。除此之外，除非法律另有规定或获得用户另行同意，本公司不会向第三方提供个人信息。"
+      },
+      {
+        "title": "6. 个人信息处理委托",
+        "before": "本公司为提供服务使用以下外部服务，个人信息可能依据各服务商的政策进行处理。",
+        "items": [
+          "Google、Kakao、Naver：社交登录身份验证",
+          "Kakao 地址搜索 API：搜索搬家出发地·到达地地址"
+        ]
+      },
+      {
+        "title": "7. 用户的权利",
+        "before": "用户可随时查询或更正自己的个人信息，也可通过注销账户要求删除已收集的个人信息。"
+      },
+      {
+        "title": "8. 个人信息安全保护措施",
+        "items": [
+          "密码经加密后保存。",
+          "登录会话通过有效期较短的访问令牌和 httpOnly Cookie 进行管理，无法通过 JavaScript 直接读取。"
+        ]
+      },
+      {
+        "title": "9. 告知义务",
+        "before": "本政策可能根据法律法规或服务变更进行修订，如有变更，将通过服务内公告进行告知。"
+      }
+    ]
+  },
+  "CookiePolicy": {
+    "intro": "Moving（以下简称“本公司”）仅出于维持登录状态等服务提供所必需的目的使用 Cookie，不使用额外的广告或分析类 Cookie。",
+    "cookieDuration": "保存期限：{duration}",
+    "sections": [
+      {
+        "title": "1. 什么是 Cookie",
+        "before": "Cookie 是用户访问网站时保存在浏览器中的小型数据文件，用于识别用户身份或维持登录状态。"
+      },
+      {
+        "title": "2. 本公司使用的 Cookie",
+        "cookies": [
+          {
+            "name": "accessToken",
+            "purpose": "用于维持登录状态的身份验证令牌。设置为 httpOnly，无法通过 JavaScript 读取。",
+            "duration": "15 分钟（过期后通过 refreshToken 重新签发）"
+          },
+          {
+            "name": "refreshToken",
+            "purpose": "用于在 accessToken 过期后无需重新登录即可延续会话的令牌。设置为 httpOnly，仅在身份验证请求（/api/auth）中发送。",
+            "duration": "7 天"
+          },
+          {
+            "name": "NEXT_LOCALE",
+            "purpose": "记住您在页头选择的语言（韩语·英语·中文·日语），以便下次访问时显示相同语言。",
+            "duration": "1 年"
+          }
+        ],
+        "after": "accessToken 和 refreshToken 是登录功能必需的必要 Cookie，若屏蔽将无法维持登录状态。NEXT_LOCALE 仅用于记住语言设置，屏蔽后不影响服务的正常使用。"
+      },
+      {
+        "title": "3. 使用社交登录（Google · Kakao · Naver）时的 Cookie",
+        "items": [
+          "点击社交登录按钮后会跳转至相应平台的登录页面，在此过程中 Google·Kakao·Naver 可能根据其自身政策签发各自的 Cookie。这些 Cookie 由各平台自行管理，本公司无法访问或控制。",
+          "为确认登录请求的合法性，系统会在跳转至社交登录页面的短暂时间内签发 oauthState Cookie，登录流程结束后将立即删除。",
+          "登录成功并返回本公司服务后，本公司将开始签发 accessToken 和 refreshToken Cookie 以维持登录状态。"
+        ]
+      },
+      {
+        "title": "4. 填写资料登记·报价申请表单时",
+        "before": "在注册会员、司机师傅与客户资料登记（昵称、从业经历、自我介绍、所在地区、头像等）、搬家报价申请（出发地·到达地、预计搬家日期等）表单中输入的内容不会保存在 Cookie 中。输入过程中仅临时保存在浏览器内存里，只有点击“注册”·“保存”按钮后才会发送至服务器并保存。"
+      },
+      {
+        "title": "5. Cookie 管理方法",
+        "before": "大多数浏览器可在设置菜单中拒绝保存或删除 Cookie。但 accessToken 和 refreshToken 是维持登录所必需的 Cookie，若屏蔽将无法使用需要登录的功能（报价申请、资料管理等）。"
+      }
+    ]
   },
   "IconButton": {
     "like": "收藏",
@@ -95,8 +210,17 @@
     "heroDescLine2": "让选择搬家公司变得简单",
     "moveTypeLine1": "告别繁琐的筛选，",
     "moveTypeLine2": "从选择搬家类型开始",
+    "moveTypeSmallDesc": "一居室、两居室，20坪以下",
+    "moveTypeHomeDesc": "三居室，20坪以下",
+    "moveTypeOfficeDesc": "办公室、商业空间",
     "compareLine1": "多家报价一眼比较",
     "compareLine2": "轻松做出选择",
+    "compareCardComment": "我们会安全运送您的物品。",
+    "compareCardMover": "金代码",
+    "compareCardFrom": "首尔市中区",
+    "compareCardTo": "京畿道水原市",
+    "requestCardFrom": "首尔市中区三一大路343",
+    "requestCardTo": "首尔市江南区宣陵路428",
     "requestLine1": "申请您需要的搬家服务",
     "requestLine2": "即可收到报价",
     "requestImageAlt": "搬家报价申请图片"

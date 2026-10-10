@@ -5,6 +5,7 @@
 
 import AuthProvider from '@/lib/providers/AuthProvider';
 import CrossRoleAccessGuard from '@/lib/providers/CrossRoleAccessGuard';
+import IntroGateProvider from '@/lib/providers/IntroGateProvider';
 import ModalProvider from '@/lib/providers/ModalProvider';
 import PreviousPathRecorder from '@/lib/providers/PreviousPathRecorder';
 import QueryProvider from '@/lib/providers/QueryProvider';
@@ -18,7 +19,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           <ToastProvider>
             <PreviousPathRecorder />
             <CrossRoleAccessGuard />
-            {children}
+            <IntroGateProvider>{children}</IntroGateProvider>
           </ToastProvider>
         </ModalProvider>
       </AuthProvider>

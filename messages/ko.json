@@ -328,6 +328,7 @@
     "usageDate": "이용일",
     "departure": "출발지",
     "arrival": "도착지",
+    "comment": "견적 내용",
     "moveDate": "이사일",
     "moveType": "이사 유형",
     "shareTitle": "견적서 공유하기",

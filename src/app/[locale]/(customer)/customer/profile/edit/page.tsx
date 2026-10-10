@@ -26,7 +26,7 @@ import { useCustomerProfileQuery } from '@/hooks/features/customer/queries/queri
 import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
 
 import CustomerProfileEditForm from '@/components/features/customer/CustomerProfile/CustomerProfileEditForm';
-import LoadingDisplay from '@/components/ui/LoadingDisplay';
+import CustomerProfileSkeleton from '@/components/features/customer/CustomerProfile/CustomerProfileSkeleton';
 
 export default function ProfileEditPage() {
   const t = useTranslations('CustomerProfile');
@@ -67,7 +67,7 @@ export default function ProfileEditPage() {
   );
 
   if (isProfilePending || !user || !profile || !defaultValues) {
-    return <LoadingDisplay />;
+    return <CustomerProfileSkeleton mode="edit" />;
   }
 
   const isSubmitting =

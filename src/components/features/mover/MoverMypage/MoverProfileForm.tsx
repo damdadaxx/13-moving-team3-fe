@@ -181,6 +181,10 @@ export default function MoverProfileForm({
                 previewAlt={t('previewAlt')}
                 disabled={areFieldsDisabled}
                 error={errors.profileImage?.message}
+                hints={[
+                  tCommon('profileImageFormatHint'),
+                  tCommon('profileImageSizeHint'),
+                ]}
                 accept="image/jpeg,image/png,image/webp"
                 className="tablet:size-[100px] tablet:[&_svg]:size-[32px] desktop:size-[160px] desktop:[&_svg]:size-[40px]"
                 {...profileImageRegistration}

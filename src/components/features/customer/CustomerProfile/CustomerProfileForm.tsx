@@ -3,16 +3,20 @@
 import { useId } from 'react';
 import { Controller } from 'react-hook-form';
 
-import type { CustomerProfileFormValues } from '@/types/customerProfile';
+import type { AuthProviderName } from '@/types/auth';
+import type { CustomerProfileCreateFormValues } from '@/types/customerProfile';
 import { useTranslations } from 'next-intl';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useFormErrorMessage } from '@/hooks/common/useFormErrorMessage';
 import { useCustomerProfileForm } from '@/hooks/features/customer/useCustomerProfileForm';
 
+import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
+
 import Button from '@/components/ui/Button/Button';
 import RegionChipGroup from '@/components/ui/Chip/RegionChipGroup';
 import ServiceTypeSelector from '@/components/ui/Chip/ServiceTypeSelector';
+import Input from '@/components/ui/Form/Input';
 import ProfileUpload from '@/components/ui/ProfileUpload';
 
 /* 모드별 문구 번역 키 (messages > CustomerProfile) */
@@ -28,11 +32,12 @@ type CustomerProfileFormMode = keyof typeof FORM_COPY;
 
 interface CustomerProfileFormProps {
   mode: CustomerProfileFormMode;
-  defaultValues?: Partial<CustomerProfileFormValues>;
+  provider: AuthProviderName;
+  defaultValues?: Partial<CustomerProfileCreateFormValues>;
   imageUrl?: string;
   isSubmitting?: boolean;
   isDisabled?: boolean;
-  onSubmit?: (values: CustomerProfileFormValues) => void | Promise<void>;
+  onSubmit?: (values: CustomerProfileCreateFormValues) => void | Promise<void>;
 }
 
 /*=================================================
@@ -47,6 +52,7 @@ interface CustomerProfileFormProps {
 */
 export default function CustomerProfileForm({
   mode,
+  provider,
   defaultValues,
   imageUrl,
   isSubmitting = false,
@@ -54,11 +60,13 @@ export default function CustomerProfileForm({
   onSubmit,
 }: CustomerProfileFormProps) {
   const t = useTranslations('CustomerProfile');
+  const tCommon = useTranslations('Common');
   const toErrorMessage = useFormErrorMessage();
   const formId = useId();
   const copy = FORM_COPY[mode];
   const controlSize = useBreakpointValue('sm', 'sm', 'md');
   const buttonSize = useBreakpointValue('sm', 'sm', 'lg');
+  const isPhoneNumberRequired = provider !== 'LOCAL';
   const {
     control,
     register,
@@ -68,8 +76,10 @@ export default function CustomerProfileForm({
     handleFormSubmit,
   } = useCustomerProfileForm({
     defaultValues,
+    isPhoneNumberRequired,
     onSubmit,
   });
+  const phoneNumberField = register('phoneNumber');
   const isLoading = isSubmitting || isFormSubmitting;
   const areFieldsDisabled = isDisabled || isLoading;
 
@@ -109,6 +119,36 @@ export default function CustomerProfileForm({
           - 공용 컴포넌트가 입력 동작과 선택 상태를 담당하므로 페이지에서 UI를 다시 만들지 않는다.
           */}
           <div className="flex flex-col gap-[20px] desktop:gap-[32px]">
+            {isPhoneNumberRequired && (
+              <>
+                {/*
+                @ 소셜 가입자 전화번호
+                - 제공자가 번호를 주면 기본값으로 채우고, 사용자가 여기서 바꿀 수도 있다.
+                - 이 값은 고객 프로필 필드가 아니라 /auth/me에 먼저 저장한다.
+                */}
+                <Input
+                  label={t('phoneNumber')}
+                  labelVariant="profile"
+                  type="tel"
+                  inputMode="tel"
+                  autoComplete="tel"
+                  size={controlSize}
+                  required
+                  maxLength={13}
+                  placeholder={t('phoneNumberPlaceholder')}
+                  disabled={areFieldsDisabled}
+                  error={errors.phoneNumber?.message}
+                  {...phoneNumberField}
+                  onChange={(event) => {
+                    event.target.value = formatPhoneNumber(event.target.value);
+                    return phoneNumberField.onChange(event);
+                  }}
+                />
+
+                <div aria-hidden="true" className="h-px w-full bg-line-100" />
+              </>
+            )}
+
             <ProfileUpload
               id={`${formId}-profile-image`}
               label={t('profileImage')}
@@ -116,6 +156,10 @@ export default function CustomerProfileForm({
               imageUrl={imageUrl}
               disabled={areFieldsDisabled}
               error={errors.profileImage?.message}
+              hints={[
+                tCommon('profileImageFormatHint'),
+                tCommon('profileImageSizeHint'),
+              ]}
               accept="image/jpeg,image/png,image/webp"
               className="tablet:size-[100px] tablet:[&_svg]:size-[32px] desktop:mt-[4px] desktop:size-[160px] desktop:[&_svg]:size-[40px]"
               {...register('profileImage')}

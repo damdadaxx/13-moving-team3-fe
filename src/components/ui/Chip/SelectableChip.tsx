@@ -3,7 +3,7 @@ import { cva } from 'class-variance-authority';
 import { cn } from '@/utils/cn';
 
 export type SelectableChipSize = 'sm' | 'md';
-export type SelectableChipVariant = 'default' | 'region';
+export type SelectableChipVariant = 'default' | 'region' | 'regionFlexible';
 
 export interface SelectableChipProps extends Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -18,7 +18,9 @@ export interface SelectableChipProps extends Omit<
 /*
 @ 선택 Chip CVA
 - variant="default"는 라벨 길이에 맞춰 너비가 늘어납니다.
-- variant="region"은 지역 버튼 고정 너비(sm 49px / md 72px)를 적용합니다.
+- variant="region"은 한국어 디자인의 5열 배치에 맞는 고정 너비(sm 49px / md 72px)입니다.
+- variant="regionFlexible"은 같은 최소 너비에서 시작하지만 긴 영어 지역 이름에 맞춰 늘어납니다.
+  너비를 구분해야 영어는 글자가 넘치지 않고, 다른 언어는 기존 5열을 유지할 수 있습니다.
 - size는 sm(36px) / md(46px) 고정 높이만 제공합니다.
 - md 크기의 typography는 선택 상태에 따라 regular 또는 medium으로 구분합니다.
 - 반응형은 컴포넌트가 처리하지 않습니다. 사용처에서 useBreakpointValue로 size를 넘깁니다.
@@ -33,6 +35,7 @@ export const selectableChipVariants = cva(
       variant: {
         default: '',
         region: '',
+        regionFlexible: '',
       },
       size: {
         sm: 'h-[36px] px-[12px] py-[6px] text-md-medium',
@@ -53,6 +56,16 @@ export const selectableChipVariants = cva(
         variant: 'region',
         size: 'md',
         className: 'w-[72px]',
+      },
+      {
+        variant: 'regionFlexible',
+        size: 'sm',
+        className: 'min-w-[49px]',
+      },
+      {
+        variant: 'regionFlexible',
+        size: 'md',
+        className: 'min-w-[72px]',
       },
       {
         size: 'md',
@@ -77,7 +90,8 @@ export const selectableChipVariants = cva(
 @ 선택 Chip 사용 방법
 - isSelected와 상태 변경은 사용하는 부모 컴포넌트가 관리합니다.
 - size는 sm(36px) / md(46px) 고정 크기만 제공합니다. 기본값은 sm입니다.
-- 지역 버튼은 variant="region"을 전달합니다.
+- 지역 버튼은 기본적으로 variant="region"을 전달합니다. 긴 번역 문구에 따라
+  너비가 늘어나야 한다면 variant="regionFlexible"을 쓰고 부모에서 줄바꿈을 허용합니다.
 - 반응형은 사용처에서 useBreakpointValue로 size를 바꿔 전달합니다.
 
 @ 최소 사용 예시

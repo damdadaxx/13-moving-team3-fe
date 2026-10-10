@@ -60,6 +60,32 @@
     "error": "无法加载通知。",
     "empty": "暂无通知。"
   },
+  "Chat": {
+    "open": "聊天",
+    "openWithCount": "聊天(未读{count}条)",
+    "close": "关闭聊天",
+    "title": "聊天",
+    "loading": "正在加载聊天记录。",
+    "error": "无法加载聊天记录。",
+    "empty": "暂无进行中的聊天。",
+    "noMessageYet": "开始对话吧。",
+    "imagePreview": "发送了一张图片。",
+    "back": "返回",
+    "roomEntered": "这是您与{name}的聊天室。",
+    "readOnlyNotice": "搬家已完成，只能查看聊天记录。",
+    "accessDenied": "无法访问此聊天。",
+    "notFound": "找不到该报价。",
+    "inputPlaceholder": "请输入消息",
+    "addImage": "添加图片",
+    "send": "发送",
+    "messageRead": "已读",
+    "messageUnread": "未读",
+    "sendFailed": "消息发送失败。",
+    "imageUploadFailed": "图片上传失败。",
+    "invalidImageType": "只能添加图片文件。",
+    "moveDate": "搬家日期: {date}",
+    "viewDetail": "查看详情"
+  },
   "Footer": {
     "tagline": "繁琐的搬家准备，一个 Moving 就搞定！"
   },

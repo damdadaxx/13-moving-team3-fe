@@ -51,6 +51,16 @@ export function getHomePath(role: Role): string {
 }
 
 /*
+@ 채팅방에서 "상세보기"로 이동할 견적 상세 경로
+- 채팅은 ACCEPTED 건에만 있어서, 고객은 항상 "받았던 견적" 상세로 간다
+*/
+export function getEstimateDetailPath(role: Role, estimateId: string): string {
+  return role === 'customer'
+    ? `${ROUTES.customerEstimates}/${estimateId}`
+    : `${ROUTES.moverEstimates}/${estimateId}`;
+}
+
+/*
 @ 프로필 최초 등록 경로
 - 회원가입 직후에는 역할에 맞는 프로필 등록 화면으로 보낸다.
 */

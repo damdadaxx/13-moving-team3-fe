@@ -60,6 +60,32 @@
     "error": "Couldn't load notifications.",
     "empty": "No notifications yet."
   },
+  "Chat": {
+    "open": "Chat",
+    "openWithCount": "Chat ({count} unread)",
+    "close": "Close chat",
+    "title": "Chat",
+    "loading": "Loading chats…",
+    "error": "Couldn't load chats.",
+    "empty": "No active chats.",
+    "noMessageYet": "Start the conversation.",
+    "imagePreview": "Sent a photo.",
+    "back": "Go back",
+    "roomEntered": "This is your chat with {name}.",
+    "readOnlyNotice": "This move is completed, so you can only view the chat history.",
+    "accessDenied": "You can't access this chat.",
+    "notFound": "Estimate not found.",
+    "inputPlaceholder": "Type a message",
+    "addImage": "Attach image",
+    "send": "Send",
+    "messageRead": "Read",
+    "messageUnread": "Unread",
+    "sendFailed": "Failed to send the message.",
+    "imageUploadFailed": "Failed to upload the image.",
+    "invalidImageType": "You can only attach image files.",
+    "moveDate": "Move date: {date}",
+    "viewDetail": "View details"
+  },
   "Footer": {
     "tagline": "Complicated move? Moving handles it all!"
   },

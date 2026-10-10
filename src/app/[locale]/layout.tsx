@@ -16,6 +16,7 @@ import KakaoScript from '@/lib/providers/KakaoScript';
 
 import { cn } from '@/utils/cn';
 
+import ChatFloatingButton from '@/components/features/chat/ChatFloatingButton';
 import Header from '@/components/ui/Header/Header';
 import PageHeader from '@/components/ui/PageHeader';
 import TopButton from '@/components/ui/TopButton';
@@ -73,6 +74,8 @@ export default async function RootLayout({
             <Header hasSessionCookie={hasSessionCookie} />
             <PageHeader />
             {children}
+            {/* 채팅 버튼은 맨 위로 버튼 자리에 있다가, 맨 위로 버튼이 보이면 그 위로 올라간다 */}
+            <ChatFloatingButton />
             <TopButton />
           </Providers>
         </NextIntlClientProvider>

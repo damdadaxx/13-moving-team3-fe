@@ -60,6 +60,32 @@
     "error": "お知らせを読み込めませんでした。",
     "empty": "お知らせはありません。"
   },
+  "Chat": {
+    "open": "チャット",
+    "openWithCount": "チャット(未読{count}件)",
+    "close": "チャットを閉じる",
+    "title": "チャット",
+    "loading": "チャットを読み込み中です。",
+    "error": "チャットを読み込めませんでした。",
+    "empty": "進行中のチャットがありません。",
+    "noMessageYet": "会話を始めましょう。",
+    "imagePreview": "写真を送信しました。",
+    "back": "戻る",
+    "roomEntered": "{name}さんとのチャットルームです。",
+    "readOnlyNotice": "完了した引っ越しのため、チャット履歴のみ閲覧できます。",
+    "accessDenied": "このチャットにはアクセスできません。",
+    "notFound": "見積もりが見つかりません。",
+    "inputPlaceholder": "メッセージを入力してください",
+    "addImage": "画像を添付",
+    "send": "送信",
+    "messageRead": "既読",
+    "messageUnread": "未読",
+    "sendFailed": "メッセージの送信に失敗しました。",
+    "imageUploadFailed": "画像のアップロードに失敗しました。",
+    "invalidImageType": "画像ファイルのみ添付できます。",
+    "moveDate": "利用日: {date}",
+    "viewDetail": "詳細を見る"
+  },
   "Footer": {
     "tagline": "面倒な引越し準備も、Movingひとつで完了！"
   },

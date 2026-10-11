@@ -92,6 +92,7 @@ export default function PendingReviewCard({
                     alt=""
                     aria-hidden="true"
                     fill
+                    sizes="16px"
                     className="object-contain"
                   />
                 </span>
@@ -165,6 +166,7 @@ export default function PendingReviewCard({
                     alt=""
                     aria-hidden="true"
                     fill
+                    sizes="16px"
                     className="object-contain"
                   />
                 </span>
@@ -242,6 +244,7 @@ export default function PendingReviewCard({
                     alt=""
                     aria-hidden="true"
                     fill
+                    sizes="16px"
                     className="object-contain"
                   />
                 </span>

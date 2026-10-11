@@ -118,6 +118,7 @@ export default function CompletedReviewCard({
                   alt=""
                   aria-hidden="true"
                   fill
+                  sizes="16px"
                   className="object-contain"
                 />
               </span>
@@ -185,6 +186,7 @@ export default function CompletedReviewCard({
                     alt=""
                     aria-hidden="true"
                     fill
+                    sizes="16px"
                     className="object-contain"
                   />
                 </span>

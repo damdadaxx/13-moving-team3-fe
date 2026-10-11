@@ -9,11 +9,6 @@ export default function NotFound() {
   const t = useTranslations('NotFound');
 
   return (
-    <EmptyState
-      as="main"
-      message={t('message')}
-      buttonLabel={t('goHome')}
-      href="/"
-    />
+    <EmptyState message={t('message')} buttonLabel={t('goHome')} href="/" />
   );
 }

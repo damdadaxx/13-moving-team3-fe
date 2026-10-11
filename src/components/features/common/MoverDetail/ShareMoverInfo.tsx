@@ -41,9 +41,9 @@ export default function ShareMoverInfo({
   };
 
   /** 카카오 공유 핸들러 */
-  const handleKakaoShare = () => {
+  const handleKakaoShare = async () => {
     try {
-      shareToKakao({
+      await shareToKakao({
         title: tMeta('ogTitle'),
         description: tMeta('siteDescription'),
         buttonTitle: t('viewOnWeb'),

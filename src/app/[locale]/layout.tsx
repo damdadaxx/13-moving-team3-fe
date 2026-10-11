@@ -12,7 +12,6 @@ import Providers from '@/app/providers';
 import { ACCESS_TOKEN_COOKIE } from '@/lib/constants/auth';
 import { pretendard } from '@/lib/constants/fonts';
 import { SITE_URL, getOpenGraph } from '@/lib/constants/site';
-import KakaoScript from '@/lib/providers/KakaoScript';
 
 import { cn } from '@/utils/cn';
 
@@ -71,7 +70,6 @@ export default async function RootLayout({
       <body className={cn('h-full pt-[54px]', 'desktop:pt-[88px]')}>
         <NextIntlClientProvider>
           <Providers>
-            <KakaoScript />
             <HeaderRevealWrapper>
               <Header hasSessionCookie={hasSessionCookie} />
             </HeaderRevealWrapper>

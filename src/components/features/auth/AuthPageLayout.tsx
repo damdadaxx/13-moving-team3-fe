@@ -4,8 +4,8 @@ import type { Role } from '@/types/role';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
-import ImgAvatarBeaver from '@/assets/images/img_avatar_beaver.png';
-import ImgAvatarTruck from '@/assets/images/img_avatar_truck.png';
+import ImgAvatarBeaver from '@/assets/images/img_avatar_beaver.webp';
+import ImgAvatarTruck from '@/assets/images/img_avatar_truck.webp';
 import ImgLogoText from '@/assets/images/img_logo_text.svg';
 
 import { getSigninPath, getSignupPath } from '@/lib/constants/routes';

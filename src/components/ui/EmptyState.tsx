@@ -3,7 +3,7 @@
 import type { StaticImageData } from 'next/image';
 import Image from 'next/image';
 
-import ImgEmpty from '@/assets/images/img_empty.png';
+import ImgEmpty from '@/assets/images/img_empty.webp';
 import ImgEmptyBeaver from '@/assets/images/img_empty_beaver.png';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';

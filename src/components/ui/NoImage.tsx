@@ -1,7 +1,7 @@
 // 이미지가 없을 때 쓰는 기본 이미지. 크기는 부모나 className으로 정한다.
 import Image from 'next/image';
 
-import ImgDefaultProfile from '@/assets/images/img_default_profile.png';
+import ImgDefaultProfile from '@/assets/images/img_default_profile.webp';
 
 import { cn } from '@/utils/cn';
 

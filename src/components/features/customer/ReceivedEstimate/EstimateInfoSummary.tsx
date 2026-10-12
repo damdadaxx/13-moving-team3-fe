@@ -64,7 +64,7 @@ export default function EstimateInfoSummary({
   const requestedAtLabel = formatDate(requestedAt, 'short');
 
   return (
-    <div className="flex flex-col items-center gap-[16px] tablet:items-start tablet:gap-[28px] desktop:gap-[40px]">
+    <div className="flex flex-col items-center gap-[16px] tablet:items-start tablet:gap-[28px] desktop:gap-[40px] tablet:px-[10px] desktop:px-[20px]">
       <div className="flex w-full items-center justify-center tablet:justify-between">
         <p className="text-2lg-semibold text-black-400 tablet:text-xl-semibold">
           {t('info')}

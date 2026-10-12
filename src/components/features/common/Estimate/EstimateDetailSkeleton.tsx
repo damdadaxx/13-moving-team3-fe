@@ -9,7 +9,7 @@ import type { EstimateDetailVariant } from '@/components/features/common/Estimat
 import PageBanner from '@/components/ui/PageBanner';
 import { Skeleton } from '@/components/ui/Skeleton';
 
-const ESTIMATE_INFO_VALUE_WIDTHS = [96, 72, 120, '58%', '62%'] as const;
+const ESTIMATE_INFO_VALUE_WIDTHS = [96, 72, 120, '58%', '62%', '70%'] as const;
 
 /** @ 배너와 프로필 이미지 자리표시 */
 function TopSectionSkeleton({ hasProfileImage }: { hasProfileImage: boolean }) {

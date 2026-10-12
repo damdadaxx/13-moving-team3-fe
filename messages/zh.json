@@ -328,6 +328,7 @@
     "usageDate": "使用日期",
     "departure": "出发地",
     "arrival": "目的地",
+    "comment": "报价内容",
     "moveDate": "搬家日期",
     "moveType": "搬家类型",
     "shareTitle": "分享报价单",

@@ -328,6 +328,7 @@
     "usageDate": "利用日",
     "departure": "出発地",
     "arrival": "到着地",
+    "comment": "見積内容",
     "moveDate": "引越し日",
     "moveType": "引越しタイプ",
     "shareTitle": "見積書を共有",

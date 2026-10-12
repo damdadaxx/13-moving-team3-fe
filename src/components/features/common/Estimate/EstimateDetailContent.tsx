@@ -68,6 +68,9 @@ export default function EstimateDetailContent({
     },
     { label: t('departure'), value: estimate.estimateRequest.departureAddress },
     { label: t('arrival'), value: estimate.estimateRequest.arrivalAddress },
+    ...(estimate.comment
+      ? [{ label: t('comment'), value: estimate.comment }]
+      : []),
   ];
 
   return (
@@ -171,7 +174,7 @@ export default function EstimateDetailContent({
                     <div
                       key={label}
                       className={cn(
-                        'flex items-center justify-between',
+                        'flex items-start justify-between gap-[12px]',
                         'tablet:justify-start tablet:gap-[23px]',
                       )}
                     >
@@ -185,7 +188,7 @@ export default function EstimateDetailContent({
                       </dt>
                       <dd
                         className={cn(
-                          'text-lg-medium text-black-400 text-right',
+                          'min-w-0 flex-1 text-lg-medium wrap-break-word whitespace-pre-wrap text-right text-black-400',
                           'tablet:text-lg-semibold tablet:text-left',
                         )}
                       >

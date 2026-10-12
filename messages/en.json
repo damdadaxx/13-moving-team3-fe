@@ -328,6 +328,7 @@
     "usageDate": "Service date",
     "departure": "From",
     "arrival": "To",
+    "comment": "Message",
     "moveDate": "Moving date",
     "moveType": "Move type",
     "shareTitle": "Share this estimate",

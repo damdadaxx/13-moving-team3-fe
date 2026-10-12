@@ -25,6 +25,7 @@ import AuthLinkText from '@/components/features/auth/AuthLinkText';
 import AuthPageLayout from '@/components/features/auth/AuthPageLayout';
 import AuthSubmitButton from '@/components/features/auth/AuthSubmitButton';
 import Input from '@/components/ui/Form/Input';
+import { labelVariants } from '@/components/ui/Form/Label';
 
 interface SignupFormProps {
   role: Role;
@@ -254,9 +255,11 @@ export default function SignupForm({ role }: SignupFormProps) {
               {...register('name')}
             />
             <div className="flex flex-col gap-2">
-              {/* 이메일 입력칸과 발송 버튼을 한 줄에 둔다. 라벨이 있어서 items-start가 아닌
-              items-end로 맞춰야 버튼이 입력칸 박스와 같은 높이로 붙는다 */}
-              <div className="flex items-end gap-2">
+              {/* 이메일 입력칸과 발송 버튼을 한 줄에 둔다. 버튼 쪽에도 라벨과 같은 높이의
+              보이지 않는 글자를 넣어 items-start로 맞춘다 — items-end를 쓰면 에러 문구가
+              뜰 때 입력칸 쪽 높이가 늘어나면서 버튼이 그만큼 아래로 밀려 버린다. 보이지
+              않는 라벨을 똑같이 둬서 에러 유무와 상관없이 버튼이 입력칸 박스 높이에 고정된다 */}
+              <div className="flex items-start gap-2">
                 <Input
                   label={t('email')}
                   type="email"
@@ -271,25 +274,35 @@ export default function SignupForm({ role }: SignupFormProps) {
                     return emailField.onChange(event);
                   }}
                 />
-                <button
-                  type="button"
-                  onClick={handleSendCode}
-                  disabled={
-                    !emailValue ||
-                    sendCodeMutation.isPending ||
-                    isEmailVerified ||
-                    isResendCoolingDown
-                  }
-                  className={AUTH_SIDE_BUTTON_CLASS}
-                >
-                  {sendCodeMutation.isPending
-                    ? t('sendingCode')
-                    : isResendCoolingDown
-                      ? t('resendCooldownButton', { seconds: cooldownSeconds })
-                      : verificationState
-                        ? t('resendCode')
-                        : t('sendCode')}
-                </button>
+                <div className="flex flex-col">
+                  <span
+                    aria-hidden
+                    className={cn(labelVariants(), 'invisible')}
+                  >
+                    {t('email')}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleSendCode}
+                    disabled={
+                      !emailValue ||
+                      sendCodeMutation.isPending ||
+                      isEmailVerified ||
+                      isResendCoolingDown
+                    }
+                    className={AUTH_SIDE_BUTTON_CLASS}
+                  >
+                    {sendCodeMutation.isPending
+                      ? t('sendingCode')
+                      : isResendCoolingDown
+                        ? t('resendCooldownButton', {
+                            seconds: cooldownSeconds,
+                          })
+                        : verificationState
+                          ? t('resendCode')
+                          : t('sendCode')}
+                  </button>
+                </div>
               </div>
               <p
                 role="status"

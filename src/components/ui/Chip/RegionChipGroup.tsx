@@ -13,7 +13,9 @@ import SelectableChip, { type SelectableChipSize } from './SelectableChip';
 - selectedRegions에는 현재 선택된 Region 값 배열을 전달합니다.
 - onRegionClick에서 단일 선택 또는 복수 선택 로직을 부모가 결정합니다.
 - size는 sm / md 고정 크기만 제공합니다. 기본값은 sm입니다.
-- 한국어·중국어·일본어는 디자인 시안대로 한 줄에 5개씩 고정 배치합니다.
+- 한국어·중국어·일본어는 375px 이상에서 기존 디자인의 5열 배치를 유지합니다.
+  375px 미만에서는 flex-wrap으로 줄바꿈해, 좌우 패딩을 제외한 공간보다 칩이 넓어지지 않게 합니다.
+  칩을 억지로 작게 만들거나 화면 밖으로 숨기지 않고, 공간이 부족하면 다음 줄로 넘깁니다.
 - 영어는 이름이 길어 고정 너비를 넘으므로 칩을 내용만큼 넓히고, 공간이 부족하면
   다음 줄로 넘깁니다. 언어별 배치를 여기서 결정해 사용하는 화면마다 중복하지 않습니다.
 - englishTabletSixColumns는 넓은 태블릿 폼에서만 사용합니다. 등록 폼처럼 폭이 좁은
@@ -58,7 +60,7 @@ export default function RegionChipGroup({
       className={cn(
         isEnglishLocale
           ? 'flex w-full min-w-0 flex-wrap gap-[8px]'
-          : 'grid grid-cols-[repeat(5,max-content)] gap-[8px]',
+          : 'flex w-full min-w-0 flex-wrap gap-[8px] mobile:grid mobile:grid-cols-[repeat(5,max-content)]',
         isEnglishLocale &&
           englishTabletSixColumns &&
           'tablet:grid tablet:grid-cols-[repeat(6,max-content)] desktop:flex',

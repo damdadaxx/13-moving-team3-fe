@@ -24,6 +24,8 @@ const DEFAULT_SIZES =
 @ 프로필 이미지
 - 없거나 불러오지 못하면 NoImage
 - /uploads 보정은 여기서만 한다. API가 이미 /api 를 붙인 값은 그대로 둔다
+- CloudFront 이미지는 next.config.ts의 허용 도메인으로 최적화한다.
+- 기존 /api 프록시 이미지는 쿠키 전달 방식이 달라지지 않도록 브라우저에서 직접 가져온다.
 */
 export default function ProfileImage({
   imageUrl,
@@ -47,7 +49,7 @@ export default function ProfileImage({
           src={resolvedUrl}
           alt={alt}
           fill
-          unoptimized // TODO: 업로드 호스트가 remotePatterns 추가 시 삭제
+          unoptimized={resolvedUrl.startsWith('/api/')}
           sizes={sizes}
           className="object-cover"
           onError={() => setFailedUrl(resolvedUrl)}

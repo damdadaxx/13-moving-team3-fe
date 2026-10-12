@@ -75,6 +75,10 @@ function SelectionSkeleton({ isRegion = false }: { isRegion?: boolean }) {
 /*
 @ 고객 프로필 등록·수정 첫 조회 화면
 - 실제 폼의 폭·열 배치와 입력 순서를 따라 로딩 중 화면 이동을 줄인다.
+- 수정 화면의 모바일·태블릿 입력과 버튼도 실제 폼과 동일한 최대 327px 너비로 표시한다.
+  부모보다 넓어지지 않도록 w-full을 유지하며, 기존 데스크톱 배치는 변경하지 않는다.
+- 등록 화면은 패딩을 포함한 전체 폭이 최대 375px이다. 좌우 24px를 제외하면 실제 폼과 같은 327px가 된다.
+  작은 화면에서도 같은 패딩을 유지해 로딩이 끝날 때 입력 위치가 바뀌지 않도록 한다.
 - 입력처럼 보이지만 조작할 수 있는 컨트롤은 만들지 않는다.
 - 서버 데이터가 없는 최초 조회에서만 페이지가 이 컴포넌트를 사용한다.
 */
@@ -96,7 +100,7 @@ export default function CustomerProfileSkeleton({
           aria-hidden="true"
           className="flex w-full flex-col gap-[32px] px-[24px] pt-[16px] pb-[24px] desktop:mt-[38px] desktop:gap-[64px] desktop:px-[72px] desktop:pt-[32px] desktop:pb-[40px]"
         >
-          <div className="mx-auto flex w-full flex-col gap-[32px] desktop:max-w-[1200px] desktop:gap-[40px]">
+          <div className="mx-auto flex w-full max-w-[327px] flex-col gap-[32px] desktop:max-w-[1200px] desktop:gap-[40px]">
             <Skeleton width={140} height={26} className="desktop:h-[46px]!" />
             <div className="flex flex-col gap-[20px] desktop:gap-[40px]">
               <Divider />
@@ -126,7 +130,7 @@ export default function CustomerProfileSkeleton({
               </div>
             </div>
           </div>
-          <div className="flex w-full flex-col gap-[8px] desktop:ml-auto desktop:max-w-[500px] desktop:flex-row desktop:gap-[20px]">
+          <div className="mx-auto flex w-full max-w-[327px] flex-col gap-[8px] desktop:mr-0 desktop:max-w-[500px] desktop:flex-row desktop:gap-[20px]">
             <Skeleton
               height={54}
               borderRadius={12}
@@ -142,7 +146,7 @@ export default function CustomerProfileSkeleton({
       ) : (
         <div
           aria-hidden="true"
-          className="mx-auto flex w-full max-w-[327px] flex-col gap-[32px] px-[24px] pt-[16px] pb-[40px] tablet:pt-[40px] desktop:max-w-[640px] desktop:gap-[56px] desktop:pt-[56px]"
+          className="mx-auto flex w-full max-w-[375px] flex-col gap-[32px] px-[24px] pt-[16px] pb-[40px] tablet:pt-[40px] desktop:max-w-[640px] desktop:gap-[56px] desktop:pt-[56px]"
         >
           <div className="flex flex-col gap-[20px]">
             <div className="flex flex-col gap-[16px] desktop:gap-[28px]">

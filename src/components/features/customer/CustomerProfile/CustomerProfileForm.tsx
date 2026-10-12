@@ -49,6 +49,11 @@ interface CustomerProfileFormProps {
 - 고객 프로필 최초 등록에 필요한 레이아웃과 입력 컴포넌트를 구성한다.
 - API 호출은 페이지에서 전달받은 onSubmit이 담당하고 폼은 로딩과 오류 상태를 표현한다.
 - 서비스 종류와 지역은 React Hook Form이 값을 보관하고, 공용 Chip은 그 값을 화면에 표현한다.
+
+@ 모바일·태블릿 여백
+- 전체 폼은 최대 375px이고, 좌우 24px 패딩을 제외한 실제 입력 너비는 최대 327px이다.
+- 375px보다 작은 화면에서도 패딩은 유지하고 입력·버튼이 부모 너비에 맞춰 줄어든다.
+  327px 폼에 패딩을 다시 넣어 입력 영역이 지나치게 좁아지지 않도록 구분한다.
 */
 export default function CustomerProfileForm({
   mode,
@@ -95,7 +100,7 @@ export default function CustomerProfileForm({
       <form
         noValidate
         onSubmit={handleFormSubmit}
-        className="mx-auto flex w-full max-w-[327px] flex-col gap-[32px] pt-[16px] pb-[40px] px-[24px] tablet:pt-[40px] desktop:gap-[56px] desktop:pt-[56px] desktop:max-w-[640px]"
+        className="mx-auto flex w-full max-w-[375px] flex-col gap-[32px] pt-[16px] pb-[40px] px-[24px] tablet:pt-[40px] desktop:gap-[56px] desktop:pt-[56px] desktop:max-w-[640px]"
       >
         <div className="mx-auto flex w-full flex-col gap-[20px]">
           {/*
@@ -170,11 +175,16 @@ export default function CustomerProfileForm({
             {/*
             @ 이용 서비스
             - 여러 서비스를 선택할 수 있다.
+            - 소셜 계정도 필수값을 알 수 있도록 기사님 폼과 같은 별표를 표시한다.
+              실제 필수 검증은 기존 Zod 스키마가 담당한다.
             - fieldset의 disabled는 내부의 실제 button까지 함께 비활성화한다.
             */}
             <fieldset disabled={areFieldsDisabled} className="min-w-0">
               <legend className="text-lg-semibold text-black-300 desktop:text-xl-semibold">
                 {t('serviceTypes')}
+                <span aria-hidden="true" className="ml-1 text-orange-400">
+                  *
+                </span>
               </legend>
               <p
                 id={serviceDescriptionId}
@@ -220,10 +230,14 @@ export default function CustomerProfileForm({
             @ 거주 지역
             - 폼 값은 단일 Region이지만 RegionChipGroup API는 배열을 받는다.
             - 선택된 값이 있으면 [값], 없으면 []로 변환해 단일 선택 UI를 만든다.
+            - 이미지와 달리 지역은 필수이므로 서비스와 동일한 별표를 표시한다.
             */}
             <fieldset disabled={areFieldsDisabled} className="min-w-0">
               <legend className="text-lg-semibold text-black-300 desktop:text-xl-semibold">
                 {t('region')}
+                <span aria-hidden="true" className="ml-1 text-orange-400">
+                  *
+                </span>
               </legend>
               <p
                 id={regionDescriptionId}

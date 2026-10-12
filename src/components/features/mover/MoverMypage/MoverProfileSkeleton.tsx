@@ -63,6 +63,8 @@ function ChipSectionSkeleton({ isRegion = false }: { isRegion?: boolean }) {
 /*
 @ 기사님 프로필 등록·수정 첫 조회 화면
 - 두 페이지가 MoverProfileForm을 공유하므로 같은 뼈대에서 제목·전화번호·버튼만 구분한다.
+- 실제 폼처럼 최대 375px 전체 폭 안에 좌우 24px 패딩을 둔다.
+  375px에서는 입력이 327px이고, 더 작은 화면에서는 여백을 남긴 채 함께 줄어든다.
 - 프로필 조회가 끝나기 전에는 입력 가능한 빈 폼 대신 이 자리표시를 보여준다.
 - 저장 요청 중에는 사용하지 않고 기존 버튼 로딩 상태를 유지한다.
 */
@@ -81,7 +83,7 @@ export default function MoverProfileSkeleton({
 
       <div
         aria-hidden="true"
-        className="mx-auto flex w-full max-w-[327px] flex-col gap-[24px] pt-[16px] pb-[40px] desktop:max-w-[1200px] desktop:gap-[48px] desktop:px-[40px] desktop:pt-[32px]"
+        className="mx-auto flex w-full max-w-[375px] flex-col gap-[24px] px-[24px] pt-[16px] pb-[40px] desktop:max-w-[1200px] desktop:gap-[48px] desktop:px-[40px] desktop:pt-[32px]"
       >
         <div className="flex flex-col gap-[16px] desktop:gap-[32px]">
           <Skeleton width={180} height={26} className="desktop:h-[46px]!" />

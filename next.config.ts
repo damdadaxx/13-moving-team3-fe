@@ -6,11 +6,20 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   /*
   @ 이미지 원격 호스트
-  - picsum은 시드 프로필용이다. 허용하지 않으면 next/image가 로드를 막는다
-  - TODO: 실제 업로드 CDN/S3 호스트로 바꾸고 picsum 항목은 삭제한다
+  - picsum은 기존 시드 프로필용이므로 계속 허용한다.
+  - CloudFront는 백엔드 CLOUDFRONT_DOMAIN과 같은 배포 도메인의 /profiles 이미지에만 허용한다.
+    hostname에는 https:// 없이 도메인만 넣고, AWS 인증 키는 프론트에 추가하지 않는다.
+  - 배포 도메인을 변경하면 이 항목도 맞춘 뒤 개발 서버를 재시작하거나 다시 배포해야 한다.
   */
   images: {
     remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'd188il1vqlvt2l.cloudfront.net',
+        port: '',
+        pathname: '/profiles/**',
+        search: '',
+      },
       {
         protocol: 'https',
         hostname: 'picsum.photos',

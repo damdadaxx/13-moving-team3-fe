@@ -54,8 +54,8 @@ function Divider({ className }: DividerProps) {
 
 /*
 @ 반응형 기준
-- Mobile: 375px 안에서 좌우 24px, 실제 입력 영역 327px를 사용한다.
-- Tablet: Mobile과 같은 375px 폼을 화면 가운데 배치한다.
+- Mobile/Tablet: 입력 영역과 버튼 묶음을 동일한 최대 327px 너비로 가운데 배치한다.
+- 화면이 더 좁으면 좌우 24px 여백을 제외한 공간 안에서 입력과 버튼이 함께 줄어든다.
 - Desktop: 1200px 컨테이너 안에서 계정 정보와 프로필 정보를 2열로 배치한다.
 
 @ 폼의 책임
@@ -118,7 +118,7 @@ export default function CustomerProfileEditForm({
       >
         <div
           className={cn(
-            'flex flex-col gap-[32px] w-full max-w[327px] mx-auto',
+            'flex flex-col gap-[32px] w-full max-w-[327px] mx-auto',
             'desktop:max-w-[1120px] desktop:gap-[40px]',
           )}
         >
@@ -142,6 +142,8 @@ export default function CustomerProfileEditForm({
               - Mobile/Tablet은 모든 항목 사이에 구분선이 있다.
               - Desktop은 전화번호 뒤와 현재 비밀번호 뒤에만 구분선을 표시한다.
               - 이메일은 백엔드 수정 계약이 없으므로 읽기 전용으로 제공한다.
+              - 이름은 소셜 계정도 필수다. 공용 Input의 required로 별표와 접근성 표시를 함께 적용한다.
+                전화번호와 비밀번호의 기존 조건부 검증은 변경하지 않는다.
               */}
               <div className="flex min-w-0 flex-col gap-[20px] desktop:gap-[32px]">
                 <Input
@@ -151,7 +153,7 @@ export default function CustomerProfileEditForm({
                   autoComplete="name"
                   size={responsiveInputSize}
                   disabled={areFieldsDisabled}
-                  aria-required="true"
+                  required
                   error={errors.name?.message}
                   {...register('name')}
                 />
@@ -339,6 +341,9 @@ export default function CustomerProfileEditForm({
                 <fieldset disabled={areFieldsDisabled} className="min-w-0">
                   <legend className="text-lg-semibold text-black-300 desktop:text-xl-semibold">
                     {t('serviceTypes')}
+                    <span aria-hidden="true" className="ml-1 text-orange-400">
+                      *
+                    </span>
                   </legend>
                   <p
                     id={serviceDescriptionId}
@@ -383,6 +388,9 @@ export default function CustomerProfileEditForm({
                 <fieldset disabled={areFieldsDisabled} className="min-w-0">
                   <legend className="text-lg-semibold text-black-300 desktop:text-xl-semibold">
                     {t('region')}
+                    <span aria-hidden="true" className="ml-1 text-orange-400">
+                      *
+                    </span>
                   </legend>
                   <p
                     id={regionDescriptionId}
@@ -391,6 +399,11 @@ export default function CustomerProfileEditForm({
                     {t('regionEditHint')}
                   </p>
 
+                  {/*
+                  @ 영어 지역 칩 줄바꿈
+                  - 기사님 수정 폼처럼 공용 컴포넌트의 기본 flex-wrap 배치를 사용한다.
+                  - 태블릿에서 6열을 강제하지 않아 긴 지역명이 폼 너비에 맞게 다음 줄로 이동한다.
+                  */}
                   <Controller
                     name="region"
                     control={control}
@@ -400,7 +413,6 @@ export default function CustomerProfileEditForm({
                         onRegionClick={field.onChange}
                         onBlur={field.onBlur}
                         size={responsiveControlSize}
-                        englishTabletSixColumns
                         aria-describedby={
                           [regionDescriptionId, regionErrorId]
                             .filter(Boolean)
@@ -440,10 +452,12 @@ export default function CustomerProfileEditForm({
         {/*
         @ 버튼의 반응형 순서와 키보드 접근성
         - Mobile/Tablet은 수정하기 → 취소, Desktop은 취소 → 수정하기 순서다.
+        - Mobile/Tablet 버튼도 입력 영역처럼 최대 327px로 제한해 태블릿에서 버튼만 넓어지지 않게 한다.
+          w-full을 함께 사용하므로 작은 화면에서는 입력 영역과 같은 비율로 줄어든다.
         - CSS order만 바꾸면 화면 순서와 Tab 순서가 달라질 수 있으므로,
           각 breakpoint에서 하나의 버튼 그룹만 display 되도록 분리했다.
         */}
-        <div className="flex w-full flex-col gap-[8px] desktop:hidden">
+        <div className="mx-auto flex w-full max-w-[327px] flex-col gap-[8px] desktop:hidden">
           <Button
             type="submit"
             size={responsiveButtonSize}

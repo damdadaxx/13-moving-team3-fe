@@ -226,7 +226,8 @@ export default function ReceivedEstimateCard({
                     onClick={toggleLike}
                     aria-pressed={isLiked}
                     aria-label={isLiked ? tLike('unlike') : tLike('like')}
-                    className="pointer-events-auto flex shrink-0 cursor-pointer items-center gap-[2px] text-md-regular text-gray-500 tablet:text-black-500"
+                    // 누르는 영역만 사방 10px 넓힌다 (p로 키우고 같은 만큼 -m으로 되돌려 레이아웃은 그대로, 높이 24 → 44px)
+                    className="pointer-events-auto -m-[10px] flex shrink-0 cursor-pointer items-center gap-[2px] rounded-[12px] p-[10px] text-md-regular text-gray-500 tablet:text-black-500"
                   >
                     {/* 기사님 찾기 카드(MoverCard)와 같은 하트 짝 아이콘·크기 */}
                     {isLiked ? (

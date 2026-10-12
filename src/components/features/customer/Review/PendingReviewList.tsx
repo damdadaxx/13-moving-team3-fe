@@ -130,9 +130,13 @@ export default function PendingReviewList() {
         </div>
       ) : (
         <ul className="flex min-w-0 flex-col gap-[20px]">
-          {reviews.map((review) => (
+          {reviews.map((review, index) => (
             <li key={review.id} className="min-w-0">
-              <PendingReviewCard review={review} onWrite={setSelectedReview} />
+              <PendingReviewCard
+                review={review}
+                onWrite={setSelectedReview}
+                priority={index === 0}
+              />
             </li>
           ))}
         </ul>

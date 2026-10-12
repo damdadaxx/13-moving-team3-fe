@@ -20,6 +20,8 @@ import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
 interface PendingReviewCardProps {
   review: PendingReview;
   onWrite?: (review: PendingReview) => void;
+  /** 목록 첫 카드처럼 화면에 바로 보이는 경우에만 true — 프로필 이미지 lazy 로딩을 건너뛴다 */
+  priority?: boolean;
 }
 
 function MetaItem({ label, value }: { label: string; value: string }) {
@@ -42,6 +44,7 @@ function MetaDivider() {
 export default function PendingReviewCard({
   review,
   onWrite,
+  priority = false,
 }: PendingReviewCardProps) {
   const tagSize = useBreakpointValue('sm', 'sm', 'md');
   const router = useRouter();
@@ -109,6 +112,7 @@ export default function PendingReviewCard({
               alt={tCard('profileAlt', { nickname: review.moverName })}
               className="size-[64px]"
               sizes="64px"
+              priority={priority}
             />
           </div>
           <div className="flex flex-col">
@@ -157,6 +161,7 @@ export default function PendingReviewCard({
               alt={tCard('profileAlt', { nickname: review.moverName })}
               className="size-[80px]"
               sizes="80px"
+              priority={priority}
             />
             <div className="flex min-w-0 flex-1 flex-col">
               <div className="flex min-w-0 w-full flex-col items-start gap-[4px] tablet:flex-row tablet:items-start tablet:gap-[6px]">
@@ -235,6 +240,7 @@ export default function PendingReviewCard({
               alt={tCard('profileAlt', { nickname: review.moverName })}
               className="size-[100px]"
               sizes="100px"
+              priority={priority}
             />
             <div className="flex min-w-0 flex-1 flex-col">
               <div className="flex min-w-0 w-full flex-col items-start gap-[4px] tablet:flex-row tablet:items-start tablet:gap-[6px]">

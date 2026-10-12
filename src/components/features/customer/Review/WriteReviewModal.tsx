@@ -9,7 +9,6 @@ import Image from 'next/image';
 import IcArrowRight from '@/assets/icons/ic_arrow_right.svg';
 import IcDriverMark from '@/assets/icons/ic_driver.png';
 import IcStar from '@/assets/icons/ic_star.svg';
-import ImgMoverCharacter from '@/assets/images/img_profile_example.png';
 
 import { HttpError } from '@/lib/api/errors';
 
@@ -23,6 +22,7 @@ import { cn } from '@/utils/cn';
 import Button from '@/components/ui/Button/Button';
 import Textarea from '@/components/ui/Form/Textarea';
 import Modal from '@/components/ui/Modal';
+import ProfileImage from '@/components/ui/ProfileImage';
 import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
 
 interface WriteReviewModalProps {
@@ -63,8 +63,6 @@ export default function WriteReviewModal({
   const buttonSize = useBreakpointValue('sm', 'sm', 'lg');
   const { showToast } = useToast();
   const createReviewMutation = useCreateReviewMutation();
-  //이미지 없으면 기본 이미지.
-  const profileImageSrc = review?.imgUrl ?? ImgMoverCharacter;
   const isValid = rating > 0 && comment.trim().length >= MIN_COMMENT_LENGTH;
   const isSubmitting = createReviewMutation.isPending;
 
@@ -147,16 +145,11 @@ export default function WriteReviewModal({
                   </span>
                 </p>
               </div>
-              <div className="relative size-[50px] shrink-0 overflow-hidden rounded-[12px] bg-black-300">
-                <Image
-                  src={profileImageSrc}
-                  alt=""
-                  fill
-                  unoptimized={typeof profileImageSrc === 'string'}
-                  className="object-cover object-[center_20%]"
-                  sizes="50px"
-                />
-              </div>
+              <ProfileImage
+                imageUrl={review.imgUrl}
+                className="size-[50px]"
+                sizes="50px"
+              />
             </div>
 
             <div className="h-px w-full bg-line-100" />

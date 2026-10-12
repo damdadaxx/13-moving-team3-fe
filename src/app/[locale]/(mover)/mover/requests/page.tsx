@@ -27,13 +27,14 @@ import { useReceivedRequestsQuery } from '@/hooks/features/estimate/queries/quer
 import { cn } from '@/utils/cn';
 
 import ReceivedRequestCard from '@/components/features/mover/EstimateRequest/ReceivedRequestCard';
+import ReceivedRequestListSkeleton from '@/components/features/mover/EstimateRequest/ReceivedRequestListSkeleton';
 import Button from '@/components/ui/Button/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import ServiceTypeSelector from '@/components/ui/Chip/ServiceTypeSelector';
 import InputSearchbar from '@/components/ui/Form/InputSearchbar';
 import Label from '@/components/ui/Form/Label';
-import LoadingDisplay from '@/components/ui/LoadingDisplay';
 import Modal from '@/components/ui/Modal';
+import { Skeleton } from '@/components/ui/Skeleton';
 import Sort, { type SortOption } from '@/components/ui/Sort';
 
 const PAGE_SIZE = 10;
@@ -180,12 +181,17 @@ export default function MoverEstimateRequestPage() {
               'desktop:hidden',
             )}
           >
-            <p className="flex items-center gap-1 text-black-400">
-              <span className="text-sm-medium">{t('total')}</span>
-              <span className="text-sm-semibold">
-                {t('count', { count: totalCount })}
-              </span>
-            </p>
+            {/* 건수를 모르는 동안 "전체 0건"이 보이지 않게 자리표시 */}
+            {isPending ? (
+              <Skeleton width={64} height={22} />
+            ) : (
+              <p className="flex items-center gap-1 text-black-400">
+                <span className="text-sm-medium">{t('total')}</span>
+                <span className="text-sm-semibold">
+                  {t('count', { count: totalCount })}
+                </span>
+              </p>
+            )}
             <div className="flex items-center gap-1">
               <Sort
                 options={sortOptions}
@@ -205,9 +211,13 @@ export default function MoverEstimateRequestPage() {
 
           {/* desktop: 카운트 별도 줄, 체크박스 + 정렬이 같은 줄 */}
           <div className="hidden desktop:flex desktop:flex-col desktop:gap-[24px]">
-            <p className="flex items-center gap-[4px] text-2lg-semibold text-black-400">
-              {t('totalCount', { count: totalCount })}
-            </p>
+            {isPending ? (
+              <Skeleton width={96} height={26} />
+            ) : (
+              <p className="flex items-center gap-[4px] text-2lg-semibold text-black-400">
+                {t('totalCount', { count: totalCount })}
+              </p>
+            )}
 
             <div className="flex items-center justify-between">
               <div className="flex flex-wrap items-center gap-[12px]">
@@ -231,7 +241,7 @@ export default function MoverEstimateRequestPage() {
             </div>
           </div>
 
-          {isPending && <LoadingDisplay />}
+          {isPending && <ReceivedRequestListSkeleton />}
 
           {isError && (
             <p className="py-[40px] text-center text-lg-regular text-red-200">

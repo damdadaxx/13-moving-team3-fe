@@ -28,9 +28,6 @@ import ImgLogoM from '@/assets/icons/ic_driver.png';
 import IcLike from '@/assets/icons/ic_like.svg';
 import IcLikeLine from '@/assets/icons/ic_like_line.svg';
 import IcStar from '@/assets/icons/ic_star.svg';
-import ImgAvatarBeaver from '@/assets/images/img_avatar_beaver.png';
-
-import { resolveMoverImageUrl } from '@/lib/api/estimate';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useFormatCareer } from '@/hooks/common/useFormatCareer';
@@ -38,6 +35,7 @@ import { useFormatPrice } from '@/hooks/common/useFormatPrice';
 
 import { cn } from '@/utils/cn';
 
+import ProfileImage from '@/components/ui/ProfileImage';
 import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
 
 interface ReceivedEstimateCardProps {
@@ -170,22 +168,10 @@ export default function ReceivedEstimateCard({
           {/* 기사님 정보 */}
           <div className="flex w-full flex-col items-start justify-center rounded-[12px] border border-gray-100 py-[12px] pr-[20px] pl-[12px]">
             <div className="flex w-full items-end gap-[12px]">
-              {/*
-            next/image가 아니라 <img>를 쓰는 이유
-            - 기사님 프로필은 백엔드가 준 임의의 호스트 URL이다 (시드는 picsum, 업로드는 /uploads)
-            - next/image는 원격 호스트를 images.remotePatterns에 전부 등록해야 렌더되고,
-              호스트를 와일드카드로 열면 이미지 최적화 서버가 외부 프록시로 악용될 수 있다
-            - 운영 이미지 호스트가 정해지면 remotePatterns에 등록하고 next/image로 바꾼다
-            */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={resolveMoverImageUrl(mover.imgUrl) ?? ImgAvatarBeaver.src}
-                alt=""
-                width={50}
-                height={50}
-                loading="lazy"
-                aria-hidden
-                className="size-[50px] shrink-0 rounded-[12px] bg-black-300 object-cover"
+              <ProfileImage
+                imageUrl={mover.imgUrl}
+                className="size-[50px]"
+                sizes="50px"
               />
 
               <div className="flex min-w-px flex-1 flex-col gap-[4px] tablet:gap-[8px]">

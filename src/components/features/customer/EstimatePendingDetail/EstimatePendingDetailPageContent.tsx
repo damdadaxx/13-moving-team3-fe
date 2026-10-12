@@ -33,12 +33,12 @@ export default function EstimatePendingDetailPageContent({
 
   // 견적 조회 실패
   if (detail.status === 'estimate-error') {
-    return <EmptyState message={tEstimate('notFound')} />;
+    return <EmptyState fit="tab" message={tEstimate('notFound')} />;
   }
 
   // 기사님 조회 실패
   if (detail.status === 'mover-error') {
-    return <EmptyState message={tMover('notFound')} />;
+    return <EmptyState fit="tab" message={tMover('notFound')} />;
   }
 
   // 견적 상세 + 기사님 상세 조회 성공
@@ -48,6 +48,7 @@ export default function EstimatePendingDetailPageContent({
   if (!PENDING_ESTIMATE_STATUSES.includes(estimate.status)) {
     return (
       <EmptyState
+        fit="tab"
         message={t('notPending')}
         buttonLabel={t('goPending')}
         href={ROUTES.customerEstimatesPending}

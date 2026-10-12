@@ -10,8 +10,6 @@ import { getLastPathname } from '@/lib/providers/PreviousPathRecorder';
 import { useAccessDeniedModal } from '@/hooks/common/useAccessDeniedModal';
 import { useAuth } from '@/hooks/features/auth/useAuth';
 
-import LoadingDisplay from '@/components/ui/LoadingDisplay';
-
 /*
 @ 기사님 찾기·상세 접근 제한
 - 비회원·고객만 본다
@@ -49,12 +47,9 @@ export default function MoverBrowseGuard({
     });
   }, [isLoading, isMover, openAccessDeniedModal, router]);
 
-  if (isMover) {
+  /* 세션 확인 전에는 목록을 그리지 않아 기사님 계정에 찾기 화면이 잠깐 보이지 않게 한다 */
+  if (isLoading || isMover) {
     return <div className="fixed inset-0 z-modal bg-gray-50" />;
-  }
-
-  if (isLoading) {
-    return <LoadingDisplay />;
   }
 
   return children;

@@ -7,7 +7,7 @@ import Modal from '@/components/ui/Modal';
 /*
 @ ModalProvider
 - 모달 상태를 전역으로 관리해 어느 컴포넌트에서든 useModal()로 열고 닫을 수 있게 한다.
-- Modal은 Provider 최상위에서 한 번만 렌더링되어 z-index/overflow 이슈를 피한다.
+- Modal은 Provider 최상위에서 한 번만 렌더링하고, 열린 뒤에는 #modal-root로 포탈된다.
 */
 
 export interface ModalOptions {

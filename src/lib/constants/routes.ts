@@ -21,8 +21,8 @@ export const ROUTES = {
   /* 일반 유저 GNB */
   customerHome: '/customer/estimate-request', // 견적 요청
   customerEstimatesRoot: '/customer/estimates', // 내 견적 관리 (받은/대기 견적)
-  customerEstimates: '/customer/estimates/received', // 내 견적 관리 > 받은 견적
   customerEstimatesPending: '/customer/estimates/pending', // 내 견적 관리 > 대기 중인 견적
+  customerEstimates: '/customer/estimates/received', // 내 견적 관리 > 받았던 견적
 
   /* 기사님 GNB */
   moverHome: '/mover/requests', // 받은 요청

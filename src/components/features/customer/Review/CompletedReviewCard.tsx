@@ -6,13 +6,13 @@ import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import IcDriverMark from '@/assets/icons/ic_driver.png';
-import ImgMoverCharacter from '@/assets/images/img_profile_example.png';
 
 import { useFormatDate } from '@/hooks/common/useFormatDate';
 
 import { cn } from '@/utils/cn';
 import formatDate from '@/utils/formatDate';
 
+import ProfileImage from '@/components/ui/ProfileImage';
 import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
 import StarRating from '@/components/ui/StarRating';
 
@@ -81,7 +81,6 @@ export default function CompletedReviewCard({
   const tEstimate = useTranslations('Estimate');
   const formatDateLocale = useFormatDate();
   const router = useRouter();
-  const profileImageSrc = review.imgUrl ?? ImgMoverCharacter;
   const moveDate = formatDateLocale(review.moveDate, 'korean');
   /* 모바일은 좁아서 끝의 요일 "(월)"을 뺀다 */
   const moveDateMobile = moveDate.replace(/\s*\([^)]*\)\s*$/, '');
@@ -128,16 +127,12 @@ export default function CompletedReviewCard({
                 </span>
               </p>
             </div>
-            <div className="relative size-[50px] shrink-0 overflow-hidden rounded-[12px] bg-black-300">
-              <Image
-                src={profileImageSrc}
-                alt={tCard('profileAlt', { nickname: review.moverName })}
-                fill
-                unoptimized={typeof profileImageSrc === 'string'}
-                className="object-cover object-[center_20%]"
-                sizes="50px"
-              />
-            </div>
+            <ProfileImage
+              imageUrl={review.imgUrl}
+              alt={tCard('profileAlt', { nickname: review.moverName })}
+              className="size-[50px]"
+              sizes="50px"
+            />
           </button>
         </div>
         <div className="h-px w-full bg-line-100" />
@@ -175,16 +170,12 @@ export default function CompletedReviewCard({
           className="group flex min-w-0 items-start gap-[20px] text-left cursor-pointer"
           onClick={goToMover}
         >
-          <div className="relative size-[80px] shrink-0 overflow-hidden rounded-[12px] bg-black-300">
-            <Image
-              src={profileImageSrc}
-              alt={tCard('profileAlt', { nickname: review.moverName })}
-              fill
-              unoptimized={typeof profileImageSrc === 'string'}
-              className="object-cover object-[center_20%]"
-              sizes="80px"
-            />
-          </div>
+          <ProfileImage
+            imageUrl={review.imgUrl}
+            alt={tCard('profileAlt', { nickname: review.moverName })}
+            className="size-[80px]"
+            sizes="80px"
+          />
           <div className="flex min-w-0 flex-1 flex-col gap-[8px]">
             <div className="flex w-full flex-col items-start">
               <div className="flex min-w-0 items-center gap-[6px]">

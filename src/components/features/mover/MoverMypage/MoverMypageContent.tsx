@@ -4,11 +4,9 @@
 
 import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
 
 import IcWriting from '@/assets/icons/ic_writing.svg';
 import IcWritingGray from '@/assets/icons/ic_writing_gray.svg';
-import ImgDefaultProfile from '@/assets/images/img_default_profile.png';
 
 import { HttpError } from '@/lib/api/errors';
 import { ROUTES } from '@/lib/constants/routes';
@@ -31,6 +29,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 import Modal from '@/components/ui/Modal';
 import PageBanner from '@/components/ui/PageBanner';
+import ProfileImage from '@/components/ui/ProfileImage';
 
 function ButtonGroup({ className }: { className?: string }) {
   const t = useTranslations('MoverMypage');
@@ -142,7 +141,7 @@ export default function MoverMypageContent() {
   - !mover는 프로필 유무가 아니라, 그릴 객체가 없어 mover를 좁히기 위한 조건
   */
   if (isError || !mover) {
-    return <EmptyState message={t('notFound')} />;
+    return <EmptyState fit="title" message={t('notFound')} />;
   }
 
   return (
@@ -168,20 +167,15 @@ export default function MoverMypageContent() {
             {/* 프로필 이미지 + 닉네임 + 찜하기 */}
             <div className={cn('flex items-end gap-[12px] mb-[16px]')}>
               {/* 프로필 이미지 */}
-              <div
+              <ProfileImage
+                imageUrl={mover.imgUrl}
+                alt={t('profileImageAlt', { nickname: mover.nickname })}
                 className={cn(
-                  'relative w-[60px] h-[64px] rounded-[12px] overflow-hidden',
-                  'tablet:w-[80px] tablet:h-[85px] tablet:rounded-[20px]',
+                  'h-[64px] w-[60px]',
+                  'tablet:h-[85px] tablet:w-[80px] tablet:rounded-[20px]',
                 )}
-              >
-                <Image
-                  src={mover.imgUrl || ImgDefaultProfile.src}
-                  alt={t('profileImageAlt', { nickname: mover.nickname })}
-                  fill
-                  sizes="(min-width: 744px) 80px, 60px"
-                  className={cn('object-cover')}
-                />
-              </div>
+                sizes="(min-width: 744px) 80px, 60px"
+              />
               <div className={cn('flex flex-col', 'tablet:gap-[8px]')}>
                 {/* 기사님 닉네임 */}
                 <MoverNickname nickname={mover.nickname} />

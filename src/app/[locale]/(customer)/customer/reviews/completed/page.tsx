@@ -1,6 +1,13 @@
 // [메뉴] 헤더 모달 메뉴 > 이사 리뷰 > 내가 작성한 리뷰 탭메뉴
 // [페이지] 내가 작성한 리뷰
+import { pageMetadata } from '@/lib/constants/site';
+
 import CompletedReviewList from '@/components/features/customer/Review/CompletedReviewList';
+
+export const generateMetadata = pageMetadata(
+  'reviewsCompleted',
+  '/customer/reviews/completed',
+);
 
 export default function ReviewCompletePage() {
   return (

@@ -74,11 +74,13 @@ export function useMoverDetailQuery(id: string) {
 - undefined: 사용할 수 있는 조회 결과 없음
 - null: 404, 프로필 미등록
 - 객체: 등록 완료
+- 헤더처럼 역할이 섞인 화면에서는 enabled로 기사님일 때만 호출한다.
 */
-export function useMoverProfileQuery() {
+export function useMoverProfileQuery(enabled = true) {
   return useQuery({
     queryKey: moverProfileKeys.detail(),
     queryFn: getMoverProfile,
+    enabled,
     staleTime: 5 * 60 * 1000,
     meta: { name: '내 기사님 프로필' },
   });

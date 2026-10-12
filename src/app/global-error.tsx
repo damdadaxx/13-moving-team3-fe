@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 
+import * as Sentry from '@sentry/nextjs';
 import {
   type Locale,
   type Messages,
@@ -44,7 +45,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
   const locale = splitLocalePrefix(pathname ?? '/').locale ?? 'ko';
 
   useEffect(() => {
-    console.error(error);
+    Sentry.captureException(error);
   }, [error]);
 
   return (
@@ -66,6 +67,7 @@ function GlobalErrorContent({ onReset }: { onReset: () => void }) {
 
   return (
     <EmptyState
+      as="main"
       message={t('message')}
       buttonLabel={t('reload')}
       onClick={onReset}

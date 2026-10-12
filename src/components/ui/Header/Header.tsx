@@ -46,7 +46,7 @@ const MENU_DATA: Record<
     { menuKey: 'findMover', href: ROUTES.moverList },
     {
       menuKey: 'myEstimates',
-      href: ROUTES.customerEstimates,
+      href: ROUTES.customerEstimatesPending,
       activePrefix: ROUTES.customerEstimatesRoot,
     },
   ],
@@ -131,14 +131,13 @@ export default function Header({ hasSessionCookie = false }: HeaderProps) {
   return (
     <header
       className={cn(
-        'fixed inset-x-0 top-0 z-header flex items-center h-[54px] px-[24px] py-[10px] bg-gray-50 border-b-1 border-b-line-100',
-        'tablet:px-[72px]',
-        'desktop:py-[26px] desktop:h-[88px]',
+        'fixed inset-x-0 top-0 z-header flex items-center h-[54px] px-[24px] bg-gray-50 border-b-1 border-b-line-100',
+        'desktop:h-[88px]',
       )}
     >
       <div
         className={cn(
-          'flex justify-between w-full',
+          'flex justify-between w-full h-full',
           'desktop:max-w-[1600px] desktop:mx-auto',
         )}
       >

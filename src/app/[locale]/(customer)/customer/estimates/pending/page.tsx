@@ -21,7 +21,56 @@ import EstimateRequestHeader from '@/components/features/customer/Estimate/Estim
 import PendingEstimateCard from '@/components/features/customer/Estimate/PendingEstimateCard';
 import EmptyListNotice from '@/components/ui/EmptyListNotice';
 import EmptyState from '@/components/ui/EmptyState';
-import LoadingDisplay from '@/components/ui/LoadingDisplay';
+import { Skeleton } from '@/components/ui/Skeleton';
+
+/*
+@ 첫 조회 중 자리표시
+- EstimateRequestHeader(요약 바)와 견적 카드 목록 자리를 같은 틀로 그린다
+*/
+function EstimatePendingSkeleton() {
+  return (
+    <div
+      aria-busy="true"
+      className={cn(
+        'min-h-[calc(100dvh-108px)] bg-background-100',
+        'desktop:min-h-[calc(100dvh-168px)]',
+      )}
+    >
+      <div
+        className={cn(
+          'bg-gray-50 p-[24px]',
+          'tablet:px-[72px] tablet:py-[32px]',
+        )}
+      >
+        <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-[12px]">
+          <Skeleton width={120} height={28} />
+          <Skeleton width={160} height={18} />
+          <Skeleton width="100%" height={48} />
+        </div>
+      </div>
+
+      <div
+        className={cn(
+          'px-[24px] pt-[35px] pb-[64px]',
+          'tablet:px-[72px] tablet:pt-[42px] tablet:pb-[96px]',
+          'desktop:pt-[78px] desktop:pb-[120px]',
+        )}
+      >
+        <div
+          className={cn(
+            'mx-auto grid w-full max-w-[1140px] gap-[20px]',
+            'tablet:gap-[32px]',
+            'desktop:grid-cols-2 desktop:gap-[24px]',
+          )}
+        >
+          {Array.from({ length: 2 }, (_, index) => (
+            <Skeleton key={index} height={280} borderRadius={20} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function EstimatePendingPage() {
   const t = useTranslations('CustomerEstimates');
@@ -45,7 +94,7 @@ export default function EstimatePendingPage() {
     });
   }
 
-  if (activeQuery.isPending) return <LoadingDisplay />;
+  if (activeQuery.isPending) return <EstimatePendingSkeleton />;
 
   if (activeQuery.isError) {
     return (

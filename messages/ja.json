@@ -619,7 +619,10 @@
     "ratingTitle": "評価を選択してください",
     "ratingAria": "評価",
     "commentLabel": "詳しいレビューを書いてください",
-    "commentPlaceholder": "10文字以上入力してください"
+    "commentPlaceholder": "10文字以上入力してください",
+    "draft": "AIで下書き",
+    "draftPending": "下書きを作成しています",
+    "draftFailed": "レビューの下書き作成に失敗しました。"
   },
   "CustomerProfile": {
     "createTitle": "プロフィール登録",

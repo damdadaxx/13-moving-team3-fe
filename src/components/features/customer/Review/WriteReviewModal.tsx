@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import type { PendingReview } from '@/types/review';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import IcArrowRight from '@/assets/icons/ic_arrow_right.svg';
@@ -15,11 +15,15 @@ import { HttpError } from '@/lib/api/errors';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useFormatDate } from '@/hooks/common/useFormatDate';
 import { useToast } from '@/hooks/common/useToast';
-import { useCreateReviewMutation } from '@/hooks/features/review/queries/mutations';
+import {
+  useCreateReviewDraftMutation,
+  useCreateReviewMutation,
+} from '@/hooks/features/review/queries/mutations';
 
 import { cn } from '@/utils/cn';
 
 import Button from '@/components/ui/Button/Button';
+import Label from '@/components/ui/Form/Label';
 import Textarea from '@/components/ui/Form/Textarea';
 import Modal from '@/components/ui/Modal';
 import ProfileImage from '@/components/ui/ProfileImage';
@@ -63,8 +67,12 @@ export default function WriteReviewModal({
   const buttonSize = useBreakpointValue('sm', 'sm', 'lg');
   const { showToast } = useToast();
   const createReviewMutation = useCreateReviewMutation();
+  const createReviewDraftMutation = useCreateReviewDraftMutation();
   const isValid = rating > 0 && comment.trim().length >= MIN_COMMENT_LENGTH;
   const isSubmitting = createReviewMutation.isPending;
+  const isDrafting = createReviewDraftMutation.isPending;
+  //리뷰초안 작성 언어를 위해 현재 언어를 가져온다.
+  const locale = useLocale();
 
   function handleSubmit() {
     if (!isValid || !review || isSubmitting) return;
@@ -84,6 +92,27 @@ export default function WriteReviewModal({
           const message =
             error instanceof HttpError ? error.message : t('createFailed');
           showToast(message);
+        },
+      },
+    );
+  }
+
+  //리뷰 초안 생성
+  function handleDraft() {
+    if (rating <= 0 || !review || isDrafting) return;
+
+    createReviewDraftMutation.mutate(
+      {
+        estimateId: review.id,
+        rating,
+        locale: locale,
+      },
+      {
+        onSuccess: (data) => {
+          setComment(data.content);
+        },
+        onError: () => {
+          showToast(t('draftFailed'));
         },
       },
     );
@@ -220,14 +249,42 @@ export default function WriteReviewModal({
           </div>
         </div>
 
-        <Textarea
-          id="write-review-comment"
-          label={t('commentLabel')}
-          labelVariant="modal"
-          value={comment}
-          onChange={(event) => setComment(event.target.value)}
-          placeholder={t('commentPlaceholder')}
-        />
+        <div className="flex w-full flex-col">
+          <div
+            className={cn(
+              'mb-[16px] flex w-full items-center justify-between gap-[12px]',
+            )}
+          >
+            <Label
+              htmlFor="write-review-comment"
+              variant="modal"
+              className="mb-0"
+            >
+              {t('commentLabel')}
+            </Label>
+            <button
+              type="button"
+              disabled={rating <= 0 || isDrafting}
+              aria-busy={isDrafting || undefined}
+              onClick={handleDraft}
+              className={cn(
+                'shrink-0 cursor-pointer text-md-semibold whitespace-nowrap text-orange-400',
+                'desktop:text-lg-semibold',
+                'disabled:cursor-not-allowed disabled:text-gray-300',
+              )}
+            >
+              {isDrafting ? t('draftPending') : t('draft')}
+            </button>
+          </div>
+          <Textarea
+            id="write-review-comment"
+            labelVariant="modal"
+            value={comment}
+            disabled={isDrafting}
+            onChange={(event) => setComment(event.target.value)}
+            placeholder={t('commentPlaceholder')}
+          />
+        </div>
       </div>
     </Modal>
   );

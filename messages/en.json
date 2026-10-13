@@ -619,7 +619,10 @@
     "ratingTitle": "Rate your experience",
     "ratingAria": "Rating",
     "commentLabel": "Tell us more about your experience",
-    "commentPlaceholder": "Please enter at least 10 characters"
+    "commentPlaceholder": "Please enter at least 10 characters",
+    "draft": "Draft with AI",
+    "draftPending": "Writing a draft...",
+    "draftFailed": "Failed to create a review draft."
   },
   "CustomerProfile": {
     "createTitle": "Create Profile",

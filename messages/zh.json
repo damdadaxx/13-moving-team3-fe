@@ -619,7 +619,10 @@
     "ratingTitle": "请选择评分",
     "ratingAria": "评分",
     "commentLabel": "请填写详细评价",
-    "commentPlaceholder": "请至少输入 10 个字"
+    "commentPlaceholder": "请至少输入 10 个字",
+    "draft": "AI 生成草稿",
+    "draftPending": "正在撰写草稿",
+    "draftFailed": "评价草稿生成失败。"
   },
   "CustomerProfile": {
     "createTitle": "注册资料",

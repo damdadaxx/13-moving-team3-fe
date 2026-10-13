@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { createReview } from '@/lib/api/review';
+import { createReview, createReviewDraft } from '@/lib/api/review';
 
 import { reviewKeys } from '@/hooks/features/review/queries/keys';
 
@@ -16,5 +16,14 @@ export function useCreateReviewMutation() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: reviewKeys.mine() });
     },
+  });
+}
+
+/*
+@ 리뷰 초안 작성
+*/
+export function useCreateReviewDraftMutation() {
+  return useMutation({
+    mutationFn: createReviewDraft,
   });
 }

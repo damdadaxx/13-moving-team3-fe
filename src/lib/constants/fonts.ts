@@ -12,7 +12,7 @@ import localFont from 'next/font/local';
   @font-face가 중복 생성되지 않음
 */
 export const pretendard = localFont({
-  src: '../../assets/fonts/PretendardVariable.woff2',
+  src: '../../assets/fonts/subsetPretendardVariable.woff2',
   weight: '45 920',
   style: 'normal',
   display: 'swap',

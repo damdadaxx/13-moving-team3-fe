@@ -11,9 +11,9 @@ import type { Messages } from 'next-intl';
 import { useTranslations } from 'next-intl';
 import type { StaticImageData } from 'next/image';
 
-import imgMovingHome from '@/assets/images/img_moving_home.png';
-import imgMovingOffice from '@/assets/images/img_moving_office.png';
-import imgMovingSmall from '@/assets/images/img_moving_small.png';
+import imgMovingHome from '@/assets/images/img_moving_home.webp';
+import imgMovingOffice from '@/assets/images/img_moving_office.webp';
+import imgMovingSmall from '@/assets/images/img_moving_small.webp';
 
 import { HttpError } from '@/lib/api/errors';
 import { ROUTES } from '@/lib/constants/routes';

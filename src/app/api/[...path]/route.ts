@@ -84,24 +84,29 @@ async function proxy(request: NextRequest, { params }: RouteContext) {
   }
 
   /*
-  @ GET /auth/me 401 정규화 — accessToken·refreshToken 쿠키가 둘 다 없을 때만
+  @ 세션 쿠키(accessToken·refreshToken) 둘 다 없는 진짜 게스트 판별
+  - refreshToken도 봐야 하는 이유: accessToken 쿠키는 maxAge가 토큰 수명(15분)과 같아서
+    만료되면 브라우저가 쿠키 자체를 지운다. accessToken만 보면 15분 뒤에는 "게스트"로 판단해
+    refresh 없이 로그아웃된다. refreshToken 쿠키(Path=/api/auth)는 이 요청에도 실린다
+  - 쿠키명은 백엔드 authConstants.ts의 ACCESS_TOKEN_COOKIE / REFRESH_TOKEN_COOKIE와 동일해야 한다
+  */
+  const hasNoSessionCookies =
+    !request.cookies.get(ACCESS_TOKEN_COOKIE) &&
+    !request.cookies.get(REFRESH_TOKEN_COOKIE);
+
+  /*
+  @ GET /auth/me 401 정규화 — 쿠키가 둘 다 없을 때만
   - "나 누구야?"에 대한 게스트(쿠키 없음)의 답은 401(접근 금지)이 아니라 "아무도 아님"이다
   - 모든 페이지에 걸린 AuthProvider가 게스트/public 페이지에서도 이 요청을 보내므로,
     401을 그대로 흘리면 브라우저 콘솔에 매번 에러가 찍힌다 → 여기서 200 { data: null }로 각색
   - 둘 중 하나라도 있으면 401을 그대로 흘려보낸다
     → clientFetch가 401을 보고 refresh를 시도할 수 있어야 하기 때문
-  - refreshToken도 봐야 하는 이유: accessToken 쿠키는 maxAge가 토큰 수명(15분)과 같아서
-    만료되면 브라우저가 쿠키 자체를 지운다. accessToken만 보면 15분 뒤에는 "게스트"로 판단해
-    refresh 없이 로그아웃된다. refreshToken 쿠키(Path=/api/auth)는 이 요청에도 실린다
-  - 쿠키명은 백엔드 authConstants.ts의 ACCESS_TOKEN_COOKIE / REFRESH_TOKEN_COOKIE와 동일해야 한다
-  - 다른 보호 라우트의 401은 손대지 않는다
   */
   if (
     request.method === 'GET' &&
     pathname === 'auth/me' &&
     response.status === 401 &&
-    !request.cookies.get(ACCESS_TOKEN_COOKIE) &&
-    !request.cookies.get(REFRESH_TOKEN_COOKIE)
+    hasNoSessionCookies
   ) {
     return Response.json({ success: true, data: null }, { status: 200 });
   }
@@ -128,6 +133,17 @@ async function proxy(request: NextRequest, { params }: RouteContext) {
             response.headers.get('Content-Type') ?? 'application/json',
         },
       });
+
+  /*
+  @ 다른 보호 라우트의 401 — 세션 쿠키가 둘 다 없으면 X-No-Session 헤더만 붙인다
+  - 401은 그대로 흘려보낸다 (의미 안 바꿈), clientFetch가 이 헤더를 보고
+    "refresh 해봐야 100% 실패"임을 알아서 왕복 한 번(POST /api/auth/refresh)을 건너뛴다
+  - accessToken만 없고 refreshToken은 남아있는 경우(토큰 만료 등)는 여전히
+    refresh를 시도해야 하므로 헤더를 안 붙인다 (hasNoSessionCookies가 false)
+  */
+  if (response.status === 401 && hasNoSessionCookies) {
+    proxyResponse.headers.set('X-No-Session', '1');
+  }
 
   /*
   @ Set-Cookie Path 보정

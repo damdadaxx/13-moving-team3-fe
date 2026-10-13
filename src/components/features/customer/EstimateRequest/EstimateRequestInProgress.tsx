@@ -5,7 +5,7 @@
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
-import imgMovingCar from '@/assets/images/img_moving_car.png';
+import imgMovingCar from '@/assets/images/img_moving_car.webp';
 
 import { ROUTES } from '@/lib/constants/routes';
 

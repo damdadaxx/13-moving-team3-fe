@@ -15,6 +15,8 @@ interface ProfileImageProps {
   className?: string;
   /** next/image sizes. 기본값은 상세 상단 프로필 크기 */
   sizes?: string;
+  /** 리스트 첫 카드처럼 화면에 바로 보이는 경우에만 true — LCP 대상일 때 lazy 로딩을 건너뛴다 */
+  priority?: boolean;
 }
 
 const DEFAULT_SIZES =
@@ -32,6 +34,7 @@ export default function ProfileImage({
   alt = '',
   className,
   sizes = DEFAULT_SIZES,
+  priority = false,
 }: ProfileImageProps) {
   const resolvedUrl = resolveImageUrl(imageUrl ?? null);
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
@@ -51,6 +54,7 @@ export default function ProfileImage({
           fill
           unoptimized={resolvedUrl.startsWith('/api/')}
           sizes={sizes}
+          priority={priority}
           className="object-cover"
           onError={() => setFailedUrl(resolvedUrl)}
         />

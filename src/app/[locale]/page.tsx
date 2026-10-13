@@ -11,7 +11,7 @@ import ScrollReveal from '@/components/ui/ScrollReveal';
 
 export default function Home() {
   return (
-    <main>
+    <>
       {/* 모바일 인트로 섹션 */}
       <IntroOverlay />
 
@@ -37,6 +37,6 @@ export default function Home() {
       <ScrollReveal>
         <Footer />
       </ScrollReveal>
-    </main>
+    </>
   );
 }

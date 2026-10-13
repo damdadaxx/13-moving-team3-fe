@@ -9,7 +9,7 @@ import Image from 'next/image';
 import IcAlarm from '@/assets/icons/ic_alarm_dark.svg';
 import IcMenu from '@/assets/icons/ic_menu_dark.svg';
 import IcProfile from '@/assets/icons/ic_profile_dark.svg';
-import ImgAvatarBeaver from '@/assets/images/img_avatar_beaver.png';
+import ImgAvatarBeaver from '@/assets/images/img_avatar_beaver.webp';
 import ImgLogo from '@/assets/images/img_logo.svg';
 import ImgBgMarkM from '@/assets/images/mover-detail/img_bg_mark_m.svg';
 

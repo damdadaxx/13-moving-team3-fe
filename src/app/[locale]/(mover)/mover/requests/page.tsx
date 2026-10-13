@@ -277,7 +277,6 @@ export default function MoverEstimateRequestPage() {
                 height={240}
                 className="size-[240px] object-contain"
                 aria-hidden
-                loading="eager"
                 priority
               />
               <p className="text-lg-regular text-gray-400 desktop:text-xl-regular">

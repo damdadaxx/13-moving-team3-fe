@@ -11,12 +11,10 @@ export const generateMetadata = pageMetadata(
 
 export default function ReviewCompletePage() {
   return (
-    <main>
-      <div className="px-[24px] pt-[40px] pb-[52px] tablet:px-[72px] tablet:pb-[61px] desktop:pt-[54px] desktop:pb-[95px]">
-        <div className="mx-auto w-full min-w-0 desktop:max-w-[1120px]">
-          <CompletedReviewList />
-        </div>
+    <div className="px-[24px] pt-[40px] pb-[52px] tablet:px-[72px] tablet:pb-[61px] desktop:pt-[54px] desktop:pb-[95px]">
+      <div className="mx-auto w-full min-w-0 desktop:max-w-[1120px]">
+        <CompletedReviewList />
       </div>
-    </main>
+    </div>
   );
 }

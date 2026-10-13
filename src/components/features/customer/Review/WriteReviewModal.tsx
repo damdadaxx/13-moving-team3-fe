@@ -136,6 +136,7 @@ export default function WriteReviewModal({
                     alt=""
                     aria-hidden="true"
                     fill
+                    sizes="16px"
                     className="object-contain"
                   />
                 </span>

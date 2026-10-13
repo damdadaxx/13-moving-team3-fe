@@ -3,6 +3,7 @@ import { hasLocale } from 'next-intl';
 
 import {
   KAKAO_JAVASCRIPT_KEY,
+  KAKAO_SDK_SRC,
   OG_IMAGE_HEIGHT,
   OG_IMAGE_WIDTH,
   getOgImagePath,
@@ -86,15 +87,53 @@ export async function copyPageUrl() {
   copyWithTextarea(url);
 }
 
+// 카카오 SDK 스크립트 로드 중복 방지용 싱글톤 프로미스 (clientFetch의 requestRefresh와 동일 패턴)
+let kakaoSdkPromise: Promise<void> | null = null;
+
+/*
+@ 카카오 SDK 지연 로드
+- 예전엔 레이아웃에서 모든 페이지 로드 시 바로 스크립트를 받았다 (약 27KB, 공유 버튼
+  안 누르는 페이지에서도 낭비). 이제 카카오 공유 버튼을 처음 누를 때만 불러온다
+- 로그인/회원가입은 이 SDK를 쓰지 않는다 — 소셜 로그인은 백엔드 OAuth 리다이렉트
+  (getSocialLoginUrl, lib/api/auth.ts)라 이 SDK와 무관하다. 기사님 상세 페이지의
+  "카카오톡 공유" 버튼(ShareMoverInfo)만 이 SDK를 쓴다
+*/
+function loadKakaoSdk(): Promise<void> {
+  if (window.Kakao) return Promise.resolve();
+
+  if (!kakaoSdkPromise) {
+    kakaoSdkPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = KAKAO_SDK_SRC;
+      script.async = true;
+      script.onload = () => resolve();
+      script.onerror = () => {
+        kakaoSdkPromise = null;
+        reject(new Error('카카오 SDK를 불러오지 못했습니다.'));
+      };
+      document.head.appendChild(script);
+    });
+  }
+
+  return kakaoSdkPromise;
+}
+
 /*
 @ 카카오톡 공유
 - 공식 샘플의 Kakao.Share.createDefaultButton 과 같은 피드 페이로드다
 - 공유 버튼이 페이지에 두 번 렌더되므로 container id 바인딩 대신 sendDefault 를 쓴다
-- Kakao.Share 는 init 이후에만 생기므로, 클릭 핸들러에서 한 번 더 init 한다
+- 클릭 시점에 SDK를 불러오고(이미 있으면 바로 통과), init 이후에만 Kakao.Share가 생기므로
+  매번 isInitialized를 확인해 한 번 더 init 한다
 */
-export function shareToKakao(options: KakaoFeedShareOptions) {
+export async function shareToKakao(options: KakaoFeedShareOptions) {
+  if (!KAKAO_JAVASCRIPT_KEY) {
+    throw new Error('카카오 공유를 실행할 수 없습니다.');
+  }
+
+  await loadKakaoSdk();
+
   const Kakao = window.Kakao;
-  if (!Kakao || !KAKAO_JAVASCRIPT_KEY) {
+  if (!Kakao) {
     throw new Error('카카오 공유를 실행할 수 없습니다.');
   }
 

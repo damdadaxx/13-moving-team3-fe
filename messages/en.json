@@ -106,14 +106,15 @@
           "Mover profile: profile photo, nickname, career, introduction, service types offered, service regions",
           "Quote requests: preferred moving date, departure/arrival address and postal code",
           "Reviews: rating, review text",
-          "Automatically collected: access logs, service usage records, cookies"
+          "Automatically collected: access logs, service usage records, and cookies. Google Analytics may collect pages visited, how the service is used, browser and device information, and approximate location."
         ]
       },
       {
         "title": "2. How we collect personal information",
         "items": [
           "Entered directly by users during sign-up, profile registration/editing, quote requests, and review writing",
-          "Received from Google, Kakao, or Naver during social login"
+          "Received from Google, Kakao, or Naver during social login",
+          "Collected automatically through Google Analytics when you visit the Service"
         ]
       },
       {
@@ -123,7 +124,8 @@
           "Providing the moving-quote matching and brokerage service between customers and movers",
           "Verifying identity through email verification",
           "Managing quote/review history and responding to customer inquiries",
-          "Improving service quality and developing new features"
+          "Improving service quality and developing new features",
+          "Analyzing visits and usage statistics through Google Analytics"
         ]
       },
       {
@@ -139,7 +141,8 @@
         "before": "We use the following external services to provide the Service, and personal information may be processed according to each provider's own policy.",
         "items": [
           "Google, Kakao, Naver: social login authentication",
-          "Kakao Address Search API: searching departure/arrival addresses for moves"
+          "Kakao Address Search API: searching departure/arrival addresses for moves",
+          "Google Analytics (Google LLC, United States): analyzing usage statistics such as pages visited, browser and device information, and cookie identifiers. This information may be processed on Google's servers, and the related cookies are kept for up to 2 years. You can refuse collection by blocking the analytics cookies in your browser or by installing Google's opt-out add-on (https://tools.google.com/dlpage/gaoptout)."
         ]
       },
       {
@@ -159,8 +162,14 @@
       }
     ]
   },
+  "CookieConsent": {
+    "label": "Cookie consent",
+    "message": "We use Google Analytics cookies to understand how the service is used. You can still sign in and request quotes if you decline.",
+    "accept": "Accept",
+    "reject": "Decline"
+  },
   "CookiePolicy": {
-    "intro": "Moving (the 'Company') uses cookies only for purposes strictly necessary to provide the Service, such as keeping you signed in. We do not use separate advertising or analytics cookies.",
+    "intro": "Moving (the 'Company') uses cookies to keep you signed in and to understand how the Service is used. We do not use advertising cookies. Usage statistics are collected with Google Analytics cookies.",
     "cookieDuration": "Retention period: {duration}",
     "sections": [
       {
@@ -184,9 +193,24 @@
             "name": "NEXT_LOCALE",
             "purpose": "Remembers the language you selected in the header (Korean, English, Chinese, Japanese) so the same language is shown on your next visit.",
             "duration": "1 year"
+          },
+          {
+            "name": "analytics_consent",
+            "purpose": "Remembers in this browser whether you accepted Google Analytics collection. If you decline, analytics cookies are not set.",
+            "duration": "1 year"
+          },
+          {
+            "name": "_ga",
+            "purpose": "A cookie issued by Google Analytics to distinguish visitors. It is used to aggregate pages visited and how the Service is used. It is not used for advertising.",
+            "duration": "2 years"
+          },
+          {
+            "name": "_ga_*",
+            "purpose": "A cookie issued by Google Analytics to keep the state of the current session.",
+            "duration": "2 years"
           }
         ],
-        "after": "accessToken and refreshToken are essential cookies required for login functionality; blocking them will prevent you from staying signed in. NEXT_LOCALE only remembers your language setting, and blocking it does not affect your use of the Service."
+        "after": "accessToken and refreshToken are essential cookies required for login functionality; blocking them will prevent you from staying signed in. NEXT_LOCALE only remembers your language setting, and _ga and _ga_* are used for usage statistics. Blocking the language or analytics cookies does not affect your use of the Service."
       },
       {
         "title": "3. Cookies used during social login (Google · Kakao · Naver)",
@@ -202,7 +226,7 @@
       },
       {
         "title": "5. Managing cookies",
-        "before": "Most browsers let you refuse or delete cookies from their settings menu. However, accessToken and refreshToken are required to stay signed in, so blocking them will prevent you from using features that require login (quote requests, profile management, etc.)."
+        "before": "Most browsers let you refuse or delete cookies from their settings menu. accessToken and refreshToken are required to stay signed in, so blocking them will prevent you from using features that require login (quote requests, profile management, etc.). You can refuse Google Analytics collection by blocking the _ga and _ga_* cookies, or by installing Google's opt-out add-on (https://tools.google.com/dlpage/gaoptout)."
       }
     ]
   },

@@ -42,7 +42,7 @@ export default function LocaleSelect() {
       options={LOCALE_OPTIONS}
       value={locale}
       onChange={handleChange}
-      ariaLabel={t('language')}
+      ariaLabel={`${t('language')}: ${LOCALE_LABELS[locale]}`}
       className={cn('shrink-0 mr-[-16px]', 'desktop:mr-[-22px]')}
     />
   );

@@ -106,14 +106,15 @@
           "司机师傅资料：头像、昵称、从业经历、自我介绍、提供的服务类型、可服务地区",
           "申请报价时：预计搬家日期、出发地·到达地地址及邮政编码",
           "撰写评价时：评分、评价内容",
-          "自动收集：访问日志、服务使用记录、Cookie"
+          "自动收集：访问日志、服务使用记录、Cookie。通过 Google Analytics 可能收集访问页面、使用路径、浏览器与设备信息以及大致地区信息。"
         ]
       },
       {
         "title": "2. 个人信息收集方式",
         "items": [
           "用户在注册、资料登记与修改、申请报价、撰写评价时直接输入",
-          "社交登录时由 Google、Kakao、Naver 提供"
+          "社交登录时由 Google、Kakao、Naver 提供",
+          "访问服务时通过 Google Analytics 自动收集"
         ]
       },
       {
@@ -123,7 +124,8 @@
           "为客户与司机师傅之间提供搬家报价匹配及中介服务",
           "通过邮箱验证进行身份确认",
           "管理报价、评价等服务使用记录，处理客户咨询",
-          "改善服务质量，开发新功能"
+          "改善服务质量，开发新功能",
+          "通过 Google Analytics 分析访问与使用统计"
         ]
       },
       {
@@ -139,7 +141,8 @@
         "before": "本公司为提供服务使用以下外部服务，个人信息可能依据各服务商的政策进行处理。",
         "items": [
           "Google、Kakao、Naver：社交登录身份验证",
-          "Kakao 地址搜索 API：搜索搬家出发地·到达地地址"
+          "Kakao 地址搜索 API：搜索搬家出发地·到达地地址",
+          "Google Analytics（Google LLC，美国）：分析访问页面、浏览器与设备信息、Cookie 标识等使用统计。相关信息可能在 Google 服务器上处理，相关 Cookie 最多保存 2 年。用户可在浏览器中屏蔽分析 Cookie，或安装 Google 提供的分析停用插件（https://tools.google.com/dlpage/gaoptout）以拒绝收集。"
         ]
       },
       {
@@ -159,8 +162,14 @@
       }
     ]
   },
+  "CookieConsent": {
+    "label": "Cookie 收集同意",
+    "message": "我们使用 Google Analytics Cookie 了解服务使用情况。拒绝后仍可登录并申请报价。",
+    "accept": "同意",
+    "reject": "拒绝"
+  },
   "CookiePolicy": {
-    "intro": "Moving（以下简称“本公司”）仅出于维持登录状态等服务提供所必需的目的使用 Cookie，不使用额外的广告或分析类 Cookie。",
+    "intro": "Moving（以下简称“本公司”）使用 Cookie 以维持登录状态并了解服务使用情况。本公司不使用广告 Cookie，使用统计通过 Google Analytics Cookie 收集。",
     "cookieDuration": "保存期限：{duration}",
     "sections": [
       {
@@ -184,9 +193,24 @@
             "name": "NEXT_LOCALE",
             "purpose": "记住您在页头选择的语言（韩语·英语·中文·日语），以便下次访问时显示相同语言。",
             "duration": "1 年"
+          },
+          {
+            "name": "analytics_consent",
+            "purpose": "在此浏览器中记住您是否同意 Google Analytics 收集。若拒绝，则不会写入分析 Cookie。",
+            "duration": "1 年"
+          },
+          {
+            "name": "_ga",
+            "purpose": "Google Analytics 为区分访客而签发的 Cookie。用于统计访问页面和使用路径，不用于广告。",
+            "duration": "2 年"
+          },
+          {
+            "name": "_ga_*",
+            "purpose": "Google Analytics 为维持当前会话使用状态而签发的 Cookie。",
+            "duration": "2 年"
           }
         ],
-        "after": "accessToken 和 refreshToken 是登录功能必需的必要 Cookie，若屏蔽将无法维持登录状态。NEXT_LOCALE 仅用于记住语言设置，屏蔽后不影响服务的正常使用。"
+        "after": "accessToken 和 refreshToken 是登录功能必需的必要 Cookie，若屏蔽将无法维持登录状态。NEXT_LOCALE 仅用于记住语言设置，_ga 和 _ga_* 用于使用统计。屏蔽语言 Cookie 或分析 Cookie 不影响服务的正常使用。"
       },
       {
         "title": "3. 使用社交登录（Google · Kakao · Naver）时的 Cookie",
@@ -202,7 +226,7 @@
       },
       {
         "title": "5. Cookie 管理方法",
-        "before": "大多数浏览器可在设置菜单中拒绝保存或删除 Cookie。但 accessToken 和 refreshToken 是维持登录所必需的 Cookie，若屏蔽将无法使用需要登录的功能（报价申请、资料管理等）。"
+        "before": "大多数浏览器可在设置菜单中拒绝保存或删除 Cookie。accessToken 和 refreshToken 是维持登录所必需的 Cookie，若屏蔽将无法使用需要登录的功能（报价申请、资料管理等）。拒绝 Google Analytics 收集时，可屏蔽 _ga、_ga_* Cookie，或安装 Google 提供的分析停用插件（https://tools.google.com/dlpage/gaoptout）。"
       }
     ]
   },

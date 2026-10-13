@@ -1,8 +1,10 @@
 import type { MetadataRoute } from 'next';
 
-// TODO: 최적화 작업 시 수정
+import { SITE_URL } from '@/lib/constants/site';
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: { userAgent: '*', allow: '/' },
+    sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

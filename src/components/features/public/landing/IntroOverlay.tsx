@@ -7,7 +7,7 @@ import { motion, type Transition } from 'framer-motion';
 import { useLocale } from 'next-intl';
 import Image from 'next/image';
 
-import ImgBeaver from '@/assets/images/img_avatar_beaver.png';
+import ImgBeaver from '@/assets/images/img_avatar_beaver.webp';
 
 import {
   beginLandingIntro,

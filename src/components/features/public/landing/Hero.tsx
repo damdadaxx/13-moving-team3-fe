@@ -8,9 +8,9 @@ import Image from 'next/image';
 
 import ImgCar from '@/assets/images/landing/img_car.svg';
 import ImgCarMobile from '@/assets/images/landing/img_car_m.svg';
-import ImgHeroBg from '@/assets/images/landing/img_hero_bg.jpg';
-import ImgHeroBgDesktop from '@/assets/images/landing/img_hero_bg_desktop.jpg';
-import ImgHeroBgTablet from '@/assets/images/landing/img_hero_bg_tablet.jpg';
+import ImgHeroBg from '@/assets/images/landing/img_hero_bg.webp';
+import ImgHeroBgDesktop from '@/assets/images/landing/img_hero_bg_desktop.webp';
+import ImgHeroBgTablet from '@/assets/images/landing/img_hero_bg_tablet.webp';
 
 import { useIntroGate } from '@/lib/providers/IntroGateProvider';
 

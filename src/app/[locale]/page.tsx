@@ -12,19 +12,28 @@ import ScrollReveal from '@/components/ui/ScrollReveal';
 export default function Home() {
   return (
     <main>
+      {/* 모바일 인트로 섹션 */}
       <IntroOverlay />
-      <ScrollReveal delay={0.15}>
-        <Hero />
-      </ScrollReveal>
-      <ScrollReveal delay={0.3}>
+
+      {/* 히어로 섹션 */}
+      <Hero />
+
+      {/* 이사 유형 섹션 */}
+      <ScrollReveal delay={0.3} onlyWithIntro>
         <MoveTypeSection />
       </ScrollReveal>
+
+      {/* 견적 요청 섹션 */}
       <ScrollReveal>
         <EstimateRequestSection />
       </ScrollReveal>
+
+      {/* 견적 비교 섹션 */}
       <ScrollReveal>
         <CompareEstimatesSection />
       </ScrollReveal>
+
+      {/* 푸터 섹션 */}
       <ScrollReveal>
         <Footer />
       </ScrollReveal>

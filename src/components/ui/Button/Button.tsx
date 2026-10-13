@@ -37,6 +37,7 @@ const buttonVariants = cva(BUTTON_BASE_CLASS, {
     color: {
       orange: '',
       gray: '',
+      white: '',
     },
     size: {
       sm: 'h-[54px] gap-1 rounded-[12px] text-lg-semibold',
@@ -56,6 +57,12 @@ const buttonVariants = cva(BUTTON_BASE_CLASS, {
       color: 'gray',
       class:
         'border-gray-200 text-gray-300 not-aria-disabled:hover:bg-background-300',
+    },
+    {
+      variant: 'outlined',
+      color: 'white',
+      class:
+        'border-gray-50 text-gray-50 not-aria-disabled:hover:bg-orange-300',
     },
   ],
   defaultVariants: {

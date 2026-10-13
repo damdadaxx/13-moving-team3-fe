@@ -10,17 +10,20 @@ import ImgLogoMobile from '@/assets/images/landing/img_footer_logo_m.svg';
 
 import { getLocalizedSiteName } from '@/lib/constants/site';
 
+import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useModal } from '@/hooks/common/useModal';
 
 import { cn } from '@/utils/cn';
 
 import CookiePolicyModalContent from '@/components/features/public/landing/CookiePolicyModalContent';
 import PrivacyPolicyModalContent from '@/components/features/public/landing/PrivacyPolicyModalContent';
+import Button from '@/components/ui/Button/Button';
 
 export default function Footer() {
   const t = useTranslations('Footer');
   const locale = useLocale();
   const { openModal } = useModal();
+  const buttonSize = useBreakpointValue('sm', 'sm', 'lg');
   const year = new Date().getFullYear();
 
   return (
@@ -49,6 +52,15 @@ export default function Footer() {
         >
           {t('tagline')}
         </p>
+        <Button
+          className="w-[190px]"
+          variant="outlined"
+          color="white"
+          size={buttonSize}
+          href={'/mover'}
+        >
+          기사님 찾으러 가기
+        </Button>
       </div>
 
       <div

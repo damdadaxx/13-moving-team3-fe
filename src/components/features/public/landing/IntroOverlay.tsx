@@ -1,6 +1,6 @@
 'use client';
 
-// 랜딩 페이지 진입 전 인트로 애니메이션 (로고 외곽선 그리기 -> 채우기 -> 비버 등장 -> 자연스럽게 페이드아웃)
+// 모바일 홈에서만, 세션당 한 번 재생하는 인트로 (로고 외곽선 -> 채우기 -> 비버 -> 페이드아웃)
 import { useEffect, useState } from 'react';
 
 import { motion, type Transition } from 'framer-motion';
@@ -9,7 +9,11 @@ import Image from 'next/image';
 
 import ImgBeaver from '@/assets/images/img_avatar_beaver.png';
 
-import { useIntroGate } from '@/lib/providers/IntroGateProvider';
+import {
+  beginLandingIntro,
+  dismissLandingIntro,
+  useIntroGate,
+} from '@/lib/providers/IntroGateProvider';
 
 const DRAW_DURATION = 1.5;
 const FILL_DURATION = 0.6;
@@ -39,6 +43,14 @@ function pathTransition(delay: number): Transition {
 }
 
 export default function IntroOverlay() {
+  const { isIntroActive } = useIntroGate();
+
+  if (!isIntroActive) return null;
+
+  return <IntroAnimation />;
+}
+
+function IntroAnimation() {
   const [phase, setPhase] = useState<IntroPhase>('logo');
   const { markReady } = useIntroGate();
   const locale = useLocale();
@@ -46,15 +58,12 @@ export default function IntroOverlay() {
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
+    beginLandingIntro();
+
     return () => {
       document.body.style.overflow = '';
     };
   }, []);
-
-  useEffect(() => {
-    if (phase !== 'wipe') return;
-    markReady();
-  }, [phase, markReady]);
 
   if (phase === 'done') return null;
 
@@ -66,7 +75,7 @@ export default function IntroOverlay() {
       onAnimationComplete={() => {
         if (phase !== 'wipe') return;
         setPhase('done');
-        document.body.style.overflow = '';
+        dismissLandingIntro();
       }}
     >
       <div className="relative">
@@ -79,6 +88,7 @@ export default function IntroOverlay() {
             onAnimationComplete={() => {
               if (phase !== 'beaver') return;
               setPhase('wipe');
+              markReady();
             }}
           >
             <Image src={ImgBeaver} alt="" width={160} height={160} priority />

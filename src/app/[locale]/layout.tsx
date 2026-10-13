@@ -5,16 +5,22 @@ import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { cookies } from 'next/headers';
+import Script from 'next/script';
 
 import '@/app/globals.css';
 import Providers from '@/app/providers';
 
+import {
+  ANALYTICS_CONSENT_COOKIE,
+  parseAnalyticsConsent,
+} from '@/lib/constants/analyticsConsent';
 import { ACCESS_TOKEN_COOKIE } from '@/lib/constants/auth';
 import { pretendard } from '@/lib/constants/fonts';
 import { SITE_URL, getOpenGraph } from '@/lib/constants/site';
 
 import { cn } from '@/utils/cn';
 
+import AnalyticsConsentBanner from '@/components/features/common/AnalyticsConsentBanner';
 import ChatFloatingButton from '@/components/features/chat/ChatFloatingButton';
 import Header from '@/components/ui/Header/Header';
 import HeaderRevealWrapper from '@/components/ui/HeaderRevealWrapper';
@@ -61,6 +67,13 @@ export default async function RootLayout({
   const { locale } = await params;
   const cookieStore = await cookies();
   const hasSessionCookie = cookieStore.has(ACCESS_TOKEN_COOKIE);
+  const gaMeasurementId = process.env.NEXT_PUBLIC_GA_ID;
+  const hasGaMeasurementId =
+    typeof gaMeasurementId === 'string' &&
+    /^G-[A-Z0-9]+$/.test(gaMeasurementId);
+  const analyticsConsent = parseAnalyticsConsent(
+    cookieStore.get(ANALYTICS_CONSENT_COOKIE)?.value,
+  );
 
   return (
     <html
@@ -78,12 +91,34 @@ export default async function RootLayout({
             {/* 채팅 버튼은 맨 위로 버튼 자리에 있다가, 맨 위로 버튼이 보이면 그 위로 올라간다 */}
             <ChatFloatingButton />
             <TopButton />
+            {hasGaMeasurementId && (
+              <AnalyticsConsentBanner
+                gaMeasurementId={gaMeasurementId}
+                initialConsent={analyticsConsent}
+              />
+            )}
           </Providers>
         </NextIntlClientProvider>
 
         {/* Modal, Toast 렌더링 위치 */}
         <div id="modal-root" />
         <div id="toast-root" />
+        {hasGaMeasurementId && analyticsConsent === 'granted' && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${gaMeasurementId}');
+              `}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );

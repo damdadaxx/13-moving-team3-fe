@@ -29,6 +29,15 @@ export const OPEN_GRAPH_DEFAULT = {
 } satisfies Metadata['openGraph'];
 
 /*
+@ 로케일별 브랜드명
+- 로고가 한글 벡터 아트워크라 한국어 외에는 그려줄 수 없어, 영문 "Moving"으로 대신 보여준다
+- 인트로 애니메이션, 푸터 카피라이트 등 사용자에게 노출되는 브랜드명 표기에 쓴다
+*/
+export function getLocalizedSiteName(locale: string) {
+  return locale === 'ko' ? SITE_NAME : 'Moving';
+}
+
+/*
 @ locale별 og:locale 값 (OG는 언어_지역 형식)
 - Record<Locale, ...>로 지원하는 모든 locale을 강제한다
   → locale을 추가하면 여기를 채우기 전까지 타입 에러가 난다

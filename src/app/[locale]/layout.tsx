@@ -17,6 +17,7 @@ import KakaoScript from '@/lib/providers/KakaoScript';
 import { cn } from '@/utils/cn';
 
 import Header from '@/components/ui/Header/Header';
+import HeaderRevealWrapper from '@/components/ui/HeaderRevealWrapper';
 import PageHeader from '@/components/ui/PageHeader';
 import TopButton from '@/components/ui/TopButton';
 
@@ -70,7 +71,9 @@ export default async function RootLayout({
         <NextIntlClientProvider>
           <Providers>
             <KakaoScript />
-            <Header hasSessionCookie={hasSessionCookie} />
+            <HeaderRevealWrapper>
+              <Header hasSessionCookie={hasSessionCookie} />
+            </HeaderRevealWrapper>
             <PageHeader />
             {children}
             <TopButton />

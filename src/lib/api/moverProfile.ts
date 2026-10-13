@@ -12,16 +12,16 @@ import {
   createMoverProfileUpdateFormData,
 } from '@/lib/api/moverProfileFormData';
 
+import { resolveImageUrl } from '@/utils/resolveImageUrl';
+
 /*=================================================
 기사님 프로필 API
 =================================================*/
 
 function toMoverProfile(profile: MoverProfile): MoverProfile {
-  const { imgUrl } = profile;
-
   return {
     ...profile,
-    imgUrl: imgUrl && imgUrl.startsWith('/uploads/') ? `/api${imgUrl}` : imgUrl,
+    imgUrl: resolveImageUrl(profile.imgUrl),
   };
 }
 

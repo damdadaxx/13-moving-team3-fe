@@ -31,7 +31,9 @@
 
 /*
 @ 하단 버튼 영역
-- buttons로 액션 버튼을 받아 flex + gap-[8px]로 정렬한다 (버튼 1개면 gap은 보이지 않음)
+- buttons로 액션 버튼을 받아 같은 너비로 나눈다 (버튼 1개면 한 칸이 가로를 다 쓴다)
+- flex-1은 기준 너비(0%)에 패딩·테두리를 더한 뒤 남는 공간만 나눠서, outlined(px-6+border)가 solid(p-4)보다 넓어진다
+- grid의 1fr 칸은 패딩과 무관하게 칸 너비가 같다
 - 사용: buttons: <> <Button /> <Button /> </>
 */
 
@@ -39,6 +41,7 @@
 @ 사용 방식
 - 도메인 컴포넌트에서 Modal을 직접 쓰기보다, ModalProvider가 최상위에서 한 번만 렌더링하고
   useModal()의 openModal(content, { title, variant, buttons }) / closeModal 로 전역에서 열고 닫는다
+- 열린 모달은 layout의 #modal-root로 createPortal 한다. 부모 overflow/stacking context에 갇히지 않게 하기 위함이다
 - children에 텍스트 한 줄짜리 확인 모달부터 폼이 들어간 복잡한 모달까지 자유롭게 구성
 - 버튼이 폼 상태에 묶여 있으면 도메인 컴포넌트가 Modal을 직접 렌더하고 buttons로 넘긴다
 */
@@ -46,12 +49,14 @@
 'use client';
 
 import { useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 import { useTranslations } from 'next-intl';
 
 import IcX from '@/assets/icons/ic_x.svg';
 
 import { useOutsideClick } from '@/hooks/common/useOutsideClick';
+import { usePortalRoot } from '@/hooks/common/usePortalRoot';
 
 import { cn } from '@/utils/cn';
 
@@ -71,6 +76,8 @@ interface ModalProps {
   className?: string;
 }
 
+const MODAL_ROOT_ID = 'modal-root';
+
 export default function Modal({
   isOpen,
   onClose,
@@ -82,17 +89,18 @@ export default function Modal({
 }: ModalProps) {
   const t = useTranslations('Common');
   const dialogRef = useRef<HTMLDivElement>(null);
+  const portalRoot = usePortalRoot(MODAL_ROOT_ID);
 
   useOutsideClick(dialogRef, onClose, {
     enabled: isOpen,
     closeOnEscape: true,
   });
 
-  if (!isOpen) return null;
+  if (!isOpen || !portalRoot) return null;
 
   const isSheet = variant === 'sheet';
 
-  return (
+  return createPortal(
     <div
       role="presentation"
       className={cn(
@@ -148,7 +156,7 @@ export default function Modal({
         {buttons && (
           <div
             className={cn(
-              'mt-[24px] flex w-full shrink-0 items-center gap-[8px]',
+              'mt-[24px] grid w-full flex-1 grid-flow-col auto-cols-[minmax(0,1fr)] items-center gap-[8px]',
               isSheet ? 'mt-[26px] desktop:mt-[40px]' : 'tablet:mt-[40px]',
             )}
           >
@@ -156,6 +164,7 @@ export default function Modal({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    portalRoot,
   );
 }

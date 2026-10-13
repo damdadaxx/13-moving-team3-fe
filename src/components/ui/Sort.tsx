@@ -157,6 +157,8 @@ interface SortProps<T extends string> {
   disabled?: boolean;
   /** 너비는 지정하지 않는다(라벨 길이에 맞춰짐). 필요하면 여기로 w-* 를 넘긴다 */
   className?: string;
+  /** 보이는 라벨과 다른 이름이 필요할 때 (예: 언어 코드 KO의 버튼 이름) */
+  ariaLabel?: string;
 }
 
 export default function Sort<T extends string>({
@@ -166,6 +168,7 @@ export default function Sort<T extends string>({
   size = 'responsive',
   disabled = false,
   className,
+  ariaLabel,
 }: SortProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
   /** 키보드로 이동 중인 항목. -1이면 아직 키보드 탐색을 시작하지 않은 상태 */
@@ -274,6 +277,7 @@ export default function Sort<T extends string>({
         type="button"
         disabled={disabled}
         onClick={() => (isOpen ? closeList() : openList(-1))}
+        aria-label={ariaLabel}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         className={sortTriggerVariants({ size, isOpen })}

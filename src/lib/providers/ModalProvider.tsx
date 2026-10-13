@@ -1,19 +1,21 @@
 'use client';
 
-import { createContext, useState } from 'react';
+import { createContext, useRef, useState } from 'react';
 
 import Modal from '@/components/ui/Modal';
 
 /*
 @ ModalProvider
 - 모달 상태를 전역으로 관리해 어느 컴포넌트에서든 useModal()로 열고 닫을 수 있게 한다.
-- Modal은 Provider 최상위에서 한 번만 렌더링되어 z-index/overflow 이슈를 피한다.
+- Modal은 Provider 최상위에서 한 번만 렌더링하고, 열린 뒤에는 #modal-root로 포탈된다.
 */
 
 export interface ModalOptions {
   title: string;
   variant?: 'popup' | 'sheet';
   buttons?: React.ReactNode;
+  /* 확인·닫기·바깥 클릭·ESC 모두 이 콜백을 한 번 호출한다 */
+  onClose?: () => void;
 }
 
 export interface ModalContextType {
@@ -33,11 +35,13 @@ export default function ModalProvider({ children }: ModalProviderProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [content, setContent] = useState<React.ReactNode>(null);
   const [options, setOptions] = useState<ModalOptions>({ title: '' });
+  const optionsRef = useRef(options);
 
   function openModal(
     modalContent: React.ReactNode,
     modalOptions: ModalOptions,
   ): void {
+    optionsRef.current = modalOptions;
     setContent(modalContent);
     setOptions(modalOptions);
     setIsOpen(true);
@@ -45,6 +49,14 @@ export default function ModalProvider({ children }: ModalProviderProps) {
 
   function closeModal(): void {
     setIsOpen(false);
+
+    const handleClose = optionsRef.current.onClose;
+    if (!handleClose) return;
+
+    const nextOptions = { ...optionsRef.current, onClose: undefined };
+    optionsRef.current = nextOptions;
+    setOptions(nextOptions);
+    handleClose();
   }
 
   return (

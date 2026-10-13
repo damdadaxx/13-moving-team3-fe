@@ -23,7 +23,10 @@ export default function EstimateNotSelectedNotice({
         className,
       )}
     >
-      <IcInfo aria-hidden className="h-[24px] w-[24px] shrink-0" />
+      <IcInfo
+        aria-hidden
+        className="h-[24px] w-[24px] shrink-0 overflow-visible"
+      />
       <p>{t('notSelected')}</p>
     </div>
   );

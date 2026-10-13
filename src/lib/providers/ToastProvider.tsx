@@ -1,6 +1,9 @@
 'use client';
 
 import { createContext, useCallback, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+
+import { usePortalRoot } from '@/hooks/common/usePortalRoot';
 
 import { cn } from '@/utils/cn';
 
@@ -23,11 +26,12 @@ interface ToastProviderProps {
 }
 
 const DEFAULT_MAX_TOAST_COUNT = 3;
+const TOAST_ROOT_ID = 'toast-root';
 
 /*
 @ ToastProvider
 - 전역에서 showToast만 호출하면 토스트를 띄운다
-- children 옆에 렌더하고, position: fixed로 viewport 기준 위치를 잡는다
+- 스택은 layout의 #toast-root로 createPortal 하고, position: fixed로 viewport 기준 위치를 잡는다
 - 여러 개는 위에서부터 스택으로 쌓이고, maxCount를 넘기면 오래된 것부터 제거한다
 */
 export default function ToastProvider({
@@ -35,6 +39,7 @@ export default function ToastProvider({
   maxCount = DEFAULT_MAX_TOAST_COUNT,
 }: ToastProviderProps) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const portalRoot = usePortalRoot(TOAST_ROOT_ID);
   const idRef = useRef(0);
 
   const showToast = useCallback(
@@ -56,23 +61,26 @@ export default function ToastProvider({
   return (
     <ToastContext.Provider value={value}>
       {children}
-      {toasts.length > 0 && (
-        <div
-          className={cn(
-            'pointer-events-none fixed inset-x-0 top-[70px] z-toast flex flex-col items-center gap-[8px] px-[24px]',
-            'tablet:top-[103px]',
-          )}
-        >
-          {toasts.map((item) => (
-            <div key={item.id} className="w-full pointer-events-auto">
-              <Toast
-                message={item.message}
-                onClose={() => closeToast(item.id)}
-              />
-            </div>
-          ))}
-        </div>
-      )}
+      {portalRoot &&
+        toasts.length > 0 &&
+        createPortal(
+          <div
+            className={cn(
+              'pointer-events-none fixed inset-x-0 top-[70px] z-toast flex flex-col items-center gap-[8px] px-[24px]',
+              'tablet:top-[103px]',
+            )}
+          >
+            {toasts.map((item) => (
+              <div key={item.id} className="w-full pointer-events-auto">
+                <Toast
+                  message={item.message}
+                  onClose={() => closeToast(item.id)}
+                />
+              </div>
+            ))}
+          </div>,
+          portalRoot,
+        )}
     </ToastContext.Provider>
   );
 }

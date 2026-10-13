@@ -23,7 +23,7 @@ import { useUpdateMoverProfileMutation } from '@/hooks/features/mover/queries/mu
 import { useMoverProfileQuery } from '@/hooks/features/mover/queries/queries';
 
 import MoverProfileForm from '@/components/features/mover/MoverMypage/MoverProfileForm';
-import LoadingDisplay from '@/components/ui/LoadingDisplay';
+import MoverProfileSkeleton from '@/components/features/mover/MoverMypage/MoverProfileSkeleton';
 
 export default function MoverProfileEditPage() {
   const t = useTranslations('MoverProfile');
@@ -53,7 +53,7 @@ export default function MoverProfileEditPage() {
   );
 
   if (isPending || !profile || !defaultValues) {
-    return <LoadingDisplay />;
+    return <MoverProfileSkeleton mode="edit" />;
   }
 
   const handleSubmit = async (plan: MoverProfileEditPlan) => {

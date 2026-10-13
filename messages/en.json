@@ -9,20 +9,33 @@
     "price": "₩{price}",
     "careerUnderOneYear": "Under 1 yr",
     "close": "Close",
+    "scrollToTop": "Back to top",
     "selectComplete": "Done",
     "previous": "Back",
     "next": "Next",
     "regionSelect": "Select region",
     "serviceTypeSelect": "Select services",
     "profileImageSelect": "Select profile image",
+    "profileImageFormatHint": "* Only JPG, PNG, and WEBP images can be uploaded.",
+    "profileImageSizeHint": "* Images must be 4MB or smaller.",
     "confirm": "OK",
-    "filter": "Filter"
+    "filter": "Filter",
+    "accessDeniedTitle": "You don't have access to this page.",
+    "accessDeniedDescription": "You don't have permission to view this page, or you need to log in.",
+    "accessDeniedCheckAddress": "Please check the address you entered.",
+    "goToMain": "Go to main",
+    "goToPrevious": "Previous page",
+    "loginRequiredTitle": "This service requires you to log in.",
+    "loginRequiredMessage": "You can use this feature after logging in.",
+    "alreadyLoggedInTitle": "You're already logged in.",
+    "alreadyLoggedInDescription": "You can't use the sign-in or sign-up page while logged in."
   },
   "Header": {
     "home": "Moving home",
     "menu": "Menu",
     "closeMobileMenu": "Close mobile menu",
     "profileMenu": "Profile menu",
+    "language": "Select language",
     "notifications": "Notifications",
     "notificationsWithCount": "Notifications ({count})",
     "nav": {
@@ -38,6 +51,7 @@
     "likedMovers": "Liked Movers",
     "reviews": "Moving Reviews",
     "mypage": "My Page",
+    "editInfo": "Edit My Info",
     "logout": "Log out"
   },
   "Notification": {
@@ -48,8 +62,173 @@
     "error": "Couldn't load notifications.",
     "empty": "No notifications yet."
   },
+  "Chat": {
+    "open": "Chat",
+    "openWithCount": "Chat ({count} unread)",
+    "close": "Close chat",
+    "title": "Chat",
+    "loading": "Loading chats…",
+    "error": "Couldn't load chats.",
+    "empty": "No active chats.",
+    "noMessageYet": "Start the conversation.",
+    "imagePreview": "Sent a photo.",
+    "back": "Go back",
+    "roomEntered": "This is your chat with {name}.",
+    "readOnlyNotice": "This move is completed, so you can only view the chat history.",
+    "accessDenied": "You can't access this chat.",
+    "notFound": "Estimate not found.",
+    "inputPlaceholder": "Type a message",
+    "addImage": "Attach image",
+    "send": "Send",
+    "messageRead": "Read",
+    "messageUnread": "Unread",
+    "sendFailed": "Failed to send the message.",
+    "imageUploadFailed": "Failed to upload the image.",
+    "invalidImageType": "You can only attach image files.",
+    "moveDate": "Move date: {date}",
+    "viewDetail": "View details"
+  },
   "Footer": {
-    "tagline": "Complicated move? Moving handles it all!"
+    "tagline": "Complicated move? Moving handles it all!",
+    "copyright": "© {year} {siteName}. All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "cookiePolicy": "Cookie Policy"
+  },
+  "PrivacyPolicy": {
+    "intro": "Moving (the 'Company') values your personal information and complies with applicable data protection laws, including the Personal Information Protection Act. This policy explains what personal data we collect while you use our moving-quote brokerage service (the 'Service'), why we collect it, and how we store it.",
+    "sections": [
+      {
+        "title": "1. Personal information we collect",
+        "items": [
+          "Email sign-up: email, password, name, phone number",
+          "Social login (Google, Kakao, Naver): email, name, social account identifier",
+          "Customer profile: profile photo, service types used, region",
+          "Mover profile: profile photo, nickname, career, introduction, service types offered, service regions",
+          "Quote requests: preferred moving date, departure/arrival address and postal code",
+          "Reviews: rating, review text",
+          "Automatically collected: access logs, service usage records, and cookies. Google Analytics may collect pages visited, how the service is used, browser and device information, and approximate location."
+        ]
+      },
+      {
+        "title": "2. How we collect personal information",
+        "items": [
+          "Entered directly by users during sign-up, profile registration/editing, quote requests, and review writing",
+          "Received from Google, Kakao, or Naver during social login",
+          "Collected automatically through Google Analytics when you visit the Service"
+        ]
+      },
+      {
+        "title": "3. Purpose of use",
+        "items": [
+          "Identifying members and maintaining login sessions, preventing fraudulent use",
+          "Providing the moving-quote matching and brokerage service between customers and movers",
+          "Verifying identity through email verification",
+          "Managing quote/review history and responding to customer inquiries",
+          "Improving service quality and developing new features",
+          "Analyzing visits and usage statistics through Google Analytics"
+        ]
+      },
+      {
+        "title": "4. Retention period",
+        "before": "We delete personal information without delay when an account is withdrawn. However, where related laws such as the Act on Consumer Protection in Electronic Commerce require retention for a set period, we keep the information for that period."
+      },
+      {
+        "title": "5. Sharing with third parties",
+        "before": "Only when a user requests a quote, we share the information needed to provide the service (departure/arrival location, moving date, contact information, etc.) with the matched mover. Otherwise, we do not share personal information with third parties except where required by law or with the user's separate consent."
+      },
+      {
+        "title": "6. Outsourced processing",
+        "before": "We use the following external services to provide the Service, and personal information may be processed according to each provider's own policy.",
+        "items": [
+          "Google, Kakao, Naver: social login authentication",
+          "Kakao Address Search API: searching departure/arrival addresses for moves",
+          "Google Analytics (Google LLC, United States): analyzing usage statistics such as pages visited, browser and device information, and cookie identifiers. This information may be processed on Google's servers, and the related cookies are kept for up to 2 years. You can refuse collection by blocking the analytics cookies in your browser or by installing Google's opt-out add-on (https://tools.google.com/dlpage/gaoptout)."
+        ]
+      },
+      {
+        "title": "7. User rights",
+        "before": "Users may view or correct their personal information at any time, and may request deletion of collected personal information by withdrawing their membership."
+      },
+      {
+        "title": "8. Measures to protect personal information",
+        "items": [
+          "Passwords are stored encrypted.",
+          "Login sessions are managed with a short-lived access token and an httpOnly cookie, so they cannot be read directly from JavaScript."
+        ]
+      },
+      {
+        "title": "9. Notice obligation",
+        "before": "This policy may be revised following changes in law or to the Service. Any changes will be announced through the notice board within the Service."
+      }
+    ]
+  },
+  "CookieConsent": {
+    "label": "Cookie consent",
+    "message": "We use Google Analytics cookies to understand how the service is used. You can still sign in and request quotes if you decline.",
+    "accept": "Accept",
+    "reject": "Decline"
+  },
+  "CookiePolicy": {
+    "intro": "Moving (the 'Company') uses cookies to keep you signed in and to understand how the Service is used. We do not use advertising cookies. Usage statistics are collected with Google Analytics cookies.",
+    "cookieDuration": "Retention period: {duration}",
+    "sections": [
+      {
+        "title": "1. What is a cookie",
+        "before": "A cookie is a small data file stored in your browser when you visit a website. It is used to identify users or keep them signed in."
+      },
+      {
+        "title": "2. Cookies we use",
+        "cookies": [
+          {
+            "name": "accessToken",
+            "purpose": "An authentication token that keeps you signed in. It is httpOnly, so it cannot be read by JavaScript.",
+            "duration": "15 minutes (reissued via refreshToken on expiry)"
+          },
+          {
+            "name": "refreshToken",
+            "purpose": "A token used to continue your session without signing in again after accessToken expires. It is httpOnly and is only sent with authentication requests (/api/auth).",
+            "duration": "7 days"
+          },
+          {
+            "name": "NEXT_LOCALE",
+            "purpose": "Remembers the language you selected in the header (Korean, English, Chinese, Japanese) so the same language is shown on your next visit.",
+            "duration": "1 year"
+          },
+          {
+            "name": "analytics_consent",
+            "purpose": "Remembers in this browser whether you accepted Google Analytics collection. If you decline, analytics cookies are not set.",
+            "duration": "1 year"
+          },
+          {
+            "name": "_ga",
+            "purpose": "A cookie issued by Google Analytics to distinguish visitors. It is used to aggregate pages visited and how the Service is used. It is not used for advertising.",
+            "duration": "2 years"
+          },
+          {
+            "name": "_ga_*",
+            "purpose": "A cookie issued by Google Analytics to keep the state of the current session.",
+            "duration": "2 years"
+          }
+        ],
+        "after": "accessToken and refreshToken are essential cookies required for login functionality; blocking them will prevent you from staying signed in. NEXT_LOCALE only remembers your language setting, and _ga and _ga_* are used for usage statistics. Blocking the language or analytics cookies does not affect your use of the Service."
+      },
+      {
+        "title": "3. Cookies used during social login (Google · Kakao · Naver)",
+        "items": [
+          "Clicking a social login button takes you to that platform's login screen. During this process, Google, Kakao, or Naver may issue their own cookies according to their own policies. These are managed by each platform and are not accessed or controlled by the Company.",
+          "An oauthState cookie is issued to verify that the login request is legitimate. It is kept only for the brief moment you are redirected to the social login screen and is deleted immediately once the login process finishes.",
+          "Once you successfully log in and return to the Company's service, the Company issues the accessToken and refreshToken cookies from that point on to keep you signed in."
+        ]
+      },
+      {
+        "title": "4. When filling out profile registration or quote request forms",
+        "before": "Values you enter in forms such as sign-up, mover/customer profile registration (nickname, career, introduction, region, profile photo, etc.), and moving quote requests (departure/arrival location, preferred moving date, etc.) are not stored in cookies. While you are typing, they are held only temporarily in your browser's memory, and are sent to and stored on the server only when you press the 'Register' or 'Save' button."
+      },
+      {
+        "title": "5. Managing cookies",
+        "before": "Most browsers let you refuse or delete cookies from their settings menu. accessToken and refreshToken are required to stay signed in, so blocking them will prevent you from using features that require login (quote requests, profile management, etc.). You can refuse Google Analytics collection by blocking the _ga and _ga_* cookies, or by installing Google's opt-out add-on (https://tools.google.com/dlpage/gaoptout)."
+      }
+    ]
   },
   "IconButton": {
     "like": "Like",
@@ -83,8 +262,17 @@
     "heroDescLine2": "and makes choosing a mover simple",
     "moveTypeLine1": "Skip the hassle,",
     "moveTypeLine2": "start by choosing your move type",
+    "moveTypeSmallDesc": "Studio, 1-bedroom, under ~20 pyeong",
+    "moveTypeHomeDesc": "3-bedroom, under ~20 pyeong",
+    "moveTypeOfficeDesc": "Offices, commercial spaces",
     "compareLine1": "Compare estimates",
     "compareLine2": "at a glance",
+    "compareCardComment": "We'll transport your belongings safely.",
+    "compareCardMover": "Kim Code",
+    "compareCardFrom": "Jung-gu, Seoul",
+    "compareCardTo": "Suwon, Gyeonggi",
+    "requestCardFrom": "343 Samil-daero, Jung-gu, Seoul",
+    "requestCardTo": "428 Seolleung-ro, Gangnam-gu, Seoul",
     "requestLine1": "Request your move",
     "requestLine2": "and get estimates",
     "requestImageAlt": "Moving estimate request"
@@ -146,7 +334,6 @@
     "clear": "Clear search"
   },
   "MoverDetail": {
-    "metaTitle": "Mover Details",
     "notFound": "We couldn't find this mover.",
     "requestLine1": "Send {nickname}",
     "requestLine2": "a designated estimate request!",
@@ -225,7 +412,7 @@
     "newPasswordMismatch": "New passwords do not match.",
     "profileImageInvalid": "Invalid profile image.",
     "profileImageType": "Only JPEG, PNG, and WEBP images can be uploaded.",
-    "profileImageSize": "Profile image must be 5MB or smaller.",
+    "profileImageSize": "Profile image must be 4MB or smaller.",
     "phoneRequired": "Please enter your phone number.",
     "careerYearsRequired": "Please enter years of experience.",
     "careerMonthsRequired": "Please enter months of experience.",
@@ -268,7 +455,11 @@
     "resendCode": "Resend",
     "sendingCode": "Sending",
     "sendCodeFailed": "Failed to send the code. Please try again.",
+    "resendCooldownButton": "Resend ({seconds}s)",
+    "justSentCodeHint": "Enter the code we just sent you.",
     "codePlaceholder": "6-digit code",
+    "codeExpiresIn": "Code expires in {time}",
+    "codeExpired": "The code has expired. Please request a new one.",
     "confirmCode": "Verify",
     "confirmingCode": "Verifying",
     "confirmCodeFailed": "Failed to verify the code. Please try again.",
@@ -310,7 +501,6 @@
     "EXPIRED": "Expired"
   },
   "Estimate": {
-    "metaTitle": "Estimate Details",
     "notFound": "We couldn't find this estimate.",
     "info": "Estimate Info",
     "requestedAt": "Requested on",
@@ -318,6 +508,7 @@
     "usageDate": "Service date",
     "departure": "From",
     "arrival": "To",
+    "comment": "Message",
     "moveDate": "Moving date",
     "moveType": "Move type",
     "shareTitle": "Share this estimate",
@@ -447,6 +638,8 @@
     "name": "Name",
     "email": "Email",
     "phoneNumber": "Phone Number",
+    "phoneNumberPlaceholder": "Enter your phone number",
+    "socialPasswordUnavailable": "Passwords for social login accounts cannot be changed here.",
     "currentPassword": "Current Password",
     "currentPasswordPlaceholder": "Enter your current password",
     "newPassword": "New Password",
@@ -454,6 +647,7 @@
     "newPasswordConfirm": "Confirm New Password",
     "newPasswordConfirmPlaceholder": "Enter the new password again",
     "created": "Your profile has been created.",
+    "phoneSavedOnly": "Your phone number was saved, but profile creation was not completed.",
     "updated": "Your profile has been updated.",
     "sectionAccount": "Account info",
     "sectionProfile": "Profile",
@@ -494,7 +688,6 @@
     "sendFailed": "Failed to send the estimate. Please try again later."
   },
   "MoverMypage": {
-    "metaTitle": "My Page",
     "editProfile": "Edit My Profile",
     "editAccount": "Edit Account Info",
     "profileRequiredTitle": "Create Profile",
@@ -551,6 +744,28 @@
   "Metadata": {
     "siteTitle": "Moving : Matching movers with people on the move",
     "siteDescription": "A service that matches customers with professional movers",
-    "ogTitle": "Moving : Complicated moves made simple with Moving!"
+    "ogTitle": "Moving : Complicated moves made simple with Moving!",
+    "customerSignin": "Log in",
+    "customerSignup": "Sign up",
+    "moverSignin": "Mover log in",
+    "moverSignup": "Mover sign up",
+    "socialLogin": "Social login",
+    "estimateRequest": "Request Estimate",
+    "moverFind": "Find Movers",
+    "moverDetail": "Mover Details",
+    "likedMovers": "Liked Movers",
+    "profileNew": "Create Profile",
+    "moverProfileNew": "Create Mover Profile",
+    "profileEdit": "Edit Profile",
+    "accountEdit": "Edit Account Info",
+    "estimatesPending": "Pending Estimates",
+    "estimatesReceived": "Received Estimates",
+    "estimateDetail": "Estimate Details",
+    "estimatesSent": "Sent Estimates",
+    "estimatesRejected": "Rejected Requests",
+    "reviewsPending": "To Review",
+    "reviewsCompleted": "My Reviews",
+    "moverRequests": "Received Requests",
+    "mypage": "My Page"
   }
 }

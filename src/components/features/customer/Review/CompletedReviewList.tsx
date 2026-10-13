@@ -8,7 +8,7 @@ import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 
-import ImgEmpty from '@/assets/images/img_empty.png';
+import ImgEmpty from '@/assets/images/img_empty.webp';
 
 import { ROUTES } from '@/lib/constants/routes';
 

@@ -6,6 +6,7 @@ import {
   readJsonBody,
   unwrapApiData,
 } from '@/lib/api/parseApi';
+import { captureSupabaseAccessTokenFromBody } from '@/lib/supabase/accessToken';
 
 // 토큰 갱신 중복 요청 방지용 싱글톤 프로미스
 let refreshPromise: Promise<Response> | null = null;
@@ -15,6 +16,8 @@ let refreshPromise: Promise<Response> | null = null;
 - 백엔드는 로그인 실패(비밀번호 틀림)도 401 UNAUTHORIZED로 내려준다
 - 이때 refresh를 시도하면 refresh도 401이라, 사용자에게는 원래 실패 사유 대신
   "세션 갱신에 실패했습니다"가 보인다 → 로그인 전 요청은 401을 그대로 넘긴다
+- 경로와 무관하게, 서버가 세션 쿠키 자체가 없다고 알려주면(X-No-Session) 그것도 건너뛴다
+  (프록시 app/api/[...path]/route.ts 참고 — refresh 해봐야 100% 실패라 왕복만 낭비)
 */
 const NO_REFRESH_PATHS: string[] = [
   ENDPOINTS.auth.login,
@@ -45,9 +48,19 @@ async function requestRefresh(): Promise<Response> {
     refreshPromise = fetch(ENDPOINTS.auth.refresh, {
       method: 'POST',
       credentials: 'same-origin',
-    }).finally(() => {
-      refreshPromise = null;
-    });
+    })
+      .then(async (response) => {
+        // 갱신 응답에도 새 accessToken이 실려온다 (Supabase 클라이언트용)
+        if (response.ok) {
+          captureSupabaseAccessTokenFromBody(
+            await readJsonBody(response.clone()),
+          );
+        }
+        return response;
+      })
+      .finally(() => {
+        refreshPromise = null;
+      });
   }
   return refreshPromise;
 }
@@ -92,11 +105,13 @@ export default async function clientFetch<T = unknown>(
   if (!response.ok) {
     const errorBody = await readJsonBody(response);
     const code = getApiErrorCode(errorBody);
+    const noSession = response.headers.get('X-No-Session') === '1';
     // 백엔드는 만료/미인증 모두 UNAUTHORIZED. TOKEN_EXPIRED가 오면 그것도 갱신.
     const shouldRefresh =
       response.status === 401 &&
       (code === 'TOKEN_EXPIRED' || code === 'UNAUTHORIZED') &&
-      !skipsRefresh(input);
+      !skipsRefresh(input) &&
+      !noSession;
 
     if (shouldRefresh && !init._retried) {
       let refreshResponse: Response;
@@ -125,5 +140,7 @@ export default async function clientFetch<T = unknown>(
   }
 
   // 백엔드 성공 응답 { success: true, data }에서 data만 반환 (이미지 URL 포함)
-  return unwrapApiData<T>(await readJsonBody(response));
+  const body = await readJsonBody(response);
+  captureSupabaseAccessTokenFromBody(body);
+  return unwrapApiData<T>(body);
 }

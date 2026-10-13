@@ -11,7 +11,6 @@ import { HttpError } from '@/lib/api/errors';
 import { authKeys } from '@/hooks/features/auth/queries/keys';
 
 import Button from '@/components/ui/Button/Button';
-import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
 /*=================================================
 프로필 등록 여부 가드 (역할 공통)
@@ -19,7 +18,7 @@ import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
 /*
 @ 가드의 책임
-- 공용 AuthGuard 안쪽에서 렌더링되므로 해당 역할로 로그인한 사용자만 검사한다.
+- AuthGuard 또는 MoverBrowseGuard에서 역할을 확인한 로그인 사용자만 검사한다.
 - 프로필이 없는 사용자는 최초 등록 페이지로 이동시킨다.
   (기획: 로그인하면 프로필을 등록하게 한다 — 가입 직후든 나중에 다시 로그인하든 동일)
 - 프로필이 이미 있는 사용자가 등록 URL로 직접 접근하면 역할 home으로 이동시킨다.
@@ -46,6 +45,8 @@ interface ProfileGuardProps<TProfile> {
   homePath: string;
   /** 인증 만료 시 보낼 로그인 경로 */
   signinPath: string;
+  /** 조회 중 대신 보여줄 화면. 생략하면 기존 페이지 스켈레톤을 유지하고, null이면 내용을 숨긴다. */
+  pendingFallback?: React.ReactNode;
   children: React.ReactNode;
 }
 
@@ -71,6 +72,7 @@ export default function ProfileGuard<TProfile>({
   profileNewPath,
   homePath,
   signinPath,
+  pendingFallback,
   children,
 }: ProfileGuardProps<TProfile>) {
   const t = useTranslations('Error');
@@ -161,17 +163,18 @@ export default function ProfileGuard<TProfile>({
   ]);
 
   /*
-  @ 조회·인증 처리·경로 이동 중 화면
-  - 이동 대상 페이지의 children이 잠깐 보이는 깜빡임을 막기 위해 공용 로딩 UI를 유지한다.
-  - 인증 만료 상태에서도 보호된 화면을 잠시 보여주지 않는다.
+  @ 조회·경로 이동 중 화면
+  - 기본값은 기존 페이지를 그려 각 페이지의 스켈레톤을 유지한다.
+  - 공개 목록처럼 조회 전 내용을 보여주면 안 되는 화면은 pendingFallback을 지정한다.
+  - 다른 화면으로 보내는 중에는 내용을 그리지 않는다
   */
-  if (
-    hasUnauthorizedError ||
-    isPending ||
-    shouldMoveToProfileNew ||
-    shouldMoveToHome
-  ) {
-    return <LoadingDisplay />;
+  if (hasUnauthorizedError || shouldMoveToProfileNew || shouldMoveToHome) {
+    return null;
+  }
+
+  if (isPending) {
+    // null도 의도적인 대기 화면이므로 ?? 대신 undefined 여부로 기본값을 구분한다.
+    return pendingFallback === undefined ? children : pendingFallback;
   }
 
   /*

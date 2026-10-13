@@ -39,7 +39,11 @@ export default function MoverDetailTopSection({
         >
           <div className={cn('relative mx-auto h-full w-full max-w-[1200px]')}>
             <ProfileImage
-              className={cn('absolute bottom-0 l-0 z-20')}
+              className={cn(
+                'absolute bottom-0 l-0 z-20',
+                'tablet:size-[100px]',
+                'desktop:size-[134px]',
+              )}
               imageUrl={imageUrl ?? undefined}
               alt={nickname ? t('profileAlt', { nickname }) : ''}
             />

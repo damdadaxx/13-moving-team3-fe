@@ -54,8 +54,8 @@ function Divider({ className }: DividerProps) {
 
 /*
 @ 반응형 기준
-- Mobile: 375px 안에서 좌우 24px, 실제 입력 영역 327px를 사용한다.
-- Tablet: Mobile과 같은 375px 폼을 화면 가운데 배치한다.
+- Mobile/Tablet: 입력 영역과 버튼 묶음을 동일한 최대 327px 너비로 가운데 배치한다.
+- 화면이 더 좁으면 좌우 24px 여백을 제외한 공간 안에서 입력과 버튼이 함께 줄어든다.
 - Desktop: 1200px 컨테이너 안에서 계정 정보와 프로필 정보를 2열로 배치한다.
 
 @ 폼의 책임
@@ -89,6 +89,7 @@ export default function CustomerProfileEditForm({
     formState: { errors, isSubmitting: isFormSubmitting },
     hasChanges,
     isFormComplete,
+    isPhoneNumberRequired,
     submitError,
     handleFormSubmit,
   } = useCustomerProfileEditForm({ defaultValues, provider, onSubmit });
@@ -117,8 +118,8 @@ export default function CustomerProfileEditForm({
       >
         <div
           className={cn(
-            'flex flex-col gap-[32px] w-full max-w[327px] mx-auto',
-            'desktop:max-w-[1200px] desktop:gap-[40px]',
+            'flex flex-col gap-[32px] w-full max-w-[327px] mx-auto',
+            'desktop:max-w-[1120px] desktop:gap-[40px]',
           )}
         >
           <header className="flex items-center">
@@ -141,6 +142,8 @@ export default function CustomerProfileEditForm({
               - Mobile/Tablet은 모든 항목 사이에 구분선이 있다.
               - Desktop은 전화번호 뒤와 현재 비밀번호 뒤에만 구분선을 표시한다.
               - 이메일은 백엔드 수정 계약이 없으므로 읽기 전용으로 제공한다.
+              - 이름은 소셜 계정도 필수다. 공용 Input의 required로 별표와 접근성 표시를 함께 적용한다.
+                전화번호와 비밀번호의 기존 조건부 검증은 변경하지 않는다.
               */}
               <div className="flex min-w-0 flex-col gap-[20px] desktop:gap-[32px]">
                 <Input
@@ -150,7 +153,7 @@ export default function CustomerProfileEditForm({
                   autoComplete="name"
                   size={responsiveInputSize}
                   disabled={areFieldsDisabled}
-                  aria-required="true"
+                  required
                   error={errors.name?.message}
                   {...register('name')}
                 />
@@ -181,7 +184,7 @@ export default function CustomerProfileEditForm({
                   autoComplete="tel"
                   size={responsiveInputSize}
                   disabled={areFieldsDisabled}
-                  aria-required="true"
+                  required={isPhoneNumberRequired}
                   maxLength={13}
                   error={errors.phoneNumber?.message}
                   {...phoneNumberField}
@@ -246,50 +249,56 @@ export default function CustomerProfileEditForm({
                     {/*
                     @ 소셜 계정 비밀번호 표시
                     - 실제 비밀번호를 API에서 조회하거나 폼 값으로 등록하지 않는다.
-                    - 고정된 마스킹 문자열만 읽기 전용으로 보여주며 비밀번호 API도 호출하지 않는다.
+                    - 안내 문구만 보조 기술에 노출하고, 장식용 마스킹 입력은
+                      Tab 순서와 스크린 리더 탐색에서 제외한다.
                     */}
-                    <Input
-                      label={t('currentPassword')}
-                      labelVariant="profile"
-                      type="text"
-                      value={SOCIAL_PASSWORD_MASK}
-                      autoComplete="off"
-                      size="sm"
-                      readOnly
-                      disabled={areFieldsDisabled}
-                      aria-readonly="true"
-                      className="text-gray-400"
-                    />
+                    <p className="text-sm-regular text-gray-400">
+                      {t('socialPasswordUnavailable')}
+                    </p>
+                    <div aria-hidden="true" className="contents">
+                      <Input
+                        label={t('currentPassword')}
+                        labelVariant="profile"
+                        type="text"
+                        value={SOCIAL_PASSWORD_MASK}
+                        autoComplete="off"
+                        size="sm"
+                        readOnly
+                        disabled
+                        tabIndex={-1}
+                        className="text-gray-400"
+                      />
 
-                    <Divider />
+                      <Divider />
 
-                    <Input
-                      label={t('newPassword')}
-                      labelVariant="profile"
-                      type="text"
-                      value={SOCIAL_PASSWORD_MASK}
-                      autoComplete="off"
-                      size="sm"
-                      readOnly
-                      disabled={areFieldsDisabled}
-                      aria-readonly="true"
-                      className="text-gray-400"
-                    />
+                      <Input
+                        label={t('newPassword')}
+                        labelVariant="profile"
+                        type="text"
+                        value={SOCIAL_PASSWORD_MASK}
+                        autoComplete="off"
+                        size="sm"
+                        readOnly
+                        disabled
+                        tabIndex={-1}
+                        className="text-gray-400"
+                      />
 
-                    <Divider className="desktop:hidden" />
+                      <Divider className="desktop:hidden" />
 
-                    <Input
-                      label={t('newPasswordConfirm')}
-                      labelVariant="profile"
-                      type="text"
-                      value={SOCIAL_PASSWORD_MASK}
-                      autoComplete="off"
-                      size="sm"
-                      readOnly
-                      disabled={areFieldsDisabled}
-                      aria-readonly="true"
-                      className="text-gray-400"
-                    />
+                      <Input
+                        label={t('newPasswordConfirm')}
+                        labelVariant="profile"
+                        type="text"
+                        value={SOCIAL_PASSWORD_MASK}
+                        autoComplete="off"
+                        size="sm"
+                        readOnly
+                        disabled
+                        tabIndex={-1}
+                        className="text-gray-400"
+                      />
+                    </div>
                   </>
                 )}
 
@@ -317,6 +326,10 @@ export default function CustomerProfileEditForm({
                     previewAlt={imageUrl ? t('currentProfileImage') : ''}
                     disabled={areFieldsDisabled}
                     error={errors.profileImage?.message}
+                    hints={[
+                      tCommon('profileImageFormatHint'),
+                      tCommon('profileImageSizeHint'),
+                    ]}
                     accept="image/jpeg,image/png,image/webp"
                     className="tablet:size-[100px] tablet:[&_svg]:size-[32px] desktop:size-[160px] desktop:[&_svg]:size-[40px]"
                     {...register('profileImage')}
@@ -328,6 +341,9 @@ export default function CustomerProfileEditForm({
                 <fieldset disabled={areFieldsDisabled} className="min-w-0">
                   <legend className="text-lg-semibold text-black-300 desktop:text-xl-semibold">
                     {t('serviceTypes')}
+                    <span aria-hidden="true" className="ml-1 text-orange-400">
+                      *
+                    </span>
                   </legend>
                   <p
                     id={serviceDescriptionId}
@@ -372,6 +388,9 @@ export default function CustomerProfileEditForm({
                 <fieldset disabled={areFieldsDisabled} className="min-w-0">
                   <legend className="text-lg-semibold text-black-300 desktop:text-xl-semibold">
                     {t('region')}
+                    <span aria-hidden="true" className="ml-1 text-orange-400">
+                      *
+                    </span>
                   </legend>
                   <p
                     id={regionDescriptionId}
@@ -380,6 +399,11 @@ export default function CustomerProfileEditForm({
                     {t('regionEditHint')}
                   </p>
 
+                  {/*
+                  @ 영어 지역 칩 줄바꿈
+                  - 기사님 수정 폼처럼 공용 컴포넌트의 기본 flex-wrap 배치를 사용한다.
+                  - 태블릿에서 6열을 강제하지 않아 긴 지역명이 폼 너비에 맞게 다음 줄로 이동한다.
+                  */}
                   <Controller
                     name="region"
                     control={control}
@@ -428,10 +452,12 @@ export default function CustomerProfileEditForm({
         {/*
         @ 버튼의 반응형 순서와 키보드 접근성
         - Mobile/Tablet은 수정하기 → 취소, Desktop은 취소 → 수정하기 순서다.
+        - Mobile/Tablet 버튼도 입력 영역처럼 최대 327px로 제한해 태블릿에서 버튼만 넓어지지 않게 한다.
+          w-full을 함께 사용하므로 작은 화면에서는 입력 영역과 같은 비율로 줄어든다.
         - CSS order만 바꾸면 화면 순서와 Tab 순서가 달라질 수 있으므로,
           각 breakpoint에서 하나의 버튼 그룹만 display 되도록 분리했다.
         */}
-        <div className="flex w-full flex-col gap-[8px] desktop:hidden">
+        <div className="mx-auto flex w-full max-w-[327px] flex-col gap-[8px] desktop:hidden">
           <Button
             type="submit"
             size={responsiveButtonSize}
@@ -452,25 +478,34 @@ export default function CustomerProfileEditForm({
           </Button>
         </div>
 
-        <div className="hidden w-full max-w-[500px] gap-[20px] self-end desktop:flex">
-          <Button
-            type="button"
-            variant="outlined"
-            size={responsiveButtonSize}
-            disabled={areFieldsDisabled}
-            onClick={onCancel}
-            className="border-gray-200 text-gray-500"
-          >
-            {tCommon('cancel')}
-          </Button>
-          <Button
-            type="submit"
-            size={responsiveButtonSize}
-            disabled={isDisabled || !isFormComplete || !hasChanges}
-            isLoading={isLoading}
-          >
-            {t('edit')}
-          </Button>
+        {/*
+        @ Desktop 버튼 위치
+        - Figma의 1200px 바깥 영역에서 좌우 40px 여백을 제외한 실제 내용 폭은 1120px이다.
+        - 입력 영역과 같은 2열·간격을 사용하고 두 번째 열에 버튼을 넣는다.
+          데스크톱에서는 오른쪽 입력 열과 버튼의 시작점·끝점이 같아지고,
+          화면이 좁아지면 두 열과 버튼이 같은 비율로 줄어든다.
+        */}
+        <div className="mx-auto hidden w-full max-w-[1120px] desktop:grid desktop:grid-cols-2 desktop:gap-x-[clamp(40px,6.25vw,120px)]">
+          <div className="col-start-2 flex w-full gap-[20px]">
+            <Button
+              type="button"
+              variant="outlined"
+              size={responsiveButtonSize}
+              disabled={areFieldsDisabled}
+              onClick={onCancel}
+              className="border-gray-200 text-gray-500"
+            >
+              {tCommon('cancel')}
+            </Button>
+            <Button
+              type="submit"
+              size={responsiveButtonSize}
+              disabled={isDisabled || !isFormComplete || !hasChanges}
+              isLoading={isLoading}
+            >
+              {t('edit')}
+            </Button>
+          </div>
         </div>
       </form>
     </main>

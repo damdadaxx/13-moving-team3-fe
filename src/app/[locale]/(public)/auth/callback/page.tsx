@@ -12,8 +12,11 @@
 import type { BackendRole } from '@/types/auth';
 
 import { toFrontendRole } from '@/lib/api/auth';
+import { pageMetadata } from '@/lib/constants/site';
 
 import SocialCallback from '@/components/features/auth/SocialCallback';
+
+export const generateMetadata = pageMetadata('socialLogin', '/auth/callback');
 
 interface SocialCallbackPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

@@ -7,8 +7,8 @@ import { ROUTES } from '@/lib/constants/routes';
 import { useEstimateDetailWithMover } from '@/hooks/features/estimate/queries/queries';
 
 import EstimateDetailContent from '@/components/features/common/Estimate/EstimateDetailContent';
+import EstimateDetailSkeleton from '@/components/features/common/Estimate/EstimateDetailSkeleton';
 import EmptyState from '@/components/ui/EmptyState';
-import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
 export default function MoverEstimateConfirmedDetailPageContent({
   estimateId,
@@ -23,17 +23,17 @@ export default function MoverEstimateConfirmedDetailPageContent({
 
   // 견적 조회 대기
   if (detail.status === 'loading') {
-    return <LoadingDisplay />;
+    return <EstimateDetailSkeleton variant="moverConfirmed" />;
   }
 
   // 견적 조회 실패
   if (detail.status === 'estimate-error') {
-    return <EmptyState message={tEstimate('notFound')} />;
+    return <EmptyState fit="title" message={tEstimate('notFound')} />;
   }
 
   // 기사님 조회 실패
   if (detail.status === 'mover-error') {
-    return <EmptyState message={tMover('notFound')} />;
+    return <EmptyState fit="title" message={tMover('notFound')} />;
   }
 
   // 견적 상세 + 기사님 상세 조회 성공
@@ -43,6 +43,7 @@ export default function MoverEstimateConfirmedDetailPageContent({
   if (estimate.status !== 'ACCEPTED') {
     return (
       <EmptyState
+        fit="title"
         message={t('notConfirmed')}
         buttonLabel={t('goSent')}
         href={ROUTES.moverEstimates}

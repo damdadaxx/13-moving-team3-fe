@@ -8,8 +8,8 @@ import { ROUTES } from '@/lib/constants/routes';
 import { useEstimateDetailWithMover } from '@/hooks/features/estimate/queries/queries';
 
 import EstimateDetailContent from '@/components/features/common/Estimate/EstimateDetailContent';
+import EstimateDetailSkeleton from '@/components/features/common/Estimate/EstimateDetailSkeleton';
 import EmptyState from '@/components/ui/EmptyState';
-import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
 /** 받았던 견적 상세에서 유효한 상태
  * - 이미 결론이 난 견적(확정/미선택/만료)만 이 페이지 대상 */
@@ -32,17 +32,17 @@ export default function EstimateReceivedDetailPageContent({
 
   // 견적 조회 대기
   if (detail.status === 'loading') {
-    return <LoadingDisplay />;
+    return <EstimateDetailSkeleton variant="customerReceived" />;
   }
 
   // 견적 조회 실패
   if (detail.status === 'estimate-error') {
-    return <EmptyState message={tEstimate('notFound')} />;
+    return <EmptyState fit="titleAndTab" message={tEstimate('notFound')} />;
   }
 
   // 기사님 조회 실패
   if (detail.status === 'mover-error') {
-    return <EmptyState message={tMover('notFound')} />;
+    return <EmptyState fit="titleAndTab" message={tMover('notFound')} />;
   }
 
   // 견적 상세 + 기사님 상세 조회 성공
@@ -52,6 +52,7 @@ export default function EstimateReceivedDetailPageContent({
   if (!RECEIVED_ESTIMATE_STATUSES.includes(estimate.status)) {
     return (
       <EmptyState
+        fit="titleAndTab"
         message={t('notReceived')}
         buttonLabel={t('goReceived')}
         href={ROUTES.customerEstimates}

@@ -91,7 +91,7 @@ function TabletEstimatePreview() {
           </p>
         </div>
 
-        <section className="relative pb-[23px]">
+        <section className="relative pb-[23px] mb-[15px]">
           <div className="relative h-[157px] overflow-hidden bg-orange-400">
             <ImgBgMarkM
               aria-hidden
@@ -106,7 +106,7 @@ function TabletEstimatePreview() {
             <ProfileImage
               imageUrl={ImgAvatarBeaver.src}
               alt=""
-              className="absolute bottom-0 left-0 size-[100px] tablet:size-[100px] desktop:size-[100px]"
+              className="absolute bottom-0 left-0 size-[100px] ml-[74px] tablet:size-[100px] desktop:size-[100px]"
             />
           </div>
         </section>
@@ -189,7 +189,7 @@ export default function EstimateRequestSection() {
     >
       <div
         className={cn(
-          'relative w-full overflow-hidden',
+          'relative w-full overflow-hidden @container',
           'aspect-[1125/1488]',
           'tablet:mx-auto tablet:max-w-[1402px] tablet:aspect-[679/835]',
           'desktop:aspect-[4206/2360]',
@@ -199,9 +199,10 @@ export default function EstimateRequestSection() {
         <div aria-hidden className="absolute inset-0 bg-gray-50">
           <div
             className={cn(
-              'absolute inset-x-0 top-0 h-[58%] bg-orange-400',
-              'tablet:inset-x-[2%] tablet:top-[2%] tablet:h-[54%] tablet:rounded-[28px]',
-              'desktop:inset-x-[1.5%] desktop:top-[2%] desktop:h-[64%] desktop:rounded-[36px]',
+              // 375×496 프레임에서 주황 띠는 위에서 205px
+              'absolute inset-x-0 top-0 h-[41.33%] bg-orange-400',
+              'tablet:inset-x-[2%] tablet:top-[2%] tablet:h-[54%] tablet:rounded-[50px]',
+              'desktop:inset-x-[1.5%] desktop:top-[2%] desktop:h-[64%] border-amber-50',
             )}
           >
             <ImgBgMarkM
@@ -210,7 +211,7 @@ export default function EstimateRequestSection() {
             />
             <ImgBgMarkM
               aria-hidden
-              className="absolute top-[18%] right-[6%] h-auto w-[34%] opacity-25"
+              className="absolute top-[56%] right-[6%] h-auto w-[34%] opacity-25"
             />
           </div>
 
@@ -218,17 +219,20 @@ export default function EstimateRequestSection() {
             src={ImgAvatarBeaver}
             alt=""
             className={cn(
-              'absolute top-[18%] right-[1%] z-[2] h-auto w-[30%]',
-              'tablet:top-[16%] tablet:right-[2%] tablet:w-[26%]',
-              'desktop:top-[28%] desktop:right-[7%] desktop:w-[16%]',
+              // PNG 여백을 뺀 실루엣이 프레임의 top 24.4% / right 3.5%
+              'absolute top-[18.79%] right-[-5.52%] z-[2] h-auto w-[44.69%]',
+              'tablet:top-[37%] tablet:right-[-2%] tablet:w-[28%]',
+              // PNG 여백을 뺀 실루엣이 1400×786 프레임의 top 31.4% / right 5.1% / width 13.5%
+              'desktop:top-[30%] desktop:right-[0.13%] desktop:w-[24.59%]',
             )}
           />
 
           <div
             className={cn(
-              'absolute top-[26%] left-[6%] z-[1] h-[64%] w-[72%] overflow-hidden rounded-[20px] bg-gray-50 shadow-[0_12px_32px_rgba(0,0,0,0.12)]',
-              'tablet:top-[22%] tablet:left-[5%] tablet:h-[72%] tablet:w-[74%] tablet:rounded-[24px]',
-              'desktop:top-[8%] desktop:left-[8%] desktop:h-[82%] desktop:w-[36%] desktop:rounded-[28px]',
+              // 카드는 주황 띠 위로 겹친다. top 132 / left 38 / 243×316
+              'absolute top-[26.61%] left-[10.13%] z-[1] h-[63.71%] w-[64.8%] overflow-hidden rounded-[8px] bg-gray-50 shadow-[0_12px_32px_rgba(0,0,0,0.12)]',
+              'tablet:top-[22%] tablet:left-[5%] tablet:h-[74%] tablet:w-[74%] tablet:rounded-[12px]',
+              'desktop:top-[8%] desktop:left-[8%] desktop:h-[82%] desktop:w-[36%]',
             )}
           >
             <TabletEstimatePreview />
@@ -237,18 +241,21 @@ export default function EstimateRequestSection() {
         <ScrollReveal
           delay={0.15}
           className={cn(
-            'absolute top-[clamp(29px,5.072vw+10.739px,50px)] right-[clamp(32px,2.415vw+23.304px,42px)]',
+            // 375×496 기준 top 29 / right 34.82. 오른쪽 정렬 20px / 행간 32
+            'absolute top-[5.85%] right-[9.29%]',
             'tablet:top-[clamp(49px,7.752vw,58px)] tablet:right-[clamp(53px,9.432vw,63px)]',
-            'desktop:top-[clamp(49px,11.625vw-70.045px,152px)] desktop:right-[clamp(53px,24.266vw-195.489px,268px)]',
+            // 1400×787 프레임 기준 top 152 / left 752. 컨테이너에 맞춰 비율로 둔다
+            'desktop:top-[19.314%] desktop:left-[53.714%] desktop:right-auto',
           )}
         >
           <h2
             className={cn(
               // text-xl-bold
-              'text-gray-50 text-right text-[clamp(20px,2.899vw+9.565px,32px)] font-bold leading-[calc(32/20)]',
+              'text-gray-50 text-right text-[5.333cqw] font-bold leading-[1.6]',
               // text-3xl-bold
               'tablet:text-3xl-bold tablet:leading-[calc(42/32)]',
-              'desktop:text-left',
+              // 32px / line-height 46. 토큰(42)보다 이 문구 스펙이 넓다
+              'desktop:text-left desktop:text-[2.283cqw] desktop:leading-[1.4375]',
             )}
           >
             {t('requestLine1')}

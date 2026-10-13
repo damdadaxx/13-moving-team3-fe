@@ -145,14 +145,14 @@ function EstimateCard({ className }: EstimateCardProps) {
               type="button"
               variant="outlined"
               tabIndex={-1}
-              className="pointer-events-none h-[34px]"
+              className="pointer-events-none h-[34px] text-xs-semibold rounded-[8px]"
             >
               {tEstimate('viewDetail')}
             </Button>
             <Button
               type="button"
               tabIndex={-1}
-              className="pointer-events-none h-[34px]"
+              className="pointer-events-none h-[34px] text-xs-semibold rounded-[8px]"
             >
               {tConfirm('button')}
             </Button>

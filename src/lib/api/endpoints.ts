@@ -71,6 +71,19 @@ export const ENDPOINTS = {
     delete: (id: number | string) => api(`/likes/${id}`), // [DELETE] 로그인 - 찜 취소
   },
 
+  // --- Chat(채팅, estimateId가 채팅방 키) ---
+  chat: {
+    rooms: api('/chat/rooms'), // [GET] 로그인 - 내 채팅방 목록 (상대방 정보·마지막 메시지·방별 안읽음수, GNB 플로팅용)
+    messages: (estimateId: number | string) =>
+      api(`/chat/rooms/${estimateId}/messages`), // [GET] 메시지 목록(커서) / [POST] 메시지 전송 - ACCEPTED·COMPLETED는 조회만, ACCEPTED만 전송
+    read: (estimateId: number | string) =>
+      api(`/chat/rooms/${estimateId}/read`), // [PATCH] 로그인 - 읽음 처리 (ACCEPTED)
+    unreadCount: (estimateId: number | string) =>
+      api(`/chat/rooms/${estimateId}/unread-count`), // [GET] 로그인 - 안 읽은 메시지 수 (ACCEPTED·COMPLETED)
+    image: (estimateId: number | string) =>
+      api(`/chat/rooms/${estimateId}/image`), // [POST] 로그인 - 이미지 업로드 presigned URL 발급 (ACCEPTED)
+  },
+
   // --- Notification(알림) ---
   notification: {
     list: api('/notifications'), // [GET] 로그인 - 알림 목록

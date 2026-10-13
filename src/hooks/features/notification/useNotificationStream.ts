@@ -6,6 +6,8 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { ENDPOINTS } from '@/lib/api/endpoints';
 import { readNotificationStream } from '@/lib/api/notificationStream';
+import { readJsonBody } from '@/lib/api/parseApi';
+import { captureSupabaseAccessTokenFromBody } from '@/lib/supabase/accessToken';
 
 import { notificationKeys } from '@/hooks/features/notification/queries/keys';
 
@@ -85,6 +87,9 @@ export default function useNotificationStream(enabled: boolean) {
             });
 
             if (!refreshResponse.ok) return;
+            captureSupabaseAccessTokenFromBody(
+              await readJsonBody(refreshResponse),
+            );
             continue;
           }
 

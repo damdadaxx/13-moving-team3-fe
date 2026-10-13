@@ -16,6 +16,7 @@ import type { Role } from '@/types/role';
 import clientFetch from '@/lib/api/clientFetch';
 import { ENDPOINTS } from '@/lib/api/endpoints';
 import { HttpError } from '@/lib/api/errors';
+import { setSupabaseAccessToken } from '@/lib/supabase/accessToken';
 
 interface AuthUserResponse {
   id: string;
@@ -173,6 +174,7 @@ export async function logout(): Promise<void> {
   await clientFetch(ENDPOINTS.auth.logout, {
     method: 'POST',
   });
+  setSupabaseAccessToken(null);
 }
 
 /*=================================================

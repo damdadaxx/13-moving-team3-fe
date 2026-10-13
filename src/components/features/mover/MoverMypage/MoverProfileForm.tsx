@@ -53,9 +53,10 @@ interface MoverProfileFormProps {
 - cancelHref는 화면 이동만 담당하며, 프로필 저장 요청과는 관계가 없다.
 
 @ 반응형 기준
-- mobile/tablet: 327px 단일 열, 공용 컨트롤 sm 크기
+- mobile/tablet: 최대 375px 폼에 좌우 24px 패딩을 두어 실제 입력 영역은 최대 327px로 맞춘다.
+  작은 화면에서는 패딩을 없애지 않고 입력과 버튼이 함께 줄어들도록 w-full을 유지한다.
 - desktop: 최대 1200px 안에서 최대 500px 두 열, 공용 컨트롤 md 크기
-- 공용 컴포넌트는 수정하지 않고 이 컴포넌트의 부모 너비와 grid로만 크기를 조절한다.
+- 입력 높이와 검증은 유지하고, 폼의 너비·여백과 공용 지역 칩의 줄바꿈으로 작은 화면에 대응한다.
 */
 export default function MoverProfileForm({
   mode = 'create',
@@ -122,7 +123,7 @@ export default function MoverProfileForm({
       <form
         noValidate
         onSubmit={handleFormSubmit}
-        className="mx-auto flex w-full max-w-[327px] flex-col gap-[24px] pt-[16px] pb-[40px] desktop:max-w-[1200px] desktop:gap-[48px] desktop:px-[40px] desktop:pt-[32px]"
+        className="mx-auto flex w-full max-w-[375px] flex-col gap-[24px] px-[24px] pt-[16px] pb-[40px] desktop:max-w-[1200px] desktop:gap-[48px] desktop:px-[40px] desktop:pt-[32px]"
       >
         {/*
         @ 페이지 안내
@@ -181,6 +182,10 @@ export default function MoverProfileForm({
                 previewAlt={t('previewAlt')}
                 disabled={areFieldsDisabled}
                 error={errors.profileImage?.message}
+                hints={[
+                  tCommon('profileImageFormatHint'),
+                  tCommon('profileImageSizeHint'),
+                ]}
                 accept="image/jpeg,image/png,image/webp"
                 className="tablet:size-[100px] tablet:[&_svg]:size-[32px] desktop:size-[160px] desktop:[&_svg]:size-[40px]"
                 {...profileImageRegistration}

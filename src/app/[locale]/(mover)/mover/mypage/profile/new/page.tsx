@@ -19,9 +19,10 @@ import { useAuth } from '@/hooks/features/auth/useAuth';
 import { createMoverProfileCreatePlan } from '@/hooks/features/mover/moverProfileCreatePlan';
 import { moverProfileKeys } from '@/hooks/features/mover/queries/keys';
 import { useCreateMoverProfileMutation } from '@/hooks/features/mover/queries/mutations';
+import { useMoverProfileQuery } from '@/hooks/features/mover/queries/queries';
 
 import MoverProfileForm from '@/components/features/mover/MoverMypage/MoverProfileForm';
-import LoadingDisplay from '@/components/ui/LoadingDisplay';
+import MoverProfileSkeleton from '@/components/features/mover/MoverMypage/MoverProfileSkeleton';
 
 export default function MoverProfileNewPage() {
   const t = useTranslations('MoverProfile');
@@ -32,6 +33,8 @@ export default function MoverProfileNewPage() {
   const { user } = useAuth();
   const updateMeMutation = useUpdateMeMutation();
   const createProfileMutation = useCreateMoverProfileMutation();
+  // Guard와 같은 Query key를 구독하므로 요청은 공유된다. 등록 여부 확인 전에는 빈 폼을 노출하지 않는다.
+  const { isPending: isProfilePending } = useMoverProfileQuery();
 
   const defaultValues = useMemo<Partial<MoverProfileFormValues> | undefined>(
     () =>
@@ -44,8 +47,13 @@ export default function MoverProfileNewPage() {
     [user],
   );
 
-  if (!user || !defaultValues) {
-    return <LoadingDisplay />;
+  if (!user || !defaultValues || isProfilePending) {
+    return (
+      <MoverProfileSkeleton
+        mode="create"
+        showPhoneNumber={Boolean(user && user.provider !== 'LOCAL')}
+      />
+    );
   }
 
   /*

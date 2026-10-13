@@ -7,6 +7,8 @@ import { useCustomerProfileQuery } from '@/hooks/features/customer/queries/queri
 
 interface CustomerProfileGuardProps {
   children: React.ReactNode;
+  /** 기사님 찾기에서는 null로 지정해 등록 여부를 확인하기 전 목록을 숨긴다. */
+  pendingFallback?: React.ReactNode;
 }
 
 /*
@@ -16,6 +18,7 @@ interface CustomerProfileGuardProps {
 */
 export default function CustomerProfileGuard({
   children,
+  pendingFallback,
 }: CustomerProfileGuardProps) {
   const query = useCustomerProfileQuery();
 
@@ -25,6 +28,7 @@ export default function CustomerProfileGuard({
       profileNewPath={ROUTES.customerProfileNew}
       homePath={ROUTES.customerHome}
       signinPath={ROUTES.customerSignin}
+      pendingFallback={pendingFallback}
     >
       {children}
     </ProfileGuard>

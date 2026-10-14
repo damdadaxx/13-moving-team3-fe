@@ -494,6 +494,7 @@
   "EstimateTabs": {
     "customerPending": "대기 중인 견적",
     "customerReceived": "받았던 견적",
+    "customerRejected": "반려된 요청",
     "moverSent": "보낸 견적 조회",
     "moverRejected": "반려 요청"
   },
@@ -553,6 +554,11 @@
     "notPending": "대기중인 견적이 아니에요.",
     "goPending": "대기중인 견적 보기",
     "notReceived": "받았던 견적이 아니에요.",
+    "designatedWaiting": "기사님의 답변을 기다리고 있어요.",
+    "rejectedEmpty": "반려된 요청이 없어요!",
+    "rejectedBadge": "반려됨",
+    "rejectReason": "반려 사유",
+    "noRejectReason": "반려 사유가 없어요.",
     "goReceived": "받았던 견적 보기"
   },
   "MoverEstimates": {
@@ -775,6 +781,7 @@
     "profileEdit": "프로필 수정",
     "accountEdit": "기본 정보 수정",
     "estimatesPending": "대기 중인 견적",
+    "estimatesRejected": "반려된 요청",
     "estimatesReceived": "받았던 견적",
     "estimateDetail": "견적 상세",
     "estimatesSent": "보낸 견적 조회",

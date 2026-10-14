@@ -494,6 +494,7 @@
   "EstimateTabs": {
     "customerPending": "保留中の見積もり",
     "customerReceived": "受け取った見積もり",
+    "customerRejected": "却下されたリクエスト",
     "moverSent": "送信した見積もり",
     "moverRejected": "お断りした依頼"
   },
@@ -553,6 +554,11 @@
     "notPending": "保留中の見積もりではありません。",
     "goPending": "保留中の見積もりを見る",
     "notReceived": "受け取った見積もりではありません。",
+    "designatedWaiting": "引っ越し業者からの返信をお待ちください。",
+    "rejectedEmpty": "却下されたリクエストはありません!",
+    "rejectedBadge": "却下",
+    "rejectReason": "却下理由",
+    "noRejectReason": "却下理由はありません。",
     "goReceived": "受け取った見積もりを見る"
   },
   "MoverEstimates": {
@@ -775,6 +781,7 @@
     "profileEdit": "プロフィール編集",
     "accountEdit": "基本情報の編集",
     "estimatesPending": "保留中の見積もり",
+    "estimatesRejected": "却下されたリクエスト",
     "estimatesReceived": "受け取った見積もり",
     "estimateDetail": "見積もり詳細",
     "estimatesSent": "送信した見積もり",

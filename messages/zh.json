@@ -494,6 +494,7 @@
   "EstimateTabs": {
     "customerPending": "待处理的报价",
     "customerReceived": "收到的报价",
+    "customerRejected": "被拒绝的请求",
     "moverSent": "已发送的报价",
     "moverRejected": "已拒绝的请求"
   },
@@ -553,6 +554,11 @@
     "notPending": "这不是待处理的报价。",
     "goPending": "查看待处理的报价",
     "notReceived": "这不是收到的报价。",
+    "designatedWaiting": "正在等待搬家师傅回复。",
+    "rejectedEmpty": "没有被拒绝的请求!",
+    "rejectedBadge": "已拒绝",
+    "rejectReason": "拒绝原因",
+    "noRejectReason": "没有拒绝原因。",
     "goReceived": "查看收到的报价"
   },
   "MoverEstimates": {
@@ -775,6 +781,7 @@
     "profileEdit": "编辑资料",
     "accountEdit": "修改基本信息",
     "estimatesPending": "待处理的报价",
+    "estimatesRejected": "被拒绝的请求",
     "estimatesReceived": "收到的报价",
     "estimateDetail": "报价详情",
     "estimatesSent": "已发送的报价",

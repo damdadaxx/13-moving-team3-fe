@@ -5,8 +5,9 @@ import { ROUTES } from '@/lib/constants/routes';
 
 /*
 @ 알림 클릭 시 이동 경로
-- targetPath는 견적 id
-- NEW_REQUEST는 비어 있어서 받은 요청 목록으로 간다
+- targetPath는 견적 id. 없으면 목록으로 간다
+- NEW_REQUEST, ESTIMATE_REJECTED는 targetPath가 없다
+- 반려는 확정 전이라 대기 중인 견적 목록으로 간다
 - 새 견적은 아직 확정 전이라 대기 중인 견적 상세로 간다
 */
 export default function getNotificationHref(
@@ -18,6 +19,10 @@ export default function getNotificationHref(
   if (role === 'mover') {
     if (notification.type === 'NEW_REQUEST' || !id) return ROUTES.moverHome;
     return `${ROUTES.moverEstimates}/${id}`;
+  }
+
+  if (notification.type === 'ESTIMATE_REJECTED') {
+    return ROUTES.customerEstimatesPending;
   }
 
   if (notification.type === 'NEW_ESTIMATE') {

@@ -6,7 +6,11 @@
 */
 
 export type NotificationType =
-  'NEW_ESTIMATE' | 'NEW_REQUEST' | 'ESTIMATE_CONFIRMED' | 'MOVE_DAY';
+  | 'NEW_ESTIMATE'
+  | 'NEW_REQUEST'
+  | 'ESTIMATE_CONFIRMED'
+  | 'ESTIMATE_REJECTED'
+  | 'MOVE_DAY';
 
 export interface Notification {
   id: string;

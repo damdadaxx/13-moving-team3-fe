@@ -128,3 +128,9 @@ export interface CompletedReview {
   content: string;
   createdAt: string;
 }
+
+export interface CreateReviewDraftInput {
+  estimateId: string;
+  rating: number;
+  locale: 'ko' | 'en' | 'zh' | 'ja';
+}

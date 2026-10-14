@@ -6,6 +6,7 @@ import type {
   GetMyReviewsParams,
   MyReviewListData,
   ReviewSummary,
+  CreateReviewDraftInput,
 } from '@/types/review';
 
 import clientFetch from '@/lib/api/clientFetch';
@@ -67,6 +68,19 @@ export async function createReview(
   input: CreateReviewInput,
 ): Promise<ReviewSummary> {
   return clientFetch<ReviewSummary>(ENDPOINTS.review.create, {
+    method: 'POST',
+    body: JSON.stringify(input),
+  });
+}
+
+/*
+@ POST /reviews/draft
+- 리뷰 초안 작성
+*/
+export async function createReviewDraft(
+  input: CreateReviewDraftInput,
+): Promise<ReviewSummary> {
+  return clientFetch<ReviewSummary>(ENDPOINTS.review.draft, {
     method: 'POST',
     body: JSON.stringify(input),
   });

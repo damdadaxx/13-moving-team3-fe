@@ -619,7 +619,12 @@
     "ratingTitle": "評価を選択してください",
     "ratingAria": "評価",
     "commentLabel": "詳しいレビューを書いてください",
-    "commentPlaceholder": "10文字以上入力してください"
+    "commentPlaceholder": "10文字以上入力してください",
+    "draft": "AIで下書き",
+    "draftPending": "下書きを作成しています",
+    "draftFailed": "レビューの下書き作成に失敗しました。",
+    "draftHintActivate": "評価を選ぶとボタンが有効になります",
+    "draftHint": "AIの下書きは評価、引越し日、担当者名、出発地と到着地をもとに作成されます"
   },
   "CustomerProfile": {
     "createTitle": "プロフィール登録",

@@ -619,7 +619,12 @@
     "ratingTitle": "请选择评分",
     "ratingAria": "评分",
     "commentLabel": "请填写详细评价",
-    "commentPlaceholder": "请至少输入 10 个字"
+    "commentPlaceholder": "请至少输入 10 个字",
+    "draft": "AI 生成草稿",
+    "draftPending": "正在撰写草稿",
+    "draftFailed": "评价草稿生成失败。",
+    "draftHintActivate": "选择评分后按钮才会启用",
+    "draftHint": "AI 草稿会根据评分、搬家日期、搬家师傅姓名以及出发地和到达地生成"
   },
   "CustomerProfile": {
     "createTitle": "注册资料",

@@ -354,6 +354,7 @@
   "DesignatedEstimate": {
     "request": "发送指定报价请求",
     "requested": "已发送指定请求",
+    "rejected": "指定报价请求已被拒绝",
     "alreadyReceived": "已收到报价",
     "success": "指定报价请求已发送。",
     "failed": "指定报价请求发送失败。",

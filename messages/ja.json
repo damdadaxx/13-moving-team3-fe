@@ -354,6 +354,7 @@
   "DesignatedEstimate": {
     "request": "指定見積もりを依頼",
     "requested": "指定見積もり依頼済み",
+    "rejected": "却下された指定見積もり依頼",
     "alreadyReceived": "見積もり受信済み",
     "success": "指定見積もりを依頼しました。",
     "failed": "指定見積もりの依頼に失敗しました。",

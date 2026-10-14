@@ -23,6 +23,7 @@ import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import useInfiniteScroll from '@/hooks/common/useInfiniteScroll';
 import useSearchInput from '@/hooks/common/useSearchInput';
 import { useReceivedRequestsQuery } from '@/hooks/features/estimate/queries/queries';
+import { useMoverProfileQuery } from '@/hooks/features/mover/queries/queries';
 
 import { cn } from '@/utils/cn';
 
@@ -46,10 +47,18 @@ export default function MoverEstimateRequestPage() {
     { value: 'moveDate', label: t('sortMoveDate') },
     { value: 'createdAt', label: t('sortRequestedAt') },
   ];
-  const [selectedServiceTypes, setSelectedServiceTypes] = useState<
-    ServiceType[]
-  >([]);
-  const [designatedOnly, setDesignatedOnly] = useState(true);
+  /*
+  @ 기본 필터
+  - 서비스 가능 지역 + 기사님이 제공하는 서비스가 기본으로 적용됩니다.
+  - 사용자가 서비스 칩을 직접 바꾸면(null이 아니면) 그 값을 우선합니다.
+  */
+  const { data: moverProfile } = useMoverProfileQuery();
+  const [pickedServiceTypes, setPickedServiceTypes] = useState<
+    ServiceType[] | null
+  >(null);
+  const selectedServiceTypes =
+    pickedServiceTypes ?? moverProfile?.serviceTypes ?? [];
+  const [designatedOnly, setDesignatedOnly] = useState(false);
   const [regionAvailableOnly, setRegionAvailableOnly] = useState(true);
   const [sortValue, setSortValue] = useState<ReceivedRequestSortBy>('moveDate');
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
@@ -78,7 +87,7 @@ export default function MoverEstimateRequestPage() {
   }
 
   function handleServiceTypesChange(next: ServiceType[]) {
-    setSelectedServiceTypes(next);
+    setPickedServiceTypes(next);
   }
 
   function hideRequest(estimateRequestId: string) {

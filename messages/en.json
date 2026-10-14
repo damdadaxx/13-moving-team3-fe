@@ -622,7 +622,9 @@
     "commentPlaceholder": "Please enter at least 10 characters",
     "draft": "Draft with AI",
     "draftPending": "Writing a draft...",
-    "draftFailed": "Failed to create a review draft."
+    "draftFailed": "Failed to create a review draft.",
+    "draftHintActivate": "Select a star rating to enable this button",
+    "draftHint": "The AI draft is written from your rating, move date, mover name, and the departure and arrival addresses"
   },
   "CustomerProfile": {
     "createTitle": "Create Profile",

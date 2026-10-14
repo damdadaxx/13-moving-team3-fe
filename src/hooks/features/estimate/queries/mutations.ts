@@ -83,7 +83,7 @@ export function useUpdateEstimateStatusMutation() {
  * @ 견적 확정 뮤테이션
  * - PATCH /estimates/{estimateId}, status: 'ACCEPTED'
  * - 확정하면 같은 요청의 나머지 PROPOSED 견적은 NOT_SELECTED로 바뀐다
- * - 성공하면 이 견적의 상세 캐시를 무효화해 확정 상태를 다시 받아온다
+ * - 상세만 비우면 목록·진행 중 요청이 이전 상태로 남으므로 견적 캐시 전체를 비운다
  */
 export function useConfirmEstimateMutation() {
   const queryClient = useQueryClient();
@@ -91,10 +91,8 @@ export function useConfirmEstimateMutation() {
   return useMutation({
     mutationFn: (estimateId: string) =>
       updateEstimateStatus(estimateId, { status: 'ACCEPTED' }),
-    onSuccess: (_data, estimateId) => {
-      queryClient.invalidateQueries({
-        queryKey: estimateKeys.detail(estimateId),
-      });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: estimateKeys.all });
     },
   });
 }

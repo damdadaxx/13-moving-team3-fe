@@ -218,6 +218,7 @@ export default function EstimateRequestSection() {
           <Image
             src={ImgAvatarBeaver}
             alt=""
+            priority
             className={cn(
               // PNG 여백을 뺀 실루엣이 프레임의 top 24.4% / right 3.5%
               'absolute top-[18.79%] right-[-5.52%] z-[2] h-auto w-[44.69%]',

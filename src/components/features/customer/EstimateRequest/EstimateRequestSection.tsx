@@ -32,5 +32,6 @@ export default function EstimateRequestSection() {
   if (!profileQuery.data) return <ProfileRequiredNotice />;
   if (activeQuery.data) return <EstimateRequestInProgress />;
 
-  return <EstimateRequestForm />;
+  /* 출발지는 프로필의 지역과 같아야 해서 폼에 넘긴다 */
+  return <EstimateRequestForm profileRegion={profileQuery.data.region} />;
 }

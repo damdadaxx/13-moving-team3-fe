@@ -6,6 +6,7 @@
 import { useMemo, useState } from 'react';
 
 import { useRouter } from '@/i18n/navigation';
+import type { Region } from '@/types/region';
 import type { ServiceType } from '@/types/serviceType';
 import type { Messages } from 'next-intl';
 import { useTranslations } from 'next-intl';
@@ -18,8 +19,11 @@ import imgMovingSmall from '@/assets/images/img_moving_small.webp';
 import { HttpError } from '@/lib/api/errors';
 import { ROUTES } from '@/lib/constants/routes';
 
+import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+import { useModal } from '@/hooks/common/useModal';
 import { useCreateEstimateRequestMutation } from '@/hooks/features/estimate/queries/mutations';
 
+import { addressToRegion } from '@/utils/addressToRegion';
 import { cn } from '@/utils/cn';
 
 import Button from '@/components/ui/Button/Button';
@@ -61,10 +65,27 @@ const STEP_TITLE_KEYS = {
   3: 'step3Title',
 } as const satisfies Record<number, keyof Messages['EstimateRequest']>;
 
-export default function EstimateRequestForm() {
+interface EstimateRequestFormProps {
+  /** 고객 프로필의 지역. 출발지는 이 지역 안이어야 한다 */
+  profileRegion: Region;
+}
+
+/** 같은 주소인지. 도로명이 없는 주소도 있어 지번까지 본다 */
+function isSameAddress(a: AddressResult, b: AddressResult) {
+  return (
+    (a.roadAddress || a.jibunAddress) === (b.roadAddress || b.jibunAddress)
+  );
+}
+
+export default function EstimateRequestForm({
+  profileRegion,
+}: EstimateRequestFormProps) {
   const t = useTranslations('EstimateRequest');
   const tCommon = useTranslations('Common');
   const tServiceType = useTranslations('ServiceType');
+  const tRegion = useTranslations('Region');
+  const { openModal, closeModal } = useModal();
+  const modalButtonSize = useBreakpointValue('sm', 'sm', 'md');
   const [step, setStep] = useState(1); // 모바일 위저드 단계
   const [movingType, setMovingType] = useState<ServiceType | null>(null);
   const [moveDate, setMoveDate] = useState<Date | null>(null);
@@ -100,9 +121,79 @@ export default function EstimateRequestForm() {
     setAddressTarget(target);
   };
 
+  /*
+  @ 주소 선택 검증
+  - 출발지와 도착지는 같은 주소일 수 없다
+  - 출발지는 프로필에 설정한 지역 안이어야 한다 (도착지는 지역 제한 없음)
+  - 조건에 맞지 않으면 선택하지 않고 안내 모달을 띄운다
+  - ponytail: 화면에서만 막는다. API로 직접 보내는 요청까지 막으려면 백엔드에도 같은 검증이 필요하다
+  */
   const handleAddressSelected = (address: AddressResult) => {
-    const setAddress = addressTarget === 'from' ? setFromAddress : setToAddress;
-    setAddress(address);
+    const isFrom = addressTarget === 'from';
+    const otherAddress = isFrom ? toAddress : fromAddress;
+
+    if (otherAddress && isSameAddress(address, otherAddress)) {
+      openModal(
+        <p className="text-2lg-medium text-black-300">
+          {t('sameAddressMessage')}
+        </p>,
+        {
+          title: t('sameAddressTitle'),
+          variant: 'popup',
+          buttons: (
+            <Button size={modalButtonSize} onClick={closeModal}>
+              {tCommon('confirm')}
+            </Button>
+          ),
+        },
+      );
+      return;
+    }
+
+    if (isFrom) {
+      // 시·도를 알 수 없는 주소는 막지 않는다 (카카오 주소는 항상 시·도로 시작한다)
+      const departureRegion = addressToRegion(
+        address.roadAddress || address.jibunAddress,
+      );
+
+      if (departureRegion && departureRegion !== profileRegion) {
+        openModal(
+          <p className="text-2lg-medium text-black-300">
+            {t('regionMismatchLine1', { region: tRegion(profileRegion) })}
+            <br />
+            {t('regionMismatchLine2')}
+          </p>,
+          {
+            title: t('regionMismatchTitle'),
+            variant: 'popup',
+            buttons: (
+              <>
+                <Button
+                  variant="outlined"
+                  size={modalButtonSize}
+                  onClick={closeModal}
+                >
+                  {tCommon('confirm')}
+                </Button>
+                <Button
+                  size={modalButtonSize}
+                  href={ROUTES.customerProfileEdit}
+                  onClick={closeModal}
+                >
+                  {t('goProfileEdit')}
+                </Button>
+              </>
+            ),
+          },
+        );
+        return;
+      }
+
+      setFromAddress(address);
+      return;
+    }
+
+    setToAddress(address);
   };
 
   const handleSubmit = async () => {

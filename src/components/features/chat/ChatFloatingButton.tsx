@@ -1,7 +1,7 @@
 // GNB 채팅 플로팅 버튼 (안 읽은 메시지 배지 + 채팅방 목록 팝오버)
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import type { ChatRoomListItem } from '@/types/chat';
 import { cva } from 'class-variance-authority';
@@ -34,11 +34,13 @@ const panelStyle = cva(
     'flex flex-col overflow-hidden bg-gray-50',
     'drop-shadow-[2px_2px_8px_rgba(0,0,0,0.06)]',
     'transition-[opacity,transform] duration-200 ease-out',
-    // 모바일: 화면 전체를 쓴다. 헤더(z-header)보다 위에 떠야 해서 z-modal을 쓴다
-    'fixed inset-0 z-modal h-full w-full rounded-none',
+    // 모바일: 뷰포트 전체. 노치·홈 인디케이터에 헤더/입력창이 가리지 않게 safe area를 남긴다
+    'fixed inset-0 z-modal h-dvh w-full rounded-none',
+    'pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]',
     // 태블릿 이상: 버튼 위에 뜨는 작은 팝오버. 목록 ↔ 채팅창 전환 시 크기가 바뀌지 않게 동일 크기
     'tablet:absolute tablet:inset-auto tablet:right-0 tablet:bottom-[calc(100%+12px)] tablet:z-dropdown tablet:origin-bottom-right',
     'tablet:h-[480px] tablet:w-[360px] tablet:rounded-[24px] tablet:border tablet:border-line-200',
+    'tablet:pt-0 tablet:pb-0',
   ),
   {
     variants: {
@@ -139,6 +141,19 @@ export default function ChatFloatingButton() {
     closeOnEscape: true,
   });
 
+  // 모바일 전체화면일 때 뒤 페이지가 같이 스크롤되면 패널이 밀려 보인다
+  useEffect(() => {
+    if (!isOpen) return;
+    const media = window.matchMedia('(max-width: 743px)');
+    if (!media.matches) return;
+
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [isOpen]);
+
   if (!isLoggedIn) return null;
 
   return (
@@ -147,20 +162,21 @@ export default function ChatFloatingButton() {
       className={cn(
         // 모바일에서 패널이 전체화면(z-modal)으로 뜨므로, 패널을 품은 이 래퍼도
         // 같은 스태킹 컨텍스트 상 z-modal이어야 헤더(z-header) 위로 뜬다
-        // 기본 위치는 맨 위로 버튼 자리. 그 버튼이 보이면 버튼 높이(48/56) + 간격 12만큼 올라간다
-        'fixed right-[16px] bottom-[calc(24px+var(--cookie-banner-lift,0px))] z-modal transition-transform duration-300 ease-out',
+        // transform은 태블릿부터만 준다. 모바일에서 translate가 있으면 fixed 패널의
+        // 기준이 뷰포트가 아니라 이 작은 래퍼가 되어 전체화면이 깨진다
+        'fixed right-[16px] bottom-[calc(24px+var(--cookie-banner-lift,0px))] z-modal',
         'tablet:right-[24px] tablet:bottom-[calc(32px+var(--cookie-banner-lift,0px))] tablet:z-dropdown',
+        'tablet:transition-transform tablet:duration-300 tablet:ease-out',
         'desktop:right-[40px] desktop:bottom-[calc(40px+var(--cookie-banner-lift,0px))]',
-        showTopButton
-          ? '-translate-y-[60px] desktop:-translate-y-[68px]'
-          : 'translate-y-0',
+        showTopButton &&
+          'tablet:-translate-y-[60px] desktop:-translate-y-[68px]',
       )}
     >
       {/*
       @ 패널 위치
-      - 모바일: 패널이 fixed inset-0로 뷰포트 전체를 덮는다 (이 래퍼 크기와 무관)
-      - 태블릿 이상: 이 래퍼(relative 없음)에 버튼과 패널을 같이 두고, 패널은 버튼 기준
-        absolute(bottom-full)로 위쪽에 작게 뜬다
+      - 모바일: 패널이 fixed inset-0로 뷰포트 전체를 덮는다. 맨 위로 버튼이 보이면
+        채팅 버튼만 위로 올린다 (래퍼에 transform을 주면 전체화면이 깨짐)
+      - 태블릿 이상: 버튼과 패널을 같이 올리고, 패널은 버튼 기준 absolute로 위쪽에 작게 뜬다
       */}
       <div className={cn('relative')}>
         <button
@@ -174,7 +190,10 @@ export default function ChatFloatingButton() {
           className={cn(
             'relative flex size-[48px] cursor-pointer items-center justify-center rounded-full',
             'bg-orange-400 text-gray-50 shadow-[2px_2px_10px_0px_rgba(46,46,46,0.08)]',
+            'transition-transform duration-300 ease-out',
             'desktop:size-[56px]',
+            // 태블릿부터는 래퍼가 같이 올라가서, 버튼만 옮기면 패널과 어긋난다
+            showTopButton && 'max-tablet:-translate-y-[60px]',
           )}
         >
           <IcChat aria-hidden className={cn('size-[24px]')} />

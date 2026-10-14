@@ -357,7 +357,7 @@
     "alreadyReceived": "見積もり受信済み",
     "success": "指定見積もりを依頼しました。",
     "failed": "指定見積もりの依頼に失敗しました。",
-    "confirmMessage": "指定見積もり依頼をキャンセルしますか？キャンセルした依頼は元に戻せません。",
+    "confirmMessage": "指定見積もりを依頼しますか？依頼した指定見積もりは撤回できません。",
     "needRequestMessage": "先に通常の見積もり依頼をしてください。",
     "goGeneralRequest": "通常の見積もりを依頼",
     "alreadyConfirmed": "すでに確定した引越し見積もりがあります。",

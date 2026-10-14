@@ -357,7 +357,7 @@
     "alreadyReceived": "已收到报价",
     "success": "指定报价请求已发送。",
     "failed": "指定报价请求发送失败。",
-    "confirmMessage": "要取消指定报价请求吗？取消后的请求无法恢复。",
+    "confirmMessage": "要发送指定报价请求吗？已发送的指定报价无法撤回。",
     "needRequestMessage": "请先提交普通报价请求。",
     "goGeneralRequest": "提交普通报价请求",
     "alreadyConfirmed": "您已有确认的搬家报价。",

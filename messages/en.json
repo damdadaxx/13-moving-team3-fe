@@ -357,7 +357,7 @@
     "alreadyReceived": "Estimate Already Received",
     "success": "Your designated estimate request was sent.",
     "failed": "Failed to send the designated estimate request.",
-    "confirmMessage": "Do you want to cancel the designated estimate request? A canceled request cannot be restored.",
+    "confirmMessage": "Do you want to request a designated estimate? A requested designated estimate cannot be withdrawn.",
     "needRequestMessage": "Please submit a general estimate request first.",
     "goGeneralRequest": "Request a General Estimate",
     "alreadyConfirmed": "You already have a confirmed moving estimate.",

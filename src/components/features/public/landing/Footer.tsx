@@ -159,7 +159,7 @@ export default function Footer() {
           }}
         >
           <Button
-            className="w-[190px]"
+            className="w-[195px]"
             variant="outlined"
             color="white"
             size={buttonSize}

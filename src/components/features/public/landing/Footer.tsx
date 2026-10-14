@@ -34,6 +34,7 @@ const SLIDE_UP = {
 
 export default function Footer() {
   const t = useTranslations('Footer');
+  const tLanding = useTranslations('Landing');
   const locale = useLocale();
   const { openModal } = useModal();
   const buttonSize = useBreakpointValue('sm', 'sm', 'lg');
@@ -164,7 +165,7 @@ export default function Footer() {
             size={buttonSize}
             href={'/mover'}
           >
-            기사님 찾으러 가기
+            {tLanding('findMover')}
           </Button>
         </motion.div>
       </div>

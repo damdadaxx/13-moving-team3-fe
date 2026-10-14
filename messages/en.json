@@ -260,6 +260,7 @@
     "heroTitle": "How do you choose a moving company?",
     "heroDescLine1": "Moving lets you compare multiple estimates at a glance",
     "heroDescLine2": "and makes choosing a mover simple",
+    "findMover": "Find a mover",
     "moveTypeLine1": "Skip the hassle,",
     "moveTypeLine2": "start by choosing your move type",
     "moveTypeSmallDesc": "Studio, 1-bedroom, under ~20 pyeong",
@@ -275,7 +276,12 @@
     "requestCardTo": "428 Seolleung-ro, Gangnam-gu, Seoul",
     "requestLine1": "Request your move",
     "requestLine2": "and get estimates",
-    "requestImageAlt": "Moving estimate request"
+    "requestImageAlt": "Moving estimate request",
+    "demoVideoLabel": "Demo video",
+    "demoVideoTitle": "Demo video",
+    "demoVideoWatch": "Watch the full demo",
+    "demoVideoDismissToday": "Don't show again today",
+    "demoVideoClose": "Close demo video"
   },
   "MoverFind": {
     "title": "Find Movers",

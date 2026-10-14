@@ -560,9 +560,7 @@
     "rejectedEmpty": "お断りした依頼はありません！",
     "nextPageFailed": "次のページを読み込めませんでした。",
     "rejectedOverlay": "お断りした依頼です",
-    "completedOverlay": "引越しが完了した見積もりです",
-    "notConfirmed": "確定した見積もりではありません。",
-    "goSent": "送信した見積もりを見る"
+    "completedOverlay": "引越しが完了した見積もりです"
   },
   "Calendar": {
     "datePlaceholder": "日付を選択",

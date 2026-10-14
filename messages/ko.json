@@ -560,9 +560,7 @@
     "rejectedEmpty": "반려한 요청이 없어요!",
     "nextPageFailed": "다음 페이지를 불러오지 못했어요.",
     "rejectedOverlay": "반려된 요청이에요",
-    "completedOverlay": "이사 완료된 견적이에요",
-    "notConfirmed": "확정된 견적이 아니에요.",
-    "goSent": "보낸 견적 보기"
+    "completedOverlay": "이사 완료된 견적이에요"
   },
   "Calendar": {
     "datePlaceholder": "날짜 선택하기",

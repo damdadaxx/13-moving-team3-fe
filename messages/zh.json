@@ -560,9 +560,7 @@
     "rejectedEmpty": "还没有拒绝的请求！",
     "nextPageFailed": "无法加载下一页。",
     "rejectedOverlay": "已拒绝的请求",
-    "completedOverlay": "搬家已完成的报价",
-    "notConfirmed": "这不是已确认的报价。",
-    "goSent": "查看已发送的报价"
+    "completedOverlay": "搬家已完成的报价"
   },
   "Calendar": {
     "datePlaceholder": "选择日期",

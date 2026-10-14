@@ -76,9 +76,12 @@ export default async function RootLayout({
   );
 
   return (
+    // 크롬 번역이 텍스트 노드를 <font>로 감싸면 React가 removeChild에서 깨진다
+    // 다국어는 next-intl이 처리하므로 브라우저 자동 번역은 끈다
     <html
       lang={locale}
-      className={cn(pretendard.variable, 'h-full antialiased')}
+      translate="no"
+      className={cn(pretendard.variable, 'notranslate h-full antialiased')}
     >
       <body className={cn('h-full pt-[54px]', 'desktop:pt-[88px]')}>
         <NextIntlClientProvider>

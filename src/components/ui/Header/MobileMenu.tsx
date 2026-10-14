@@ -63,6 +63,9 @@ const mobileMenuItem = cva(
   'flex h-[74px] w-full cursor-pointer items-center text-lg-medium text-black-500',
 );
 
+const mobileMenuLinkClass =
+  'flex h-full w-full items-center px-[24px] py-[20px]';
+
 /**
  * 모바일 메뉴
  * @param menus - 메뉴 목록
@@ -123,9 +126,7 @@ export default function MobileMenu({
             {menus.map((item) => (
               <li key={item.menu} className={mobileMenuItem()}>
                 <Link
-                  className={cn(
-                    'flex items-center w-full h-full px-[24px] py-[20px]',
-                  )}
+                  className={mobileMenuLinkClass}
                   href={item.href}
                   onClick={onClose}
                 >
@@ -135,7 +136,11 @@ export default function MobileMenu({
             ))}
             {isGuest ? (
               <li className={mobileMenuItem()}>
-                <Link href={getGuestSigninPath()} onClick={onClose}>
+                <Link
+                  className={mobileMenuLinkClass}
+                  href={getGuestSigninPath()}
+                  onClick={onClose}
+                >
                   {tCommon('login')}
                 </Link>
               </li>

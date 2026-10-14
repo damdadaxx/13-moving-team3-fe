@@ -233,6 +233,44 @@
 }
 
 /*
+@ 푸터 위 작은 비버
+- 얼굴은 자르지 않고, 가장자리 뒤로 숨었다가 시간차를 두고 올라온다
+*/
+@keyframes footer-beaver-peek {
+  0%,
+  6% {
+    transform: translateY(110%);
+  }
+  14%,
+  30% {
+    transform: translateY(0);
+  }
+  33% {
+    transform: translateY(8%);
+  }
+  36%,
+  44% {
+    transform: translateY(0);
+  }
+  50%,
+  100% {
+    transform: translateY(110%);
+  }
+}
+
+.footer-beaver-peek {
+  animation: footer-beaver-peek 8.2s cubic-bezier(0.34, 1.4, 0.5, 1) infinite
+    backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-beaver-peek {
+    animation: none;
+    transform: translateY(0);
+  }
+}
+
+/*
 @ 커스텀 스크롤바
 - thumb: gray-300
 - Chrome은 scrollbar-width가 ::-webkit-scrollbar를 덮어쓰므로 Firefox에만 적용

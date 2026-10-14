@@ -60,6 +60,7 @@ export const ENDPOINTS = {
     mine: api('/reviews/me'), // [GET] 로그인 - 내 완료 견적 (?hasReview=false 미작성, true 작성완료)
     byMover: (id: number | string) => api(`/reviews/mover/${id}`), // [GET] 비로그인 - 기사 리뷰 목록
     create: api('/reviews'), // [POST] 로그인 - 리뷰 작성
+    draft: api('/reviews/draft'), // [POST] 로그인 - 리뷰 초안 작성
   },
 
   // --- Like(찜) ---

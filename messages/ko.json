@@ -260,6 +260,7 @@
     "heroTitle": "이사업체, 어떻게 고르세요?",
     "heroDescLine1": "무빙은 여러 견적을 한눈에 비교해",
     "heroDescLine2": "이사업체 선정 과정을 간편하게 바꿔드려요",
+    "findMover": "기사님 찾으러 가기",
     "moveTypeLine1": "번거로운 선정과정,",
     "moveTypeLine2": "이사 유형부터 선택해요",
     "moveTypeSmallDesc": "원룸, 투룸, 20평대 미만",
@@ -275,7 +276,12 @@
     "requestCardTo": "서울 강남구 선릉로 428",
     "requestLine1": "원하는 이사 서비스를 요청하고",
     "requestLine2": "견적을 받아보세요",
-    "requestImageAlt": "이사 견적 요청 이미지"
+    "requestImageAlt": "이사 견적 요청 이미지",
+    "demoVideoLabel": "시연 영상",
+    "demoVideoTitle": "시연 영상",
+    "demoVideoWatch": "시연 영상 자세히 보러 가기",
+    "demoVideoDismissToday": "오늘 하루 동안 보지 않기",
+    "demoVideoClose": "시연 영상 닫기"
   },
   "MoverFind": {
     "title": "기사님 찾기",
@@ -619,7 +625,12 @@
     "ratingTitle": "평점을 선택해 주세요",
     "ratingAria": "평점",
     "commentLabel": "상세 후기를 작성해 주세요",
-    "commentPlaceholder": "최소 10자 이상 입력해주세요"
+    "commentPlaceholder": "최소 10자 이상 입력해주세요",
+    "draft": "AI 리뷰 초안 작성",
+    "draftPending": "초안을 작성 중이에요",
+    "draftFailed": "리뷰 초안 생성에 실패했어요.",
+    "draftHintActivate": "별점을 선택해야 버튼이 활성화됩니다",
+    "draftHint": "AI 리뷰 초안 작성은 별점, 이사 날짜, 기사님 이름, 출발지와 도착지를 기반으로 작성됩니다"
   },
   "CustomerProfile": {
     "createTitle": "프로필 등록",

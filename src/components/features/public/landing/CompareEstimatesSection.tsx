@@ -3,15 +3,15 @@
 
 import { useLayoutEffect, useRef, useState } from 'react';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 import IcArrowRight from '@/assets/icons/ic_arrow_right.svg';
 import ImgBuilding from '@/assets/images/landing/img_building.svg';
 
+import { useFormatDate } from '@/hooks/common/useFormatDate';
 import { useFormatPrice } from '@/hooks/common/useFormatPrice';
 
 import { cn } from '@/utils/cn';
-import formatDate from '@/utils/formatDate';
 
 import MoverSummary from '@/components/features/customer/Estimate/MoverSummary';
 import Button from '@/components/ui/Button/Button';
@@ -32,7 +32,13 @@ function EstimateCard({ className }: EstimateCardProps) {
   const t = useTranslations('Landing');
   const tEstimate = useTranslations('Estimate');
   const tConfirm = useTranslations('EstimateConfirm');
+  const isEnglish = useLocale() === 'en';
+  const addressValueClass = cn(
+    'whitespace-nowrap text-black-500',
+    isEnglish ? 'text-xs-semibold' : 'text-sm-semibold',
+  );
   const formatPrice = useFormatPrice();
+  const formatDateLocale = useFormatDate();
   const slotRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
@@ -103,7 +109,7 @@ function EstimateCard({ className }: EstimateCardProps) {
                   <span className="text-xs-regular text-gray-500">
                     {tEstimate('departure')}
                   </span>
-                  <span className="text-sm-semibold whitespace-nowrap text-black-500">
+                  <span className={addressValueClass}>
                     {t('compareCardFrom')}
                   </span>
                 </div>
@@ -115,7 +121,7 @@ function EstimateCard({ className }: EstimateCardProps) {
                   <span className="text-xs-regular text-gray-500">
                     {tEstimate('arrival')}
                   </span>
-                  <span className="text-sm-semibold whitespace-nowrap text-black-500">
+                  <span className={addressValueClass}>
                     {t('compareCardTo')}
                   </span>
                 </div>
@@ -125,7 +131,7 @@ function EstimateCard({ className }: EstimateCardProps) {
                   {tEstimate('moveDate')}
                 </span>
                 <span className="text-sm-semibold whitespace-nowrap text-black-500">
-                  {formatDate(SAMPLE_MOVE_DATE, 'korean')}
+                  {formatDateLocale(SAMPLE_MOVE_DATE, 'korean')}
                 </span>
               </div>
             </div>

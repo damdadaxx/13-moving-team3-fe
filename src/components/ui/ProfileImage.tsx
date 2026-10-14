@@ -52,7 +52,9 @@ export default function ProfileImage({
           src={resolvedUrl}
           alt={alt}
           fill
-          unoptimized={resolvedUrl.startsWith('/api/')}
+          unoptimized={
+            resolvedUrl.startsWith('/api/') || resolvedUrl.startsWith('/_next/')
+          }
           sizes={sizes}
           priority={priority}
           className="object-cover"

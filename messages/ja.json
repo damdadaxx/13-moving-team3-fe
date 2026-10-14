@@ -260,6 +260,7 @@
     "heroTitle": "引越し業者、どうやって選びますか？",
     "heroDescLine1": "Movingなら複数の見積もりをひと目で比較",
     "heroDescLine2": "引越し業者選びをもっと簡単に",
+    "findMover": "引越し業者を探す",
     "moveTypeLine1": "面倒な業者選びは、",
     "moveTypeLine2": "引越しタイプを選ぶところから",
     "moveTypeSmallDesc": "ワンルーム・1LDK、20坪未満",
@@ -275,7 +276,12 @@
     "requestCardTo": "ソウル市 江南区 宣陵路 428",
     "requestLine1": "引越しサービスを依頼して",
     "requestLine2": "見積もりを受け取ろう",
-    "requestImageAlt": "引越し見積もり依頼のイメージ"
+    "requestImageAlt": "引越し見積もり依頼のイメージ",
+    "demoVideoLabel": "デモ動画",
+    "demoVideoTitle": "デモ動画",
+    "demoVideoWatch": "デモ動画の詳細を見る",
+    "demoVideoDismissToday": "今日は表示しない",
+    "demoVideoClose": "デモ動画を閉じる"
   },
   "MoverFind": {
     "title": "引越し業者を探す",
@@ -619,7 +625,12 @@
     "ratingTitle": "評価を選択してください",
     "ratingAria": "評価",
     "commentLabel": "詳しいレビューを書いてください",
-    "commentPlaceholder": "10文字以上入力してください"
+    "commentPlaceholder": "10文字以上入力してください",
+    "draft": "AIで下書き",
+    "draftPending": "下書きを作成しています",
+    "draftFailed": "レビューの下書き作成に失敗しました。",
+    "draftHintActivate": "評価を選ぶとボタンが有効になります",
+    "draftHint": "AIの下書きは評価、引越し日、担当者名、出発地と到着地をもとに作成されます"
   },
   "CustomerProfile": {
     "createTitle": "プロフィール登録",

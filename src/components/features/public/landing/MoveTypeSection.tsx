@@ -83,6 +83,7 @@ export default function MoveTypeSection() {
                     src={image}
                     alt=""
                     aria-hidden
+                    priority={highlighted}
                     className={cn(
                       'h-auto',
                       highlighted ? 'w-[96px]' : 'w-[64px]',
@@ -139,6 +140,7 @@ export default function MoveTypeSection() {
                   src={image}
                   alt=""
                   aria-hidden
+                  priority={highlighted}
                   className={
                     highlighted
                       ? 'h-auto w-[156px] max-w-full'

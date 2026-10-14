@@ -3,11 +3,12 @@
 import { useState } from 'react';
 
 import type { PendingReview } from '@/types/review';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import IcArrowRight from '@/assets/icons/ic_arrow_right.svg';
 import IcDriverMark from '@/assets/icons/ic_driver.png';
+import IcInfo from '@/assets/icons/ic_info.svg';
 import IcStar from '@/assets/icons/ic_star.svg';
 
 import { HttpError } from '@/lib/api/errors';
@@ -15,11 +16,15 @@ import { HttpError } from '@/lib/api/errors';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useFormatDate } from '@/hooks/common/useFormatDate';
 import { useToast } from '@/hooks/common/useToast';
-import { useCreateReviewMutation } from '@/hooks/features/review/queries/mutations';
+import {
+  useCreateReviewDraftMutation,
+  useCreateReviewMutation,
+} from '@/hooks/features/review/queries/mutations';
 
 import { cn } from '@/utils/cn';
 
 import Button from '@/components/ui/Button/Button';
+import Label from '@/components/ui/Form/Label';
 import Textarea from '@/components/ui/Form/Textarea';
 import Modal from '@/components/ui/Modal';
 import ProfileImage from '@/components/ui/ProfileImage';
@@ -63,8 +68,12 @@ export default function WriteReviewModal({
   const buttonSize = useBreakpointValue('sm', 'sm', 'lg');
   const { showToast } = useToast();
   const createReviewMutation = useCreateReviewMutation();
+  const createReviewDraftMutation = useCreateReviewDraftMutation();
   const isValid = rating > 0 && comment.trim().length >= MIN_COMMENT_LENGTH;
   const isSubmitting = createReviewMutation.isPending;
+  const isDrafting = createReviewDraftMutation.isPending;
+  //리뷰초안 작성 언어를 위해 현재 언어를 가져온다.
+  const locale = useLocale();
 
   function handleSubmit() {
     if (!isValid || !review || isSubmitting) return;
@@ -84,6 +93,27 @@ export default function WriteReviewModal({
           const message =
             error instanceof HttpError ? error.message : t('createFailed');
           showToast(message);
+        },
+      },
+    );
+  }
+
+  //리뷰 초안 생성
+  function handleDraft() {
+    if (rating <= 0 || !review || isDrafting) return;
+
+    createReviewDraftMutation.mutate(
+      {
+        estimateId: review.id,
+        rating,
+        locale: locale,
+      },
+      {
+        onSuccess: (data) => {
+          setComment(data.content);
+        },
+        onError: () => {
+          showToast(t('draftFailed'));
         },
       },
     );
@@ -220,14 +250,77 @@ export default function WriteReviewModal({
           </div>
         </div>
 
-        <Textarea
-          id="write-review-comment"
-          label={t('commentLabel')}
-          labelVariant="modal"
-          value={comment}
-          onChange={(event) => setComment(event.target.value)}
-          placeholder={t('commentPlaceholder')}
-        />
+        <div className="flex w-full flex-col">
+          <div
+            className={cn(
+              'mb-[16px] flex w-full flex-wrap items-center justify-between gap-x-[12px] gap-y-[8px]',
+            )}
+          >
+            <Label
+              htmlFor="write-review-comment"
+              variant="modal"
+              className="mb-0"
+            >
+              {t('commentLabel')}
+            </Label>
+            <div className="flex shrink-0 items-center gap-[6px]">
+              <button
+                type="button"
+                disabled={rating <= 0 || isDrafting}
+                aria-busy={isDrafting || undefined}
+                onClick={handleDraft}
+                className={cn(
+                  'cursor-pointer rounded-full border border-orange-400 bg-transparent px-[12px] py-[6px] text-xs-medium whitespace-nowrap text-orange-400',
+                  'desktop:px-[14px] desktop:text-sm-medium',
+                  'hover:bg-orange-100',
+                  'disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-300 disabled:hover:bg-transparent',
+                )}
+              >
+                {isDrafting ? t('draftPending') : t('draft')}
+              </button>
+              <span className="group/hint relative inline-flex">
+                <button
+                  type="button"
+                  aria-label={`${t('draftHintActivate')} ${t('draftHint')}`}
+                  className="inline-flex size-[24px] cursor-help items-center justify-center"
+                >
+                  <IcInfo
+                    aria-hidden
+                    className="size-[20px] overflow-visible"
+                  />
+                </button>
+                <span
+                  role="tooltip"
+                  className={cn(
+                    'pointer-events-none invisible absolute top-[calc(100%+8px)] right-0 z-20 w-[240px]',
+                    'rounded-[8px] bg-black-400 px-[12px] py-[10px] text-left text-xs-medium text-gray-50',
+                    'shadow-[0_4px_12px_rgba(0,0,0,0.12)]',
+                    'group-hover/hint:visible group-focus-within/hint:visible',
+                  )}
+                >
+                  <ul className="flex flex-col gap-[6px]">
+                    <li className="flex gap-[6px]">
+                      <span aria-hidden="true">•</span>
+                      <span>{t('draftHintActivate')}</span>
+                    </li>
+                    <li className="flex gap-[6px]">
+                      <span aria-hidden="true">•</span>
+                      <span>{t('draftHint')}</span>
+                    </li>
+                  </ul>
+                </span>
+              </span>
+            </div>
+          </div>
+          <Textarea
+            id="write-review-comment"
+            labelVariant="modal"
+            value={comment}
+            disabled={isDrafting}
+            onChange={(event) => setComment(event.target.value)}
+            placeholder={t('commentPlaceholder')}
+          />
+        </div>
       </div>
     </Modal>
   );

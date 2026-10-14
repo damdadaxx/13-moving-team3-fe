@@ -6,7 +6,10 @@ import {
   readJsonBody,
   unwrapApiData,
 } from '@/lib/api/parseApi';
-import { captureSupabaseAccessTokenFromBody } from '@/lib/supabase/accessToken';
+import {
+  captureSupabaseAccessTokenFromBody,
+  getSupabaseTokenEpoch,
+} from '@/lib/supabase/accessToken';
 
 // 토큰 갱신 중복 요청 방지용 싱글톤 프로미스
 let refreshPromise: Promise<Response> | null = null;
@@ -45,13 +48,15 @@ interface ClientFetchInit extends RequestInit {
 
 async function requestRefresh(): Promise<Response> {
   if (!refreshPromise) {
+    const epoch = getSupabaseTokenEpoch();
     refreshPromise = fetch(ENDPOINTS.auth.refresh, {
       method: 'POST',
       credentials: 'same-origin',
     })
       .then(async (response) => {
         // 갱신 응답에도 새 accessToken이 실려온다 (Supabase 클라이언트용)
-        if (response.ok) {
+        // 요청 중에 로그아웃하면 epoch가 바뀌므로, 늦은 응답으로 토큰을 다시 넣지 않는다
+        if (response.ok && epoch === getSupabaseTokenEpoch()) {
           captureSupabaseAccessTokenFromBody(
             await readJsonBody(response.clone()),
           );
@@ -63,6 +68,11 @@ async function requestRefresh(): Promise<Response> {
       });
   }
   return refreshPromise;
+}
+
+/** 진행 중인 갱신이 있으면 그 요청을 그대로 쓴다. 토큰 회전이 겹치지 않게 */
+export function refreshSession(): Promise<Response> {
+  return requestRefresh();
 }
 
 /**

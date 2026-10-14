@@ -32,11 +32,11 @@ export default function TopButton({ className }: TopButtonProps) {
       aria-hidden={!isVisible}
       tabIndex={isVisible ? 0 : -1}
       className={cn(
-        'fixed right-[16px] bottom-[24px] z-top-button flex size-[48px] cursor-pointer items-center justify-center rounded-full border border-line-200 bg-gray-50 text-black-400',
+        'fixed right-[16px] bottom-[calc(24px+var(--cookie-banner-lift,0px))] z-top-button flex size-[48px] cursor-pointer items-center justify-center rounded-full border border-line-200 bg-gray-50 text-black-400',
         'shadow-[2px_2px_10px_0px_rgba(46,46,46,0.08)]',
         'transition-[opacity,transform] duration-300 ease-out',
-        'tablet:right-[24px] tablet:bottom-[32px]',
-        'desktop:right-[40px] desktop:bottom-[40px] desktop:size-[56px]',
+        'tablet:right-[24px] tablet:bottom-[calc(32px+var(--cookie-banner-lift,0px))]',
+        'desktop:right-[40px] desktop:bottom-[calc(40px+var(--cookie-banner-lift,0px))] desktop:size-[56px]',
         isVisible
           ? 'opacity-100'
           : 'pointer-events-none translate-y-2 opacity-0',

@@ -2,6 +2,7 @@
 
 // 랜딩 페이지
 import CompareEstimatesSection from '@/components/features/public/landing/CompareEstimatesSection';
+import DemoVideoPopup from '@/components/features/public/landing/DemoVideoPopup';
 import EstimateRequestSection from '@/components/features/public/landing/EstimateRequestSection';
 import Footer from '@/components/features/public/landing/Footer';
 import Hero from '@/components/features/public/landing/Hero';
@@ -35,6 +36,9 @@ export default function Home() {
 
       {/* 푸터 섹션 */}
       <Footer />
+
+      {/* 데모 영상 팝업 */}
+      <DemoVideoPopup />
     </>
   );
 }

@@ -34,9 +34,7 @@ export default function Home() {
       </ScrollReveal>
 
       {/* 푸터 섹션 */}
-      <ScrollReveal>
-        <Footer />
-      </ScrollReveal>
+      <Footer />
     </>
   );
 }

@@ -10,6 +10,7 @@ import IcAlarm from '@/assets/icons/ic_alarm_dark.svg';
 import IcMenu from '@/assets/icons/ic_menu_dark.svg';
 import IcProfile from '@/assets/icons/ic_profile_dark.svg';
 import ImgAvatarBeaver from '@/assets/images/img_avatar_beaver.webp';
+import ImgDefaultProfile from '@/assets/images/img_default_profile.webp';
 import ImgLogo from '@/assets/images/img_logo.svg';
 import ImgBgMarkM from '@/assets/images/mover-detail/img_bg_mark_m.svg';
 
@@ -104,7 +105,7 @@ function TabletEstimatePreview() {
           </div>
           <div className="absolute inset-0 px-[72px]">
             <ProfileImage
-              imageUrl={ImgAvatarBeaver.src}
+              imageUrl={ImgDefaultProfile.src}
               alt=""
               className="absolute bottom-0 left-0 size-[100px] ml-[74px] tablet:size-[100px] desktop:size-[100px]"
             />

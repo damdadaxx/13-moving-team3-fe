@@ -7,7 +7,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import { ENDPOINTS } from '@/lib/api/endpoints';
 import { readNotificationStream } from '@/lib/api/notificationStream';
 import { readJsonBody } from '@/lib/api/parseApi';
-import { captureSupabaseAccessTokenFromBody } from '@/lib/supabase/accessToken';
+import {
+  captureSupabaseAccessTokenFromBody,
+  getSupabaseTokenEpoch,
+} from '@/lib/supabase/accessToken';
 
 import { notificationKeys } from '@/hooks/features/notification/queries/keys';
 
@@ -80,13 +83,15 @@ export default function useNotificationStream(enabled: boolean) {
             refreshed = true;
 
             // 토큰 갱신 (/api/auth/refresh)
+            const epoch = getSupabaseTokenEpoch();
             const refreshResponse = await fetch(ENDPOINTS.auth.refresh, {
               method: 'POST',
               credentials: 'same-origin',
               signal: abort.signal,
             });
 
-            if (!refreshResponse.ok) return;
+            if (!refreshResponse.ok || epoch !== getSupabaseTokenEpoch())
+              return;
             captureSupabaseAccessTokenFromBody(
               await readJsonBody(refreshResponse),
             );

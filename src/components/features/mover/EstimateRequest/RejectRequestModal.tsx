@@ -1,17 +1,23 @@
 'use client';
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import type { ServiceType } from '@/types/serviceType';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
+import { z } from 'zod';
 
 import { HttpError } from '@/lib/api/errors';
+import {
+  MESSAGE_TEXT_MIN_LENGTH,
+  messageTextSchema,
+} from '@/lib/validations/messageTextValidation';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useToast } from '@/hooks/common/useToast';
 import { useUpdateEstimateStatusMutation } from '@/hooks/features/estimate/queries/mutations';
 
 import Button from '@/components/ui/Button/Button';
-import Label from '@/components/ui/Form/Label';
+import FormTextarea from '@/components/ui/Form/FormTextarea';
 import Modal from '@/components/ui/Modal';
 
 import EstimateRequestSummary from './EstimateRequestSummary';
@@ -31,7 +37,8 @@ interface RejectRequestModalProps {
   onSuccess?: () => void;
 }
 
-const MIN_REASON_LENGTH = 10;
+const rejectFormSchema = z.object({ rejectReason: messageTextSchema });
+type RejectFormValues = z.infer<typeof rejectFormSchema>;
 
 export default function RejectRequestModal({
   isOpen,
@@ -46,16 +53,21 @@ export default function RejectRequestModal({
   onSuccess,
 }: RejectRequestModalProps) {
   const t = useTranslations('MoverRequests');
-  const [rejectReason, setRejectReason] = useState('');
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isValid },
+  } = useForm<RejectFormValues>({
+    resolver: zodResolver(rejectFormSchema),
+    mode: 'onTouched',
+    defaultValues: { rejectReason: '' },
+  });
   const controlSize = useBreakpointValue('sm', 'sm', 'md');
   const { showToast } = useToast();
   const updateEstimateStatusMutation = useUpdateEstimateStatusMutation();
 
-  const isValid = rejectReason.length >= MIN_REASON_LENGTH;
-
-  async function handleSubmit() {
-    if (!isValid) return;
-
+  async function onSubmit({ rejectReason }: RejectFormValues) {
     if (!estimateId) {
       showToast(t('estimateLoadFailed'));
       return;
@@ -66,7 +78,7 @@ export default function RejectRequestModal({
         estimateId,
         input: { status: 'REJECTED', rejectReason },
       });
-      setRejectReason('');
+      reset();
       onSuccess?.();
       onClose();
     } catch (error) {
@@ -86,7 +98,7 @@ export default function RejectRequestModal({
         <Button
           size={controlSize}
           disabled={!isValid || updateEstimateStatusMutation.isPending}
-          onClick={handleSubmit}
+          onClick={handleSubmit(onSubmit)}
         >
           {t('reject')}
         </Button>
@@ -102,15 +114,14 @@ export default function RejectRequestModal({
           moveDate={moveDate}
         />
 
-        <div>
-          <Label variant="modal">{t('rejectReasonLabel')}</Label>
-          <textarea
-            value={rejectReason}
-            onChange={(event) => setRejectReason(event.target.value)}
-            placeholder={t('minLengthPlaceholder')}
-            className="h-[160px] w-full resize-none rounded-[16px] border border-line-200 px-[16px] py-[14px] text-lg-regular text-black-500 placeholder:text-gray-400 focus:outline-none desktop:px-[24px] desktop:text-2lg-regular"
-          />
-        </div>
+        <FormTextarea
+          control={control}
+          name="rejectReason"
+          label={t('rejectReasonLabel')}
+          labelVariant="modal"
+          placeholder={t('minLengthPlaceholder')}
+          minLength={MESSAGE_TEXT_MIN_LENGTH}
+        />
       </div>
     </Modal>
   );

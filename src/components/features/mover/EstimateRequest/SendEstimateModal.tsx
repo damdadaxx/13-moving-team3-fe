@@ -1,11 +1,18 @@
 'use client';
 
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import type { ServiceType } from '@/types/serviceType';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
+import { z } from 'zod';
 
 import { HttpError } from '@/lib/api/errors';
+import {
+  MESSAGE_TEXT_MIN_LENGTH,
+  messageTextSchema,
+} from '@/lib/validations/messageTextValidation';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useFormatPrice } from '@/hooks/common/useFormatPrice';
@@ -16,8 +23,8 @@ import {
 } from '@/hooks/features/estimate/queries/mutations';
 
 import Button from '@/components/ui/Button/Button';
+import FormTextarea from '@/components/ui/Form/FormTextarea';
 import Input from '@/components/ui/Form/Input';
-import Label from '@/components/ui/Form/Label';
 import Modal from '@/components/ui/Modal';
 
 import EstimateRequestSummary from './EstimateRequestSummary';
@@ -38,7 +45,8 @@ interface SendEstimateModalProps {
   onSuccess?: () => void;
 }
 
-const MIN_COMMENT_LENGTH = 10;
+const estimateFormSchema = z.object({ comment: messageTextSchema });
+type EstimateFormValues = z.infer<typeof estimateFormSchema>;
 
 export default function SendEstimateModal({
   isOpen,
@@ -56,7 +64,16 @@ export default function SendEstimateModal({
   const t = useTranslations('MoverRequests');
   const formatPrice = useFormatPrice();
   const [price, setPrice] = useState('');
-  const [comment, setComment] = useState('');
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isValid: isCommentValid },
+  } = useForm<EstimateFormValues>({
+    resolver: zodResolver(estimateFormSchema),
+    mode: 'onTouched',
+    defaultValues: { comment: '' },
+  });
   const controlSize = useBreakpointValue('sm', 'sm', 'md');
   const { showToast } = useToast();
   const createEstimateMutation = useCreateEstimateMutation();
@@ -64,7 +81,7 @@ export default function SendEstimateModal({
   const isPending =
     createEstimateMutation.isPending || updateEstimateStatusMutation.isPending;
 
-  const isValid = price !== '' && comment.length >= MIN_COMMENT_LENGTH;
+  const isValid = price !== '' && isCommentValid;
 
   function handlePriceChange(event: React.ChangeEvent<HTMLInputElement>) {
     /* 입력값은 숫자만 남겨 현재 언어 금액 표기로 보여준다 (ko: 180,000원 / en: ₩180,000) */
@@ -72,8 +89,8 @@ export default function SendEstimateModal({
     setPrice(rawDigits ? formatPrice(Number(rawDigits)) : '');
   }
 
-  async function handleSubmit() {
-    if (!isValid) return;
+  async function onSubmit({ comment }: EstimateFormValues) {
+    if (price === '') return;
 
     if (isDesignated && !estimateId) {
       showToast(t('estimateLoadFailed'));
@@ -98,7 +115,7 @@ export default function SendEstimateModal({
         });
       }
       setPrice('');
-      setComment('');
+      reset();
       onSuccess?.();
       onClose();
     } catch (error) {
@@ -118,7 +135,7 @@ export default function SendEstimateModal({
         <Button
           size={controlSize}
           disabled={!isValid || isPending}
-          onClick={handleSubmit}
+          onClick={handleSubmit(onSubmit)}
         >
           {t('sendEstimate')}
         </Button>
@@ -144,15 +161,14 @@ export default function SendEstimateModal({
           placeholder={t('pricePlaceholder')}
         />
 
-        <div>
-          <Label variant="modal">{t('commentLabel')}</Label>
-          <textarea
-            value={comment}
-            onChange={(event) => setComment(event.target.value)}
-            placeholder={t('minLengthPlaceholder')}
-            className="h-[160px] w-full resize-none rounded-[16px] border border-line-200 px-[16px] py-[14px] text-lg-regular text-black-500 placeholder:text-gray-400 focus:outline-none desktop:px-[24px] desktop:text-2lg-regular"
-          />
-        </div>
+        <FormTextarea
+          control={control}
+          name="comment"
+          label={t('commentLabel')}
+          labelVariant="modal"
+          placeholder={t('minLengthPlaceholder')}
+          minLength={MESSAGE_TEXT_MIN_LENGTH}
+        />
       </div>
     </Modal>
   );

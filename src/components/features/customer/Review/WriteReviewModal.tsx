@@ -1,10 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import type { PendingReview } from '@/types/review';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
+import { z } from 'zod';
 
 import IcArrowRight from '@/assets/icons/ic_arrow_right.svg';
 import IcDriverMark from '@/assets/icons/ic_driver.png';
@@ -12,6 +15,10 @@ import IcInfo from '@/assets/icons/ic_info.svg';
 import IcStar from '@/assets/icons/ic_star.svg';
 
 import { HttpError } from '@/lib/api/errors';
+import {
+  MESSAGE_TEXT_MIN_LENGTH,
+  messageTextSchema,
+} from '@/lib/validations/messageTextValidation';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useFormatDate } from '@/hooks/common/useFormatDate';
@@ -24,8 +31,8 @@ import {
 import { cn } from '@/utils/cn';
 
 import Button from '@/components/ui/Button/Button';
+import FormTextarea from '@/components/ui/Form/FormTextarea';
 import Label from '@/components/ui/Form/Label';
-import Textarea from '@/components/ui/Form/Textarea';
 import Modal from '@/components/ui/Modal';
 import ProfileImage from '@/components/ui/ProfileImage';
 import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
@@ -36,7 +43,8 @@ interface WriteReviewModalProps {
   onClose: () => void;
 }
 
-const MIN_COMMENT_LENGTH = 10;
+const reviewFormSchema = z.object({ comment: messageTextSchema });
+type ReviewFormValues = z.infer<typeof reviewFormSchema>;
 const STAR_COUNT = 5;
 
 function MetaItem({ label, value }: { label: string; value: string }) {
@@ -63,25 +71,35 @@ export default function WriteReviewModal({
   const tEstimate = useTranslations('Estimate');
   const formatDateLocale = useFormatDate();
   const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
+  const {
+    control,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { isValid: isCommentValid },
+  } = useForm<ReviewFormValues>({
+    resolver: zodResolver(reviewFormSchema),
+    mode: 'onTouched',
+    defaultValues: { comment: '' },
+  });
   const tagSize = useBreakpointValue('sm', 'sm', 'md');
   const buttonSize = useBreakpointValue('sm', 'sm', 'lg');
   const { showToast } = useToast();
   const createReviewMutation = useCreateReviewMutation();
   const createReviewDraftMutation = useCreateReviewDraftMutation();
-  const isValid = rating > 0 && comment.trim().length >= MIN_COMMENT_LENGTH;
+  const isValid = rating > 0 && isCommentValid;
   const isSubmitting = createReviewMutation.isPending;
   const isDrafting = createReviewDraftMutation.isPending;
   //리뷰초안 작성 언어를 위해 현재 언어를 가져온다.
   const locale = useLocale();
 
-  function handleSubmit() {
-    if (!isValid || !review || isSubmitting) return;
+  function onSubmit({ comment }: ReviewFormValues) {
+    if (rating <= 0 || !review || isSubmitting) return;
 
     createReviewMutation.mutate(
       {
         estimateId: review.id,
-        content: comment.trim(),
+        content: comment,
         rating,
       },
       {
@@ -110,7 +128,7 @@ export default function WriteReviewModal({
       },
       {
         onSuccess: (data) => {
-          setComment(data.content);
+          setValue('comment', data.content, { shouldValidate: true });
         },
         onError: () => {
           showToast(t('draftFailed'));
@@ -121,7 +139,7 @@ export default function WriteReviewModal({
 
   function handleClose() {
     setRating(0);
-    setComment('');
+    reset();
     onClose();
   }
 
@@ -138,7 +156,7 @@ export default function WriteReviewModal({
           size={buttonSize}
           disabled={!isValid || isSubmitting}
           isLoading={isSubmitting}
-          onClick={handleSubmit}
+          onClick={handleSubmit(onSubmit)}
         >
           {t('submit')}
         </Button>
@@ -312,13 +330,14 @@ export default function WriteReviewModal({
               </span>
             </div>
           </div>
-          <Textarea
+          <FormTextarea
+            control={control}
+            name="comment"
             id="write-review-comment"
             labelVariant="modal"
-            value={comment}
             disabled={isDrafting}
-            onChange={(event) => setComment(event.target.value)}
             placeholder={t('commentPlaceholder')}
+            minLength={MESSAGE_TEXT_MIN_LENGTH}
           />
         </div>
       </div>

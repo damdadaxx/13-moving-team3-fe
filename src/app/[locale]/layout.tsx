@@ -20,8 +20,8 @@ import { SITE_URL, getOpenGraph } from '@/lib/constants/site';
 
 import { cn } from '@/utils/cn';
 
-import AnalyticsConsentBanner from '@/components/features/common/AnalyticsConsentBanner';
 import ChatFloatingButton from '@/components/features/chat/ChatFloatingButton';
+import AnalyticsConsentBanner from '@/components/features/common/AnalyticsConsentBanner';
 import Header from '@/components/ui/Header/Header';
 import HeaderRevealWrapper from '@/components/ui/HeaderRevealWrapper';
 import PageHeader from '@/components/ui/PageHeader';

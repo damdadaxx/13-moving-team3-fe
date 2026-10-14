@@ -260,6 +260,7 @@
     "heroTitle": "搬家公司，您是怎么选的？",
     "heroDescLine1": "Moving 让您一眼比较多份报价",
     "heroDescLine2": "让选择搬家公司变得简单",
+    "findMover": "去找搬家师傅",
     "moveTypeLine1": "告别繁琐的筛选，",
     "moveTypeLine2": "从选择搬家类型开始",
     "moveTypeSmallDesc": "一居室、两居室，20坪以下",
@@ -275,7 +276,12 @@
     "requestCardTo": "首尔市江南区宣陵路428",
     "requestLine1": "申请您需要的搬家服务",
     "requestLine2": "即可收到报价",
-    "requestImageAlt": "搬家报价申请图片"
+    "requestImageAlt": "搬家报价申请图片",
+    "demoVideoLabel": "演示视频",
+    "demoVideoTitle": "演示视频",
+    "demoVideoWatch": "查看完整演示视频",
+    "demoVideoDismissToday": "今天不再显示",
+    "demoVideoClose": "关闭演示视频"
   },
   "MoverFind": {
     "title": "寻找搬家师傅",

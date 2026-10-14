@@ -148,9 +148,9 @@ export default function ChatFloatingButton() {
         // 모바일에서 패널이 전체화면(z-modal)으로 뜨므로, 패널을 품은 이 래퍼도
         // 같은 스태킹 컨텍스트 상 z-modal이어야 헤더(z-header) 위로 뜬다
         // 기본 위치는 맨 위로 버튼 자리. 그 버튼이 보이면 버튼 높이(48/56) + 간격 12만큼 올라간다
-        'fixed right-[16px] bottom-[24px] z-modal transition-transform duration-300 ease-out',
-        'tablet:right-[24px] tablet:bottom-[32px] tablet:z-dropdown',
-        'desktop:right-[40px] desktop:bottom-[40px]',
+        'fixed right-[16px] bottom-[calc(24px+var(--cookie-banner-lift,0px))] z-modal transition-transform duration-300 ease-out',
+        'tablet:right-[24px] tablet:bottom-[calc(32px+var(--cookie-banner-lift,0px))] tablet:z-dropdown',
+        'desktop:right-[40px] desktop:bottom-[calc(40px+var(--cookie-banner-lift,0px))]',
         showTopButton
           ? '-translate-y-[60px] desktop:-translate-y-[68px]'
           : 'translate-y-0',

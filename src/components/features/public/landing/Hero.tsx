@@ -3,7 +3,7 @@
 // 히어로 섹션 컴포넌트
 import { useState } from 'react';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import ImgCar from '@/assets/images/landing/img_car.svg';
@@ -23,6 +23,7 @@ import ScrollReveal from '@/components/ui/ScrollReveal';
 
 export default function Hero() {
   const t = useTranslations('Landing');
+  const isEnglish = useLocale() === 'en';
   const buttonSize = useBreakpointValue('sm', 'sm', 'lg');
   const heroImage = useBreakpointValue(
     ImgHeroBg,
@@ -72,7 +73,7 @@ export default function Hero() {
         {/* 히어로 콘텐츠 */}
         <div
           className={cn(
-            'absolute inset-0 z-30 flex flex-col items-center justify-center px-[24px] text-center mb-[16px]',
+            'absolute inset-0 z-30 flex flex-col items-center justify-center px-[24px] text-center my-[16px]',
             'tablet:mb-[20px]',
           )}
         >
@@ -90,19 +91,23 @@ export default function Hero() {
             <ScrollReveal delay={0.2}>
               <h1
                 className={cn(
-                  'mb-[8px] text-xl-bold text-gray-50',
-                  'tablet:text-3xl-bold',
+                  'mb-[8px] text-gray-50',
+                  isEnglish
+                    ? 'text-[19px] leading-[32px] font-bold tablet:text-[31px] tablet:leading-[42px]'
+                    : 'text-xl-bold tablet:text-3xl-bold',
                 )}
               >
                 {t('heroTitle')}
               </h1>
               <p
                 className={cn(
-                  'text-lg-regular text-gray-200',
-                  'tablet:text-2lg-regular',
+                  'text-gray-200',
+                  isEnglish
+                    ? 'text-[15px] leading-[26px] tablet:text-[17px]'
+                    : 'text-lg-regular tablet:text-2lg-regular',
                 )}
               >
-                {t('heroDescLine1')} <br /> {t('heroDescLine2')}
+                {t('heroDescLine1')} {t('heroDescLine2')}
               </p>
             </ScrollReveal>
             <ScrollReveal delay={0.25}>
@@ -111,7 +116,7 @@ export default function Hero() {
                 size={buttonSize}
                 href={'/mover'}
               >
-                기사님 찾으러 가기
+                {t('findMover')}
               </Button>
             </ScrollReveal>
           </div>

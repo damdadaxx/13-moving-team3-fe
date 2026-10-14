@@ -1,7 +1,7 @@
 'use client';
 
 // 분석 쿠키 동의 배너
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { useTranslations } from 'next-intl';
 
@@ -54,6 +54,29 @@ export default function AnalyticsConsentBanner({
   const tFooter = useTranslations('Footer');
   const { openModal } = useModal();
   const [consent, setConsent] = useState(initialConsent);
+  const bannerRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const banner = bannerRef.current;
+    if (!banner) return;
+
+    const updateLift = () => {
+      const height = banner.getBoundingClientRect().height;
+      // 배너 bottom이 버튼 bottom보다 8px 낮고, 버튼과 12px 간격을 두면 높이 + 4px만큼 올린다
+      document.documentElement.style.setProperty(
+        '--cookie-banner-lift',
+        `${height + 4}px`,
+      );
+    };
+
+    updateLift();
+    const observer = new ResizeObserver(updateLift);
+    observer.observe(banner);
+    return () => {
+      observer.disconnect();
+      document.documentElement.style.removeProperty('--cookie-banner-lift');
+    };
+  }, [consent]);
 
   useEffect(() => {
     if (consent !== 'granted') return;
@@ -70,6 +93,7 @@ export default function AnalyticsConsentBanner({
 
   return (
     <section
+      ref={bannerRef}
       aria-label={t('label')}
       className={cn(
         'fixed right-[16px] bottom-[16px] left-[16px] z-toast flex flex-col gap-[16px] rounded-[16px] border border-white/70 bg-gray-50/80 px-[20px] py-[16px] backdrop-blur-[7px]',

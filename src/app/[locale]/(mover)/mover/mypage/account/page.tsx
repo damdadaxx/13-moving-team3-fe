@@ -21,6 +21,8 @@ import {
 import { useAuth } from '@/hooks/features/auth/useAuth';
 import type { MoverAccountEditPlan } from '@/hooks/features/mover/moverAccountEditPlan';
 
+import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
+
 import MoverAccountForm from '@/components/features/mover/MoverMypage/MoverAccountForm';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 
@@ -34,13 +36,19 @@ export default function MoverInfoPage() {
   const updateMeMutation = useUpdateMeMutation();
   const updatePasswordMutation = useUpdatePasswordMutation();
 
+  /*
+  @ 기존 전화번호 초기 표시
+  - 소셜·로컬 계정 모두 입력 전부터 회원가입·최초 등록과 같은 하이픈 형식으로 보여준다.
+  - 전화번호가 없으면 빈 문자열을 유지하며, 계정별 필수 검증은 기존 폼 훅에서 처리한다.
+  - 화면 표시만 포맷하고, 변경 여부 비교와 API 전송은 기존 EditPlan을 유지한다.
+  */
   const defaultValues = useMemo<MoverAccountFormValues | undefined>(
     () =>
       user
         ? {
             name: user.name,
             email: user.email,
-            phoneNumber: user.phoneNumber ?? '',
+            phoneNumber: formatPhoneNumber(user.phoneNumber ?? ''),
             currentPassword: '',
             newPassword: '',
             newPasswordConfirm: '',

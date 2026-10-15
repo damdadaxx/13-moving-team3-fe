@@ -1,9 +1,10 @@
 // 채팅방 뷰
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 
 import { useRouter } from '@/i18n/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 
 import IcAlarmClose from '@/assets/icons/ic_alarm_close.svg';
@@ -13,6 +14,7 @@ import IcChevronLeft from '@/assets/icons/ic_chevron_left.svg';
 import { getEstimateDetailPath } from '@/lib/constants/routes';
 
 import { useAuth } from '@/hooks/features/auth/useAuth';
+import { refreshLatestChatMessages } from '@/hooks/features/chat/chatMessageCache';
 import { useReadChatMessagesMutation } from '@/hooks/features/chat/queries/mutations';
 import { useChatMessagesQuery } from '@/hooks/features/chat/queries/queries';
 import { useEstimateDetailQuery } from '@/hooks/features/estimate/queries/queries';
@@ -66,6 +68,11 @@ export default function ChatRoomView({
 }: ChatRoomViewProps) {
   const t = useTranslations('Chat');
   const scrollRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
+  // 이전 메시지를 앞에 붙이기 직전의 스크롤 상태. 붙인 뒤 보던 자리를 유지하는 데 쓴다
+  const prependRestoreRef = useRef<{ height: number; top: number } | null>(
+    null,
+  );
   const router = useRouter();
   const { user, role } = useAuth();
 
@@ -83,6 +90,32 @@ export default function ChatRoomView({
   // 오래된 메시지 하나가 같이 빠져서 messages.length가 그대로일 수 있다.
   // 그래서 길이 대신 "가장 최근 메시지가 바뀌었는지"로 새 메시지 도착을 판단한다
   const lastMessageId = messages.at(-1)?.messageId;
+  const firstMessageId = messages[0]?.messageId;
+  const { hasNextPage, isFetchingNextPage, fetchNextPage } = messagesQuery;
+
+  // 방에 들어올 때 최신 메시지를 한 번 따라잡는다 (캐시가 있는 방에서 놓친 메시지 반영)
+  useEffect(() => {
+    if (isAccessible) void refreshLatestChatMessages(queryClient, estimateId);
+  }, [estimateId, isAccessible, queryClient]);
+
+  // 맨 위로 올리면 이전 메시지를 더 불러온다
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (!el || el.scrollTop > 40 || !hasNextPage || isFetchingNextPage) return;
+
+    prependRestoreRef.current = { height: el.scrollHeight, top: el.scrollTop };
+    void fetchNextPage();
+  };
+
+  // 이전 메시지가 앞에 붙어도 보던 메시지 위치가 그대로 유지되게 스크롤을 보정한다
+  useLayoutEffect(() => {
+    const el = scrollRef.current;
+    const restore = prependRestoreRef.current;
+    if (!el || !restore) return;
+
+    prependRestoreRef.current = null;
+    el.scrollTop = el.scrollHeight - restore.height + restore.top;
+  }, [firstMessageId]);
 
   // 채팅방 읽음 처리
   const markRead = useReadChatMessagesMutation(estimateId);
@@ -226,10 +259,16 @@ export default function ChatRoomView({
 
       <div
         ref={scrollRef}
+        onScroll={handleScroll}
         className={cn(
           'flex min-h-0 flex-1 flex-col gap-[8px] overflow-y-auto py-[16px] scrollbar-gray-300',
         )}
       >
+        {isFetchingNextPage ? (
+          <p className={cn('text-center text-xs-medium text-gray-400')}>
+            {t('loadingOlder')}
+          </p>
+        ) : null}
         <div className={cn('flex justify-center px-[16px] pb-[8px]')}>
           <span
             className={cn(

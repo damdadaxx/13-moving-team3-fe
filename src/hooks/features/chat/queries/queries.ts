@@ -22,6 +22,9 @@ export function useChatRoomsQuery(enabled: boolean) {
 
 /** 채팅 메시지 목록 (커서 무한 스크롤)
  * - ACCEPTED·COMPLETED 상태에서만 enabled로 열어준다
+ * - 포커스·재연결·재마운트로 통째로 다시 받지 않는다. infinite query를 다시 받으면
+ *   첫 페이지가 최신 N개로 바뀌어 이전 메시지가 사라지거나 페이지 사이에 구멍이 생긴다.
+ *   새 메시지·읽음은 Realtime과 refreshLatestChatMessages가 캐시에 합친다
  */
 export function useChatMessagesQuery(estimateId: string, enabled: boolean) {
   return useInfiniteQuery({
@@ -31,6 +34,9 @@ export function useChatMessagesQuery(estimateId: string, enabled: boolean) {
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
     enabled,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
     meta: { name: '채팅 메시지 목록' },
   });
 }

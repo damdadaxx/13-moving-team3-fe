@@ -14,6 +14,10 @@
     "previous": "戻る",
     "next": "次へ",
     "showMore": "もっと見る",
+    "textLengthRule": "{min}文字以上",
+    "textLengthCount": "{count}文字",
+    "textLengthRuleRange": "最小{min}文字 · 最大{max}文字",
+    "textLengthCountMax": "{count}/{max}",
     "regionSelect": "地域を選択",
     "serviceTypeSelect": "利用サービスを選択",
     "profileImageSelect": "プロフィール画像を選択",
@@ -428,6 +432,7 @@
     "nicknameMax": "ニックネームは10文字以内で入力してください。",
     "shortIntroMin": "ひとこと紹介は8文字以上で入力してください。",
     "shortIntroMax": "ひとこと紹介は50文字以内で入力してください。",
+    "messageTextMin": "10文字以上で入力してください。",
     "descriptionMin": "詳細説明は10文字以上で入力してください。",
     "descriptionMax": "詳細説明は300文字以内で入力してください。",
     "selectAtLeastOne": "1つ以上選択してください。",
@@ -567,9 +572,7 @@
     "rejectedEmpty": "お断りした依頼はありません！",
     "nextPageFailed": "次のページを読み込めませんでした。",
     "rejectedOverlay": "お断りした依頼です",
-    "completedOverlay": "引越しが完了した見積もりです",
-    "notConfirmed": "確定した見積もりではありません。",
-    "goSent": "送信した見積もりを見る"
+    "completedOverlay": "引越しが完了した見積もりです"
   },
   "Calendar": {
     "datePlaceholder": "日付を選択",

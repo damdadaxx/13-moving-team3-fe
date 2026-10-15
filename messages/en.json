@@ -14,6 +14,10 @@
     "previous": "Back",
     "next": "Next",
     "showMore": "Show more",
+    "textLengthRule": "Min {min} characters",
+    "textLengthCount": "{count} characters",
+    "textLengthRuleRange": "Min {min} · Max {max} characters",
+    "textLengthCountMax": "{count}/{max}",
     "regionSelect": "Select region",
     "serviceTypeSelect": "Select services",
     "profileImageSelect": "Select profile image",
@@ -428,6 +432,7 @@
     "nicknameMax": "Nickname can be up to 10 characters.",
     "shortIntroMin": "Tagline must be at least 8 characters.",
     "shortIntroMax": "Tagline can be up to 50 characters.",
+    "messageTextMin": "Please enter at least 10 characters.",
     "descriptionMin": "Description must be at least 10 characters.",
     "descriptionMax": "Description can be up to 300 characters.",
     "selectAtLeastOne": "Please select at least one.",
@@ -567,9 +572,7 @@
     "rejectedEmpty": "No rejected requests yet!",
     "nextPageFailed": "Couldn't load the next page.",
     "rejectedOverlay": "Request rejected",
-    "completedOverlay": "Move completed",
-    "notConfirmed": "This isn't a confirmed estimate.",
-    "goSent": "View Sent Estimates"
+    "completedOverlay": "Move completed"
   },
   "Calendar": {
     "datePlaceholder": "Select a date",

@@ -14,6 +14,7 @@
     "previous": "Back",
     "next": "Next",
     "showMore": "Show more",
+    "showLess": "Show less",
     "textLengthRule": "Min {min} characters",
     "textLengthCount": "{count} characters",
     "textLengthRuleRange": "Min {min} · Max {max} characters",

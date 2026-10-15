@@ -75,6 +75,8 @@ async function getMoverIds(): Promise<string[]> {
       const data = await serverFetchClient<MoverListData>(url, {
         headers: proxySecret ? { 'X-Proxy-Secret': proxySecret } : undefined,
         signal: AbortSignal.timeout(8000),
+        // 위의 revalidate와 같게 1시간. 없으면 Next가 이 요청을 캐시하지 않는다
+        next: { revalidate: 3600 },
       });
 
       for (const mover of data.list) {

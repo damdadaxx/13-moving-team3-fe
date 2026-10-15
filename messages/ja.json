@@ -79,6 +79,7 @@
     "imagePreview": "写真を送信しました。",
     "back": "戻る",
     "roomEntered": "{name}さんとのチャットルームです。",
+    "loadingOlder": "以前のメッセージを読み込み中です",
     "readOnlyNotice": "完了した引っ越しのため、チャット履歴のみ閲覧できます。",
     "accessDenied": "このチャットにはアクセスできません。",
     "notFound": "見積もりが見つかりません。",

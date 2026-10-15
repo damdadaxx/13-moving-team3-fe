@@ -79,6 +79,7 @@
     "imagePreview": "Sent a photo.",
     "back": "Go back",
     "roomEntered": "This is your chat with {name}.",
+    "loadingOlder": "Loading earlier messages…",
     "readOnlyNotice": "This move is completed, so you can only view the chat history.",
     "accessDenied": "You can't access this chat.",
     "notFound": "Estimate not found.",

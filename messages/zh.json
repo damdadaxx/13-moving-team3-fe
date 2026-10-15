@@ -79,6 +79,7 @@
     "imagePreview": "发送了一张图片。",
     "back": "返回",
     "roomEntered": "这是您与{name}的聊天室。",
+    "loadingOlder": "正在加载更早的消息",
     "readOnlyNotice": "搬家已完成，只能查看聊天记录。",
     "accessDenied": "无法访问此聊天。",
     "notFound": "找不到该报价。",

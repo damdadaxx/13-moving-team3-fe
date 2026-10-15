@@ -79,6 +79,7 @@
     "imagePreview": "사진을 보냈습니다.",
     "back": "뒤로가기",
     "roomEntered": "{name}님과의 채팅방이에요.",
+    "loadingOlder": "이전 메시지를 불러오는 중이에요",
     "readOnlyNotice": "완료된 견적이라 채팅 기록만 볼 수 있어요.",
     "accessDenied": "채팅에 접근할 수 없어요.",
     "notFound": "견적을 찾을 수 없어요.",

@@ -67,6 +67,12 @@ export default function RejectRequestModal({
   const { showToast } = useToast();
   const updateEstimateStatusMutation = useUpdateEstimateStatusMutation();
 
+  // 모달은 마운트된 채 열고 닫히므로, 닫을 때(X·배경·ESC 포함) 입력값을 비운다
+  function handleClose() {
+    reset();
+    onClose();
+  }
+
   async function onSubmit({ rejectReason }: RejectFormValues) {
     if (!estimateId) {
       showToast(t('estimateLoadFailed'));
@@ -78,9 +84,8 @@ export default function RejectRequestModal({
         estimateId,
         input: { status: 'REJECTED', rejectReason },
       });
-      reset();
       onSuccess?.();
-      onClose();
+      handleClose();
     } catch (error) {
       const message =
         error instanceof HttpError ? error.message : t('rejectFailed');
@@ -91,7 +96,7 @@ export default function RejectRequestModal({
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       title={t('rejectTitle')}
       variant="sheet"
       buttons={

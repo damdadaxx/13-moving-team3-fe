@@ -89,6 +89,13 @@ export default function SendEstimateModal({
     setPrice(rawDigits ? formatPrice(Number(rawDigits)) : '');
   }
 
+  // 모달은 마운트된 채 열고 닫히므로, 닫을 때(X·배경·ESC 포함) 입력값을 비운다
+  function handleClose() {
+    setPrice('');
+    reset();
+    onClose();
+  }
+
   async function onSubmit({ comment }: EstimateFormValues) {
     if (price === '') return;
 
@@ -114,10 +121,8 @@ export default function SendEstimateModal({
           comment,
         });
       }
-      setPrice('');
-      reset();
       onSuccess?.();
-      onClose();
+      handleClose();
     } catch (error) {
       const message =
         error instanceof HttpError ? error.message : t('sendFailed');
@@ -128,7 +133,7 @@ export default function SendEstimateModal({
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       title={t('sendEstimate')}
       variant="sheet"
       buttons={

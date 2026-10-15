@@ -13,6 +13,7 @@
     "selectComplete": "선택완료",
     "previous": "이전",
     "next": "다음",
+    "showMore": "더보기",
     "textLengthRule": "최소 {min}자 이상",
     "textLengthCount": "{count}자",
     "textLengthRuleRange": "최소 {min}자 · 최대 {max}자",
@@ -499,6 +500,7 @@
   "EstimateTabs": {
     "customerPending": "대기 중인 견적",
     "customerReceived": "받았던 견적",
+    "customerRejected": "반려된 요청",
     "moverSent": "보낸 견적 조회",
     "moverRejected": "반려 요청"
   },
@@ -558,6 +560,11 @@
     "notPending": "대기중인 견적이 아니에요.",
     "goPending": "대기중인 견적 보기",
     "notReceived": "받았던 견적이 아니에요.",
+    "designatedWaiting": "기사님의 답변을 기다리고 있어요.",
+    "rejectedEmpty": "반려된 요청이 없어요!",
+    "rejectedBadge": "반려됨",
+    "rejectReason": "반려 사유",
+    "noRejectReason": "반려 사유가 없어요.",
     "goReceived": "받았던 견적 보기"
   },
   "MoverEstimates": {

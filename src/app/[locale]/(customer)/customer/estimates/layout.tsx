@@ -1,5 +1,5 @@
 // [메뉴] 내 견적 관리 메뉴
-// [레이아웃] 대기중인 견적 / 받았던 견적 탭 공통 레이아웃
+// [레이아웃] 대기중인 견적 / 받았던 견적 / 반려된 요청 탭 공통 레이아웃
 import { Suspense } from 'react';
 
 import { useTranslations } from 'next-intl';
@@ -24,6 +24,11 @@ export default function EstimateLayout({
       label: 'received',
       value: t('customerReceived'),
       href: ROUTES.customerEstimates,
+    },
+    {
+      label: 'rejected',
+      value: t('customerRejected'),
+      href: ROUTES.customerEstimatesRejected,
     },
   ];
 

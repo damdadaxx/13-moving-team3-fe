@@ -13,6 +13,7 @@
     "selectComplete": "Done",
     "previous": "Back",
     "next": "Next",
+    "showMore": "Show more",
     "textLengthRule": "Min {min} characters",
     "textLengthCount": "{count} characters",
     "textLengthRuleRange": "Min {min} · Max {max} characters",
@@ -499,6 +500,7 @@
   "EstimateTabs": {
     "customerPending": "Pending Estimates",
     "customerReceived": "Received Estimates",
+    "customerRejected": "Rejected Requests",
     "moverSent": "Sent Estimates",
     "moverRejected": "Rejected Requests"
   },
@@ -558,6 +560,11 @@
     "notPending": "This isn't a pending estimate.",
     "goPending": "View Pending Estimates",
     "notReceived": "This isn't a received estimate.",
+    "designatedWaiting": "Waiting for the mover to reply.",
+    "rejectedEmpty": "No rejected requests!",
+    "rejectedBadge": "Rejected",
+    "rejectReason": "Reason for rejection",
+    "noRejectReason": "No reason was given.",
     "goReceived": "View Received Estimates"
   },
   "MoverEstimates": {

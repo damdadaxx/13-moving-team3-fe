@@ -13,6 +13,7 @@
     "selectComplete": "完成",
     "previous": "上一步",
     "next": "下一步",
+    "showMore": "查看更多",
     "textLengthRule": "至少 {min} 字",
     "textLengthCount": "{count} 字",
     "textLengthRuleRange": "最少 {min} 字 · 最多 {max} 字",
@@ -499,6 +500,7 @@
   "EstimateTabs": {
     "customerPending": "待处理的报价",
     "customerReceived": "收到的报价",
+    "customerRejected": "被拒绝的请求",
     "moverSent": "已发送的报价",
     "moverRejected": "已拒绝的请求"
   },
@@ -558,6 +560,11 @@
     "notPending": "这不是待处理的报价。",
     "goPending": "查看待处理的报价",
     "notReceived": "这不是收到的报价。",
+    "designatedWaiting": "正在等待搬家师傅回复。",
+    "rejectedEmpty": "没有被拒绝的请求!",
+    "rejectedBadge": "已拒绝",
+    "rejectReason": "拒绝原因",
+    "noRejectReason": "没有拒绝原因。",
     "goReceived": "查看收到的报价"
   },
   "MoverEstimates": {

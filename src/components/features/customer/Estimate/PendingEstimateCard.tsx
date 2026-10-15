@@ -18,6 +18,7 @@ import { cn } from '@/utils/cn';
 
 import Button from '@/components/ui/Button/Button';
 import EstimateCard from '@/components/ui/EstimateCard';
+import ExpandableText from '@/components/ui/ExpandableText';
 import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
 
 import MoverSummary from './MoverSummary';
@@ -83,14 +84,14 @@ export default function PendingEstimateCard({
           </div>
 
           <div className="flex flex-col gap-[4px]">
-            <p
+            <ExpandableText
               className={cn(
                 'text-lg-semibold text-black-300',
                 'tablet:text-2lg-semibold',
               )}
             >
-              {estimate.comment}
-            </p>
+              {estimate.comment ?? ''}
+            </ExpandableText>
 
             <MoverSummary
               name={mover.nickname}

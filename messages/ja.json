@@ -13,6 +13,7 @@
     "selectComplete": "選択完了",
     "previous": "戻る",
     "next": "次へ",
+    "showMore": "もっと見る",
     "textLengthRule": "{min}文字以上",
     "textLengthCount": "{count}文字",
     "textLengthRuleRange": "最小{min}文字 · 最大{max}文字",
@@ -499,6 +500,7 @@
   "EstimateTabs": {
     "customerPending": "保留中の見積もり",
     "customerReceived": "受け取った見積もり",
+    "customerRejected": "却下されたリクエスト",
     "moverSent": "送信した見積もり",
     "moverRejected": "お断りした依頼"
   },
@@ -558,6 +560,11 @@
     "notPending": "保留中の見積もりではありません。",
     "goPending": "保留中の見積もりを見る",
     "notReceived": "受け取った見積もりではありません。",
+    "designatedWaiting": "引っ越し業者からの返信をお待ちください。",
+    "rejectedEmpty": "却下されたリクエストはありません!",
+    "rejectedBadge": "却下",
+    "rejectReason": "却下理由",
+    "noRejectReason": "却下理由はありません。",
     "goReceived": "受け取った見積もりを見る"
   },
   "MoverEstimates": {

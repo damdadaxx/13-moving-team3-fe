@@ -13,6 +13,8 @@ import * as Sentry from '@sentry/nextjs';
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
   environment: process.env.NODE_ENV,
+  // 로컬 개발(Fast Refresh 등)에서 난 에러가 팀 Sentry에 섞이지 않게 운영에서만 보낸다
+  enabled: process.env.NODE_ENV === 'production',
   // ponytail: 운영에서 모든 요청을 추적하면 할당량을 빨리 쓴다. 트래픽이 늘면 더 낮춘다
   tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
   // 세션 리플레이: 일반 세션 10%, 에러가 난 세션은 전부 (실제 등록은 SentryReplayLoader에서)

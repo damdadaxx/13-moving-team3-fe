@@ -359,6 +359,7 @@
   "DesignatedEstimate": {
     "request": "Request Designated Estimate",
     "requested": "Designated Request Sent",
+    "rejected": "Designated Request Rejected",
     "alreadyReceived": "Estimate Already Received",
     "success": "Your designated estimate request was sent.",
     "failed": "Failed to send the designated estimate request.",

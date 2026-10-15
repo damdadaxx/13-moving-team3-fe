@@ -359,6 +359,7 @@
   "DesignatedEstimate": {
     "request": "지정 견적 요청하기",
     "requested": "지정 견적 요청 완료",
+    "rejected": "반려된 지정 견적 요청",
     "alreadyReceived": "이미 견적을 받았어요",
     "success": "지정 견적 요청이 완료되었어요",
     "failed": "지정 견적 요청에 실패했어요.",

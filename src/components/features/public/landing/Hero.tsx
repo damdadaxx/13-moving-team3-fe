@@ -12,9 +12,11 @@ import ImgHeroBg from '@/assets/images/landing/img_hero_bg.webp';
 import ImgHeroBgDesktop from '@/assets/images/landing/img_hero_bg_desktop.webp';
 import ImgHeroBgTablet from '@/assets/images/landing/img_hero_bg_tablet.webp';
 
+import { ROUTES } from '@/lib/constants/routes';
 import { useIntroGate } from '@/lib/providers/IntroGateProvider';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
+import { useAuth } from '@/hooks/features/auth/useAuth';
 
 import { cn } from '@/utils/cn';
 
@@ -23,6 +25,8 @@ import ScrollReveal from '@/components/ui/ScrollReveal';
 
 export default function Hero() {
   const t = useTranslations('Landing');
+  const { role } = useAuth();
+  const isMover = role === 'mover';
   const isEnglish = useLocale() === 'en';
   const buttonSize = useBreakpointValue('sm', 'sm', 'lg');
   const heroImage = useBreakpointValue(
@@ -112,11 +116,11 @@ export default function Hero() {
             </ScrollReveal>
             <ScrollReveal delay={0.25}>
               <Button
-                className="w-[190px] mt-[24px]"
+                className="mt-[24px] w-[190px]"
                 size={buttonSize}
-                href={'/mover'}
+                href={isMover ? ROUTES.moverHome : ROUTES.moverList}
               >
-                {t('findMover')}
+                {t(isMover ? 'viewRequests' : 'findMover')}
               </Button>
             </ScrollReveal>
           </div>

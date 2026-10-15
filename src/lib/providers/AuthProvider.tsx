@@ -3,14 +3,21 @@
 
 'use client';
 
-import { createContext, useEffect, useMemo } from 'react';
+import { createContext, useEffect, useMemo, useRef } from 'react';
 
 import type { AuthUser, LoginInput, SignupInput } from '@/types/auth';
 import type { Role } from '@/types/role';
-
-import { writeStoredAuthUser } from '@/lib/storage/authUserStorage';
+import { useQueryClient } from '@tanstack/react-query';
 
 import {
+  useStoredAuthUser,
+  writeStoredAuthUser,
+} from '@/lib/storage/authUserStorage';
+import { setSupabaseAccessToken } from '@/lib/supabase/accessToken';
+
+import { authKeys } from '@/hooks/features/auth/queries/keys';
+import {
+  applyAuthSession,
   useLoginMutation,
   useLogoutMutation,
   useSignupMutation,
@@ -38,6 +45,9 @@ export default function AuthProvider({
   children: React.ReactNode;
 }) {
   const { data: user = null, isLoading } = useMeQuery();
+  const storedUser = useStoredAuthUser();
+  const queryClient = useQueryClient();
+  const sawStoredUserRef = useRef(false);
   const loginMutation = useLoginMutation();
   const signupMutation = useSignupMutation();
   const logoutMutation = useLogoutMutation();
@@ -54,6 +64,27 @@ export default function AuthProvider({
     if (isLoading) return;
     writeStoredAuthUser(user);
   }, [user, isLoading]);
+
+  /*
+  @ 다른 탭에서 로그아웃하면 이 탭도 로그아웃한다
+  - 로그아웃한 탭만 localStorage를 지운다. storage 이벤트는 다른 탭에서만 온다
+  - useMeQuery는 저장된 사용자를 initialData로만 쓰므로, 캐시에 사용자가 남아 헤더가 로그인으로 남는다
+  - 이 탭에서 한 번이라도 저장된 사용자를 본 뒤에 그 값이 사라지면 세션을 비운다
+  - 첫 렌더의 undefined(아직 저장소를 안 읽음)는 로그아웃이 아니다
+  */
+  useEffect(() => {
+    if (storedUser) {
+      sawStoredUserRef.current = true;
+      return;
+    }
+
+    if (!sawStoredUserRef.current) return;
+    sawStoredUserRef.current = false;
+
+    void queryClient.cancelQueries({ queryKey: authKeys.me() });
+    applyAuthSession(queryClient, null);
+    setSupabaseAccessToken(null);
+  }, [storedUser, queryClient]);
 
   const value = useMemo<AuthContextValue>(
     () => ({

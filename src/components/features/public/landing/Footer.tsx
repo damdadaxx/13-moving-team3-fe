@@ -11,10 +11,12 @@ import ImgAvatarBeaver from '@/assets/images/img_avatar_beaver.webp';
 import ImgSiteLogo from '@/assets/images/img_logo.svg';
 import ImgSiteLogoMobile from '@/assets/images/img_logo_m.svg';
 
+import { ROUTES } from '@/lib/constants/routes';
 import { getLocalizedSiteName } from '@/lib/constants/site';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useModal } from '@/hooks/common/useModal';
+import { useAuth } from '@/hooks/features/auth/useAuth';
 
 import { cn } from '@/utils/cn';
 
@@ -35,6 +37,8 @@ const SLIDE_UP = {
 export default function Footer() {
   const t = useTranslations('Footer');
   const tLanding = useTranslations('Landing');
+  const { role } = useAuth();
+  const isMover = role === 'mover';
   const locale = useLocale();
   const { openModal } = useModal();
   const buttonSize = useBreakpointValue('sm', 'sm', 'lg');
@@ -163,9 +167,9 @@ export default function Footer() {
             variant="outlined"
             color="white"
             size={buttonSize}
-            href={'/mover'}
+            href={isMover ? ROUTES.moverHome : ROUTES.moverList}
           >
-            {tLanding('findMover')}
+            {tLanding(isMover ? 'viewRequests' : 'findMover')}
           </Button>
         </motion.div>
       </div>

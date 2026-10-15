@@ -11,6 +11,7 @@ import type { MoverAccountEditPlan } from '@/hooks/features/mover/moverAccountEd
 import { useMoverAccountForm } from '@/hooks/features/mover/useMoverAccountForm';
 
 import { cn } from '@/utils/cn';
+import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
 
 import Button from '@/components/ui/Button/Button';
 import Input from '@/components/ui/Form/Input';
@@ -88,6 +89,7 @@ export default function MoverAccountForm({
   const areFieldsDisabled = isDisabled || isLoading;
   const isLocalAccount = provider === 'LOCAL';
   const isSubmitDisabled = isDisabled || !hasChanges || !isFormComplete;
+  const phoneNumberRegistration = register('phoneNumber');
 
   return (
     <main className="w-full bg-gray-50">
@@ -119,7 +121,9 @@ export default function MoverAccountForm({
             @ 이름·이메일·전화번호
             - 이름과 전화번호는 PATCH /auth/me에서 수정 가능한 값이다.
             - 이메일은 수정 API 계약이 없으므로 조회값을 읽기 전용으로 표시한다.
-            - 전화번호는 모바일 숫자 키보드를 제공하되 하이픈 입력도 허용한다.
+            - 소셜·로컬 계정 모두 회원가입·최초 등록과 같은 공용 함수로 전화번호 하이픈을 표시한다.
+            - 포맷한 값은 RHF에도 전달하고, API 전송과 변경 비교는 기존 EditPlan에서 하이픈을 제거한다.
+            - 표시 길이는 하이픈 포함 최대 13자이며, 계정별 전화번호 필수 조건은 유지한다.
             */}
             <section
               aria-label={t('sectionBasic')}
@@ -165,9 +169,14 @@ export default function MoverAccountForm({
                 autoComplete="tel"
                 size={responsiveInputSize}
                 required={isPhoneNumberRequired}
+                maxLength={13}
                 disabled={areFieldsDisabled}
                 error={errors.phoneNumber?.message}
-                {...register('phoneNumber')}
+                {...phoneNumberRegistration}
+                onChange={(event) => {
+                  event.target.value = formatPhoneNumber(event.target.value);
+                  return phoneNumberRegistration.onChange(event);
+                }}
               />
 
               {/* 작은 화면에서만 기본정보와 비밀번호 영역을 구분한다. */}

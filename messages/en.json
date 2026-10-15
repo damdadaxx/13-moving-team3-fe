@@ -88,6 +88,8 @@
     "send": "Send",
     "messageRead": "Read",
     "messageUnread": "Unread",
+    "showMore": "Show more",
+    "showLess": "Show less",
     "sendFailed": "Failed to send the message.",
     "imageUploadFailed": "Failed to upload the image.",
     "invalidImageType": "You can only attach image files.",

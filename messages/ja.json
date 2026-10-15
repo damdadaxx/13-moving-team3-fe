@@ -88,6 +88,8 @@
     "send": "送信",
     "messageRead": "既読",
     "messageUnread": "未読",
+    "showMore": "もっと見る",
+    "showLess": "閉じる",
     "sendFailed": "メッセージの送信に失敗しました。",
     "imageUploadFailed": "画像のアップロードに失敗しました。",
     "invalidImageType": "画像ファイルのみ添付できます。",

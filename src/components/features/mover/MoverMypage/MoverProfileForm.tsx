@@ -1,7 +1,7 @@
 'use client';
 
 import { useId, useState } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 
 import type { AuthProviderName } from '@/types/auth';
 import type { MoverProfileFormValues } from '@/types/moverProfile';
@@ -17,8 +17,9 @@ import { cn } from '@/utils/cn';
 import Button from '@/components/ui/Button/Button';
 import RegionChipGroup from '@/components/ui/Chip/RegionChipGroup';
 import ServiceTypeSelector from '@/components/ui/Chip/ServiceTypeSelector';
+import FormTextarea from '@/components/ui/Form/FormTextarea';
 import Input from '@/components/ui/Form/Input';
-import Textarea from '@/components/ui/Form/Textarea';
+import TextLengthHint from '@/components/ui/Form/TextLengthHint';
 import ProfileUpload from '@/components/ui/ProfileUpload';
 
 type MoverProfileFormMode = 'create' | 'edit';
@@ -106,6 +107,8 @@ export default function MoverProfileForm({
   const areFieldsDisabled = isDisabled || isLoading;
   const isSubmitDisabled =
     isDisabled || !isFormComplete || (isEditMode && !hasChanges);
+  const nicknameValue = useWatch({ control, name: 'nickname' }) ?? '';
+  const shortIntroValue = useWatch({ control, name: 'shortIntro' }) ?? '';
   const profileImageRegistration = register('profileImage');
   const careerYearsRegistration = register('careerYears');
   const careerRemainderMonthsRegistration = register('careerRemainderMonths');
@@ -235,18 +238,25 @@ export default function MoverProfileForm({
 
             <div aria-hidden="true" className="h-px w-full bg-line-100" />
 
-            <Input
-              id={`${formId}-nickname`}
-              label={t('nickname')}
-              labelVariant="profile"
-              size={controlSize}
-              required
-              maxLength={10}
-              placeholder={t('nicknamePlaceholder')}
-              disabled={areFieldsDisabled}
-              error={errors.nickname?.message}
-              {...register('nickname')}
-            />
+            <div className="flex flex-col gap-[4px]">
+              <Input
+                id={`${formId}-nickname`}
+                label={t('nickname')}
+                labelVariant="profile"
+                size={controlSize}
+                required
+                maxLength={10}
+                placeholder={t('nicknamePlaceholder')}
+                disabled={areFieldsDisabled}
+                error={errors.nickname?.message}
+                {...register('nickname')}
+              />
+              <TextLengthHint
+                length={nicknameValue.length}
+                minLength={2}
+                maxLength={10}
+              />
+            </div>
 
             <div aria-hidden="true" className="h-px w-full bg-line-100" />
 
@@ -328,18 +338,25 @@ export default function MoverProfileForm({
 
             <div aria-hidden="true" className="h-px w-full bg-line-100" />
 
-            <Input
-              id={`${formId}-short-intro`}
-              label={t('shortIntro')}
-              labelVariant="profile"
-              size={controlSize}
-              required
-              maxLength={50}
-              placeholder={t('shortIntroPlaceholder')}
-              disabled={areFieldsDisabled}
-              error={errors.shortIntro?.message}
-              {...register('shortIntro')}
-            />
+            <div className="flex flex-col gap-[4px]">
+              <Input
+                id={`${formId}-short-intro`}
+                label={t('shortIntro')}
+                labelVariant="profile"
+                size={controlSize}
+                required
+                maxLength={50}
+                placeholder={t('shortIntroPlaceholder')}
+                disabled={areFieldsDisabled}
+                error={errors.shortIntro?.message}
+                {...register('shortIntro')}
+              />
+              <TextLengthHint
+                length={shortIntroValue.length}
+                minLength={8}
+                maxLength={50}
+              />
+            </div>
           </div>
 
           <div className="flex min-w-0 flex-col gap-[20px] desktop:w-full desktop:max-w-[500px] desktop:justify-self-end desktop:gap-[32px]">
@@ -349,17 +366,18 @@ export default function MoverProfileForm({
               className="h-px w-full bg-line-100 desktop:hidden"
             />
 
-            <Textarea
+            <FormTextarea
+              control={control}
+              name="description"
               id={`${formId}-description`}
               label={t('description')}
               labelVariant="profile"
               required
+              minLength={10}
               maxLength={300}
               placeholder={t('descriptionPlaceholder')}
               disabled={areFieldsDisabled}
-              error={errors.description?.message}
               className="tablet:text-lg-regular tablet:leading-[26px] desktop:text-2lg-regular desktop:leading-[32px]"
-              {...register('description')}
             />
 
             <div aria-hidden="true" className="h-px w-full bg-line-100" />

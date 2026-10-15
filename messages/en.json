@@ -651,7 +651,10 @@
     "draftPending": "Writing a draft...",
     "draftFailed": "Failed to create a review draft.",
     "draftHintActivate": "Select a star rating to enable this button",
-    "draftHint": "The AI draft is written from your rating, move date, mover name, and the departure and arrival addresses"
+    "draftHint": "The AI draft is written from your rating, move date, and mover name",
+    "sortReviewDate": "By review date",
+    "sortMoveDate": "By move date",
+    "sortAria": "Sort reviews"
   },
   "CustomerProfile": {
     "createTitle": "Create Profile",

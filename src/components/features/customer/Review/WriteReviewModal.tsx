@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import type { PendingReview } from '@/types/review';
@@ -14,7 +14,7 @@ import IcDriverMark from '@/assets/icons/ic_driver.png';
 import IcInfo from '@/assets/icons/ic_info.svg';
 import IcStar from '@/assets/icons/ic_star.svg';
 
-import { HttpError } from '@/lib/api/errors';
+import { HttpError, isAbortError } from '@/lib/api/errors';
 import {
   MESSAGE_TEXT_MIN_LENGTH,
   messageTextSchema,
@@ -93,6 +93,21 @@ export default function WriteReviewModal({
   //리뷰초안 작성 언어를 위해 현재 언어를 가져온다.
   const locale = useLocale();
 
+  //리뷰 초안 생성 취소를 위한 AbortController 를 ref로 연결
+  const draftAbortRef = useRef<AbortController | null>(null);
+
+  //리뷰 초안 생성 취소
+  function abortDraft() {
+    draftAbortRef.current?.abort();
+    draftAbortRef.current = null;
+  }
+
+  useEffect(() => {
+    return () => {
+      draftAbortRef.current?.abort();
+    };
+  }, []);
+
   function onSubmit({ comment }: ReviewFormValues) {
     if (rating <= 0 || !review || isSubmitting) return;
 
@@ -120,17 +135,27 @@ export default function WriteReviewModal({
   function handleDraft() {
     if (rating <= 0 || !review || isDrafting) return;
 
+    //이전 요청이 있으면 끊는다.
+    abortDraft();
+    //새로운 요청을 위해 새로운 AbortController 생성
+    const controller = new AbortController();
+    //생성한 AbortController를 ref에 연결
+    draftAbortRef.current = controller;
+
     createReviewDraftMutation.mutate(
       {
         estimateId: review.id,
         rating,
         locale: locale,
+        signal: controller.signal,
       },
       {
         onSuccess: (data) => {
           setValue('comment', data.content, { shouldValidate: true });
         },
-        onError: () => {
+        onError: (error) => {
+          //모달을 닫아서 끊은건 에러가 아니다.
+          if (isAbortError(error)) return;
           showToast(t('draftFailed'));
         },
       },
@@ -138,6 +163,8 @@ export default function WriteReviewModal({
   }
 
   function handleClose() {
+    abortDraft();
+    createReviewDraftMutation.reset();
     setRating(0);
     reset();
     onClose();
@@ -156,7 +183,9 @@ export default function WriteReviewModal({
           size={buttonSize}
           disabled={!isValid || isSubmitting}
           isLoading={isSubmitting}
-          onClick={handleSubmit(onSubmit)}
+          onClick={() => {
+            handleSubmit(onSubmit)();
+          }}
         >
           {t('submit')}
         </Button>

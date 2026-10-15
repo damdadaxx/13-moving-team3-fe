@@ -651,7 +651,10 @@
     "draftPending": "下書きを作成しています",
     "draftFailed": "レビューの下書き作成に失敗しました。",
     "draftHintActivate": "評価を選ぶとボタンが有効になります",
-    "draftHint": "AIの下書きは評価、引越し日、担当者名、出発地と到着地をもとに作成されます"
+    "draftHint": "AIの下書きは評価、引越し日、担当者名をもとに作成されます",
+    "sortReviewDate": "投稿日順",
+    "sortMoveDate": "引越し日順",
+    "sortAria": "レビューの並び替え"
   },
   "CustomerProfile": {
     "createTitle": "プロフィール登録",

@@ -1,9 +1,13 @@
 'use client';
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { usePathname, useRouter } from '@/i18n/navigation';
-import { CompletedReview, MyReviewEstimateItem } from '@/types/review';
+import type {
+  CompletedReview,
+  MyReviewEstimateItem,
+  ReviewSort,
+} from '@/types/review';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
@@ -18,12 +22,14 @@ import {
   useCompletedReviewsQuery,
 } from '@/hooks/features/review/queries/queries';
 
+import { cn } from '@/utils/cn';
 import formatRegion from '@/utils/formatRegion';
 
 import CompletedReviewCard from '@/components/features/customer/Review/CompletedReviewCard';
 import Button from '@/components/ui/Button/Button';
 import Pagination from '@/components/ui/Pagination';
 import { Skeleton } from '@/components/ui/Skeleton';
+import Sort, { type SortOption } from '@/components/ui/Sort';
 
 function getPageFromSearch(searchParams: URLSearchParams) {
   const rawPage = Number(searchParams.get('page'));
@@ -77,10 +83,15 @@ export default function CompletedReviewList() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentPage = getPageFromSearch(searchParams);
+  const [sort, setSort] = useState<ReviewSort>('reviewDate');
   const buttonSize = useBreakpointValue('sm', 'lg', 'lg');
+  const sortOptions: SortOption<ReviewSort>[] = [
+    { value: 'reviewDate', label: t('sortReviewDate') },
+    { value: 'moveDate', label: t('sortMoveDate') },
+  ];
 
-  const { data, isPending, isError, error } =
-    useCompletedReviewsQuery(currentPage);
+  const { data, isPending, isFetching, isError, error } =
+    useCompletedReviewsQuery(currentPage, sort);
 
   const goToPage = useCallback(
     (nextPage: number) => {
@@ -95,6 +106,10 @@ export default function CompletedReviewList() {
     },
     [pathname, router, searchParams],
   );
+
+  function handleSortChange(next: ReviewSort) {
+    setSort(next);
+  }
 
   useEffect(() => {
     if (!data) return;
@@ -112,6 +127,9 @@ export default function CompletedReviewList() {
 
   return (
     <div className="flex min-w-0 flex-col gap-[20px]">
+      <div className="flex justify-end">
+        <Sort options={sortOptions} value={sort} onChange={handleSortChange} />
+      </div>
       {isPending && !data ? (
         <ul className="flex flex-col gap-[20px]">
           {Array.from({ length: COMPLETED_REVIEWS_PAGE_SIZE }, (_, index) => (
@@ -143,7 +161,13 @@ export default function CompletedReviewList() {
           </div>
         </div>
       ) : (
-        <ul className="flex min-w-0 flex-col gap-[20px]">
+        //데이터 로딩 중일 때 투명하게 처리한다.
+        <ul
+          className={cn(
+            'flex min-w-0 flex-col gap-[20px]',
+            isFetching && 'opacity-60',
+          )}
+        >
           {reviews.map((review) => (
             <li key={review.id} className="min-w-0">
               <CompletedReviewCard review={review} />

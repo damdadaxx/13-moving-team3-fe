@@ -1,5 +1,5 @@
 import { ENDPOINTS } from '@/lib/api/endpoints';
-import { HttpError } from '@/lib/api/errors';
+import { HttpError, isAbortError } from '@/lib/api/errors';
 import {
   getApiErrorCode,
   parseApiError,
@@ -105,7 +105,12 @@ export default async function clientFetch<T = unknown>(
       credentials: 'same-origin',
       headers,
     });
-  } catch {
+  } catch (error) {
+    /* abort는 http 에러가 아니다.*/
+    if (isAbortError(error) || init.signal?.aborted) {
+      throw error;
+    }
+
     throw new HttpError(
       '서버와 연결할 수 없습니다. 잠시 후 다시 시도해주세요.',
       'NETWORK_ERROR',

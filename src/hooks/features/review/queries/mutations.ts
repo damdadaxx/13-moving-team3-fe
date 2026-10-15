@@ -1,3 +1,4 @@
+import { CreateReviewDraftVariables } from '@/types/review';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { createReview, createReviewDraft } from '@/lib/api/review';
@@ -24,6 +25,7 @@ export function useCreateReviewMutation() {
 */
 export function useCreateReviewDraftMutation() {
   return useMutation({
-    mutationFn: createReviewDraft,
+    mutationFn: ({ signal, ...input }: CreateReviewDraftVariables) =>
+      createReviewDraft(input, signal),
   });
 }

@@ -2,6 +2,7 @@
 // 고객이 지정 견적을 요청했지만 기사님이 아직 금액을 보내지 않은 카드 (확정 버튼 없음)
 'use client';
 
+import { Link } from '@/i18n/navigation';
 import type { Estimate } from '@/types/estimate';
 import type { ServiceType } from '@/types/serviceType';
 import { useTranslations } from 'next-intl';
@@ -48,15 +49,18 @@ export default function DesignatedEstimateCard({
         </span>
       </div>
 
-      <MoverSummary
-        name={mover.nickname}
-        imgUrl={mover.imgUrl}
-        likeCount={mover.likeCount}
-        averageRating={mover.averageRating}
-        reviewCount={mover.reviewCount}
-        careerMonths={mover.careerMonths}
-        confirmedCount={mover.confirmedEstimateCount}
-      />
+      {/* 기사님 정보를 누르면 기사님 프로필(상세)로 이동한다 */}
+      <Link href={`/mover/${mover.userId}`} className="block">
+        <MoverSummary
+          name={mover.nickname}
+          imgUrl={mover.imgUrl}
+          likeCount={mover.likeCount}
+          averageRating={mover.averageRating}
+          reviewCount={mover.reviewCount}
+          careerMonths={mover.careerMonths}
+          confirmedCount={mover.confirmedEstimateCount}
+        />
+      </Link>
 
       <p className="text-md-regular text-gray-400 tablet:text-lg-regular">
         {t('designatedWaiting')}

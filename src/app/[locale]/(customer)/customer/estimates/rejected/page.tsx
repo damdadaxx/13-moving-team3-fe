@@ -15,14 +15,44 @@ import { cn } from '@/utils/cn';
 import RejectedEstimateCard from '@/components/features/customer/Estimate/RejectedEstimateCard';
 import EmptyListNotice from '@/components/ui/EmptyListNotice';
 import EmptyState from '@/components/ui/EmptyState';
-import LoadingDisplay from '@/components/ui/LoadingDisplay';
+import { Skeleton } from '@/components/ui/Skeleton';
+
+/*
+@ 첫 조회 중 자리표시
+- RejectedEstimateCard 목록과 같은 틀(2열 그리드)로 그려 데이터가 와도 레이아웃이 튀지 않는다
+*/
+function EstimateRejectedSkeleton() {
+  return (
+    <div
+      aria-busy="true"
+      className={cn(
+        'min-h-[calc(100dvh-108px)] bg-background-100',
+        'px-[24px] pt-[35px] pb-[64px]',
+        'tablet:px-[72px] tablet:pt-[42px] tablet:pb-[96px]',
+        'desktop:min-h-[calc(100dvh-168px)] desktop:pt-[78px] desktop:pb-[120px]',
+      )}
+    >
+      <div
+        className={cn(
+          'mx-auto grid w-full max-w-[1140px] gap-[20px]',
+          'tablet:gap-[32px]',
+          'desktop:grid-cols-2 desktop:gap-[24px]',
+        )}
+      >
+        {Array.from({ length: 2 }, (_, index) => (
+          <Skeleton key={index} height={200} borderRadius={20} />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function EstimateRejectedPage() {
   const t = useTranslations('CustomerEstimates');
   const tError = useTranslations('Error');
   const activeQuery = useActiveEstimateRequestQuery();
 
-  if (activeQuery.isPending) return <LoadingDisplay />;
+  if (activeQuery.isPending) return <EstimateRejectedSkeleton />;
 
   if (activeQuery.isError) {
     return (

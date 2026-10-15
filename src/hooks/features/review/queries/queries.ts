@@ -8,6 +8,9 @@ export const MOVER_REVIEW_PAGE_SIZE = 5;
 export const PENDING_REVIEWS_PAGE_SIZE = 4;
 export const COMPLETED_REVIEWS_PAGE_SIZE = 3;
 
+/** 공개 리뷰 목록. 리뷰 작성 mutation이 이 캐시를 비운다 */
+const MOVER_REVIEW_STALE_TIME = 5 * 60 * 1000;
+
 /** @ 기사님 리뷰 목록 쿼리 */
 export function useMoverReviewsQuery(moverId: string, page: number) {
   return useQuery({
@@ -21,6 +24,7 @@ export function useMoverReviewsQuery(moverId: string, page: number) {
         pageSize: MOVER_REVIEW_PAGE_SIZE,
       }),
     enabled: Boolean(moverId),
+    staleTime: MOVER_REVIEW_STALE_TIME,
     /** 이전 데이터를 반환하여 데이터가 없을 때 이전 데이터를 표시 */
     placeholderData: (previousData, previousQuery) => {
       const previousMoverId = previousQuery?.queryKey[2];

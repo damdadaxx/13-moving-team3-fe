@@ -1,7 +1,7 @@
 'use client';
 
 import { useId, useState } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 
 import type { AuthProviderName } from '@/types/auth';
 import type { MoverProfileFormValues } from '@/types/moverProfile';
@@ -13,12 +13,14 @@ import type { MoverProfileEditPlan } from '@/hooks/features/mover/moverProfileEd
 import { useMoverProfileForm } from '@/hooks/features/mover/useMoverProfileForm';
 
 import { cn } from '@/utils/cn';
+import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
 
 import Button from '@/components/ui/Button/Button';
 import RegionChipGroup from '@/components/ui/Chip/RegionChipGroup';
 import ServiceTypeSelector from '@/components/ui/Chip/ServiceTypeSelector';
+import FormTextarea from '@/components/ui/Form/FormTextarea';
 import Input from '@/components/ui/Form/Input';
-import Textarea from '@/components/ui/Form/Textarea';
+import TextLengthHint from '@/components/ui/Form/TextLengthHint';
 import ProfileUpload from '@/components/ui/ProfileUpload';
 
 type MoverProfileFormMode = 'create' | 'edit';
@@ -92,6 +94,7 @@ export default function MoverProfileForm({
     submitError,
     setNormalizedCareerYears,
     setNormalizedCareerRemainderMonths,
+    restoreEmptyCareerRemainderMonths,
     handleFormSubmit,
   } = useMoverProfileForm({
     mode,
@@ -106,6 +109,9 @@ export default function MoverProfileForm({
   const areFieldsDisabled = isDisabled || isLoading;
   const isSubmitDisabled =
     isDisabled || !isFormComplete || (isEditMode && !hasChanges);
+  const nicknameValue = useWatch({ control, name: 'nickname' }) ?? '';
+  const shortIntroValue = useWatch({ control, name: 'shortIntro' }) ?? '';
+  const phoneNumberRegistration = register('phoneNumber');
   const profileImageRegistration = register('profileImage');
   const careerYearsRegistration = register('careerYears');
   const careerRemainderMonthsRegistration = register('careerRemainderMonths');
@@ -153,6 +159,13 @@ export default function MoverProfileForm({
           <div className="flex min-w-0 flex-col gap-[20px] desktop:w-full desktop:max-w-[500px] desktop:gap-[32px]">
             {!isEditMode && isPhoneNumberRequired && (
               <>
+                {/*
+                @ 소셜 계정 전화번호 입력
+                - 회원가입과 같은 공용 함수로 입력 중 하이픈을 표시한다.
+                - 포맷한 값을 RHF에도 전달해 화면 표시와 검증 값이 일치하도록 한다.
+                - 표시 길이는 하이픈 포함 최대 13자이며, 숫자는 공용 함수에서 11자리로 제한한다.
+                - API 전송 전 하이픈 제거는 기존 등록 계획 함수에서 처리한다.
+                */}
                 <Input
                   id={`${formId}-phone-number`}
                   label={tField('phoneNumber')}
@@ -162,10 +175,15 @@ export default function MoverProfileForm({
                   autoComplete="tel"
                   size={controlSize}
                   required
+                  maxLength={13}
                   placeholder={t('phoneNumberPlaceholder')}
                   disabled={areFieldsDisabled}
                   error={errors.phoneNumber?.message}
-                  {...register('phoneNumber')}
+                  {...phoneNumberRegistration}
+                  onChange={(event) => {
+                    event.target.value = formatPhoneNumber(event.target.value);
+                    return phoneNumberRegistration.onChange(event);
+                  }}
                 />
 
                 <div aria-hidden="true" className="h-px w-full bg-line-100" />
@@ -235,18 +253,25 @@ export default function MoverProfileForm({
 
             <div aria-hidden="true" className="h-px w-full bg-line-100" />
 
-            <Input
-              id={`${formId}-nickname`}
-              label={t('nickname')}
-              labelVariant="profile"
-              size={controlSize}
-              required
-              maxLength={10}
-              placeholder={t('nicknamePlaceholder')}
-              disabled={areFieldsDisabled}
-              error={errors.nickname?.message}
-              {...register('nickname')}
-            />
+            <div className="flex flex-col gap-[4px]">
+              <Input
+                id={`${formId}-nickname`}
+                label={t('nickname')}
+                labelVariant="profile"
+                size={controlSize}
+                required
+                maxLength={10}
+                placeholder={t('nicknamePlaceholder')}
+                disabled={areFieldsDisabled}
+                error={errors.nickname?.message}
+                {...register('nickname')}
+              />
+              <TextLengthHint
+                length={nicknameValue.length}
+                minLength={2}
+                maxLength={10}
+              />
+            </div>
 
             <div aria-hidden="true" className="h-px w-full bg-line-100" />
 
@@ -256,8 +281,10 @@ export default function MoverProfileForm({
             - type=number는 e, 음수, 소수 입력과 브라우저 증감 버튼 문제가 있어
               text + inputMode=numeric으로 숫자 키보드를 제공한다.
             - 입력 변경 시 숫자가 아닌 문자를 제거하고 앞자리 0을 정리한다.
-            - 개월이 12 이상이면 12개월마다 1년으로 환산해 기존 연수에 더하고,
-              12개월 미만만 입력했는데 연수가 비어 있으면 연수에 0을 채운다.
+            - 최초 등록은 년을 직접 입력해야 하며, 개월은 실제 기본값 0으로 시작한다.
+            - 개월을 지우는 동안에는 빈 값을 유지하고, 최초 등록에서 blur 시 0으로 복원한다.
+            - 년이 입력되면 12개월마다 1년으로 환산한다. 개월을 먼저 입력해도 년은 자동으로 채우지 않는다.
+            - 수정 화면은 서버에서 받은 년/개월과 기존 입력 환산 동작을 유지한다.
             - Zod는 직접 입력뿐 아니라 서버 기본값 등 모든 제출값을 마지막으로 검증한다.
             - 3년 6개월은 careerYears="3", careerRemainderMonths="6"으로 관리한다.
             */}
@@ -280,6 +307,7 @@ export default function MoverProfileForm({
                       pattern="[0-9]*"
                       placeholder="0"
                       aria-label={t('careerYearsAria')}
+                      required
                       disabled={areFieldsDisabled}
                       error={errors.careerYears?.message}
                       {...careerYearsRegistration}
@@ -314,6 +342,10 @@ export default function MoverProfileForm({
                           event.currentTarget.value,
                         );
                       }}
+                      onBlur={(event) => {
+                        restoreEmptyCareerRemainderMonths();
+                        return careerRemainderMonthsRegistration.onBlur(event);
+                      }}
                     />
                   </div>
                   <span
@@ -328,18 +360,25 @@ export default function MoverProfileForm({
 
             <div aria-hidden="true" className="h-px w-full bg-line-100" />
 
-            <Input
-              id={`${formId}-short-intro`}
-              label={t('shortIntro')}
-              labelVariant="profile"
-              size={controlSize}
-              required
-              maxLength={50}
-              placeholder={t('shortIntroPlaceholder')}
-              disabled={areFieldsDisabled}
-              error={errors.shortIntro?.message}
-              {...register('shortIntro')}
-            />
+            <div className="flex flex-col gap-[4px]">
+              <Input
+                id={`${formId}-short-intro`}
+                label={t('shortIntro')}
+                labelVariant="profile"
+                size={controlSize}
+                required
+                maxLength={50}
+                placeholder={t('shortIntroPlaceholder')}
+                disabled={areFieldsDisabled}
+                error={errors.shortIntro?.message}
+                {...register('shortIntro')}
+              />
+              <TextLengthHint
+                length={shortIntroValue.length}
+                minLength={8}
+                maxLength={50}
+              />
+            </div>
           </div>
 
           <div className="flex min-w-0 flex-col gap-[20px] desktop:w-full desktop:max-w-[500px] desktop:justify-self-end desktop:gap-[32px]">
@@ -349,17 +388,18 @@ export default function MoverProfileForm({
               className="h-px w-full bg-line-100 desktop:hidden"
             />
 
-            <Textarea
+            <FormTextarea
+              control={control}
+              name="description"
               id={`${formId}-description`}
               label={t('description')}
               labelVariant="profile"
               required
+              minLength={10}
               maxLength={300}
               placeholder={t('descriptionPlaceholder')}
               disabled={areFieldsDisabled}
-              error={errors.description?.message}
               className="tablet:text-lg-regular tablet:leading-[26px] desktop:text-2lg-regular desktop:leading-[32px]"
-              {...register('description')}
             />
 
             <div aria-hidden="true" className="h-px w-full bg-line-100" />

@@ -12,6 +12,8 @@ export default function SentryReplayLoader() {
 
     const load = async () => {
       const Sentry = await import('@sentry/nextjs');
+      // Strict Mode·재마운트로 effect가 두 번 돌아도 Replay는 한 번만 등록한다
+      if (Sentry.getClient()?.getIntegrationByName('Replay')) return;
       const replayIntegration =
         await Sentry.lazyLoadIntegration('replayIntegration');
       Sentry.addIntegration(replayIntegration());

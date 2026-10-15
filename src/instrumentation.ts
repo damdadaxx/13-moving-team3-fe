@@ -14,6 +14,7 @@ export function register() {
     Sentry.init({
       dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
       environment: process.env.NODE_ENV,
+      enabled: process.env.NODE_ENV === 'production',
       // ponytail: 운영에서 모든 요청을 추적하면 할당량을 빨리 쓴다. 트래픽이 늘면 더 낮춘다
       tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
     });

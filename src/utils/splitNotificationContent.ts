@@ -18,6 +18,9 @@ export default function splitNotificationContent(
   const patterns = [
     new RegExp(`^(.*기사님의 )((?:${SERVICE_LABELS}) 견적)(이 도착했어요\\.)$`),
     new RegExp(
+      `^(.*기사님이 )((?:${SERVICE_LABELS}) 지정 견적 요청)(을 반려했어요\\.)$`,
+    ),
+    new RegExp(
       `^(.*님의 )((?:${SERVICE_LABELS}) 견적 요청)(이 도착했어요\\.)$`,
     ),
     /^(.*견적이 )(확정)(되었어요\.)$/,

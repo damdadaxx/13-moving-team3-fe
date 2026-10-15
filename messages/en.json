@@ -13,6 +13,11 @@
     "selectComplete": "Done",
     "previous": "Back",
     "next": "Next",
+    "showMore": "Show more",
+    "textLengthRule": "Min {min} characters",
+    "textLengthCount": "{count} characters",
+    "textLengthRuleRange": "Min {min} · Max {max} characters",
+    "textLengthCountMax": "{count}/{max}",
     "regionSelect": "Select region",
     "serviceTypeSelect": "Select services",
     "profileImageSelect": "Select profile image",
@@ -354,10 +359,11 @@
   "DesignatedEstimate": {
     "request": "Request Designated Estimate",
     "requested": "Designated Request Sent",
+    "rejected": "Designated Request Rejected",
     "alreadyReceived": "Estimate Already Received",
     "success": "Your designated estimate request was sent.",
     "failed": "Failed to send the designated estimate request.",
-    "confirmMessage": "Do you want to cancel the designated estimate request? A canceled request cannot be restored.",
+    "confirmMessage": "Do you want to request a designated estimate? A requested designated estimate cannot be withdrawn.",
     "needRequestMessage": "Please submit a general estimate request first.",
     "goGeneralRequest": "Request a General Estimate",
     "alreadyConfirmed": "You already have a confirmed moving estimate.",
@@ -427,6 +433,7 @@
     "nicknameMax": "Nickname can be up to 10 characters.",
     "shortIntroMin": "Tagline must be at least 8 characters.",
     "shortIntroMax": "Tagline can be up to 50 characters.",
+    "messageTextMin": "Please enter at least 10 characters.",
     "descriptionMin": "Description must be at least 10 characters.",
     "descriptionMax": "Description can be up to 300 characters.",
     "selectAtLeastOne": "Please select at least one.",
@@ -494,6 +501,7 @@
   "EstimateTabs": {
     "customerPending": "Pending Estimates",
     "customerReceived": "Received Estimates",
+    "customerRejected": "Rejected Requests",
     "moverSent": "Sent Estimates",
     "moverRejected": "Rejected Requests"
   },
@@ -553,6 +561,11 @@
     "notPending": "This isn't a pending estimate.",
     "goPending": "View Pending Estimates",
     "notReceived": "This isn't a received estimate.",
+    "designatedWaiting": "Waiting for the mover to reply.",
+    "rejectedEmpty": "No rejected requests!",
+    "rejectedBadge": "Rejected",
+    "rejectReason": "Reason for rejection",
+    "noRejectReason": "No reason was given.",
     "goReceived": "View Received Estimates"
   },
   "MoverEstimates": {
@@ -560,9 +573,7 @@
     "rejectedEmpty": "No rejected requests yet!",
     "nextPageFailed": "Couldn't load the next page.",
     "rejectedOverlay": "Request rejected",
-    "completedOverlay": "Move completed",
-    "notConfirmed": "This isn't a confirmed estimate.",
-    "goSent": "View Sent Estimates"
+    "completedOverlay": "Move completed"
   },
   "Calendar": {
     "datePlaceholder": "Select a date",

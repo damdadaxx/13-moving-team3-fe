@@ -13,6 +13,11 @@
     "selectComplete": "선택완료",
     "previous": "이전",
     "next": "다음",
+    "showMore": "더보기",
+    "textLengthRule": "최소 {min}자 이상",
+    "textLengthCount": "{count}자",
+    "textLengthRuleRange": "최소 {min}자 · 최대 {max}자",
+    "textLengthCountMax": "{count}/{max}",
     "regionSelect": "지역 선택",
     "serviceTypeSelect": "이용 서비스 선택",
     "profileImageSelect": "프로필 이미지 선택",
@@ -354,10 +359,11 @@
   "DesignatedEstimate": {
     "request": "지정 견적 요청하기",
     "requested": "지정 견적 요청 완료",
+    "rejected": "반려된 지정 견적 요청",
     "alreadyReceived": "이미 견적을 받았어요",
     "success": "지정 견적 요청이 완료되었어요",
     "failed": "지정 견적 요청에 실패했어요.",
-    "confirmMessage": "지정 견적 요청을 취소하시겠습니까? 취소한 요청은 다시 복구할 수 없습니다.",
+    "confirmMessage": "지정 견적 요청을 하시겠습니까? 요청한 지정 견적은 철회할 수 없습니다.",
     "needRequestMessage": "일반 견적 요청을 먼저 진행해 주세요.",
     "goGeneralRequest": "일반 견적 요청 하기",
     "alreadyConfirmed": "이미 확정된 이사 견적이 있어요.",
@@ -427,6 +433,7 @@
     "nicknameMax": "별명은 최대 10자까지 입력할 수 있습니다.",
     "shortIntroMin": "한 줄 소개는 8자 이상 입력해주세요.",
     "shortIntroMax": "한 줄 소개는 최대 50자까지 입력할 수 있습니다.",
+    "messageTextMin": "10자 이상 입력해주세요.",
     "descriptionMin": "상세 설명은 10자 이상 입력해주세요.",
     "descriptionMax": "상세 설명은 최대 300자까지 입력할 수 있습니다.",
     "selectAtLeastOne": "1개 이상 선택해주세요.",
@@ -494,6 +501,7 @@
   "EstimateTabs": {
     "customerPending": "대기 중인 견적",
     "customerReceived": "받았던 견적",
+    "customerRejected": "반려된 요청",
     "moverSent": "보낸 견적 조회",
     "moverRejected": "반려 요청"
   },
@@ -553,6 +561,11 @@
     "notPending": "대기중인 견적이 아니에요.",
     "goPending": "대기중인 견적 보기",
     "notReceived": "받았던 견적이 아니에요.",
+    "designatedWaiting": "기사님의 답변을 기다리고 있어요.",
+    "rejectedEmpty": "반려된 요청이 없어요!",
+    "rejectedBadge": "반려됨",
+    "rejectReason": "반려 사유",
+    "noRejectReason": "반려 사유가 없어요.",
     "goReceived": "받았던 견적 보기"
   },
   "MoverEstimates": {
@@ -560,9 +573,7 @@
     "rejectedEmpty": "반려한 요청이 없어요!",
     "nextPageFailed": "다음 페이지를 불러오지 못했어요.",
     "rejectedOverlay": "반려된 요청이에요",
-    "completedOverlay": "이사 완료된 견적이에요",
-    "notConfirmed": "확정된 견적이 아니에요.",
-    "goSent": "보낸 견적 보기"
+    "completedOverlay": "이사 완료된 견적이에요"
   },
   "Calendar": {
     "datePlaceholder": "날짜 선택하기",

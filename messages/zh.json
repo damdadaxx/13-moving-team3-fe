@@ -13,6 +13,11 @@
     "selectComplete": "完成",
     "previous": "上一步",
     "next": "下一步",
+    "showMore": "查看更多",
+    "textLengthRule": "至少 {min} 字",
+    "textLengthCount": "{count} 字",
+    "textLengthRuleRange": "最少 {min} 字 · 最多 {max} 字",
+    "textLengthCountMax": "{count}/{max}",
     "regionSelect": "选择地区",
     "serviceTypeSelect": "选择服务",
     "profileImageSelect": "选择头像",
@@ -354,10 +359,11 @@
   "DesignatedEstimate": {
     "request": "发送指定报价请求",
     "requested": "已发送指定请求",
+    "rejected": "指定报价请求已被拒绝",
     "alreadyReceived": "已收到报价",
     "success": "指定报价请求已发送。",
     "failed": "指定报价请求发送失败。",
-    "confirmMessage": "要取消指定报价请求吗？取消后的请求无法恢复。",
+    "confirmMessage": "要发送指定报价请求吗？已发送的指定报价无法撤回。",
     "needRequestMessage": "请先提交普通报价请求。",
     "goGeneralRequest": "提交普通报价请求",
     "alreadyConfirmed": "您已有确认的搬家报价。",
@@ -427,6 +433,7 @@
     "nicknameMax": "昵称最多 10 个字。",
     "shortIntroMin": "一句话介绍至少需要 8 个字。",
     "shortIntroMax": "一句话介绍最多 50 个字。",
+    "messageTextMin": "请至少输入 10 个字。",
     "descriptionMin": "详细说明至少需要 10 个字。",
     "descriptionMax": "详细说明最多 300 个字。",
     "selectAtLeastOne": "请至少选择一项。",
@@ -494,6 +501,7 @@
   "EstimateTabs": {
     "customerPending": "待处理的报价",
     "customerReceived": "收到的报价",
+    "customerRejected": "被拒绝的请求",
     "moverSent": "已发送的报价",
     "moverRejected": "已拒绝的请求"
   },
@@ -553,6 +561,11 @@
     "notPending": "这不是待处理的报价。",
     "goPending": "查看待处理的报价",
     "notReceived": "这不是收到的报价。",
+    "designatedWaiting": "正在等待搬家师傅回复。",
+    "rejectedEmpty": "没有被拒绝的请求!",
+    "rejectedBadge": "已拒绝",
+    "rejectReason": "拒绝原因",
+    "noRejectReason": "没有拒绝原因。",
     "goReceived": "查看收到的报价"
   },
   "MoverEstimates": {
@@ -560,9 +573,7 @@
     "rejectedEmpty": "还没有拒绝的请求！",
     "nextPageFailed": "无法加载下一页。",
     "rejectedOverlay": "已拒绝的请求",
-    "completedOverlay": "搬家已完成的报价",
-    "notConfirmed": "这不是已确认的报价。",
-    "goSent": "查看已发送的报价"
+    "completedOverlay": "搬家已完成的报价"
   },
   "Calendar": {
     "datePlaceholder": "选择日期",

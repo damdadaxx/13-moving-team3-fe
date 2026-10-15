@@ -21,6 +21,8 @@ import { moverProfileKeys } from '@/hooks/features/mover/queries/keys';
 import { useCreateMoverProfileMutation } from '@/hooks/features/mover/queries/mutations';
 import { useMoverProfileQuery } from '@/hooks/features/mover/queries/queries';
 
+import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
+
 import MoverProfileForm from '@/components/features/mover/MoverMypage/MoverProfileForm';
 import MoverProfileSkeleton from '@/components/features/mover/MoverMypage/MoverProfileSkeleton';
 
@@ -36,11 +38,17 @@ export default function MoverProfileNewPage() {
   // Guard와 같은 Query key를 구독하므로 요청은 공유된다. 등록 여부 확인 전에는 빈 폼을 노출하지 않는다.
   const { isPending: isProfilePending } = useMoverProfileQuery();
 
+  /*
+  @ 소셜 전화번호 초기 표시
+  - 기존 전화번호가 있으면 입력 전부터 회원가입과 같은 하이픈 형식으로 보여준다.
+  - 전화번호가 없으면 빈 문자열을 유지해 사용자가 직접 입력하도록 한다.
+  - 화면 표시만 포맷하며, 저장 여부 비교와 API 전송은 기존 등록 계획을 유지한다.
+  */
   const defaultValues = useMemo<Partial<MoverProfileFormValues> | undefined>(
     () =>
       user
         ? {
-            phoneNumber: user.phoneNumber ?? '',
+            phoneNumber: formatPhoneNumber(user.phoneNumber ?? ''),
             removeImage: false,
           }
         : undefined,

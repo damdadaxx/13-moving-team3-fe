@@ -5,6 +5,7 @@
 // 상세(GET /estimates/{estimateId})를 카드마다 따로 조회해 customer.name만 꺼내 쓴다
 'use client';
 
+import { Link } from '@/i18n/navigation';
 import type { EstimateGroup, MyEstimateSummary } from '@/types/estimate';
 import { useTranslations } from 'next-intl';
 
@@ -42,7 +43,20 @@ export default function SentEstimateCard({
   const isCompleted = estimateRequest.status === 'COMPLETED';
 
   return (
-    <EstimateCard className="relative tablet:gap-[32px]">
+    <EstimateCard
+      className={cn(
+        'relative tablet:gap-[32px]',
+        // 이사 완료 카드는 오버레이가 덮고 있어 hover 효과를 주지 않는다
+        !isCompleted &&
+          'transition-shadow hover:shadow-[-4px_-4px_20px_0_rgba(200,200,200,0.5),4px_4px_20px_0_rgba(200,200,200,0.5)]',
+      )}
+    >
+      {/* 카드 전체를 상세 링크로 덮는다. 이사 완료 카드는 아래 오버레이가 위를 덮고 자체 버튼으로 이동한다 */}
+      <Link
+        href={`/mover/estimates/sent/${estimate.estimateId}`}
+        aria-label={t('viewEstimateDetail')}
+        className="absolute inset-0 rounded-[20px] focus-visible:outline-2 focus-visible:outline-orange-400"
+      />
       <EstimateRequestSummary
         variant="card"
         className="tablet:gap-[24px]"

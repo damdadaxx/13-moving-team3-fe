@@ -13,6 +13,11 @@
     "selectComplete": "選択完了",
     "previous": "戻る",
     "next": "次へ",
+    "showMore": "もっと見る",
+    "textLengthRule": "{min}文字以上",
+    "textLengthCount": "{count}文字",
+    "textLengthRuleRange": "最小{min}文字 · 最大{max}文字",
+    "textLengthCountMax": "{count}/{max}",
     "regionSelect": "地域を選択",
     "serviceTypeSelect": "利用サービスを選択",
     "profileImageSelect": "プロフィール画像を選択",
@@ -354,10 +359,11 @@
   "DesignatedEstimate": {
     "request": "指定見積もりを依頼",
     "requested": "指定見積もり依頼済み",
+    "rejected": "却下された指定見積もり依頼",
     "alreadyReceived": "見積もり受信済み",
     "success": "指定見積もりを依頼しました。",
     "failed": "指定見積もりの依頼に失敗しました。",
-    "confirmMessage": "指定見積もり依頼をキャンセルしますか？キャンセルした依頼は元に戻せません。",
+    "confirmMessage": "指定見積もりを依頼しますか？依頼した指定見積もりは撤回できません。",
     "needRequestMessage": "先に通常の見積もり依頼をしてください。",
     "goGeneralRequest": "通常の見積もりを依頼",
     "alreadyConfirmed": "すでに確定した引越し見積もりがあります。",
@@ -427,6 +433,7 @@
     "nicknameMax": "ニックネームは10文字以内で入力してください。",
     "shortIntroMin": "ひとこと紹介は8文字以上で入力してください。",
     "shortIntroMax": "ひとこと紹介は50文字以内で入力してください。",
+    "messageTextMin": "10文字以上で入力してください。",
     "descriptionMin": "詳細説明は10文字以上で入力してください。",
     "descriptionMax": "詳細説明は300文字以内で入力してください。",
     "selectAtLeastOne": "1つ以上選択してください。",
@@ -494,6 +501,7 @@
   "EstimateTabs": {
     "customerPending": "保留中の見積もり",
     "customerReceived": "受け取った見積もり",
+    "customerRejected": "却下されたリクエスト",
     "moverSent": "送信した見積もり",
     "moverRejected": "お断りした依頼"
   },
@@ -553,6 +561,11 @@
     "notPending": "保留中の見積もりではありません。",
     "goPending": "保留中の見積もりを見る",
     "notReceived": "受け取った見積もりではありません。",
+    "designatedWaiting": "引っ越し業者からの返信をお待ちください。",
+    "rejectedEmpty": "却下されたリクエストはありません!",
+    "rejectedBadge": "却下",
+    "rejectReason": "却下理由",
+    "noRejectReason": "却下理由はありません。",
     "goReceived": "受け取った見積もりを見る"
   },
   "MoverEstimates": {
@@ -560,9 +573,7 @@
     "rejectedEmpty": "お断りした依頼はありません！",
     "nextPageFailed": "次のページを読み込めませんでした。",
     "rejectedOverlay": "お断りした依頼です",
-    "completedOverlay": "引越しが完了した見積もりです",
-    "notConfirmed": "確定した見積もりではありません。",
-    "goSent": "送信した見積もりを見る"
+    "completedOverlay": "引越しが完了した見積もりです"
   },
   "Calendar": {
     "datePlaceholder": "日付を選択",

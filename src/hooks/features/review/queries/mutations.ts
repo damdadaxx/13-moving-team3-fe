@@ -6,7 +6,7 @@ import { reviewKeys } from '@/hooks/features/review/queries/keys';
 
 /*
 @ 리뷰 작성
-- 성공하면 작성 가능/작성 완료 목록을 다시 받는다
+- 성공하면 작성 가능/작성 완료 목록과, 기사님 상세의 공개 리뷰를 다시 받는다
 */
 export function useCreateReviewMutation() {
   const queryClient = useQueryClient();
@@ -14,7 +14,7 @@ export function useCreateReviewMutation() {
   return useMutation({
     mutationFn: createReview,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: reviewKeys.mine() });
+      queryClient.invalidateQueries({ queryKey: reviewKeys.all });
     },
   });
 }

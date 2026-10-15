@@ -20,6 +20,14 @@ import {
 } from '@/hooks/features/mover/queries/keys';
 
 /*
+@ 공개 기사님 데이터 신선도
+- 목록 카드에 찜 수가 보여서 1분만 유지한다
+- 상세는 자주 안 바뀐다. 프로필 수정 mutation이 이 캐시를 비운다
+*/
+const MOVER_LIST_STALE_TIME = 60 * 1000;
+const MOVER_DETAIL_STALE_TIME = 5 * 60 * 1000;
+
+/*
 @ 기사님 찾기 목록 (무한 스크롤)
 - params(검색어/필터/정렬)가 쿼리 키라서 바뀌면 첫 페이지부터 새로 불러온다
 - 그동안 목록이 비면 화면이 깜빡이므로 placeholderData로 이전 목록을 유지한다
@@ -36,6 +44,7 @@ export function useMoverListInfiniteQuery(
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
     placeholderData: keepPreviousData,
+    staleTime: MOVER_LIST_STALE_TIME,
     meta: { name: '기사님 목록' },
   });
 }
@@ -65,6 +74,7 @@ export function useMoverDetailQuery(id: string) {
     queryKey: moverKeys.detail(id),
     queryFn: () => fetchMoverDetail(id),
     enabled: Boolean(id),
+    staleTime: MOVER_DETAIL_STALE_TIME,
     meta: { name: '기사님 상세' },
   });
 }

@@ -17,6 +17,7 @@ import { useActiveEstimateRequestQuery } from '@/hooks/features/estimate/queries
 
 import { cn } from '@/utils/cn';
 
+import DesignatedEstimateCard from '@/components/features/customer/Estimate/DesignatedEstimateCard';
 import EstimateRequestHeader from '@/components/features/customer/Estimate/EstimateRequestHeader';
 import PendingEstimateCard from '@/components/features/customer/Estimate/PendingEstimateCard';
 import EmptyListNotice from '@/components/ui/EmptyListNotice';
@@ -121,12 +122,23 @@ export default function EstimatePendingPage() {
   }
 
   /*
-  @ PROPOSED만 남긴다
-  - active 응답에는 아직 금액이 없는 지정 견적(DESIGNATED)과 반려(REJECTED)도 섞여 있다.
+  @ PROPOSED + DESIGNATED만 남긴다
+  - PROPOSED: 기사님이 금액을 보낸 견적 (확정 가능)
+  - DESIGNATED: 고객이 지정 견적을 요청했지만 기사님이 아직 답하지 않은 요청 (금액 없음, 확정 불가)
+  - 반려(REJECTED)는 '반려된 요청' 탭에서 보여준다.
   - 확정하면 고른 견적은 ACCEPTED, 나머지는 NOT_SELECTED가 되어 이 목록에서 빠진다.
   */
   const pendingEstimates = activeRequest.estimates.filter(
-    (estimate) => estimate.status === 'PROPOSED',
+    (estimate) =>
+      estimate.status === 'PROPOSED' ||
+      // 확정된 뒤에는 답이 없던 지정 요청을 숨긴다 (백엔드는 DESIGNATED 행을 그대로 남겨 둔다)
+      (estimate.status === 'DESIGNATED' &&
+        activeRequest.status !== 'CONFIRMED'),
+  );
+  // 지정 견적(답변 대기)을 위로 올린다. sort는 안정 정렬이라 나머지 순서는 그대로다
+  pendingEstimates.sort(
+    (a, b) =>
+      Number(b.status === 'DESIGNATED') - Number(a.status === 'DESIGNATED'),
   );
 
   return (
@@ -169,16 +181,23 @@ export default function EstimatePendingPage() {
           >
             {pendingEstimates.map((estimate) => (
               <li key={estimate.id} className="flex">
-                <PendingEstimateCard
-                  estimate={estimate}
-                  serviceType={activeRequest.serviceType}
-                  onConfirm={handleConfirm}
-                  isConfirming={
-                    acceptEstimate.isPending &&
-                    acceptEstimate.variables === estimate.id
-                  }
-                  isDisabled={acceptEstimate.isPending}
-                />
+                {estimate.status === 'DESIGNATED' ? (
+                  <DesignatedEstimateCard
+                    estimate={estimate}
+                    serviceType={activeRequest.serviceType}
+                  />
+                ) : (
+                  <PendingEstimateCard
+                    estimate={estimate}
+                    serviceType={activeRequest.serviceType}
+                    onConfirm={handleConfirm}
+                    isConfirming={
+                      acceptEstimate.isPending &&
+                      acceptEstimate.variables === estimate.id
+                    }
+                    isDisabled={acceptEstimate.isPending}
+                  />
+                )}
               </li>
             ))}
           </ul>

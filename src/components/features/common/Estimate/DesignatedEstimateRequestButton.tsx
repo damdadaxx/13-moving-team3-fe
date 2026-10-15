@@ -33,6 +33,7 @@ function findMoverEstimate(
 /*
 @ 지정 견적 버튼 문구 (번역 키, messages > DesignatedEstimate)
 - 잠그는 조건은 그대로다. 해당 기사님 견적이 하나라도 있으면 비활성화한다.
+- 지정 견적이 반려됨: 반려된 지정 견적 요청
 - 지정 견적(isDesignated: true): 지정 견적 요청 완료
 - 일반 견적만 있는 기사님: 이미 견적을 받았어요
 - 견적이 없음: 지정 견적 요청하기
@@ -41,6 +42,7 @@ function getDesignatedButtonLabelKey(
   estimate: EstimateSummary | undefined,
 ): keyof Messages['DesignatedEstimate'] {
   if (!estimate) return 'request';
+  if (estimate.status === 'REJECTED') return 'rejected';
   if (estimate.isDesignated) return 'requested';
   return 'alreadyReceived';
 }

@@ -17,6 +17,7 @@ interface LikeOptimisticContext {
   previousStatus: LikeStatus | undefined;
   previousMover: MoverDetail | undefined;
   previousLiked: [QueryKey, MoverListData | undefined][];
+  previousLists: [QueryKey, InfiniteData<MoverListData> | undefined][];
 }
 
 /** 좋아요 상태 캐시 업데이트 */
@@ -137,6 +138,48 @@ function syncLikedMoverListCache(
   }
 }
 
+/*
+@ 기사님 찾기 목록의 찜 수
+- 목록은 1분 동안 다시 받지 않는다
+- 상세에서 찜한 뒤 돌아오면 하트는 찜 목록 캐시로 바뀌지만, 카드 숫자는 이 목록에 남아 있다
+- 같은 기사님 칸의 찜 수와 찜 여부만 바로 고친다
+*/
+function syncMoverListLikeCache(
+  queryClient: QueryClient,
+  moverId: string,
+  nextIsLiked: boolean,
+  likeCount: number,
+) {
+  const lists = queryClient.getQueriesData<InfiniteData<MoverListData>>({
+    queryKey: moverKeys.lists(),
+  });
+
+  for (const [queryKey, current] of lists) {
+    if (!current) continue;
+
+    let changed = false;
+    const pages = current.pages.map((page) => {
+      let pageChanged = false;
+      const list = page.list.map((mover) => {
+        if (
+          mover.id !== moverId ||
+          (mover.likeCount === likeCount && mover.isLiked === nextIsLiked)
+        ) {
+          return mover;
+        }
+
+        pageChanged = true;
+        changed = true;
+        return { ...mover, isLiked: nextIsLiked, likeCount };
+      });
+
+      return pageChanged ? { ...page, list } : page;
+    });
+
+    if (changed) queryClient.setQueryData(queryKey, { ...current, pages });
+  }
+}
+
 function invalidateLikedMoverLists(queryClient: QueryClient) {
   void queryClient.invalidateQueries({ queryKey: likedMoverListKey });
   void queryClient.invalidateQueries({ queryKey: likeKeys.mine() });
@@ -147,7 +190,7 @@ function invalidateLikedMoverLists(queryClient: QueryClient) {
 - 클릭 즉시 캐시를 바꿔 UI를 먼저 반영한다
 - 진행 중인 조회가 낙관적 값을 덮어쓰지 않도록 취소한다
 - 실패하면 이전 캐시로 롤백한다
-- 기사님 찾기 하트 캐시도 같이 바꿔, 뒤로 가기 직후 빈 하트가 남지 않게 한다
+- 기사님 찾기 하트 캐시와 목록 카드의 찜 수도 같이 바꾼다
 */
 async function applyOptimisticLike(
   queryClient: QueryClient,
@@ -157,6 +200,7 @@ async function applyOptimisticLike(
   await queryClient.cancelQueries({ queryKey: likeKeys.byMover(moverId) });
   await queryClient.cancelQueries({ queryKey: moverKeys.detail(moverId) });
   await queryClient.cancelQueries({ queryKey: likedMoverListKey });
+  await queryClient.cancelQueries({ queryKey: moverKeys.lists() });
 
   const previousStatus = queryClient.getQueryData<LikeStatus>(
     likeKeys.byMover(moverId),
@@ -167,6 +211,11 @@ async function applyOptimisticLike(
   const previousLiked = queryClient.getQueriesData<MoverListData>({
     queryKey: likedMoverListKey,
   });
+  const previousLists = queryClient.getQueriesData<InfiniteData<MoverListData>>(
+    {
+      queryKey: moverKeys.lists(),
+    },
+  );
   const wasLiked = previousStatus?.isLiked ?? false;
   const currentCount =
     previousStatus?.likeCount ?? previousMover?.likeCount ?? 0;
@@ -178,8 +227,9 @@ async function applyOptimisticLike(
     likeId: nextIsLiked ? previousStatus?.likeId : undefined,
   });
   syncLikedMoverListCache(queryClient, moverId, nextIsLiked, likeCount);
+  syncMoverListLikeCache(queryClient, moverId, nextIsLiked, likeCount);
 
-  return { previousStatus, previousMover, previousLiked };
+  return { previousStatus, previousMover, previousLiked, previousLists };
 }
 
 /** 좋아요 상태 캐시 롤백 */
@@ -203,6 +253,10 @@ function rollbackOptimisticLike(
   for (const [queryKey, data] of context.previousLiked) {
     queryClient.setQueryData(queryKey, data);
   }
+
+  for (const [queryKey, data] of context.previousLists) {
+    queryClient.setQueryData(queryKey, data);
+  }
 }
 
 /** 좋아요 생성 뮤테이션 */
@@ -222,6 +276,7 @@ export function useCreateLikeMutation() {
         likeId: data.like.id,
       });
       syncLikedMoverListCache(queryClient, moverId, true, data.likeCount);
+      syncMoverListLikeCache(queryClient, moverId, true, data.likeCount);
     },
     onSettled: () => {
       invalidateLikedMoverLists(queryClient);
@@ -245,6 +300,7 @@ export function useDeleteLikeMutation() {
         likeCount: data.likeCount,
       });
       syncLikedMoverListCache(queryClient, moverId, false, data.likeCount);
+      syncMoverListLikeCache(queryClient, moverId, false, data.likeCount);
     },
     onSettled: () => {
       invalidateLikedMoverLists(queryClient);

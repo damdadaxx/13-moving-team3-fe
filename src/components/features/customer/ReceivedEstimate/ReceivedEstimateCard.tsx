@@ -38,6 +38,7 @@ import { useMoverLike } from '@/hooks/features/like/useMoverLike';
 
 import { cn } from '@/utils/cn';
 
+import ExpandableText from '@/components/ui/ExpandableText';
 import ProfileImage from '@/components/ui/ProfileImage';
 import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
 
@@ -175,9 +176,12 @@ export default function ReceivedEstimateCard({
 
         <div className="flex w-full flex-col gap-[16px]">
           <div className="flex w-full items-center justify-between gap-[16px]">
-            <p className="text-lg-semibold text-black-300 tablet:text-2lg-semibold">
-              {estimate.comment}
-            </p>
+            {/* min-w-0: 공백 없는 긴 글이 flex 줄 밖으로 넘치지 않게 한다 */}
+            <div className="min-w-0 flex-1">
+              <ExpandableText className="text-lg-semibold text-black-300 tablet:text-2lg-semibold">
+                {estimate.comment ?? ''}
+              </ExpandableText>
+            </div>
             <StatusLabel
               isConfirmed={isConfirmed}
               className="hidden tablet:flex"

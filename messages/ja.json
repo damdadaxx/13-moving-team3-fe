@@ -14,6 +14,7 @@
     "previous": "戻る",
     "next": "次へ",
     "showMore": "もっと見る",
+    "showLess": "閉じる",
     "textLengthRule": "{min}文字以上",
     "textLengthCount": "{count}文字",
     "textLengthRuleRange": "最小{min}文字 · 最大{max}文字",

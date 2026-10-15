@@ -9,6 +9,7 @@ import { useTranslations } from 'next-intl';
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
 import EstimateCard from '@/components/ui/EstimateCard';
+import ExpandableText from '@/components/ui/ExpandableText';
 import ServiceTypeTag from '@/components/ui/ServiceTypeTag';
 
 interface RejectedEstimateCardProps {
@@ -53,9 +54,9 @@ export default function RejectedEstimateCard({
         <span className="text-md-medium text-gray-300">
           {t('rejectReason')}
         </span>
-        <p className="text-md-regular whitespace-pre-line text-black-300 tablet:text-lg-regular">
+        <ExpandableText className="text-md-regular text-black-300 tablet:text-lg-regular">
           {estimate.rejectReason || t('noRejectReason')}
-        </p>
+        </ExpandableText>
       </div>
     </EstimateCard>
   );

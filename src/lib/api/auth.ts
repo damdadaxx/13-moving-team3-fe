@@ -37,10 +37,26 @@ export function toBackendRole(role: Role): BackendRole {
   return role === 'customer' ? 'CUSTOMER' : 'MOVER';
 }
 
+/*
+@ API 응답 → AuthUser
+- 스프레드(...user)를 쓰지 않고 필드를 하나씩 고른다
+- login / refresh / me 응답 바디에는 accessToken이 같이 실려 있다 (Supabase 클라이언트용).
+  스프레드로 받으면 그 토큰이 AuthUser에 섞여 들어가고, AuthProvider가 그대로
+  localStorage('moving:authUser')에 저장해 버린다 → httpOnly 쿠키로 얻은 보호가 무의미해진다
+- Supabase용 토큰은 clientFetch가 응답 원본에서 따로 캡처하므로(clientFetch.ts의
+  captureSupabaseAccessTokenFromBody) 여기서 떼어내도 실시간 채팅은 그대로 동작한다
+- 앞으로 백엔드가 응답에 필드를 더 추가해도 의도한 것만 들어오게 하려는 목적도 있다
+*/
 function toAuthUser(user: AuthUserResponse): AuthUser {
   return {
-    ...user,
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    phoneNumber: user.phoneNumber,
     role: toFrontendRole(user.role),
+    provider: user.provider,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
   };
 }
 

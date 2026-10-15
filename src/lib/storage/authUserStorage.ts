@@ -28,6 +28,24 @@ const AUTH_USER_STORAGE_KEY = 'moving:authUser';
 let cachedRaw: string | null = null;
 let cachedUser: AuthUser | undefined;
 
+/*
+@ 저장된 값에서 accessToken 제거
+- 이 보호가 생기기 전 버전은 /auth/me 응답을 스프레드로 받아서 accessToken까지 저장했다.
+  그 값이 남아 있는 브라우저에서는, useMeQuery의 initialData로 올라온 뒤 아래 AuthProvider가
+  다시 저장해 계속 남는다 (특히 /auth/me가 네트워크 오류로 실패하면 새 값으로 덮이지도 않는다)
+- 그래서 API 경계(lib/api/auth.ts의 toAuthUser)와 별개로 읽는 시점에도 한 번 떼어낸다
+- 떼어낼 게 없으면 같은 참조를 그대로 돌려준다 — useSyncExternalStore의 getSnapshot은
+  변화가 없을 때 같은 참조를 반환해야 한다
+*/
+function withoutAccessToken(user: AuthUser): AuthUser {
+  if (!('accessToken' in user)) return user;
+
+  const { accessToken: _accessToken, ...safeUser } = user as AuthUser & {
+    accessToken?: string;
+  };
+  return safeUser;
+}
+
 /** 저장된 값이 없으면 undefined (react-hook의 "initialData 없음"과 같은 의미) */
 export function readStoredAuthUser(): AuthUser | undefined {
   if (typeof window === 'undefined') return undefined;
@@ -42,7 +60,9 @@ export function readStoredAuthUser(): AuthUser | undefined {
   if (raw === cachedRaw) return cachedUser;
 
   try {
-    cachedUser = raw ? (JSON.parse(raw) as AuthUser) : undefined;
+    cachedUser = raw
+      ? withoutAccessToken(JSON.parse(raw) as AuthUser)
+      : undefined;
   } catch {
     cachedUser = undefined;
   }

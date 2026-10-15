@@ -1,3 +1,4 @@
+import type { ReviewSort } from '@/types/review';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 
 import { fetchMoverReviews, getMyReviews } from '@/lib/api/review';
@@ -57,18 +58,23 @@ export function usePendingReviewsQuery(page: number) {
 /*
 @ 내가 작성한 리뷰 목록
 - GET /reviews/me?hasReview=true
-- 페이지를 넘겨도 이전 목록을 잠깐 보여 주려고 keepPreviousData를 쓴다
 */
-export function useCompletedReviewsQuery(page: number) {
+export function useCompletedReviewsQuery(page: number, sort: ReviewSort) {
   return useQuery({
-    queryKey: reviewKeys.completed(page, COMPLETED_REVIEWS_PAGE_SIZE),
+    queryKey: reviewKeys.completed(page, COMPLETED_REVIEWS_PAGE_SIZE, sort),
     queryFn: () =>
       getMyReviews({
         page,
         pageSize: COMPLETED_REVIEWS_PAGE_SIZE,
         hasReview: true,
+        sort,
       }),
-    placeholderData: keepPreviousData,
+    /* 페이지 넘길 때만 이전 목록을 남긴다. 정렬이 바뀌면 이전 목록을 보여 주면 안 된다 */
+    placeholderData: (previousData, previousQuery) => {
+      const previousSort = previousQuery?.queryKey.at(-1);
+      if (previousSort !== sort) return undefined;
+      return previousData;
+    },
     meta: { name: '내가 작성한 리뷰 목록' },
   });
 }

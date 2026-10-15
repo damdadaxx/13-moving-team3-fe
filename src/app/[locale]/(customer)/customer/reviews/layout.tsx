@@ -24,7 +24,7 @@ export default function ReviewsLayout({
   ];
 
   return (
-    <div className="min-h-full bg-background-100">
+    <div className="min-h-[calc(100dvh-54px)] bg-background-100 desktop:min-h-[calc(100dvh-88px)]">
       <Tab tabs={tabs} />
       {children}
     </div>

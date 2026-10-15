@@ -565,9 +565,7 @@
     "rejectedEmpty": "No rejected requests yet!",
     "nextPageFailed": "Couldn't load the next page.",
     "rejectedOverlay": "Request rejected",
-    "completedOverlay": "Move completed",
-    "notConfirmed": "This isn't a confirmed estimate.",
-    "goSent": "View Sent Estimates"
+    "completedOverlay": "Move completed"
   },
   "Calendar": {
     "datePlaceholder": "Select a date",

@@ -363,7 +363,7 @@
     "alreadyReceived": "이미 견적을 받았어요",
     "success": "지정 견적 요청이 완료되었어요",
     "failed": "지정 견적 요청에 실패했어요.",
-    "confirmMessage": "지정 견적 요청을 취소하시겠습니까? 취소한 요청은 다시 복구할 수 없습니다.",
+    "confirmMessage": "지정 견적 요청을 하시겠습니까? 요청한 지정 견적은 철회할 수 없습니다.",
     "needRequestMessage": "일반 견적 요청을 먼저 진행해 주세요.",
     "goGeneralRequest": "일반 견적 요청 하기",
     "alreadyConfirmed": "이미 확정된 이사 견적이 있어요.",

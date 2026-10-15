@@ -56,8 +56,14 @@ export default function MoverEstimateRequestPage() {
   const [pickedServiceTypes, setPickedServiceTypes] = useState<
     ServiceType[] | null
   >(null);
-  const selectedServiceTypes =
-    pickedServiceTypes ?? moverProfile?.serviceTypes ?? [];
+  /*
+  @ 빈 배열 fallback
+  - ?? []를 렌더마다 만들면 useMemo 의존성이 매번 바뀌어 받은 요청을 다시 조회한다
+  */
+  const selectedServiceTypes = useMemo(
+    () => pickedServiceTypes ?? moverProfile?.serviceTypes ?? [],
+    [pickedServiceTypes, moverProfile?.serviceTypes],
+  );
   const [designatedOnly, setDesignatedOnly] = useState(false);
   const [regionAvailableOnly, setRegionAvailableOnly] = useState(true);
   const [sortValue, setSortValue] = useState<ReceivedRequestSortBy>('moveDate');

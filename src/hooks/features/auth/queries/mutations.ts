@@ -1,7 +1,11 @@
 // tanstack/react-query - auth mutations
 import type { AuthUser } from '@/types/auth';
 import type { Role } from '@/types/role';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  type QueryClient,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import {
   confirmEmailVerification,
@@ -16,14 +20,26 @@ import {
 
 import { authKeys } from '@/hooks/features/auth/queries/keys';
 
+/*
+@ 로그인 사용자 캐시를 한 번에 바꾼다
+- me 캐시를 이 사용자(없으면 null)로 덮고, 그 외 도메인 쿼리는 지운다
+- 다른 탭 로그아웃도 같은 처리를 쓴다
+*/
+export function applyAuthSession(
+  queryClient: QueryClient,
+  user: AuthUser | null,
+): void {
+  queryClient.setQueryData(authKeys.me(), user);
+  queryClient.removeQueries({
+    predicate: (query) => query.queryKey[0] !== authKeys.all[0],
+  });
+}
+
 function useResetAuthCache() {
   const queryClient = useQueryClient();
 
   return (user: AuthUser | null) => {
-    queryClient.setQueryData(authKeys.me(), user);
-    queryClient.removeQueries({
-      predicate: (query) => query.queryKey[0] !== authKeys.all[0],
-    });
+    applyAuthSession(queryClient, user);
   };
 }
 

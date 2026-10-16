@@ -2,9 +2,11 @@
   <img src="./src/assets/images/img_intro.webp" alt="Moving 메인 페이지" width="100%" />
 </div>
 
-# 🚚 Moving — 무빙
+# 🚚 무빙 (Moving)
 
-**편리하고 믿을 수 있는 이사 중개 서비스**
+---
+
+이사 소비자와 이사 전문가 매칭 서비스
 
 - 서비스 주소: [moving-team3.xyz](https://moving-team3.xyz)
 - Frontend: [13-moving-team3-fe](https://github.com/damdadaxx/13-moving-team3-fe)
@@ -12,39 +14,33 @@
 
 # 📜 목차
 
-1. [프로젝트 소개](#📝-프로젝트-소개)
-2. [기능 시연 영상](#💻-기능-시연-영상)
+1. [프로젝트 소개](#-프로젝트-소개)
+2. [기능 시연 영상](#-기능-시연-영상)
 3. [시스템 아키텍처](#-시스템-아키텍처)
 4. [기술 스택](#️-기술-스택)
-5. [주요 라이브러리](#📚-주요-라이브러리)
-6. [팀 소개 및 문서](#👥-팀-소개-및-문서)
-7. [개인별 주요 작업 내역](#📋-개인별-주요-작업-내역)
-8. [프로젝트 구조](#📁-프로젝트-구조)
-9. [주요 기능 상세](#🌟-주요-기능-상세)
-10. [성능 최적화 전략](#🚀-성능-최적화-전략)
-11. [트러블 슈팅](#💣-트러블-슈팅)
+5. [주요 라이브러리](#-주요-라이브러리)
+6. [팀 소개 및 문서](#-팀-소개-및-문서)
+7. [개인별 주요 작업 내역](#-개인별-주요-작업-내역)
+8. [프로젝트 구조](#-프로젝트-구조)
+9. [주요 기능 상세](#-주요-기능-상세)
+10. [성능 최적화 전략](#-성능-최적화-전략)
+11. [트러블 슈팅](#-트러블-슈팅)
+12. [실행 방법](#️-실행-방법)
+13. [주요 명령어](#️-주요-명령어)
 
 <br/>
 
 # 📝 프로젝트 소개
 
-- 이사 소비자와 이사 전문가를 연결하는 이사 견적 매칭 서비스입니다.
-
-고객은 이사 정보를 등록하고 기사님의 견적을 비교할 수 있으며,
-기사님은 받은 요청을 확인하고 견적을 제안할 수 있습니다.
-
-프로필, 찜하기, 리뷰, 실시간 알림과 1:1 채팅을 통해
-이사를 준비하는 과정에서 필요한 정보와 소통을 제공합니다.
+- 이사 소비자와 이사 전문가(기사님)를 연결하는 견적 매칭 플랫폼입니다. 고객이 이사 조건으로 견적을 요청하면, 서비스 가능 지역·서비스 유형이 맞는 기사님이 견적을 보내고, 고객은 견적을 비교해 확정합니다. 확정 이후에는 1:1 채팅, 이사 완료 후 리뷰 작성(AI 초안 지원)까지 하나의 흐름으로 이어집니다.
 
 <br/>
 
-# 💻 기능 시연 영상
-
-### 고객
+# 💻 고객 기능 시연 영상
 
 [![무빙 고객 기능 시연 영상](https://img.youtube.com/vi/DfR7eHb9VYA/maxresdefault.jpg)](https://www.youtube.com/watch?v=DfR7eHb9VYA)
 
-### 기사님
+# 💻 기사 기능 시연 영상
 
 [![무빙 기사님 기능 시연 영상](https://img.youtube.com/vi/SPF-6KNENOQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=SPF-6KNENOQ)
 
@@ -83,9 +79,9 @@
 ### ✅ Hosting & Deployment
 
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat&logo=vercel&logoColor=white)
-![AWS EC2](https://img.shields.io/badge/AWS_EC2-FF9900?style=flat)
-![Amazon CloudFront](https://img.shields.io/badge/Amazon_CloudFront-8C4FFF?style=flat)
-![Amazon Route 53](https://img.shields.io/badge/Amazon_Route_53-8C4FFF?style=flat)
+![AWS EC2](https://img.shields.io/badge/AWS_EC2-FF9900?style=flat&logo=amazonec2&logoColor=white)
+![Amazon CloudFront](https://img.shields.io/badge/Amazon_CloudFront-8C4FFF?style=flat&logo=amazonaws&logoColor=white)
+![Amazon Route 53](https://img.shields.io/badge/Amazon_Route_53-8C4FFF?style=flat&logo=amazonroute53&logoColor=white)
 
 - **Vercel**: Next.js 프론트엔드 배포
 - **AWS EC2**: 백엔드 API 서버 배포
@@ -96,7 +92,7 @@
 
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-FF4438?style=flat&logo=redis&logoColor=white)
-![Amazon S3](https://img.shields.io/badge/Amazon_S3-569A31?style=flat)
+![Amazon S3](https://img.shields.io/badge/Amazon_S3-569A31?style=flat&logo=amazons3&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=flat&logo=supabase&logoColor=white)
 
 - **PostgreSQL**: 서비스 도메인 데이터 저장
@@ -129,7 +125,6 @@
 별도 라이브러리를 사용하지 않는 항목은 내장 API 또는 자체 구현으로 구분했습니다.
 
 <details>
-
 <summary>데이터 패칭 / 캐싱</summary>
 
 - **@tanstack/react-query**: 서버 데이터 조회·캐싱·Mutation 및 커서 기반 무한 스크롤
@@ -265,12 +260,12 @@
 
 |    이름    |        역할         |                                                              담당                                                               |                       GitHub                       |                                개인 개발 보고서                                |
 | :--------: | :-----------------: | :-----------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------: | :----------------------------------------------------------------------------: |
-| **한효주** |  👑 팀장 · FE 리드  | ![FE](https://img.shields.io/badge/FE-3178C6?style=flat-square) ![BE](https://img.shields.io/badge/BE-5FA04E?style=flat-square) |     [@damdadaxx](https://github.com/damdadaxx)     | [📄 보고서](https://app.notion.com/p/damdada/a9d7bbb8e517822b8cf001c2d6b0d714) |
-| **방민재** | ⭐ 부팀장 · BE 리드 | ![FE](https://img.shields.io/badge/FE-3178C6?style=flat-square) ![BE](https://img.shields.io/badge/BE-5FA04E?style=flat-square) |     [@extermins](https://github.com/extermins)     | [📄 보고서](https://app.notion.com/p/damdada/1177bbb8e51782f68d5e018de1bf3c0e) |
-| **김대영** |       🙋 팀원       | ![FE](https://img.shields.io/badge/FE-3178C6?style=flat-square) ![BE](https://img.shields.io/badge/BE-5FA04E?style=flat-square) |  [@daeyeong1573](https://github.com/daeyeong1573)  | [📄 보고서](https://app.notion.com/p/damdada/dcd7bbb8e5178322a025817111f1fbdd) |
-| **곽서현** |       🙋 팀원       | ![FE](https://img.shields.io/badge/FE-3178C6?style=flat-square) ![BE](https://img.shields.io/badge/BE-5FA04E?style=flat-square) |     [@sgwag6799](https://github.com/sgwag6799)     | [📄 보고서](https://app.notion.com/p/damdada/e007bbb8e5178226aa5f01367967e6a2) |
-| **윤다정** |       🙋 팀원       | ![FE](https://img.shields.io/badge/FE-3178C6?style=flat-square) ![BE](https://img.shields.io/badge/BE-5FA04E?style=flat-square) |    [@torang1013](https://github.com/torang1013)    | [📄 보고서](https://app.notion.com/p/damdada/b087bbb8e51782e883950110bbc4f64f) |
-| **전현선** |       🙋 팀원       | ![FE](https://img.shields.io/badge/FE-3178C6?style=flat-square) ![BE](https://img.shields.io/badge/BE-5FA04E?style=flat-square) | [@hyeonseon9909](https://github.com/hyeonseon9909) | [📄 보고서](https://app.notion.com/p/damdada/8497bbb8e51782a8be3101e415dc62ae) |
+| **한효주** |  👑 팀장 · FE 리드  | ![FE](https://img.shields.io/badge/FE-3178C6?style=flat-square) ![BE](https://img.shields.io/badge/BE-5FA04E?style=flat-square) |     [@damdadaxx](https://github.com/damdadaxx)     | [📄 보고서](https://app.notion.com/p/damdada/8c37bbb8e51783f68be00149916877ae) |
+| **방민재** | ⭐ 부팀장 · BE 리드 | ![FE](https://img.shields.io/badge/FE-3178C6?style=flat-square) ![BE](https://img.shields.io/badge/BE-5FA04E?style=flat-square) |     [@extermins](https://github.com/extermins)     | [📄 보고서](https://app.notion.com/p/damdada/24f7bbb8e5178205a41d01fd68ce9e8b) |
+| **김대영** |       🙋 팀원       | ![FE](https://img.shields.io/badge/FE-3178C6?style=flat-square) ![BE](https://img.shields.io/badge/BE-5FA04E?style=flat-square) |  [@daeyeong1573](https://github.com/daeyeong1573)  | [📄 보고서](https://app.notion.com/p/damdada/b4d7bbb8e51783d3a548815fcb32617f) |
+| **곽서현** |       🙋 팀원       | ![FE](https://img.shields.io/badge/FE-3178C6?style=flat-square) ![BE](https://img.shields.io/badge/BE-5FA04E?style=flat-square) |     [@sgwag6799](https://github.com/sgwag6799)     | [📄 보고서](https://app.notion.com/p/damdada/6e57bbb8e51782acbc3a81e0e20d280d) |
+| **윤다정** |       🙋 팀원       | ![FE](https://img.shields.io/badge/FE-3178C6?style=flat-square) ![BE](https://img.shields.io/badge/BE-5FA04E?style=flat-square) |    [@torang1013](https://github.com/torang1013)    | [📄 보고서](https://app.notion.com/p/damdada/cfd7bbb8e51782c89866818b056d9f77) |
+| **전현선** |       🙋 팀원       | ![FE](https://img.shields.io/badge/FE-3178C6?style=flat-square) ![BE](https://img.shields.io/badge/BE-5FA04E?style=flat-square) | [@hyeonseon9909](https://github.com/hyeonseon9909) | [📄 보고서](https://app.notion.com/p/damdada/9107bbb8e51782d0a5a9819db59db9bd) |
 
 ## 팀 문서
 
@@ -461,7 +456,7 @@
 
 <br/>
 
-## 📁 프로젝트 구조
+# 📁 프로젝트 구조
 
 다국어 적용 이후 현재 사용 중인 폴더 구조를 기준으로 정리했습니다.
 반복되는 하위 폴더와 파일은 생략했습니다.
@@ -1106,3 +1101,108 @@ useEffect(scrollToBottom, [lastMessageId]);
 - 공용 컴포넌트는 사용처가 로딩 정책을 전달할 수 있도록 열어 둬야 합니다.
 
 </details>
+
+<br/>
+
+# ▶️ 실행 방법
+
+## 1. 실행 환경
+
+- Node.js: 20.9.0 이상
+- 패키지 매니저: npm
+- 개발 서버 주소: http://localhost:5173
+
+팀에서 사용하는 Node.js 버전에 맞춰 실행해주세요.
+
+## 2. 저장소 복제 및 의존성 설치
+
+```bash
+git clone https://github.com/damdadaxx/13-moving-team3-fe.git
+cd 13-moving-team3-fe
+
+npm install
+```
+
+이미 저장소를 복제했다면 프로젝트 폴더에서 `npm install`부터 진행합니다.
+
+## 3. 환경변수 설정
+
+프로젝트 루트에서 예시 파일을 복사합니다.
+
+```bash
+cp .env.example .env.local
+```
+
+생성된 `.env.local`에 팀에서 공유받은 값을 입력합니다.
+
+| 환경변수                               | 설명                                      |
+| -------------------------------------- | ----------------------------------------- |
+| `API_BASE_URL`                         | 프론트 서버가 요청을 전달할 백엔드 주소   |
+| `PROXY_SECRET`                         | 백엔드와 공유하는 서버 전용 프록시 시크릿 |
+| `NEXT_PUBLIC_SITE_URL`                 | 프론트엔드 사이트 주소                    |
+| `NEXT_PUBLIC_SUPABASE_URL`             | 채팅에 사용하는 Supabase 프로젝트 URL     |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase 브라우저 클라이언트용 공개 키    |
+| `KAKAO_REST_API_KEY`                   | 서버의 카카오 주소 검색용 키              |
+| `NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY`     | 브라우저의 카카오 공유 SDK용 키           |
+
+Sentry, Google Analytics 등 나머지 설정은 `.env.example`의 주석을 참고합니다.
+
+### 로컬 연결 예시
+
+백엔드를 `3001` 포트에서 실행한다면 다음처럼 설정합니다.
+
+```dotenv
+API_BASE_URL=http://localhost:3001
+NEXT_PUBLIC_SITE_URL=http://localhost:5173
+```
+
+- `API_BASE_URL`은 실제 백엔드 실행 포트에 맞춰 변경합니다.
+- `PROXY_SECRET`은 백엔드 설정과 일치해야 합니다.
+- Supabase URL과 공개 키는 현재 초기화 코드에서 필요하므로 누락하지 않습니다.
+- 로컬 백엔드에 연결한다면 백엔드 서버도 별도로 실행해야 합니다.
+- 소셜 로그인은 백엔드와 외부 제공자의 로컬 콜백 주소 설정도 필요합니다.
+
+### 주의사항
+
+- `.env.local`과 실제 비밀값은 Git에 커밋하지 않습니다.
+- `NEXT_PUBLIC_`으로 시작하는 값은 브라우저에 노출됩니다.
+- `PROXY_SECRET`, 서버용 API 키 등에 임의로 `NEXT_PUBLIC_`을 붙이지 않습니다.
+- 환경변수를 수정했다면 개발 서버를 다시 실행합니다.
+
+## 4. 개발 서버 실행
+
+```bash
+npm run dev
+```
+
+브라우저에서 [http://localhost:5173](http://localhost:5173)으로 접속합니다.
+
+개발 서버는 `next dev -p 5173`으로 실행되므로 포트가 `5173`으로 고정되어 있습니다.
+
+## 5. 프로덕션 빌드 및 실행
+
+```bash
+npm run build
+
+# 로컬에서 프로덕션 서버도 5173 포트로 실행하는 경우
+npm run start -- -p 5173
+```
+
+`npm run start`는 개발 서버가 아니라 빌드된 결과를 실행하는 명령입니다.
+
+<br/>
+
+# 🛠️ 주요 명령어
+
+| 명령어             | 설명                                             |
+| ------------------ | ------------------------------------------------ |
+| `npm run dev`      | 개발 서버 실행 — 5173 포트                       |
+| `npm run build`    | 프로덕션 빌드                                    |
+| `npm run start`    | 빌드된 프로덕션 서버 실행                        |
+| `npm run lint`     | ESLint 검사                                      |
+| `npm run lint:fix` | ESLint 검사 및 수정 가능한 항목 자동 수정        |
+| `npm run format`   | 프로젝트 전체 Prettier 포맷 적용                 |
+| `npx tsc --noEmit` | 빌드 결과물을 생성하지 않고 TypeScript 타입 검사 |
+
+> `lint:fix`와 `format`은 파일을 실제로 수정합니다. 실행 후 변경 내용을 확인해주세요.
+> <br/>

@@ -4,8 +4,6 @@
 
 # 🚚 무빙 (Moving)
 
----
-
 이사 소비자와 이사 전문가 매칭 서비스
 
 - 서비스 주소: [moving-team3.xyz](https://moving-team3.xyz)
@@ -272,6 +270,8 @@
 ### 📝 [팀 노션](https://www.notion.so/damdada/3377bbb8e51782129977817c0da86c23?v=7f37bbb8e51782efa73e8815e7b07056&source=copy_link)
 
 ### 📝 [API 문서](https://app.notion.com/p/damdada/API-3c97bbb8e517809bbbcee27e95dabd72)
+
+### 📝 [Swagger 문서](https://api.moving-team3.xyz/api-docs)
 
 <br/>
 
@@ -1130,20 +1130,10 @@ npm install
 프로젝트 루트에서 예시 파일을 복사합니다.
 
 ```bash
-cp .env.example .env.local
+cp .env.example
 ```
 
-생성된 `.env.local`에 팀에서 공유받은 값을 입력합니다.
-
-| 환경변수                               | 설명                                      |
-| -------------------------------------- | ----------------------------------------- |
-| `API_BASE_URL`                         | 프론트 서버가 요청을 전달할 백엔드 주소   |
-| `PROXY_SECRET`                         | 백엔드와 공유하는 서버 전용 프록시 시크릿 |
-| `NEXT_PUBLIC_SITE_URL`                 | 프론트엔드 사이트 주소                    |
-| `NEXT_PUBLIC_SUPABASE_URL`             | 채팅에 사용하는 Supabase 프로젝트 URL     |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase 브라우저 클라이언트용 공개 키    |
-| `KAKAO_REST_API_KEY`                   | 서버의 카카오 주소 검색용 키              |
-| `NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY`     | 브라우저의 카카오 공유 SDK용 키           |
+생성된 `.env`에 팀에서 공유받은 값을 입력합니다.
 
 Sentry, Google Analytics 등 나머지 설정은 `.env.example`의 주석을 참고합니다.
 
@@ -1164,7 +1154,7 @@ NEXT_PUBLIC_SITE_URL=http://localhost:5173
 
 ### 주의사항
 
-- `.env.local`과 실제 비밀값은 Git에 커밋하지 않습니다.
+- `.env`과 실제 비밀값은 Git에 커밋하지 않습니다.
 - `NEXT_PUBLIC_`으로 시작하는 값은 브라우저에 노출됩니다.
 - `PROXY_SECRET`, 서버용 API 키 등에 임의로 `NEXT_PUBLIC_`을 붙이지 않습니다.
 - 환경변수를 수정했다면 개발 서버를 다시 실행합니다.

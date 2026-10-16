@@ -9,7 +9,9 @@ import Image from 'next/image';
 import ImgEmpty from '@/assets/images/img_empty.webp';
 
 import { HttpError } from '@/lib/api/errors';
+import { ROUTES } from '@/lib/constants/routes';
 
+import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import useInfiniteScroll from '@/hooks/common/useInfiniteScroll';
 import { useToast } from '@/hooks/common/useToast';
 import { useBulkDeleteLikesMutation } from '@/hooks/features/like/queries/mutations';
@@ -20,6 +22,7 @@ import { cn } from '@/utils/cn';
 import LikedMoverCard, {
   type LikedMover,
 } from '@/components/features/customer/LikedMover/LikedMoverCard';
+import Button from '@/components/ui/Button/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import LoadingDisplay from '@/components/ui/LoadingDisplay';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -43,6 +46,7 @@ function toLikedMover(item: LikedMoverItem): LikedMover {
 
 export default function LikedMoverList() {
   const t = useTranslations('LikedMovers');
+  const tMover = useTranslations('MoverFind');
   const { showToast } = useToast();
   //삭제할 기사님의 ID값을 담는다.
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -67,6 +71,7 @@ export default function LikedMoverList() {
   const totalCount = data?.pages[0]?.totalCount ?? 0;
   const selectedCount = isSelectAll ? movers.length : selectedIds.length;
   const isDeleting = bulkDeleteMutation.isPending;
+  const buttonSize = useBreakpointValue('sm', 'lg', 'lg');
 
   //무한 스크롤 감시자 설정
   const sentinelRef = useInfiniteScroll<HTMLDivElement>({
@@ -197,6 +202,11 @@ export default function LikedMoverList() {
             <span className="py-[80px] text-center text-lg-regular text-gray-400">
               {t('empty')}
             </span>
+            <div className="w-full max-w-[327px] tablet:w-[196px]">
+              <Button href={ROUTES.moverList} size={buttonSize}>
+                {tMover('title')}
+              </Button>
+            </div>
           </li>
         ) : (
           movers.map((mover) => (

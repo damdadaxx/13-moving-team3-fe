@@ -44,16 +44,20 @@ export function fetchMoverReviews(
 - 이사 완료(COMPLETED) + 확정(ACCEPTED) 견적만 온다
 - hasReview=false: 작성 가능한 리뷰
 - hasReview=true: 내가 작성한 리뷰
+- sort=reviewDate: 리뷰 작성일 기준 정렬
+- sort=moveDate: 이사 완료일 기준 정렬
 */
 export async function getMyReviews({
   page,
   pageSize,
   hasReview,
+  sort,
 }: GetMyReviewsParams): Promise<MyReviewListData> {
   const params = new URLSearchParams();
   params.set('page', String(page));
   params.set('pageSize', String(pageSize));
   params.set('hasReview', hasReview ? 'true' : 'false');
+  if (sort) params.set('sort', sort);
 
   return clientFetch<MyReviewListData>(
     `${ENDPOINTS.review.mine}?${params.toString()}`,
@@ -79,9 +83,11 @@ export async function createReview(
 */
 export async function createReviewDraft(
   input: CreateReviewDraftInput,
+  signal?: AbortSignal,
 ): Promise<ReviewSummary> {
   return clientFetch<ReviewSummary>(ENDPOINTS.review.draft, {
     method: 'POST',
     body: JSON.stringify(input),
+    signal,
   });
 }

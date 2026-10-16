@@ -33,3 +33,8 @@ export function isUnauthorizedHttpError(error: unknown): error is HttpError {
     error.code === 'REFRESH_FAILED'
   );
 }
+
+//api 요청 취소
+export function isAbortError(error: unknown): boolean {
+  return error instanceof Error && error.name === 'AbortError';
+}

@@ -79,10 +79,13 @@ export interface MyReviewListData {
   totalPages: number;
 }
 
+export type ReviewSort = 'reviewDate' | 'moveDate';
+
 export interface GetMyReviewsParams {
   page: number;
   pageSize: number;
   hasReview: boolean;
+  sort?: ReviewSort;
 }
 
 export interface CreateReviewInput {
@@ -133,4 +136,7 @@ export interface CreateReviewDraftInput {
   estimateId: string;
   rating: number;
   locale: 'ko' | 'en' | 'zh' | 'ja';
+}
+export interface CreateReviewDraftVariables extends CreateReviewDraftInput {
+  signal?: AbortSignal;
 }

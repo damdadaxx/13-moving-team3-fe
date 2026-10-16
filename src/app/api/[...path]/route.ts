@@ -65,10 +65,15 @@ async function proxy(request: NextRequest, { params }: RouteContext) {
         ...(PROXY_SECRET && { 'X-Proxy-Secret': PROXY_SECRET }),
       },
       body,
+      signal: request.signal,
       // 소셜 로그인 302 를 서버에서 따라가지 않고 브라우저에 그대로 넘긴다
       redirect: 'manual',
     });
   } catch {
+    //api 요청 취소
+    if (request.signal.aborted) {
+      return new Response(null, { status: 499 });
+    }
     // 백엔드 연결 실패 시 JSON 에러 응답
     return Response.json(
       {

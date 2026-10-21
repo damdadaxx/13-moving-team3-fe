@@ -38,6 +38,27 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  /*
+  @ 서비스 워커 파일 헤더
+  - sw.js는 브라우저가 캐시하지 않고 항상 새로 받아야 새 버전이 바로 반영된다
+  */
+  async headers() {
+    return [
+      {
+        source: '/sw.js',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+          {
+            key: 'Content-Type',
+            value: 'application/javascript; charset=utf-8',
+          },
+        ],
+      },
+    ];
+  },
   // SVG를 React 컴포넌트로 import: import IcArrow from '@/assets/icons/ic_arrow.svg'
   // dimensions:false로 width/height를 지우는 대신, viewBox는 남겨야
   // className(size-full 등)으로 지정한 크기에 아이콘이 맞게 스케일된다

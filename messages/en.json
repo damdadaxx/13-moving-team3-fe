@@ -171,6 +171,13 @@
       }
     ]
   },
+  "InstallPrompt": {
+    "title": "Install the Moving app",
+    "description": "Add it to your home screen to open it quickly like an app.",
+    "install": "Install app",
+    "hideToday": "Don't show today",
+    "iosGuide": "Tap the Share button, then choose 'Add to Home Screen'."
+  },
   "CookieConsent": {
     "label": "Cookie consent",
     "message": "We use Google Analytics cookies to understand how the service is used. You can still sign in and request quotes if you decline.",

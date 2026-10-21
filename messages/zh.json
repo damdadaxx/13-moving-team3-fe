@@ -171,6 +171,13 @@
       }
     ]
   },
+  "InstallPrompt": {
+    "title": "安装 Moving 应用",
+    "description": "添加到主屏幕后，可以像应用一样快速打开。",
+    "install": "安装应用",
+    "hideToday": "今日不再提示",
+    "iosGuide": "点击底部的分享按钮，然后选择“添加到主屏幕”。"
+  },
   "CookieConsent": {
     "label": "Cookie 收集同意",
     "message": "我们使用 Google Analytics Cookie 了解服务使用情况。拒绝后仍可登录并申请报价。",

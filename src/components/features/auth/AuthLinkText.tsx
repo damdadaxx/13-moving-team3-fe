@@ -29,7 +29,8 @@ export default function AuthLinkText({
       <Link
         href={href}
         className={cn(
-          'text-xs-semibold text-orange-400 underline underline-offset-[3px]',
+          // 안내 문구가 길면 줄이 바뀌더라도 링크 라벨 자체는 한 덩어리로 유지한다
+          'text-xs-semibold whitespace-nowrap text-orange-400 underline underline-offset-[3px]',
           'tablet:text-xl-semibold',
         )}
       >

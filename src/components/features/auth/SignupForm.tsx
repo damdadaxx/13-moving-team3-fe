@@ -50,9 +50,10 @@ function formatRemainingTime(totalSeconds: number): string {
 - h-[54px]: sm Input(54px)과 같은 높이로 맞춘다. 전에는 인증 확인 버튼에만
   h-[54px]를 따로 붙여서, 이메일 옆 상태 텍스트와 나란한 "받기/재발송" 버튼은
   패딩만으로 정해진 더 낮은 높이로 떠 있었다. 공통 클래스에 넣어 둘 다 같게 만든다
+- whitespace-nowrap: "재발송(n초)"·긴 번역에서도 글씨가 두 줄로 꺾이지 않게 한다 (대신 입력칸이 줄어든다)
 */
 const AUTH_SIDE_BUTTON_CLASS = cn(
-  'flex h-[54px] shrink-0 cursor-pointer items-center justify-center rounded-lg border border-orange-400 px-3 text-sm-medium text-orange-400',
+  'flex h-[54px] shrink-0 cursor-pointer items-center justify-center rounded-lg border border-orange-400 px-3 text-sm-medium whitespace-nowrap text-orange-400',
   'disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-300',
 );
 

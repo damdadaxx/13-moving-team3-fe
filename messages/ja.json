@@ -301,7 +301,20 @@
     "regionPlaceholder": "地域",
     "servicePlaceholder": "サービス",
     "all": "すべて",
-    "reset": "リセット"
+    "reset": "リセット",
+    "aiToggle": "AI検索",
+    "aiToggleLabel": "AI検索をオンにする",
+    "aiPlaceholder": "例）釜山 オフィス引越し、レビューが多い順",
+    "aiHelper": "文章で入力してEnterを押してください。個人情報は入力しないでください。",
+    "aiRemaining": "本日 {remaining}/{limit}回",
+    "aiExhausted": "本日のAI検索をすべて使いました。毎日0時（韓国時間）にリセットされます。",
+    "aiTooShort": "2文字以上入力してください。",
+    "aiPending": "AIが条件を探しています",
+    "aiResult": "AIが見つけた条件：{conditions}",
+    "aiNoCondition": "条件が見つかりませんでした。地域・引越しの種類・並び順を入れて再度入力してください。",
+    "aiSearchByName": "この文章で名前検索する",
+    "aiTooMany": "AI検索はしばらくしてから再度お試しください。",
+    "aiFailed": "AI検索に失敗しました。しばらくしてから再度お試しください。"
   },
   "MoverCard": {
     "nickname": "{nickname}",

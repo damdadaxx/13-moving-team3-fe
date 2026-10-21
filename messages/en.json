@@ -301,7 +301,20 @@
     "regionPlaceholder": "Region",
     "servicePlaceholder": "Service",
     "all": "All",
-    "reset": "Reset"
+    "reset": "Reset",
+    "aiToggle": "AI search",
+    "aiToggleLabel": "Turn on AI search",
+    "aiPlaceholder": "e.g. Office move in Busan, most reviewed",
+    "aiHelper": "Describe what you need and press Enter. Do not enter personal information.",
+    "aiRemaining": "{remaining}/{limit} left today",
+    "aiExhausted": "You have used all AI searches for today. It resets at midnight (KST).",
+    "aiTooShort": "Please enter at least 2 characters.",
+    "aiPending": "AI is finding your filters",
+    "aiResult": "Filters found by AI: {conditions}",
+    "aiNoCondition": "No filters found. Try including a region, move type, or sort order.",
+    "aiSearchByName": "Search names with this text",
+    "aiTooMany": "Please try AI search again in a moment.",
+    "aiFailed": "AI search failed. Please try again in a moment."
   },
   "MoverCard": {
     "nickname": "{nickname}",

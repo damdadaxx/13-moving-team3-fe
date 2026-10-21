@@ -4,21 +4,30 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { usePathname, useRouter } from '@/i18n/navigation';
-import type { MoverListSortBy } from '@/types/mover';
+import type { MoverAiSearchFilter, MoverListSortBy } from '@/types/mover';
 import { REGIONS, type Region } from '@/types/region';
 import { SERVICE_TYPES, type ServiceType } from '@/types/serviceType';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 
+import { HttpError } from '@/lib/api/errors';
 import { LIKED_MOVER_ID_PAGE_SIZE } from '@/lib/constants/mover';
 
 import useDebounce from '@/hooks/common/useDebounce';
+import { useLoginRequiredModal } from '@/hooks/common/useLoginRequiredModal';
+import { useToast } from '@/hooks/common/useToast';
+import {
+  AI_DAILY_LIMIT_CODE,
+  useAiUsageQuery,
+} from '@/hooks/features/ai/queries/queries';
 import { useAuth } from '@/hooks/features/auth/useAuth';
+import { useMoverAiSearchMutation } from '@/hooks/features/mover/queries/mutations';
 import { useLikedMoversQuery } from '@/hooks/features/mover/queries/queries';
 
 import { cn } from '@/utils/cn';
 
 import LikedMoverSection from '@/components/features/common/Mover/LikedMoverSection';
+import MoverAiSearchToggle from '@/components/features/common/Mover/MoverAiSearchToggle';
 import MoverFilterBar, {
   SORT_VALUES,
 } from '@/components/features/common/Mover/MoverFilterBar';
@@ -26,6 +35,7 @@ import MoverList from '@/components/features/common/Mover/MoverList';
 import InputSearchbar from '@/components/ui/Form/InputSearchbar';
 
 const DEFAULT_SORT_BY: MoverListSortBy = 'reviewCount';
+const AI_QUERY_MIN_LENGTH = 2;
 
 function toRegion(value: string | null): Region | undefined {
   return REGIONS.includes(value as Region) ? (value as Region) : undefined;
@@ -55,6 +65,9 @@ function toSortBy(value: string | null): MoverListSortBy {
 */
 export default function MoverFindContent() {
   const t = useTranslations('MoverFind');
+  const tRegion = useTranslations('Region');
+  const tServiceType = useTranslations('ServiceType');
+  const tSort = useTranslations('MoverSort');
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -77,6 +90,24 @@ export default function MoverFindContent() {
   const [keyword, setKeyword] = useState(urlKeyword);
   const debouncedKeyword = useDebounce(keyword.trim(), 300);
 
+  /*
+  @ AI 검색 모드 (URL ai=1)
+  - 검색창에 문장을 쓰고 Enter를 누르면 Gemini가 지역·서비스·정렬·별명을 골라 준다.
+    그 값을 기존 필터와 같은 URL 쿼리에 넣으므로 목록·뒤로가기·공유 링크는 지금처럼 동작한다.
+  - 타이핑마다 부르지 않는다 (디바운스 없음, Enter/검색 아이콘으로만). 로그인 사용자만, 하루 5회.
+  - 입력한 문장은 URL에 남기지 않는다 (개인정보가 섞일 수 있어서). 로컬 state로만 들고 있는다.
+  */
+  const { isLoggedIn, role } = useAuth();
+  const isAiMode = isLoggedIn && searchParams.get('ai') === '1';
+  const [aiQuery, setAiQuery] = useState('');
+  const [aiResult, setAiResult] = useState<MoverAiSearchFilter | null>(null);
+  // 조건을 하나도 못 찾은 문장. "이 문장으로 이름 검색하기" 버튼에 쓴다
+  const [unmatchedAiQuery, setUnmatchedAiQuery] = useState<string | null>(null);
+  const { data: aiUsage } = useAiUsageQuery(isLoggedIn);
+  const aiSearchMutation = useMoverAiSearchMutation();
+  const openLoginRequiredModal = useLoginRequiredModal();
+  const { showToast } = useToast();
+
   const updateQuery = useCallback(
     (updates: Record<string, string | undefined>) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -91,8 +122,9 @@ export default function MoverFindContent() {
   );
 
   // debounce가 끝난 검색어가 URL과 달라졌을 때만 반영한다 (매 렌더 반복 방지)
+  // AI 모드에서는 q를 AI가 고른 별명이 차지하므로 건드리지 않는다
   useEffect(() => {
-    if (debouncedKeyword === urlKeyword) return;
+    if (isAiMode || debouncedKeyword === urlKeyword) return;
     updateQuery({ q: debouncedKeyword || undefined });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedKeyword]);
@@ -103,7 +135,6 @@ export default function MoverFindContent() {
   - 비회원·기사님, 또는 찜한 기사님이 0명인 고객은 영역이 비어 그리지 않으므로
     오른쪽 327px 열도 만들지 않고 목록이 그 폭까지 넓어진다
   */
-  const { role } = useAuth();
   const isCustomer = role === 'customer';
   const { data: likedPage } = useLikedMoversQuery({
     size: LIKED_MOVER_ID_PAGE_SIZE,
@@ -112,8 +143,94 @@ export default function MoverFindContent() {
   const hasLikedSection = isCustomer && (likedPage?.list.length ?? 0) > 0;
 
   function handleReset() {
+    setAiResult(null);
     updateQuery({ region: undefined, serviceType: undefined });
   }
+
+  function handleToggleAi() {
+    if (!isLoggedIn) {
+      openLoginRequiredModal();
+      return;
+    }
+    setAiResult(null);
+    setUnmatchedAiQuery(null);
+    if (isAiMode) {
+      // 이름 검색으로 돌아갈 때는 지금 URL의 q(AI가 고른 별명일 수 있음)를 입력창에 맞춘다
+      setKeyword(urlKeyword);
+      updateQuery({ ai: undefined });
+      return;
+    }
+    updateQuery({ ai: '1' });
+  }
+
+  function getAiErrorMessage(error: unknown) {
+    if (error instanceof HttpError) {
+      if (error.code === AI_DAILY_LIMIT_CODE) return t('aiExhausted');
+      if (error.code === 'TOO_MANY_REQUESTS') return t('aiTooMany');
+    }
+    return t('aiFailed');
+  }
+
+  function handleAiSearch(value: string) {
+    const query = value.trim();
+    if (aiSearchMutation.isPending) return;
+    if (query.length < AI_QUERY_MIN_LENGTH) {
+      showToast(t('aiTooShort'));
+      return;
+    }
+    if (aiUsage?.moverSearch.remaining === 0) {
+      showToast(t('aiExhausted'));
+      return;
+    }
+
+    setUnmatchedAiQuery(null);
+    aiSearchMutation.mutate(query, {
+      onSuccess: ({ filter }) => {
+        const hasCondition = Object.values(filter).some(
+          (condition) => condition !== null,
+        );
+        if (!hasCondition) {
+          setAiResult(null);
+          setUnmatchedAiQuery(query);
+          showToast(t('aiNoCondition'));
+          return;
+        }
+
+        // 문장 전체가 새 조건이다. 언급하지 않은 조건은 비운다
+        setAiResult(filter);
+        updateQuery({
+          region: filter.region ?? undefined,
+          serviceType: filter.serviceType ?? undefined,
+          sortBy:
+            filter.sortBy && filter.sortBy !== DEFAULT_SORT_BY
+              ? filter.sortBy
+              : undefined,
+          q: filter.keyword ?? undefined,
+        });
+      },
+      onError: (error) => showToast(getAiErrorMessage(error)),
+    });
+  }
+
+  // 조건을 못 찾은 문장을 그대로 별명 검색으로 넘긴다
+  function handleSearchUnmatchedByName() {
+    if (!unmatchedAiQuery) return;
+    setKeyword(unmatchedAiQuery);
+    setUnmatchedAiQuery(null);
+    setAiResult(null);
+    updateQuery({ ai: undefined });
+  }
+
+  const aiResultText = aiResult
+    ? [
+        aiResult.region && tRegion(aiResult.region),
+        aiResult.serviceType && tServiceType(aiResult.serviceType),
+        aiResult.sortBy && tSort(aiResult.sortBy),
+        aiResult.keyword && `"${aiResult.keyword}"`,
+      ]
+        .filter(Boolean)
+        .join(' · ')
+    : '';
 
   return (
     // 바깥은 화면 전체 폭, 안쪽 래퍼가 최대 너비(1248px)를 잡고 가운데 정렬한다
@@ -142,28 +259,89 @@ export default function MoverFindContent() {
               : 'desktop:grid-cols-[minmax(0,1fr)]',
           )}
         >
-          <InputSearchbar
-            value={keyword}
-            onChange={(event) => setKeyword(event.target.value)}
-            aria-label={t('searchLabel')}
+          {/* 검색 행: 그리드의 1행을 그대로 차지해야 찜한 기사님(row-start-3) 위치가 유지된다 */}
+          <div
             className={cn(
               'mt-[16px] mb-1.5',
               'tablet:mt-[24px] tablet:mb-2.5',
               'desktop:col-start-1 desktop:mt-[3px] desktop:mb-0',
             )}
-          />
+          >
+            <div className="flex items-center gap-2">
+              {isAiMode ? (
+                <InputSearchbar
+                  key="ai"
+                  value={aiQuery}
+                  onChange={(event) => setAiQuery(event.target.value)}
+                  onSearch={handleAiSearch}
+                  maxLength={100}
+                  placeholder={t('aiPlaceholder')}
+                  aria-label={t('aiToggle')}
+                  aria-busy={aiSearchMutation.isPending || undefined}
+                  className="min-w-0 flex-1"
+                />
+              ) : (
+                <InputSearchbar
+                  key="name"
+                  value={keyword}
+                  onChange={(event) => setKeyword(event.target.value)}
+                  aria-label={t('searchLabel')}
+                  className="min-w-0 flex-1"
+                />
+              )}
+              <MoverAiSearchToggle
+                isOn={isAiMode}
+                usage={aiUsage?.moverSearch}
+                onToggle={handleToggleAi}
+              />
+            </div>
+
+            {isAiMode ? (
+              <div
+                className="mt-2 flex flex-col gap-1 text-xs-regular text-gray-500 desktop:text-sm-regular"
+                aria-live="polite"
+              >
+                {aiSearchMutation.isPending ? (
+                  <p>{t('aiPending')}</p>
+                ) : aiResultText ? (
+                  <p className="text-orange-400">
+                    {t('aiResult', { conditions: aiResultText })}
+                  </p>
+                ) : (
+                  <p>{t('aiHelper')}</p>
+                )}
+                {unmatchedAiQuery ? (
+                  <button
+                    type="button"
+                    onClick={handleSearchUnmatchedByName}
+                    className="cursor-pointer self-start text-orange-400 underline underline-offset-2"
+                  >
+                    {t('aiSearchByName')}
+                  </button>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
 
           <MoverFilterBar
             region={region}
             serviceType={serviceType}
             sortBy={sortBy}
-            onRegionChange={(next) => updateQuery({ region: next })}
-            onServiceTypeChange={(next) => updateQuery({ serviceType: next })}
-            onSortChange={(next) =>
+            // 필터를 직접 바꾸면 "AI가 찾은 조건" 문구는 더 이상 맞지 않으므로 지운다
+            onRegionChange={(next) => {
+              setAiResult(null);
+              updateQuery({ region: next });
+            }}
+            onServiceTypeChange={(next) => {
+              setAiResult(null);
+              updateQuery({ serviceType: next });
+            }}
+            onSortChange={(next) => {
+              setAiResult(null);
               updateQuery({
                 sortBy: next === DEFAULT_SORT_BY ? undefined : next,
-              })
-            }
+              });
+            }}
             onReset={handleReset}
             className={cn(
               'py-4',
@@ -173,7 +351,8 @@ export default function MoverFindContent() {
 
           <MoverList
             params={{
-              keyword: debouncedKeyword || undefined,
+              // AI 모드의 별명은 입력창이 아니라 URL(q)에서 온다
+              keyword: (isAiMode ? urlKeyword : debouncedKeyword) || undefined,
               region,
               serviceType,
               sortBy,

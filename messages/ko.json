@@ -667,7 +667,10 @@
     "draftHint": "AI 리뷰 초안 작성은 별점, 이사 날짜, 기사님 이름을 기반으로 작성됩니다",
     "sortReviewDate": "작성일순",
     "sortMoveDate": "이사일순",
-    "sortAria": "리뷰 정렬"
+    "sortAria": "리뷰 정렬",
+    "draftRemaining": "오늘 {remaining}/{limit}회",
+    "draftExhausted": "오늘 초안 생성 횟수를 모두 사용했어요. 매일 자정에 초기화돼요.",
+    "draftTooMany": "초안 생성은 잠시 후 다시 시도해 주세요."
   },
   "CustomerProfile": {
     "createTitle": "프로필 등록",

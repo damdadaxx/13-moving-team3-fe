@@ -667,7 +667,10 @@
     "draftHint": "AIの下書きは評価、引越し日、担当者名をもとに作成されます",
     "sortReviewDate": "投稿日順",
     "sortMoveDate": "引越し日順",
-    "sortAria": "レビューの並び替え"
+    "sortAria": "レビューの並び替え",
+    "draftRemaining": "本日 {remaining}/{limit}回",
+    "draftExhausted": "本日の下書き作成回数をすべて使いました。毎日0時（韓国時間）にリセットされます。",
+    "draftTooMany": "下書き作成はしばらくしてから再度お試しください。"
   },
   "CustomerProfile": {
     "createTitle": "プロフィール登録",

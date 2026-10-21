@@ -667,7 +667,10 @@
     "draftHint": "AI 草稿会根据评分、搬家日期和搬家师傅姓名生成",
     "sortReviewDate": "按评价日期",
     "sortMoveDate": "按搬家日期",
-    "sortAria": "评价排序"
+    "sortAria": "评价排序",
+    "draftRemaining": "今日 {remaining}/{limit} 次",
+    "draftExhausted": "今日草稿生成次数已用完，每天零点（韩国时间）重置。",
+    "draftTooMany": "请稍后再生成草稿。"
   },
   "CustomerProfile": {
     "createTitle": "注册资料",

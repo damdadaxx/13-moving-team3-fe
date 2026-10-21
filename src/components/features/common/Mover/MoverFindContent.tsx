@@ -269,17 +269,44 @@ export default function MoverFindContent() {
           >
             <div className="flex items-center gap-2">
               {isAiMode ? (
-                <InputSearchbar
-                  key="ai"
-                  value={aiQuery}
-                  onChange={(event) => setAiQuery(event.target.value)}
-                  onSearch={handleAiSearch}
-                  maxLength={100}
-                  placeholder={t('aiPlaceholder')}
-                  aria-label={t('aiToggle')}
-                  aria-busy={aiSearchMutation.isPending || undefined}
-                  className="min-w-0 flex-1"
-                />
+                /*
+                @ AI 검색바 테두리
+                - 2px 패딩으로 비친 배경이 테두리 역할을 한다 (검색바 radius 16 + 2 = 18)
+                - 대기: 주황 테두리 + 바깥 주황 그림자
+                - 검색 중: 커다란 원뿔 그라데이션을 돌려서, 패딩 틈으로 빛이 테두리를 따라 도는 것처럼 보인다
+                  (overflow-hidden 으로 바깥은 잘림. 자기 box-shadow 는 잘리지 않는다)
+                - 동작 줄이기 설정이면 회전 없이 진한 테두리만 보인다
+                */
+                <div
+                  className={cn(
+                    'relative min-w-0 flex-1 overflow-hidden rounded-[18px] p-[2px] transition-shadow duration-300',
+                    aiSearchMutation.isPending
+                      ? 'bg-orange-100 shadow-[0_0_0_4px_var(--color-orange-100),0_4px_24px_rgba(249,80,46,0.35)] motion-reduce:bg-orange-400'
+                      : 'bg-orange-300 shadow-[0_0_0_4px_var(--color-orange-100),0_4px_16px_rgba(249,80,46,0.2)]',
+                  )}
+                >
+                  {aiSearchMutation.isPending ? (
+                    <span
+                      aria-hidden="true"
+                      className={cn(
+                        'pointer-events-none absolute top-1/2 left-1/2 aspect-square w-[200%] -translate-x-1/2 -translate-y-1/2',
+                        'bg-[conic-gradient(transparent_0deg,var(--color-orange-400)_70deg,transparent_140deg,transparent_180deg,var(--color-orange-400)_250deg,transparent_320deg)]',
+                        'animate-ai-search-spin motion-reduce:hidden',
+                      )}
+                    />
+                  ) : null}
+                  <InputSearchbar
+                    key="ai"
+                    value={aiQuery}
+                    onChange={(event) => setAiQuery(event.target.value)}
+                    onSearch={handleAiSearch}
+                    maxLength={100}
+                    placeholder={t('aiPlaceholder')}
+                    aria-label={t('aiToggle')}
+                    aria-busy={aiSearchMutation.isPending || undefined}
+                    className="relative"
+                  />
+                </div>
               ) : (
                 <InputSearchbar
                   key="name"

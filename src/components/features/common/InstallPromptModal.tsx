@@ -151,12 +151,14 @@ export default function InstallPromptModal() {
             variant="outlined"
             size={controlSize}
             onClick={handleHideToday}
+            className="p-0 text-md-medium!"
           >
             {t('hideToday')}
           </Button>
           <Button
             size={controlSize}
             onClick={installEvent ? () => void handleInstall() : handleClose}
+            className="p-0 text-md-medium!"
           >
             {installEvent ? t('install') : tCommon('confirm')}
           </Button>
@@ -171,11 +173,11 @@ export default function InstallPromptModal() {
           height={72}
           className="size-[72px] rounded-[18px] border border-line-100"
         />
-        <p className="text-md-regular text-black-300 tablet:text-lg-regular">
+        {/* <p className="text-md-regular text-black-300 tablet:text-lg-regular whitespace-pre-line text-center">
           {t('description')}
-        </p>
+        </p> */}
         {installEvent ? null : (
-          <p className="rounded-[12px] bg-background-200 px-[16px] py-[12px] text-sm-medium text-black-300 tablet:text-md-medium">
+          <p className="w-full rounded-[12px] bg-background-200 px-[16px] py-[12px] text-sm-medium whitespace-pre-line text-black-300 tablet:text-md-medium">
             {t('iosGuide')}
           </p>
         )}

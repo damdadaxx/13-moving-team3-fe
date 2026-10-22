@@ -662,7 +662,7 @@
     "commentPlaceholder": "请至少输入 10 个字",
     "draft": "AI 生成草稿",
     "draftPending": "正在撰写草稿",
-    "draftFailed": "评价草稿生成失败。",
+    "draftFailed": "未能生成评价草稿，请稍后再试。",
     "draftHintActivate": "选择评分后按钮才会启用",
     "draftHint": "AI 草稿会根据评分、搬家日期和搬家师傅姓名生成",
     "sortReviewDate": "按评价日期",

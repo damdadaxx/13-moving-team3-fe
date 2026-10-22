@@ -662,7 +662,7 @@
     "commentPlaceholder": "10文字以上入力してください",
     "draft": "AIで下書き",
     "draftPending": "下書きを作成しています",
-    "draftFailed": "レビューの下書き作成に失敗しました。",
+    "draftFailed": "レビューの下書きを作成できませんでした。しばらくしてから再度お試しください。",
     "draftHintActivate": "評価を選ぶとボタンが有効になります",
     "draftHint": "AIの下書きは評価、引越し日、担当者名をもとに作成されます",
     "sortReviewDate": "投稿日順",

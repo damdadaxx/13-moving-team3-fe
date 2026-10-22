@@ -31,9 +31,10 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
       {
-        // 채팅 이미지(Supabase Storage 공개 URL), 상대방 프로필 이미지 표시용
+        // 채팅 이미지. 비공개 버킷이라 조회 시점마다 signed URL로 내려온다
+        // (버킷/리전이 바뀌면 BE AWS_PRIVATE_BUCKET_NAME/AWS_REGION과 같이 맞춘다)
         protocol: 'https',
-        hostname: 'riphxsdecygfvtadyixk.supabase.co',
+        hostname: 'private-team3-moving-buket.s3.ap-northeast-2.amazonaws.com',
         pathname: '/**',
       },
     ],

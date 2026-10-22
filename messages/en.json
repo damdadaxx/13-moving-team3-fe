@@ -87,6 +87,7 @@
     "inputPlaceholder": "Type a message",
     "addImage": "Attach image",
     "send": "Send",
+    "sendImage": "Send photo",
     "messageRead": "Read",
     "messageUnread": "Unread",
     "showMore": "Show more",

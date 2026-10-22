@@ -3,20 +3,25 @@
 import { useRef, useState } from 'react';
 
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 
 import IcCornerDownLeft from '@/assets/icons/ic_corner_down_left.svg';
 import IcPaperclip from '@/assets/icons/ic_paperclip.svg';
 
+import { uploadChatImage } from '@/lib/api/chatImageUpload';
 import { HttpError } from '@/lib/api/errors';
-import { uploadChatImage } from '@/lib/supabase/chatImage';
 
 import { useToast } from '@/hooks/common/useToast';
 import {
   useChatImageUploadUrlMutation,
   useSendChatMessageMutation,
 } from '@/hooks/features/chat/queries/mutations';
+import { useEmitTyping } from '@/hooks/features/chat/useChatTyping';
 
 import { cn } from '@/utils/cn';
+
+import Button from '@/components/ui/Button/Button';
+import Modal from '@/components/ui/Modal';
 
 interface MessageInputProps {
   estimateId: string;
@@ -25,7 +30,7 @@ interface MessageInputProps {
 }
 
 /** 백엔드 HttpError는 사용자가 읽을 수 있는 한국어 메시지를 그대로 들고 있어 보여준다.
- * 그 외(Supabase Storage 에러 등)는 원인 파악용 영문 메시지라도 fallback보다 정보가 많으면 보여준다
+ * 그 외(S3 업로드 에러 등)는 원인 파악용 영문 메시지라도 fallback보다 정보가 많으면 보여준다
  */
 function getErrorMessage(error: unknown, fallback: string): string {
   if (error instanceof HttpError) return error.message;
@@ -36,21 +41,27 @@ function getErrorMessage(error: unknown, fallback: string): string {
 /*
 @ 채팅 입력창
 - 텍스트: Enter(IME 조합 중 제외)·전송 버튼으로 보낸다
-- 이미지: 파일 버튼으로 이미지 파일을 고르면 presigned URL 발급 → Storage 업로드 → 공개 URL로 즉시 전송한다
-  (텍스트와 별도 메시지로 바로 나간다. 미리보기 없이 탭 한 번으로 보내는 흐름)
+- 이미지: 파일 버튼으로 이미지 파일을 고르면 미리보기 모달이 뜬다. 전송을 눌러야 presigned
+  POST URL 발급 → S3 업로드 → path를 메시지로 보낸다 (텍스트와 별도 메시지로 나간다)
 */
 export default function MessageInput({
   estimateId,
   onSend,
 }: MessageInputProps) {
   const t = useTranslations('Chat');
+  const tCommon = useTranslations('Common');
   const { showToast } = useToast();
   const [text, setText] = useState('');
   const [isComposing, setIsComposing] = useState(false);
+  const [pendingImage, setPendingImage] = useState<{
+    file: File;
+    previewUrl: string;
+  } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const sendMessage = useSendChatMessageMutation(estimateId);
   const issueUploadUrl = useChatImageUploadUrlMutation(estimateId);
+  const emitTyping = useEmitTyping(estimateId);
 
   const handleSendText = () => {
     const content = text.trim();
@@ -72,7 +83,7 @@ export default function MessageInput({
     handleSendText();
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = '';
     if (!file) return;
@@ -83,11 +94,25 @@ export default function MessageInput({
       return;
     }
 
+    setPendingImage({ file, previewUrl: URL.createObjectURL(file) });
+  };
+
+  const closePendingImage = () => {
+    if (pendingImage) URL.revokeObjectURL(pendingImage.previewUrl);
+    setPendingImage(null);
+  };
+
+  const handleSendImage = async () => {
+    if (!pendingImage) return;
+    const { file } = pendingImage;
+    // 업로드는 백그라운드로 두고 모달은 바로 닫는다 (텍스트 전송과 같은 낙관적 흐름)
+    closePendingImage();
+
     try {
-      const { path, token } = await issueUploadUrl.mutateAsync(file.name);
-      await uploadChatImage(path, token, file);
+      const upload = await issueUploadUrl.mutateAsync(file.name);
+      await uploadChatImage(file, upload);
       sendMessage.mutate(
-        { imagePath: path },
+        { imagePath: upload.path },
         {
           onError: (error) =>
             showToast(getErrorMessage(error, t('sendFailed'))),
@@ -113,7 +138,7 @@ export default function MessageInput({
         type="file"
         accept="image/*"
         hidden
-        onChange={(e) => void handleFileChange(e)}
+        onChange={handleFileChange}
       />
       <button
         type="button"
@@ -131,7 +156,10 @@ export default function MessageInput({
         type="text"
         value={text}
         placeholder={t('inputPlaceholder')}
-        onChange={(e) => setText(e.target.value)}
+        onChange={(e) => {
+          setText(e.target.value);
+          emitTyping();
+        }}
         onKeyDown={handleKeyDown}
         onCompositionStart={() => setIsComposing(true)}
         onCompositionEnd={() => setIsComposing(false)}
@@ -152,6 +180,33 @@ export default function MessageInput({
       >
         <IcCornerDownLeft aria-hidden className={cn('size-[20px]')} />
       </button>
+
+      <Modal
+        isOpen={pendingImage !== null}
+        onClose={closePendingImage}
+        title={t('sendImage')}
+        buttons={
+          <>
+            <Button variant="outlined" color="gray" onClick={closePendingImage}>
+              {tCommon('cancel')}
+            </Button>
+            <Button onClick={() => void handleSendImage()}>{t('send')}</Button>
+          </>
+        }
+      >
+        {pendingImage ? (
+          // 고정 박스 + object-contain: 원본이 작아도 이 크기까진 채워 보여준다 (최소 크기 보장)
+          <div className={cn('relative h-[240px] w-full')}>
+            <Image
+              src={pendingImage.previewUrl}
+              alt=""
+              fill
+              unoptimized
+              className={cn('rounded-[12px] object-contain')}
+            />
+          </div>
+        ) : null}
+      </Modal>
     </div>
   );
 }

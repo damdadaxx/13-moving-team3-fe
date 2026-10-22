@@ -87,6 +87,7 @@
     "inputPlaceholder": "메시지를 입력하세요",
     "addImage": "이미지 첨부",
     "send": "전송",
+    "sendImage": "사진 전송",
     "messageRead": "읽음",
     "messageUnread": "안읽음",
     "showMore": "더보기",

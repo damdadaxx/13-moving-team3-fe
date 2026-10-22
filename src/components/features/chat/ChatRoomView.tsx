@@ -4,7 +4,6 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
 
 import { useRouter } from '@/i18n/navigation';
-import { useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 
 import IcAlarmClose from '@/assets/icons/ic_alarm_close.svg';
@@ -14,9 +13,9 @@ import IcChevronLeft from '@/assets/icons/ic_chevron_left.svg';
 import { getEstimateDetailPath } from '@/lib/constants/routes';
 
 import { useAuth } from '@/hooks/features/auth/useAuth';
-import { refreshLatestChatMessages } from '@/hooks/features/chat/chatMessageCache';
 import { useReadChatMessagesMutation } from '@/hooks/features/chat/queries/mutations';
 import { useChatMessagesQuery } from '@/hooks/features/chat/queries/queries';
+import { useOtherTyping } from '@/hooks/features/chat/useChatTyping';
 import { useEstimateDetailQuery } from '@/hooks/features/estimate/queries/queries';
 
 import { cn } from '@/utils/cn';
@@ -47,6 +46,32 @@ function DateDivider({ date }: { date: string }) {
   );
 }
 
+/** 상대방 메시지 말풍선과 같은 자리·같은 스타일로 보여주는 "입력 중" 표시 */
+function TypingIndicator() {
+  return (
+    <div
+      className={cn(
+        'flex items-end gap-[6px] justify-start px-[16px] tablet:px-[24px]',
+      )}
+    >
+      <div
+        className={cn(
+          'flex items-center gap-[4px] rounded-[16px] rounded-bl-[4px] bg-background-200 px-[16px] py-[12px]',
+        )}
+      >
+        {[0, 1, 2].map((i) => (
+          <span
+            key={i}
+            aria-hidden
+            style={{ animationDelay: `${i * 150}ms` }}
+            className={cn('size-[6px] animate-bounce rounded-full bg-gray-400')}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 interface ChatRoomViewProps {
   estimateId: string;
   /** 뒤로가기 (목록으로 전환) */
@@ -68,7 +93,6 @@ export default function ChatRoomView({
 }: ChatRoomViewProps) {
   const t = useTranslations('Chat');
   const scrollRef = useRef<HTMLDivElement>(null);
-  const queryClient = useQueryClient();
   // 이전 메시지를 앞에 붙이기 직전의 스크롤 상태. 붙인 뒤 보던 자리를 유지하는 데 쓴다
   const prependRestoreRef = useRef<{ height: number; top: number } | null>(
     null,
@@ -93,10 +117,10 @@ export default function ChatRoomView({
   const firstMessageId = messages[0]?.messageId;
   const { hasNextPage, isFetchingNextPage, fetchNextPage } = messagesQuery;
 
-  // 방에 들어올 때 최신 메시지를 한 번 따라잡는다 (캐시가 있는 방에서 놓친 메시지 반영)
-  useEffect(() => {
-    if (isAccessible) void refreshLatestChatMessages(queryClient, estimateId);
-  }, [estimateId, isAccessible, queryClient]);
+  // 실시간 join·새 메시지/읽음 반영은 ChatFloatingButton의 useChatRealtimeSync가
+  // 내 채팅방 전체를 대상으로 전역으로 처리한다 (이 방도 포함된다)
+
+  const isOtherTyping = useOtherTyping(estimateId, isAccessible);
 
   // 맨 위로 올리면 이전 메시지를 더 불러온다
   const handleScroll = () => {
@@ -129,7 +153,7 @@ export default function ChatRoomView({
     const el = scrollRef.current;
     if (el) el.scrollTop = el.scrollHeight;
   };
-  useEffect(scrollToBottom, [lastMessageId]);
+  useEffect(scrollToBottom, [lastMessageId, isOtherTyping]);
 
   const otherPartyName = estimate
     ? role === 'customer'
@@ -303,6 +327,8 @@ export default function ChatRoomView({
             </div>
           );
         })}
+
+        {isOtherTyping ? <TypingIndicator /> : null}
       </div>
 
       {isReadOnly ? (

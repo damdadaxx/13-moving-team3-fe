@@ -9,11 +9,11 @@ import type { AuthUser, LoginInput, SignupInput } from '@/types/auth';
 import type { Role } from '@/types/role';
 import { useQueryClient } from '@tanstack/react-query';
 
+import { chatSocket } from '@/lib/socket/client';
 import {
   useStoredAuthUser,
   writeStoredAuthUser,
 } from '@/lib/storage/authUserStorage';
-import { setSupabaseAccessToken } from '@/lib/supabase/accessToken';
 
 import { authKeys } from '@/hooks/features/auth/queries/keys';
 import {
@@ -83,7 +83,7 @@ export default function AuthProvider({
 
     void queryClient.cancelQueries({ queryKey: authKeys.me() });
     applyAuthSession(queryClient, null);
-    setSupabaseAccessToken(null);
+    chatSocket.disconnect();
   }, [storedUser, queryClient]);
 
   const value = useMemo<AuthContextValue>(

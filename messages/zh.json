@@ -87,6 +87,7 @@
     "inputPlaceholder": "请输入消息",
     "addImage": "添加图片",
     "send": "发送",
+    "sendImage": "发送照片",
     "messageRead": "已读",
     "messageUnread": "未读",
     "showMore": "查看更多",

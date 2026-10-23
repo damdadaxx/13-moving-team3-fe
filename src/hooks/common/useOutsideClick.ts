@@ -24,6 +24,8 @@ type OutsideClickHandler = (e: MouseEvent | FocusEvent | KeyboardEvent) => void;
  * (closeOnEscape=true 시) ESC 키를 눌렀을 때 handler를 호출하는 공통 훅입니다.
  * 옵션 미사용 시 기본적으로 마우스 외부 클릭만 감지합니다.
  */
+const MODAL_ROOT_ID = 'modal-root';
+
 export function useOutsideClick<T extends HTMLElement>(
   ref: RefObject<T | null>,
   handler: OutsideClickHandler,
@@ -38,13 +40,22 @@ export function useOutsideClick<T extends HTMLElement>(
 
     function handleOutside(e: MouseEvent | FocusEvent) {
       // e.target이 Node|null로 타이핑될 수 있으므로 type guard 사용
-      if (
-        ref.current &&
-        e.target instanceof Node &&
-        !ref.current.contains(e.target)
-      ) {
-        handler(e);
-      }
+      if (!ref.current || !(e.target instanceof Node)) return;
+      if (ref.current.contains(e.target)) return;
+
+      /*
+      @ 모달/라이트박스는 #modal-root로 포탈돼서 감시 대상(ref) 바깥의 DOM 트리에 있다.
+      - 그래서 모달 안을 클릭하면(전송 버튼, 배경, 이미지 크게 보기 등) 이 ref 입장에서는
+        "바깥 클릭"으로 보여 드롭다운/팝오버가 같이 닫혀버린다.
+      - ref 자신이 모달 안(#modal-root 하위)에 있는 경우는 제외한다 — 그건 모달 자신의
+        바깥 클릭 감지(배경 클릭으로 모달 닫기)라서 그대로 동작해야 한다.
+      */
+      const modalRoot = document.getElementById(MODAL_ROOT_ID);
+      const refIsInsideModal = !!modalRoot && modalRoot.contains(ref.current);
+      const targetIsInsideModal = !!modalRoot && modalRoot.contains(e.target);
+      if (!refIsInsideModal && targetIsInsideModal) return;
+
+      handler(e);
     }
 
     function handleEscape(e: KeyboardEvent) {

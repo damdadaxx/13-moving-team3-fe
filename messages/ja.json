@@ -87,6 +87,7 @@
     "inputPlaceholder": "メッセージを入力してください",
     "addImage": "画像を添付",
     "send": "送信",
+    "sendImage": "写真を送信",
     "messageRead": "既読",
     "messageUnread": "未読",
     "showMore": "もっと見る",

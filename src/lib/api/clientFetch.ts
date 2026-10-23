@@ -6,10 +6,6 @@ import {
   readJsonBody,
   unwrapApiData,
 } from '@/lib/api/parseApi';
-import {
-  captureSupabaseAccessTokenFromBody,
-  getSupabaseTokenEpoch,
-} from '@/lib/supabase/accessToken';
 
 // 토큰 갱신 중복 요청 방지용 싱글톤 프로미스
 let refreshPromise: Promise<Response> | null = null;
@@ -48,24 +44,12 @@ interface ClientFetchInit extends RequestInit {
 
 async function requestRefresh(): Promise<Response> {
   if (!refreshPromise) {
-    const epoch = getSupabaseTokenEpoch();
     refreshPromise = fetch(ENDPOINTS.auth.refresh, {
       method: 'POST',
       credentials: 'same-origin',
-    })
-      .then(async (response) => {
-        // 갱신 응답에도 새 accessToken이 실려온다 (Supabase 클라이언트용)
-        // 요청 중에 로그아웃하면 epoch가 바뀌므로, 늦은 응답으로 토큰을 다시 넣지 않는다
-        if (response.ok && epoch === getSupabaseTokenEpoch()) {
-          captureSupabaseAccessTokenFromBody(
-            await readJsonBody(response.clone()),
-          );
-        }
-        return response;
-      })
-      .finally(() => {
-        refreshPromise = null;
-      });
+    }).finally(() => {
+      refreshPromise = null;
+    });
   }
   return refreshPromise;
 }
@@ -156,6 +140,5 @@ export default async function clientFetch<T = unknown>(
 
   // 백엔드 성공 응답 { success: true, data }에서 data만 반환 (이미지 URL 포함)
   const body = await readJsonBody(response);
-  captureSupabaseAccessTokenFromBody(body);
   return unwrapApiData<T>(body);
 }

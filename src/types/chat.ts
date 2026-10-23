@@ -1,14 +1,15 @@
 /*
-@ 채팅 관련 타입 (Supabase 분리 DB, chat_messages 테이블 기반)
-- 채팅방 키는 estimateId(기존 도메인 DB의 견적 id)다
+@ 채팅 관련 타입 (도메인 DB의 chatMessage 테이블 기반, Socket.IO로 실시간 반영)
+- 채팅방 키는 estimateId(기존 도메인 DB의 견적 id)다. Socket.IO room 이름도 estimateId다
 - ACCEPTED: 송수신+이미지+조회 / COMPLETED: 조회만 / 그 외: 접근 불가
 - 백엔드 OpenAPI(ChatMessage/ChatMessageListResponse/SendMessageResponse/
   UnreadCountResponse/ImageUploadResponse) 스키마와 이름을 맞춘다
 */
 
 export interface ChatMessage {
-  /** Supabase bigint id. 문자열로 내려온다 */
+  /** UUID */
   messageId: string;
+  estimateId: string;
   senderId: string;
   content: string | null;
   imageUrl: string | null;
@@ -42,12 +43,14 @@ export interface ChatUnreadCount {
 }
 
 /** POST /chat/rooms/:estimateId/image 응답
- * - uploadUrl(PUT)로 Storage에 직접 업로드한 뒤, path를 메시지 전송(imagePath)에 쓴다
+ * - uploadUrl(POST, S3 presigned POST)로 fields를 같이 실어 직접 업로드한 뒤,
+ *   path를 메시지 전송(imagePath)에 쓴다. PUT이 아니라 POST — 4MB 제한을
+ *   content-length-range 조건으로 S3가 강제하려면 POST 정책 방식이어야 한다
  */
 export interface ChatImageUploadUrl {
   uploadUrl: string;
   path: string;
-  token: string;
+  fields: Record<string, string>;
 }
 
 /** GET /chat/rooms - 내가 참여 중인 채팅방(견적 ACCEPTED, 요청 CONFIRMED·COMPLETED) 목록

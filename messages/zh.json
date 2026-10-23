@@ -340,7 +340,20 @@
     "regionPlaceholder": "地区",
     "servicePlaceholder": "服务",
     "all": "全部",
-    "reset": "重置"
+    "reset": "重置",
+    "aiToggle": "AI 搜索",
+    "aiToggleLabel": "开启 AI 搜索",
+    "aiPlaceholder": "例：釜山 办公室搬家，评价最多",
+    "aiHelper": "用句子描述后按 Enter。请勿输入个人信息。",
+    "aiRemaining": "今日 {remaining}/{limit} 次",
+    "aiExhausted": "今日 AI 搜索次数已用完，每天零点（韩国时间）重置。",
+    "aiTooShort": "请输入至少 2 个字。",
+    "aiPending": "AI 正在查找条件",
+    "aiResult": "AI 找到的条件：{conditions}",
+    "aiNoCondition": "未找到条件。请加入地区、搬家类型或排序后重新输入。",
+    "aiSearchByName": "用这句话搜索昵称",
+    "aiTooMany": "请稍后再试 AI 搜索。",
+    "aiFailed": "AI 搜索失败，请稍后再试。"
   },
   "MoverCard": {
     "nickname": "{nickname} 师傅",
@@ -689,12 +702,15 @@
     "commentPlaceholder": "请至少输入 10 个字",
     "draft": "AI 生成草稿",
     "draftPending": "正在撰写草稿",
-    "draftFailed": "评价草稿生成失败。",
+    "draftFailed": "未能生成评价草稿，请稍后再试。",
     "draftHintActivate": "选择评分后按钮才会启用",
     "draftHint": "AI 草稿会根据评分、搬家日期和搬家师傅姓名生成",
     "sortReviewDate": "按评价日期",
     "sortMoveDate": "按搬家日期",
-    "sortAria": "评价排序"
+    "sortAria": "评价排序",
+    "draftRemaining": "今日 {remaining}/{limit} 次",
+    "draftExhausted": "今日草稿生成次数已用完，每天零点（韩国时间）重置。",
+    "draftTooMany": "请稍后再生成草稿。"
   },
   "CustomerProfile": {
     "createTitle": "注册资料",

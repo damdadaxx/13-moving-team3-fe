@@ -1,5 +1,10 @@
 // 기사님 프로필 API 호출 함수
-import type { MoverDetail, MoverListData, MoverListQuery } from '@/types/mover';
+import type {
+  MoverAiSearchData,
+  MoverDetail,
+  MoverListData,
+  MoverListQuery,
+} from '@/types/mover';
 import type { ServiceType } from '@/types/serviceType';
 
 import clientFetch from '@/lib/api/clientFetch';
@@ -41,6 +46,18 @@ export function fetchMoverList(
 */
 export function fetchMoverDetail(id: string): Promise<MoverDetail> {
   return clientFetch<MoverDetail>(ENDPOINTS.mover.detail(id));
+}
+
+/*
+@ 기사님 AI 검색 (GET /mover/ai-search?q=)
+- 자연어 검색 문장을 목록 필터로 바꾼다. 목록은 오지 않는다 → 결과로 fetchMoverList 를 다시 부른다
+- 로그인 필요. 1분 3회 · 하루 5회 (429 code: TOO_MANY_REQUESTS / DAILY_LIMIT_EXCEEDED)
+*/
+export function fetchMoverAiSearch(q: string): Promise<MoverAiSearchData> {
+  const params = new URLSearchParams({ q });
+  return clientFetch<MoverAiSearchData>(
+    `${ENDPOINTS.mover.aiSearch}?${params.toString()}`,
+  );
 }
 
 /*=================================================

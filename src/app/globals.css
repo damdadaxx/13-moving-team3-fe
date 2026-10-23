@@ -66,6 +66,7 @@
     cubic-bezier(0.22, 1, 0.36, 1) forwards;
   --animate-toast-slide-up: toast-slide-up 0.4s cubic-bezier(0.4, 0, 1, 1)
     forwards;
+  --animate-ai-search-spin: ai-search-spin 1.6s linear infinite;
 
   /* -------- Font system (Pretendard) --------
      letter-spacing은 Figma에 별도 값이 없어서 0em(기본값)으로 둔다. */
@@ -206,6 +207,13 @@
   }
   100% {
     background-position: -200% 0;
+  }
+}
+
+/* AI 검색 중 검색바 테두리를 도는 빛 (MoverFindContent) */
+@keyframes ai-search-spin {
+  to {
+    rotate: 360deg;
   }
 }
 

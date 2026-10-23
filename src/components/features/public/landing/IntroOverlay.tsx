@@ -1,7 +1,7 @@
 'use client';
 
 // 모바일 홈에서만, 세션당 한 번 재생하는 인트로 (로고 외곽선 -> 채우기 -> 비버 -> 페이드아웃)
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 
 import { motion, type Transition } from 'framer-motion';
 import { useLocale } from 'next-intl';
@@ -42,12 +42,40 @@ function pathTransition(delay: number): Transition {
   };
 }
 
+const subscribeNothing = () => () => {};
+
+/*
+@ 인트로 전 깜빡임 방지 (모바일)
+- 서버 HTML과 hydration 첫 렌더에서는 인트로 모드를 알 수 없어(항상 skip) 랜딩 화면이 먼저 보였다가
+  JS가 뜬 뒤에야 인트로가 올라왔다
+- 그래서 서버 렌더와 hydration 동안만 인트로와 같은 주황 덮개를 깔아 둔다
+  - 모바일(744px 미만)에서만 보인다 (tablet:hidden)
+  - 이미 인트로를 본 탭이면 layout의 스크립트가 html에 data-intro-seen을 붙여 처음부터 숨긴다 (globals.css)
+  - hydration이 끝나면 덮개는 사라지고, 그 자리에 인트로(같은 주황 화면)가 바로 이어진다
+  - JS가 늦거나 실패해도 화면이 막히지 않게 몇 초 뒤 CSS로 스스로 사라진다 (globals.css)
+*/
 export default function IntroOverlay() {
   const { isIntroActive } = useIntroGate();
+  // 서버 렌더·hydration 렌더에서만 true, 그 뒤 클라이언트 렌더에서는 false
+  const isServerRender = useSyncExternalStore(
+    subscribeNothing,
+    () => false,
+    () => true,
+  );
 
-  if (!isIntroActive) return null;
+  if (isIntroActive) return <IntroAnimation />;
 
-  return <IntroAnimation />;
+  if (isServerRender) {
+    return (
+      <div
+        data-intro-cover
+        aria-hidden
+        className="fixed inset-0 z-modal bg-orange-400 tablet:hidden"
+      />
+    );
+  }
+
+  return null;
 }
 
 function IntroAnimation() {

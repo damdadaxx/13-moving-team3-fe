@@ -6,6 +6,8 @@ import { usePathname } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
+import { useIntroGate } from '@/lib/providers/IntroGateProvider';
+
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 
 import Button from '@/components/ui/Button/Button';
@@ -13,6 +15,7 @@ import Modal from '@/components/ui/Modal';
 
 /*
 @ 앱 설치 안내 모달 (PWA)
+- 모바일 인트로(splash)가 재생되는 동안에는 띄우지 않고, 인트로가 끝난 뒤에 띄운다
 - 랜딩 페이지('/')에서만 띄운다. 띄운 뒤 다른 페이지로 이동하면 닫고, 돌아와도 다시 띄우지 않는다 (새로고침하면 다시 뜬다)
 - 처음 들어왔을 때 띄운다. X·배경·ESC로 그냥 닫은 것은 아무것도 저장하지 않아 다시 들어오면 또 뜬다
 - "오늘 하루 보지 않기"를 눌렀을 때만 오늘(자정까지)은 띄우지 않는다. 이 브라우저(localStorage)에만 기억한다
@@ -85,6 +88,8 @@ export default function InstallPromptModal() {
   const controlSize = useBreakpointValue('sm', 'sm', 'md');
   const pathname = usePathname();
   const isLanding = pathname === '/';
+  // 모바일 인트로가 재생 중인 동안은 false. 끝나면(또는 인트로가 없는 환경이면) false가 된다
+  const { isIntroActive } = useIntroGate();
   /*
   @ 안내 상태
   - idle: 아직 띄울 준비가 안 됐다 (설치 이벤트를 기다리는 중)
@@ -95,7 +100,7 @@ export default function InstallPromptModal() {
   const [wasLanding, setWasLanding] = useState(isLanding);
   const [installEvent, setInstallEvent] =
     useState<BeforeInstallPromptEvent | null>(null);
-  const isOpen = status === 'ready' && isLanding;
+  const isOpen = status === 'ready' && isLanding && !isIntroActive;
 
   // 랜딩에서 다른 페이지로 이동하면 닫은 것으로 본다 (렌더 중 상태 조정)
   if (wasLanding !== isLanding) {

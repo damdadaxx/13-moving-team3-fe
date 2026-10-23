@@ -351,6 +351,7 @@
     "reset": "초기화",
     "aiToggle": "AI 검색",
     "aiToggleLabel": "AI 검색 켜기",
+    "aiHint": "AI 검색 버튼을 눌러 스마트한 추천을 받아보세요.",
     "aiPlaceholder": "예) 부산 사무실 이사, 리뷰 많은 순",
     "aiHelper": "문장으로 입력하고 Enter를 누르세요. 개인정보는 입력하지 마세요.",
     "aiRemaining": "오늘 {remaining}/{limit}회",

@@ -351,6 +351,7 @@
     "reset": "リセット",
     "aiToggle": "AI検索",
     "aiToggleLabel": "AI検索をオンにする",
+    "aiHint": "AI検索ボタンを押して、スマートなおすすめを受け取りましょう。",
     "aiPlaceholder": "例）釜山 オフィス引越し、レビューが多い順",
     "aiHelper": "文章で入力してEnterを押してください。個人情報は入力しないでください。",
     "aiRemaining": "本日 {remaining}/{limit}回",

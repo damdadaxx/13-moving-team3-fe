@@ -330,6 +330,13 @@ export default function MoverFindContent() {
               />
             </div>
 
+            {/* AI 검색이 꺼져 있을 때: AI 검색 버튼을 눌러 보라고 안내한다 */}
+            {isAiMode ? null : (
+              <p className="mt-2 text-xs-regular text-gray-500 desktop:text-sm-regular">
+                {t('aiHint')}
+              </p>
+            )}
+
             {isAiMode ? (
               <div
                 className="mt-2 flex flex-col gap-1 text-xs-regular text-gray-500 desktop:text-sm-regular"

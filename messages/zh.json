@@ -351,6 +351,7 @@
     "reset": "重置",
     "aiToggle": "AI 搜索",
     "aiToggleLabel": "开启 AI 搜索",
+    "aiHint": "点击 AI 搜索按钮，获取智能推荐。",
     "aiPlaceholder": "例：釜山 办公室搬家，评价最多",
     "aiHelper": "用句子描述后按 Enter。请勿输入个人信息。",
     "aiRemaining": "今日 {remaining}/{limit} 次",

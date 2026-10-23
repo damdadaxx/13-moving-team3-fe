@@ -1,8 +1,10 @@
 'use client';
 
+import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 
 import { HttpError } from '@/lib/api/errors';
+import { ROUTES } from '@/lib/constants/routes';
 
 import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useModal } from '@/hooks/common/useModal';
@@ -36,12 +38,15 @@ export default function EstimateConfirmButton({
   const { openModal, closeModal } = useModal();
   const modalButtonSize = useBreakpointValue('sm', 'sm', 'md');
   const { mutateAsync, isPending } = useConfirmEstimateMutation();
+  const router = useRouter();
 
   /** 견적 확정 */
   async function confirmEstimate() {
     try {
       await mutateAsync(estimateId);
       showToast(t('success'));
+      // 확정되면 받았던 견적 상세로 보내 선수금을 결제하게 한다
+      router.push(`${ROUTES.customerEstimates}/${estimateId}`);
     } catch (error) {
       showToast(error instanceof HttpError ? error.message : t('failed'));
     }

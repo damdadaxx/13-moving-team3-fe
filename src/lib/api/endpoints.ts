@@ -55,6 +55,14 @@ export const ENDPOINTS = {
     update: (estimateId: number | string) => api(`/estimates/${estimateId}`), // [PATCH] 로그인 - 견적 상태 전환(발송/반려/확정)
   },
 
+  // --- Payment(결제, 토스페이먼츠) ---
+  payment: {
+    byEstimate: (estimateId: number | string) =>
+      api(`/estimates/${estimateId}/payments`), // [GET] 로그인(고객) - 선수금·잔금 결제 현황 / [POST] 결제 주문 생성 (body: type)
+    list: api('/payments'), // [GET] 로그인(고객) - 내 결제내역(커서 무한 스크롤)
+    confirm: api('/payments/confirm'), // [POST] 로그인(고객) - 결제 승인 (paymentKey, orderId, amount)
+  },
+
   // --- Review(리뷰) ---
   review: {
     mine: api('/reviews/me'), // [GET] 로그인 - 내 완료 견적 (?hasReview=false 미작성, true 작성완료)

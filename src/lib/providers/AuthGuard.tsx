@@ -101,7 +101,10 @@ export default function AuthGuard({ children, allow }: AuthGuardProps) {
 
     if (!isLoggedIn && arrivedLoggedOut === false) {
       const signinPath = getSigninPath(allow);
-      const callbackUrl = encodeURIComponent(pathname);
+      // 쿼리도 함께 넘긴다 (결제 성공 주소의 paymentKey 같은 값을 로그인 뒤에도 이어 쓰기 위해)
+      const callbackUrl = encodeURIComponent(
+        `${pathname}${window.location.search}`,
+      );
       router.replace(`${signinPath}?callbackUrl=${callbackUrl}`);
     }
   }, [

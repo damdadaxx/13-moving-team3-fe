@@ -21,12 +21,20 @@ import Modal from '@/components/ui/Modal';
   - 크롬·엣지·삼성 인터넷: beforeinstallprompt를 받아 두었다가 "앱 설치하기"에서 설치 창을 연다
   - iOS(사파리 등): 설치 이벤트가 없어서 공유 → "홈 화면에 추가" 방법을 안내한다
   - 그 외(설치를 지원하지 않는 브라우저): 띄우지 않는다
-- 설치 이벤트가 앱이 뜨기 전에 이미 지나갔다면 이번 방문에는 띄우지 못할 수 있다 (다음 방문에 뜬다)
+- 새로고침하면 크롬이 설치 이벤트를 React가 뜨기 전에 보낸다. 그래서 layout의 beforeInteractive 스크립트가
+  이벤트를 먼저 받아 window.__deferredInstallPrompt에 보관하고, 이 컴포넌트가 뜰 때 그 값을 꺼내 쓴다
 */
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
+
+declare global {
+  interface Window {
+    /** layout의 beforeInteractive 스크립트가 미리 받아 둔 설치 이벤트 */
+    __deferredInstallPrompt?: BeforeInstallPromptEvent;
+  }
 }
 
 const HIDDEN_DATE_KEY = 'moving-install-prompt-hidden-date';
@@ -85,13 +93,26 @@ export default function InstallPromptModal() {
     const handleBeforeInstallPrompt = (event: Event) => {
       // 크롬의 기본 설치 안내(미니 인포바)를 막고 이 모달로 대신한다
       event.preventDefault();
+      window.__deferredInstallPrompt = event as BeforeInstallPromptEvent;
       setInstallEvent(event as BeforeInstallPromptEvent);
       open();
     };
-    const handleInstalled = () => setIsOpen(false);
+    const handleInstalled = () => {
+      window.__deferredInstallPrompt = undefined;
+      setIsOpen(false);
+    };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     window.addEventListener('appinstalled', handleInstalled);
+
+    // 이 컴포넌트가 뜨기 전에 이미 받아 둔 설치 이벤트가 있으면 바로 쓴다
+    const earlyEvent = window.__deferredInstallPrompt;
+    const earlyTimer = earlyEvent
+      ? setTimeout(() => {
+          setInstallEvent(earlyEvent);
+          open();
+        }, 0)
+      : undefined;
 
     const iosTimer = isIos() ? setTimeout(open, IOS_SHOW_DELAY_MS) : undefined;
 
@@ -102,6 +123,7 @@ export default function InstallPromptModal() {
       );
       window.removeEventListener('appinstalled', handleInstalled);
       clearTimeout(iosTimer);
+      clearTimeout(earlyTimer);
     };
   }, []);
 
@@ -118,6 +140,7 @@ export default function InstallPromptModal() {
     await installEvent.prompt();
     await installEvent.userChoice;
     // 한 번 쓴 설치 이벤트는 다시 쓸 수 없다. 결과와 관계없이 모달을 닫는다
+    window.__deferredInstallPrompt = undefined;
     setInstallEvent(null);
     setIsOpen(false);
   };

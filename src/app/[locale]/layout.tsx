@@ -96,6 +96,14 @@ export default async function RootLayout({
       className={cn(pretendard.variable, 'notranslate h-full antialiased')}
     >
       <body className={cn('h-full pt-[54px]', 'desktop:pt-[88px]')}>
+        {/*
+        @ 앱 설치 이벤트를 먼저 받아 둔다
+        - 새로고침하면 크롬이 beforeinstallprompt를 React가 뜨기 전에 보내서 놓치게 된다
+        - 여기서 받아 window.__deferredInstallPrompt에 보관하면 InstallPromptModal이 뜬 뒤 꺼내 쓴다
+        */}
+        <Script id="capture-install-prompt" strategy="beforeInteractive">
+          {`window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__deferredInstallPrompt=e;});`}
+        </Script>
         <NextIntlClientProvider>
           <Providers>
             <HeaderRevealWrapper>

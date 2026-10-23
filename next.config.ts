@@ -31,12 +31,34 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
       {
-        // 채팅 이미지(Supabase Storage 공개 URL), 상대방 프로필 이미지 표시용
+        // 채팅 이미지. 비공개 버킷이라 조회 시점마다 signed URL로 내려온다
+        // (버킷/리전이 바뀌면 BE AWS_PRIVATE_BUCKET_NAME/AWS_REGION과 같이 맞춘다)
         protocol: 'https',
-        hostname: 'riphxsdecygfvtadyixk.supabase.co',
+        hostname: 'private-team3-moving-buket.s3.ap-northeast-2.amazonaws.com',
         pathname: '/**',
       },
     ],
+  },
+  /*
+  @ 서비스 워커 파일 헤더
+  - sw.js는 브라우저가 캐시하지 않고 항상 새로 받아야 새 버전이 바로 반영된다
+  */
+  async headers() {
+    return [
+      {
+        source: '/sw.js',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+          {
+            key: 'Content-Type',
+            value: 'application/javascript; charset=utf-8',
+          },
+        ],
+      },
+    ];
   },
   // SVG를 React 컴포넌트로 import: import IcArrow from '@/assets/icons/ic_arrow.svg'
   // dimensions:false로 width/height를 지우는 대신, viewBox는 남겨야

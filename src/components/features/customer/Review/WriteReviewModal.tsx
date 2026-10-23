@@ -24,6 +24,10 @@ import { useBreakpointValue } from '@/hooks/common/useBreakpointValue';
 import { useFormatDate } from '@/hooks/common/useFormatDate';
 import { useToast } from '@/hooks/common/useToast';
 import {
+  AI_DAILY_LIMIT_CODE,
+  useAiUsageQuery,
+} from '@/hooks/features/ai/queries/queries';
+import {
   useCreateReviewDraftMutation,
   useCreateReviewMutation,
 } from '@/hooks/features/review/queries/mutations';
@@ -90,6 +94,10 @@ export default function WriteReviewModal({
   const isValid = rating > 0 && isCommentValid;
   const isSubmitting = createReviewMutation.isPending;
   const isDrafting = createReviewDraftMutation.isPending;
+  //오늘 남은 초안 생성 횟수 (하루 5회, 자정 초기화). 리뷰 모달은 로그인 고객만 연다.
+  const { data: aiUsage } = useAiUsageQuery(isOpen);
+  const draftUsage = aiUsage?.reviewDraft;
+  const isDraftExhausted = draftUsage?.remaining === 0;
   //리뷰초안 작성 언어를 위해 현재 언어를 가져온다.
   const locale = useLocale();
 
@@ -132,8 +140,22 @@ export default function WriteReviewModal({
   }
 
   //리뷰 초안 생성
+  function getDraftErrorMessage(error: unknown) {
+    if (error instanceof HttpError) {
+      if (error.code === AI_DAILY_LIMIT_CODE) return t('draftExhausted');
+      if (error.code === 'TOO_MANY_REQUESTS') return t('draftTooMany');
+      //남의 견적서·이미 리뷰가 있는 견적서 등 서버가 알려준 사유
+      if (error.status === 400 || error.status === 403) return error.message;
+    }
+    return t('draftFailed');
+  }
+
   function handleDraft() {
     if (rating <= 0 || !review || isDrafting) return;
+    if (isDraftExhausted) {
+      showToast(t('draftExhausted'));
+      return;
+    }
 
     //이전 요청이 있으면 끊는다.
     abortDraft();
@@ -156,7 +178,7 @@ export default function WriteReviewModal({
         onError: (error) => {
           //모달을 닫아서 끊은건 에러가 아니다.
           if (isAbortError(error)) return;
-          showToast(t('draftFailed'));
+          showToast(getDraftErrorMessage(error));
         },
       },
     );
@@ -313,8 +335,9 @@ export default function WriteReviewModal({
             <div className="flex shrink-0 items-center gap-[6px]">
               <button
                 type="button"
-                disabled={rating <= 0 || isDrafting}
+                disabled={rating <= 0 || isDrafting || isDraftExhausted}
                 aria-busy={isDrafting || undefined}
+                title={isDraftExhausted ? t('draftExhausted') : undefined}
                 onClick={handleDraft}
                 className={cn(
                   'cursor-pointer rounded-full border border-orange-400 bg-transparent px-[12px] py-[6px] text-xs-medium whitespace-nowrap text-orange-400',
@@ -325,6 +348,14 @@ export default function WriteReviewModal({
               >
                 {isDrafting ? t('draftPending') : t('draft')}
               </button>
+              {draftUsage ? (
+                <span className="text-xs-regular whitespace-nowrap text-gray-500">
+                  {t('draftRemaining', {
+                    remaining: draftUsage.remaining,
+                    limit: draftUsage.limit,
+                  })}
+                </span>
+              ) : null}
               <span className="group/hint relative inline-flex">
                 <button
                   type="button"

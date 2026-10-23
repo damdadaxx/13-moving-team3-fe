@@ -6,12 +6,8 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { ENDPOINTS } from '@/lib/api/endpoints';
 import { readNotificationStream } from '@/lib/api/notificationStream';
-import { readJsonBody } from '@/lib/api/parseApi';
-import {
-  captureSupabaseAccessTokenFromBody,
-  getSupabaseTokenEpoch,
-} from '@/lib/supabase/accessToken';
 
+import { chatKeys } from '@/hooks/features/chat/queries/keys';
 import { notificationKeys } from '@/hooks/features/notification/queries/keys';
 
 const RETRY_START_MS = 1_000;
@@ -73,6 +69,15 @@ export default function useNotificationStream(enabled: boolean) {
               void queryClient.invalidateQueries({
                 queryKey: notificationKeys.list(),
               });
+
+              // 견적 확정(ACCEPTED) 알림 — 그 순간 생기는 채팅방은 chat_messages
+              // 테이블과 무관해 소켓 채널로는 알 수 없다. 이미 오는 이 알림으로
+              // 채팅방 목록을 다시 받아, 새로고침 없이 바로 나타나게 한다
+              if (event.notification.type === 'ESTIMATE_CONFIRMED') {
+                void queryClient.invalidateQueries({
+                  queryKey: chatKeys.rooms(),
+                });
+              }
             },
           );
 
@@ -83,18 +88,13 @@ export default function useNotificationStream(enabled: boolean) {
             refreshed = true;
 
             // 토큰 갱신 (/api/auth/refresh)
-            const epoch = getSupabaseTokenEpoch();
             const refreshResponse = await fetch(ENDPOINTS.auth.refresh, {
               method: 'POST',
               credentials: 'same-origin',
               signal: abort.signal,
             });
 
-            if (!refreshResponse.ok || epoch !== getSupabaseTokenEpoch())
-              return;
-            captureSupabaseAccessTokenFromBody(
-              await readJsonBody(refreshResponse),
-            );
+            if (!refreshResponse.ok || abort.signal.aborted) return;
             continue;
           }
 

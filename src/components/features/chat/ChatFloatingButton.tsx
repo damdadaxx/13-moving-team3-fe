@@ -121,10 +121,13 @@ export default function ChatFloatingButton() {
   const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  useChatRealtimeSync(isLoggedIn);
-
   const { data, isLoading, isError } = useChatRoomsQuery(isLoggedIn);
   const rooms = data?.list ?? [];
+
+  useChatRealtimeSync(
+    rooms.map((room) => room.estimateId),
+    isLoggedIn,
+  );
   const totalUnreadCount = rooms.reduce(
     (sum, room) => sum + room.unreadCount,
     0,

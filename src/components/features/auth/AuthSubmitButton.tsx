@@ -27,7 +27,8 @@ export default function AuthSubmitButton({
         disabled={disabled}
         isLoading={isLoading}
         className={cn(
-          'h-[54px] rounded-xl bg-orange-400 text-lg-semibold text-gray-50 disabled:bg-gray-100',
+          // 긴 번역(en/ja/zh)이나 좁은 화면에서도 버튼 글씨가 두 줄로 꺾이지 않게 한다
+          'h-[54px] rounded-xl bg-orange-400 text-lg-semibold whitespace-nowrap text-gray-50 disabled:bg-gray-100',
           'tablet:h-[60px] tablet:rounded-2xl tablet:text-2lg-semibold',
         )}
       >

@@ -9,8 +9,8 @@ type MessagesData = InfiniteData<ChatMessageList, string | undefined>;
 
 /*
 @ 채팅 메시지 캐시 직접 갱신
-- Realtime 이벤트나 전송 응답으로 이미 알고 있는 변경은 목록을 다시 불러오지 않고 캐시에 바로 반영한다
-  (재조회는 BFF → ALB → Express → Supabase까지 전체 경로를 타고, 이미지가 있으면 signed URL도 새로 발급한다)
+- Socket.IO 이벤트나 전송 응답으로 이미 알고 있는 변경은 목록을 다시 불러오지 않고 캐시에 바로 반영한다
+  (재조회는 BFF → ALB → Express → DB까지 전체 경로를 타고, 이미지가 있으면 signed URL도 새로 발급한다)
 - 메시지 목록을 한 번도 안 연 방은 캐시가 없으므로 건드리지 않는다. 열 때 새로 조회한다
 - 목록은 페이지마다 최신 메시지가 앞에 온다 (ChatRoomView가 reverse해서 그린다)
 */
@@ -59,12 +59,14 @@ export function addChatMessageToCache(
   );
 }
 
-/** 메시지 하나의 읽음 상태를 캐시에서 바꾼다 (읽음 처리 UPDATE 이벤트용) */
-export function setChatMessageReadInCache(
+/** readerId가 보낸 게 아닌(=내가 보낸) 메시지를 전부 읽음으로 바꾼다 ('read' 이벤트용)
+ * - payload가 { readerId }뿐이라 messageId를 모른다. BE의 markRead도 같은 조건
+ *   (senderId !== readerId)으로 갱신하므로 캐시도 동일하게 맞춘다
+ */
+export function setMessagesReadByOthersInCache(
   queryClient: QueryClient,
   estimateId: string,
-  messageId: string,
-  isRead: boolean,
+  readerId: string,
 ) {
   queryClient.setQueryData<MessagesData>(
     chatKeys.messages(estimateId),
@@ -75,11 +77,9 @@ export function setChatMessageReadInCache(
       const pages = data.pages.map((page) => ({
         ...page,
         list: page.list.map((message) => {
-          if (message.messageId !== messageId || message.isRead === isRead) {
-            return message;
-          }
+          if (message.senderId === readerId || message.isRead) return message;
           isChanged = true;
-          return { ...message, isRead };
+          return { ...message, isRead: true };
         }),
       }));
 

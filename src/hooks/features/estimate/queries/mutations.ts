@@ -46,7 +46,8 @@ export function useAcceptEstimateMutation() {
   return useMutation({
     mutationFn: (estimateId: string) => acceptEstimate(estimateId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: estimateKeys.activeRequest() });
+      // 활성 요청뿐 아니라 견적 상세(받았던 견적 상세로 이동해 결제한다)도 새 상태로 받는다
+      queryClient.invalidateQueries({ queryKey: estimateKeys.all });
     },
   });
 }

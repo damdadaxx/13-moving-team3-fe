@@ -30,7 +30,7 @@
 
 # 📝 프로젝트 소개
 
-- 이사 소비자와 이사 전문가(기사님)를 연결하는 견적 매칭 플랫폼입니다. 고객이 이사 조건으로 견적을 요청하면, 서비스 가능 지역·서비스 유형이 맞는 기사님이 견적을 보내고, 고객은 견적을 비교해 확정합니다. 확정 이후에는 1:1 채팅, 이사 완료 후 리뷰 작성(AI 초안 지원)까지 하나의 흐름으로 이어집니다.
+- 이사 소비자와 이사 전문가(기사님)를 연결하는 견적 매칭 플랫폼입니다. 고객이 이사 조건으로 견적을 요청하면, 서비스 가능 지역·서비스 유형이 맞는 기사님이 견적을 보내고, 고객은 견적을 비교해 확정합니다. 확정 이후에는 선수금 결제와 1:1 채팅이 이어지고, 이사가 끝나면 잔금 결제와 리뷰 작성(AI 초안 지원)까지 하나의 흐름으로 이어집니다.
 
 <br/>
 
@@ -67,6 +67,8 @@
 ![React Hook Form](https://img.shields.io/badge/React_Hook_Form-EC5990?style=flat&logo=reacthookform&logoColor=white)
 ![Zod](https://img.shields.io/badge/Zod-3E67B1?style=flat&logo=zod&logoColor=white)
 ![next-intl](https://img.shields.io/badge/next--intl-000000?style=flat)
+![Socket.IO](https://img.shields.io/badge/Socket.IO-010101?style=flat&logo=socketdotio&logoColor=white)
+![Toss Payments](https://img.shields.io/badge/Toss_Payments-0064FF?style=flat)
 
 **Backend — 별도 저장소에서 관리**
 
@@ -78,11 +80,15 @@
 
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat&logo=vercel&logoColor=white)
 ![AWS EC2](https://img.shields.io/badge/AWS_EC2-FF9900?style=flat&logo=amazonec2&logoColor=white)
+![Nginx](https://img.shields.io/badge/Nginx-009639?style=flat&logo=nginx&logoColor=white)
+![AWS ALB](https://img.shields.io/badge/AWS_ALB-FF9900?style=flat&logo=amazonelasticloadbalancing&logoColor=white)
 ![Amazon CloudFront](https://img.shields.io/badge/Amazon_CloudFront-8C4FFF?style=flat&logo=amazonaws&logoColor=white)
 ![Amazon Route 53](https://img.shields.io/badge/Amazon_Route_53-8C4FFF?style=flat&logo=amazonroute53&logoColor=white)
 
 - **Vercel**: Next.js 프론트엔드 배포
 - **AWS EC2**: 백엔드 API 서버 배포
+- **Nginx**: EC2에서 API 서버로 요청을 넘기는 리버스 프록시
+- **AWS ALB**: 백엔드 트래픽을 EC2로 전달
 - **Amazon CloudFront**: S3에 저장한 프로필 이미지 제공
 - **Amazon Route 53**: 서비스 도메인 DNS 관리
 
@@ -91,12 +97,10 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-FF4438?style=flat&logo=redis&logoColor=white)
 ![Amazon S3](https://img.shields.io/badge/Amazon_S3-569A31?style=flat&logo=amazons3&logoColor=white)
-![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=flat&logo=supabase&logoColor=white)
 
 - **PostgreSQL**: 서비스 도메인 데이터 저장
 - **Redis**: 백엔드 API 캐싱 — 연결 설정이 있는 환경에서 사용
-- **Amazon S3**: 고객·기사님 프로필 이미지 저장
-- **Supabase**: 채팅 데이터, Realtime 구독 및 채팅 이미지 Storage
+- **Amazon S3**: 고객·기사님 프로필 이미지 저장. 채팅 이미지는 비공개 버킷에 저장하고 signed URL로 제공
 
 ### ✅ CI/CD
 
@@ -207,10 +211,18 @@
 <details>
 <summary>네트워킹 / 실시간</summary>
 
-- **@supabase/supabase-js**: 채팅 메시지 변경 구독 및 채팅 이미지 업로드
+- **socket.io-client**: 채팅 메시지·읽음·입력 중 이벤트를 백엔드 Socket.IO 서버에서 수신
 - **Fetch API·ReadableStream**: SSE 알림 스트림 수신
 - **IntersectionObserver**: 목록 하단 감지를 이용한 공용 무한 스크롤
 - SSE와 무한 스크롤은 별도 폴리필·관찰 라이브러리 없이 구현
+
+</details>
+
+<details>
+<summary>결제</summary>
+
+- **@tosspayments/tosspayments-sdk**: 선수금·잔금 카드 결제창
+- 주문 생성과 승인(confirm)은 백엔드 API로 처리하고, 프론트는 결제창 호출과 성공·실패 화면을 담당
 
 </details>
 
@@ -219,9 +231,9 @@
 
 - **next/image**: 프로필·정적 이미지 표시와 이미지 최적화
 - **@svgr/webpack**: SVG 에셋을 React 컴포넌트로 변환
-- CloudFront·Supabase 등 사용하는 외부 이미지 호스트를 `remotePatterns`에서 관리
+- CloudFront 프로필 이미지와 S3 채팅 이미지 호스트를 `remotePatterns`에서 관리
 - 프로필 이미지는 백엔드에서 S3에 저장하고 CloudFront URL로 제공
-- 채팅 이미지는 Supabase Storage를 사용
+- 채팅 이미지는 비공개 S3 버킷에 올리고 signed URL로 표시
 
 </details>
 
@@ -271,7 +283,9 @@
 
 ### 📝 [API 문서](https://app.notion.com/p/damdada/API-3c97bbb8e517809bbbcee27e95dabd72)
 
-### 📝 [Swagger 문서](https://api.moving-team3.xyz/api-docs)
+### 📝 Swagger 문서
+
+개발 환경에서만 공개합니다. 서버를 `NODE_ENV=production`이 아닌 환경으로 실행한 뒤 `/api-docs`로 접속하세요. (운영 서버에서는 노출되지 않습니다)
 
 <br/>
 
@@ -300,7 +314,8 @@
 - **실시간 1:1 채팅**
   - 견적 확정 후 고객·기사님 간 채팅 기능 구현
   - 채팅방·메시지·읽음 처리 API 연동
-  - Supabase Realtime 기반 변경 감지 및 채팅 이미지 업로드 연동
+  - Socket.IO 기반 실시간 반영, 입력 중 표시, S3 채팅 이미지 업로드 연동
+  - 전송 전 이미지 확인과 말풍선 이미지 크게 보기
 
 - **초기 설정 및 구조 리팩토링**
   - Next.js App Router·TypeScript strict·Tailwind CSS 초기 설정
@@ -337,6 +352,7 @@
 
 - **기사님 견적 관리 페이지**
   - 기사님이 보낸 견적 목록 페이지 구현
+  - 보낸 견적 카드에서 상세 페이지로 이동
 
 </details>
 
@@ -358,6 +374,18 @@
 - **받았던 견적 찜하기**
   - 확정된 견적 카드에 찜하기 버튼 적용
 
+- **고객 견적 관리**
+  - 반려된 요청 탭 추가 및 반려 사유 표시
+  - 대기 중인 견적에 지정 견적 표시
+
+- **입력 안내**
+  - 최소·최대 글자 수 안내를 반려·견적·리뷰·프로필 입력에 적용
+  - 긴 반려 사유·견적 코멘트의 더보기·접기
+
+- **결제**
+  - 토스페이먼츠 선수금·잔금 결제창과 성공·실패 화면 구현
+  - 내 견적 관리에 결제내역 탭 추가
+
 - **다국어 (i18n)**
   - next-intl 기반 한국어·영어·중국어(간체)·일본어 4개 언어 지원
   - 설정·라우팅·네비게이션·번역 작업을 단계별 PR로 분리하여 충돌 최소화
@@ -367,6 +395,12 @@
 
 - **에러 모니터링**
   - Sentry 기반 프론트엔드 에러 모니터링 설정
+
+- **PWA**
+  - 웹 앱 매니페스트와 홈 화면 아이콘 설정
+  - 서비스 워커로 오프라인 안내 페이지 제공. API·이미지는 캐시하지 않음
+  - 크롬 계열은 설치 창, iOS는 홈 화면 추가 방법을 안내하는 설치 모달
+  - "오늘 하루 보지 않기"는 해당 브라우저에만 저장
 
 </details>
 
@@ -388,6 +422,7 @@
 - **인증 공통 로직**
   - AuthProvider·AuthGuard 기반 세션 관리 및 역할별 접근 제어 구현
   - clientFetch의 공통 오류 파싱 및 토큰 갱신 처리
+  - 화면에 저장하는 사용자 정보에서 액세스 토큰을 제외
 
 - **로그인·회원가입**
   - 고객·기사님 로그인 및 회원가입 페이지 구현
@@ -398,6 +433,8 @@
   - 기사님 찾기 페이지의 검색·필터·정렬·무한 스크롤 구현
   - 찜한 기사님 페이지 구현
   - 기사님 찾기 조건을 URL에 반영해 페이지 이동 후 검색 상태 유지
+  - 자연어 문장을 지역·서비스·정렬 조건으로 바꾸는 AI 검색
+  - 기사님 찾기와 리뷰 초안에 오늘 남은 AI 횟수 표시
 
 </details>
 
@@ -422,6 +459,7 @@
 - **AI 리뷰 초안 작성**
   - Gemini 기반 리뷰 초안 자동 작성 기능 구현
   - 리뷰 초안 생성 API 요청 및 결과 반영 UI 구현
+  - 초안 요청을 취소하면 연결 오류로 보이지 않게 처리
 
 </details>
 
@@ -473,7 +511,10 @@
 │   ├── zh.json
 │   └── ja.json
 ├── public/
-│   └── og/                     # 언어별 공유 이미지
+│   ├── icons/                  # PWA·홈 화면 아이콘
+│   ├── og/                     # 언어별 공유 이미지
+│   ├── sw.js                   # 오프라인 안내용 서비스 워커
+│   └── offline.html
 ├── src/
 │   ├── app/
 │   │   ├── [locale]/
@@ -482,14 +523,15 @@
 │   │   │   ├── (customer)/
 │   │   │   │   └── customer/
 │   │   │   │       ├── estimate-request/
-│   │   │   │       ├── estimates/
+│   │   │   │       ├── estimates/      # 대기·받았던·반려·결제내역
+│   │   │   │       ├── payments/       # 결제 성공·실패
 │   │   │   │       ├── liked-movers/
 │   │   │   │       ├── profile/
 │   │   │   │       └── reviews/
 │   │   │   ├── (mover)/
 │   │   │   │   └── mover/
 │   │   │   │       ├── requests/
-│   │   │   │       ├── estimates/
+│   │   │   │       ├── estimates/      # 보낸 견적·반려
 │   │   │   │       └── mypage/
 │   │   │   ├── layout.tsx      # locale별 루트 레이아웃
 │   │   │   ├── page.tsx        # 랜딩 페이지
@@ -502,6 +544,7 @@
 │   │   ├── providers.tsx       # 전역 Provider 조합
 │   │   ├── globals.css         # 디자인 토큰·전역 스타일
 │   │   ├── global-error.tsx
+│   │   ├── manifest.ts         # PWA 웹 앱 매니페스트
 │   │   ├── robots.ts
 │   │   └── sitemap.ts
 │   ├── assets/
@@ -529,8 +572,8 @@
 │   │   ├── constants/
 │   │   ├── providers/          # 인증·Query·프로필 가드·모달·토스트
 │   │   ├── services/           # 서버용 Fetch 래퍼
+│   │   ├── socket/             # 채팅 Socket.IO 클라이언트
 │   │   ├── storage/            # 사용자 표시 정보 저장·동기화
-│   │   ├── supabase/
 │   │   └── validations/        # Zod 스키마와 검증 메시지
 │   ├── types/
 │   ├── utils/
@@ -636,14 +679,37 @@
 - **받았던 견적**
   - 견적 요청 단위로 이사 정보와 견적서를 묶어 표시
   - 커서 기반 무한 스크롤
+- **반려된 요청**
+  - 기사님이 반려한 지정 견적 요청
+  - 진행 중인 요청에 포함된 반려 건을 조회
 - **견적 상세**
   - 이사 정보·기사님 정보·금액·코멘트 조회
   - 서버 응답의 `canConfirm`과 상태에 따라 액션 표시
+  - 확정된 견적은 선수금·잔금 결제 현황을 함께 표시
 
 </details>
 
 <details>
-<summary>6. 받은 요청 및 견적 관리 — 기사님</summary>
+<summary>6. 결제 — 토스페이먼츠</summary>
+
+- **선수금·잔금**
+  - 견적 확정 후 선수금(견적가의 10%), 이사 완료 후 잔금(나머지 90%)
+  - 결제 가능 여부는 서버의 `canPayDeposit`·`canPayBalance`를 따름
+  - 금액은 서버가 계산하고, 프론트는 받은 금액으로 결제창만 연다
+- **결제창**
+  - 서버에서 주문을 만든 뒤 토스페이먼츠 카드 결제창을 호출
+  - 성공·실패 화면으로 이동하고, 승인(confirm)은 성공 화면에서 처리
+  - 사용자가 결제창을 닫으면 오류로 처리하지 않음
+- **결제내역**
+  - 내 견적 관리의 결제내역 탭에서 조회
+  - 커서 기반 무한 스크롤, 최신 결제순
+- **키 분리**
+  - 클라이언트 키(`NEXT_PUBLIC_TOSS_CLIENT_KEY`)만 브라우저에 두고, 시크릿 키는 백엔드에만 둠
+
+</details>
+
+<details>
+<summary>7. 받은 요청 및 견적 관리 — 기사님</summary>
 
 - **받은 요청**
   - 이사 유형·지정 견적·서비스 가능 지역 필터, 정렬·검색
@@ -658,7 +724,7 @@
 </details>
 
 <details>
-<summary>7. 리뷰 및 AI 리뷰 초안</summary>
+<summary>8. 리뷰 및 AI 리뷰 초안</summary>
 
 - **리뷰 작성**
   - 이사가 완료된 확정 견적 중 미작성 목록 조회
@@ -675,7 +741,7 @@
 </details>
 
 <details>
-<summary>8. 실시간 알림</summary>
+<summary>9. 실시간 알림</summary>
 
 - **SSE 직접 구현**
   - Fetch API·ReadableStream으로 이벤트 프레임 파싱
@@ -692,7 +758,7 @@
 </details>
 
 <details>
-<summary>9. 실시간 1:1 채팅</summary>
+<summary>10. 실시간 1:1 채팅</summary>
 
 - **확정 견적 기반 채팅**
   - 견적이 확정된 고객·기사님 간 1:1 채팅
@@ -702,15 +768,21 @@
   - 커서 기반 이전 메시지 조회
   - 한글 조합 중 Enter 입력 구분
 - **실시간 동기화**
-  - Supabase Realtime 구독으로 Query 캐시 갱신
-  - 채널 실패 시 재구독, 토큰 만료 전 갱신
+  - Socket.IO로 백엔드에 직접 연결. Next 프록시는 WebSocket 업그레이드를 받지 않음
+  - 쿠키로 인증하고, 로그인한 뒤에만 연결
+  - 재연결은 socket.io-client의 지수 백오프를 사용하고, 다시 붙으면 방마다 최신 메시지를 받아 끊긴 사이를 따라잡음
+  - `message`·`read` 이벤트로 Query 캐시를 갱신
+- **입력 중 표시**
+  - 입력 중 신호는 연속 입력 시 간격을 두고 전송
+  - 상대 표시는 신호가 끊기면 잠시 뒤 사라짐
 - **채팅 이미지**
-  - 백엔드에서 업로드 정보를 발급받아 Supabase Storage에 업로드
+  - 백엔드에서 S3 presigned POST 정보를 받아 업로드
+  - 조회는 비공개 버킷의 signed URL
 
 </details>
 
 <details>
-<summary>10. 다국어</summary>
+<summary>11. 다국어</summary>
 
 - **4개 언어 지원**
   - next-intl 기반 한국어·영어·중국어(간체)·일본어
@@ -725,7 +797,7 @@
 </details>
 
 <details>
-<summary>11. 랜딩 페이지 및 SEO</summary>
+<summary>12. 랜딩 페이지 및 SEO</summary>
 
 - **서비스 소개**
   - 인트로·히어로·이용 안내 섹션과 역할별 CTA
@@ -737,7 +809,7 @@
 </details>
 
 <details>
-<summary>12. 공통 UI 및 접근성</summary>
+<summary>13. 공통 UI 및 접근성</summary>
 
 - **디자인 시스템**
   - 색상·타이포그래피·브레이크포인트·z-index 토큰 관리
@@ -753,7 +825,7 @@
 </details>
 
 <details>
-<summary>13. 서비스 안정화 및 모니터링</summary>
+<summary>14. 서비스 안정화 및 모니터링</summary>
 
 - **공통 API 처리**
   - 브라우저의 `/api/*` 요청을 Route Handler에서 백엔드로 전달
@@ -766,6 +838,21 @@
   - 소스맵 업로드, 세션 리플레이 지연 로드
 - **동의 기반 방문 분석**
   - 사용자가 동의한 경우에만 Google Analytics 스크립트 삽입
+
+</details>
+
+<details>
+<summary>15. PWA</summary>
+
+- **설치**
+  - 매니페스트로 앱 이름·아이콘·standalone 표시
+  - 크롬·엣지·삼성 인터넷은 설치 창, iOS는 공유 후 홈 화면 추가 안내
+  - 이미 설치된 앱에서는 안내를 띄우지 않음
+  - "오늘 하루 보지 않기"는 자정까지 이 브라우저에만 적용
+- **오프라인**
+  - 프로덕션에서만 서비스 워커 등록
+  - 페이지 이동이 네트워크 오류로 실패하면 오프라인 안내 페이지 표시
+  - API·이미지·스크립트는 캐시하지 않음
 
 </details>
 
@@ -1130,7 +1217,7 @@ npm install
 프로젝트 루트에서 예시 파일을 복사합니다.
 
 ```bash
-cp .env.example
+cp .env.example .env
 ```
 
 생성된 `.env`에 팀에서 공유받은 값을 입력합니다.
@@ -1144,11 +1231,13 @@ Sentry, Google Analytics 등 나머지 설정은 `.env.example`의 주석을 참
 ```dotenv
 API_BASE_URL=http://localhost:3001
 NEXT_PUBLIC_SITE_URL=http://localhost:5173
+NEXT_PUBLIC_SOCKET_URL=http://localhost:3001
 ```
 
 - `API_BASE_URL`은 실제 백엔드 실행 포트에 맞춰 변경합니다.
 - `PROXY_SECRET`은 백엔드 설정과 일치해야 합니다.
-- Supabase URL과 공개 키는 현재 초기화 코드에서 필요하므로 누락하지 않습니다.
+- `NEXT_PUBLIC_SOCKET_URL`은 채팅 Socket.IO 연결에 필요합니다. 브라우저는 Next 프록시를 거치지 않고 백엔드에 직접 붙습니다. 로컬은 위처럼 백엔드와 같은 주소를 넣으면 됩니다.
+- `NEXT_PUBLIC_TOSS_CLIENT_KEY`는 결제창용 클라이언트 키입니다. 시크릿 키는 백엔드에만 둡니다.
 - 로컬 백엔드에 연결한다면 백엔드 서버도 별도로 실행해야 합니다.
 - 소셜 로그인은 백엔드와 외부 제공자의 로컬 콜백 주소 설정도 필요합니다.
 

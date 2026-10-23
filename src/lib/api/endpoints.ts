@@ -32,6 +32,7 @@ export const ENDPOINTS = {
     profile: api('/mover/profile'), // [POST/GET/PATCH] 로그인
     list: api('/mover'), // [GET] 비로그인
     detail: (id: number | string) => api(`/mover/${id}`), // [GET] 비로그인
+    aiSearch: api('/mover/ai-search'), // [GET] 로그인 - 자연어 검색 문장 → 목록 필터 (?q=, 1분 3회 · 하루 5회)
   },
 
   // --- Customer(고객) ---
@@ -55,12 +56,25 @@ export const ENDPOINTS = {
     update: (estimateId: number | string) => api(`/estimates/${estimateId}`), // [PATCH] 로그인 - 견적 상태 전환(발송/반려/확정)
   },
 
+  // --- Payment(결제, 토스페이먼츠) ---
+  payment: {
+    byEstimate: (estimateId: number | string) =>
+      api(`/estimates/${estimateId}/payments`), // [GET] 로그인(고객) - 선수금·잔금 결제 현황 / [POST] 결제 주문 생성 (body: type)
+    list: api('/payments'), // [GET] 로그인(고객) - 내 결제내역(커서 무한 스크롤)
+    confirm: api('/payments/confirm'), // [POST] 로그인(고객) - 결제 승인 (paymentKey, orderId, amount)
+  },
+
   // --- Review(리뷰) ---
   review: {
     mine: api('/reviews/me'), // [GET] 로그인 - 내 완료 견적 (?hasReview=false 미작성, true 작성완료)
     byMover: (id: number | string) => api(`/reviews/mover/${id}`), // [GET] 비로그인 - 기사 리뷰 목록
     create: api('/reviews'), // [POST] 로그인 - 리뷰 작성
     draft: api('/reviews/draft'), // [POST] 로그인 - 리뷰 초안 작성
+  },
+
+  // --- AI(Gemini 기능 공용) ---
+  ai: {
+    usage: api('/ai/usage'), // [GET] 로그인 - 오늘 남은 AI 사용 횟수 (차감 없음)
   },
 
   // --- Like(찜) ---

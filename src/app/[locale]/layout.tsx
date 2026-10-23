@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
 import { routing } from '@/i18n/routing';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { cookies } from 'next/headers';
@@ -22,10 +22,19 @@ import { cn } from '@/utils/cn';
 
 import ChatFloatingButton from '@/components/features/chat/ChatFloatingButton';
 import AnalyticsConsentBanner from '@/components/features/common/AnalyticsConsentBanner';
+import InstallPromptModal from '@/components/features/common/InstallPromptModal';
 import Header from '@/components/ui/Header/Header';
 import HeaderRevealWrapper from '@/components/ui/HeaderRevealWrapper';
 import PageHeader from '@/components/ui/PageHeader';
 import TopButton from '@/components/ui/TopButton';
+
+/*
+@ 브라우저 UI 색
+- 탭·주소창 색은 흰색으로 둔다 (설치된 PWA의 상단 바 색은 manifest.ts의 theme_color)
+*/
+export const viewport: Viewport = {
+  themeColor: '#ffffff',
+};
 
 export async function generateMetadata({
   params,
@@ -40,6 +49,9 @@ export async function generateMetadata({
     title: t('siteTitle'),
     description: t('siteDescription'),
     openGraph: await getOpenGraph(locale, '/'),
+    // iOS 홈 화면에 추가할 때의 아이콘과 앱 모드 (manifest는 app/manifest.ts가 자동 연결)
+    icons: { apple: '/icons/apple-touch-icon.png' },
+    appleWebApp: { capable: true, title: '무빙', statusBarStyle: 'default' },
   };
 }
 
@@ -84,6 +96,14 @@ export default async function RootLayout({
       className={cn(pretendard.variable, 'notranslate h-full antialiased')}
     >
       <body className={cn('h-full pt-[54px]', 'desktop:pt-[88px]')}>
+        {/*
+        @ 앱 설치 이벤트를 먼저 받아 둔다
+        - 새로고침하면 크롬이 beforeinstallprompt를 React가 뜨기 전에 보내서 놓치게 된다
+        - 여기서 받아 window.__deferredInstallPrompt에 보관하면 InstallPromptModal이 뜬 뒤 꺼내 쓴다
+        */}
+        <Script id="capture-install-prompt" strategy="beforeInteractive">
+          {`window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__deferredInstallPrompt=e;});`}
+        </Script>
         <NextIntlClientProvider>
           <Providers>
             <HeaderRevealWrapper>
@@ -94,6 +114,7 @@ export default async function RootLayout({
             {/* 채팅 버튼은 맨 위로 버튼 자리에 있다가, 맨 위로 버튼이 보이면 그 위로 올라간다 */}
             <ChatFloatingButton />
             <TopButton />
+            <InstallPromptModal />
             {hasGaMeasurementId && (
               <AnalyticsConsentBanner
                 gaMeasurementId={gaMeasurementId}

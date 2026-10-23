@@ -18,6 +18,7 @@ import MoverDetailTopSection from '@/components/features/common/MoverDetail/Move
 import MoverStickyActionBar from '@/components/features/common/MoverDetail/MoverStickyActionBar';
 import ShareMoverInfo from '@/components/features/common/MoverDetail/ShareMoverInfo';
 import ServiceTypeTagList from '@/components/features/common/ServiceType/ServiceTypeTagList';
+import PaymentSection from '@/components/features/customer/Payment/PaymentSection';
 import SectionTitle from '@/components/ui/SectionTitle';
 
 /*
@@ -146,6 +147,12 @@ export default function EstimateDetailContent({
 
               {/* 견적가 */}
               <EstimatePriceSection price={estimate.price} layout="inline" />
+
+              {/* 선수금·잔금 결제 (확정된 견적을 고객이 볼 때만) */}
+              {variant === 'customerReceived' &&
+                estimate.status === 'ACCEPTED' && (
+                  <PaymentSection estimateId={estimate.estimateId} />
+                )}
 
               {/* 견적 정보 */}
               <div

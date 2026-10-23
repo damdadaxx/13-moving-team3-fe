@@ -1,3 +1,4 @@
+import type { AiUsage } from '@/types/ai';
 import type { ServiceType } from '@/types/serviceType';
 
 export interface RatingDistributionItem {
@@ -136,6 +137,11 @@ export interface CreateReviewDraftInput {
   estimateId: string;
   rating: number;
   locale: 'ko' | 'en' | 'zh' | 'ja';
+}
+/** POST /reviews/draft 응답 — 초안 본문 + 오늘 남은 초안 생성 횟수 */
+export interface ReviewDraftData {
+  content: string;
+  usage: AiUsage;
 }
 export interface CreateReviewDraftVariables extends CreateReviewDraftInput {
   signal?: AbortSignal;

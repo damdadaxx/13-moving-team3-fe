@@ -1,4 +1,5 @@
 // 기사님 프로필 관련 타입
+import type { AiUsage } from '@/types/ai';
 import type { Region } from '@/types/region';
 import type { ServiceType } from '@/types/serviceType';
 
@@ -43,6 +44,23 @@ export interface MoverListData {
 
 export type MoverListSortBy =
   'reviewCount' | 'rating' | 'career' | 'confirmedCount';
+
+/*
+@ GET /mover/ai-search 응답
+- 자연어 검색 문장을 목록 필터로 바꾼 결과. 근거가 없는 조건은 null
+- 이 값을 GET /mover 쿼리(URL)에 그대로 반영한다
+*/
+export interface MoverAiSearchFilter {
+  region: Region | null;
+  serviceType: ServiceType | null;
+  sortBy: MoverListSortBy | null;
+  keyword: string | null;
+}
+
+export interface MoverAiSearchData {
+  filter: MoverAiSearchFilter;
+  usage: AiUsage;
+}
 
 export interface MoverListQuery {
   keyword?: string;

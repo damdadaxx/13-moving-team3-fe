@@ -7,6 +7,7 @@ import type {
   MyReviewListData,
   ReviewSummary,
   CreateReviewDraftInput,
+  ReviewDraftData,
 } from '@/types/review';
 
 import clientFetch from '@/lib/api/clientFetch';
@@ -79,13 +80,13 @@ export async function createReview(
 
 /*
 @ POST /reviews/draft
-- 리뷰 초안 작성
+- 리뷰 초안 작성. 오늘 남은 초안 생성 횟수(usage)도 같이 온다
 */
 export async function createReviewDraft(
   input: CreateReviewDraftInput,
   signal?: AbortSignal,
-): Promise<ReviewSummary> {
-  return clientFetch<ReviewSummary>(ENDPOINTS.review.draft, {
+): Promise<ReviewDraftData> {
+  return clientFetch<ReviewDraftData>(ENDPOINTS.review.draft, {
     method: 'POST',
     body: JSON.stringify(input),
     signal,

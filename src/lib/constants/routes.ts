@@ -24,6 +24,9 @@ export const ROUTES = {
   customerEstimatesPending: '/customer/estimates/pending', // 내 견적 관리 > 대기 중인 견적
   customerEstimates: '/customer/estimates/received', // 내 견적 관리 > 받았던 견적
   customerEstimatesRejected: '/customer/estimates/rejected', // 내 견적 관리 > 반려된 요청
+  customerEstimatesPayments: '/customer/estimates/payments', // 내 견적 관리 > 결제내역
+  customerPaymentsSuccess: '/customer/payments/success', // 결제 성공 (토스 successUrl)
+  customerPaymentsFail: '/customer/payments/fail', // 결제 실패 (토스 failUrl)
 
   /* 기사님 GNB */
   moverHome: '/mover/requests', // 받은 요청

@@ -6,6 +6,7 @@
 // (진행 중인 요청과 거기 들어온 견적 목록을 함께 내려주는 엔드포인트)
 'use client';
 
+import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 
 import { HttpError } from '@/lib/api/errors';
@@ -79,6 +80,7 @@ export default function EstimatePendingPage() {
   const tError = useTranslations('Error');
   const activeQuery = useActiveEstimateRequestQuery();
   const acceptEstimate = useAcceptEstimateMutation();
+  const router = useRouter();
   const { showToast } = useToast();
 
   /*
@@ -87,6 +89,8 @@ export default function EstimatePendingPage() {
   */
   function handleConfirm(estimateId: string) {
     acceptEstimate.mutate(estimateId, {
+      // 확정하면 바로 견적 상세로 보내 선수금을 결제하게 한다
+      onSuccess: () => router.push(`${ROUTES.customerEstimates}/${estimateId}`),
       onError: (error) => {
         showToast(
           error instanceof HttpError ? error.message : tConfirm('failedRetry'),

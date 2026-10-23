@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>무빙</title>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        box-sizing: border-box;
+        background: #fafafa;
+        color: #1f1f1f;
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Pretendard', 'Segoe UI', Roboto,
+          sans-serif;
+        text-align: center;
+      }
+      main {
+        max-width: 320px;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 20px;
+      }
+      p {
+        margin: 0 0 24px;
+        color: #6b6b6b;
+        font-size: 15px;
+        line-height: 1.5;
+      }
+      button {
+        padding: 12px 24px;
+        border: 0;
+        border-radius: 16px;
+        background: #f9502e;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1 id="title">인터넷에 연결되어 있지 않아요</h1>
+      <p id="message">연결을 확인한 뒤 다시 시도해 주세요.</p>
+      <button id="retry" type="button">다시 시도</button>
+    </main>
+    <script>
+      // 오프라인 페이지는 정적이라 next-intl을 쓸 수 없어 브라우저 언어로 문구만 바꾼다
+      var texts = {
+        en: [
+          'You are offline',
+          'Check your connection and try again.',
+          'Retry',
+        ],
+        ja: [
+          'オフラインです',
+          '接続を確認して、もう一度お試しください。',
+          '再試行',
+        ],
+        zh: ['当前处于离线状态', '请检查网络连接后重试。', '重试'],
+      };
+      var lang = (navigator.language || 'ko').slice(0, 2);
+      var t = texts[lang];
+      if (t) {
+        document.documentElement.lang = lang;
+        document.getElementById('title').textContent = t[0];
+        document.getElementById('message').textContent = t[1];
+        document.getElementById('retry').textContent = t[2];
+      }
+      document.getElementById('retry').addEventListener('click', function () {
+        location.reload();
+      });
+    </script>
+  </body>
+</html>

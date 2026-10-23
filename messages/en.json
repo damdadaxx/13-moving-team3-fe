@@ -171,6 +171,13 @@
       }
     ]
   },
+  "InstallPrompt": {
+    "title": "Add Moving to your home screen",
+    "description": "Add it to your home screen to\nopen it quickly like an app.",
+    "install": "Install app",
+    "hideToday": "Don't show today",
+    "iosGuide": "Tap the Share button (the square with an arrow pointing up)\nand choose 'Add to Home Screen' to open it like an app.\nIf you can't see it, tap the ··· menu and choose 'Share'."
+  },
   "Payment": {
     "title": "Payment",
     "depositLabel": "Deposit (10% of the estimate)",

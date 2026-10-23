@@ -10,6 +10,7 @@ import ModalProvider from '@/lib/providers/ModalProvider';
 import PreviousPathRecorder from '@/lib/providers/PreviousPathRecorder';
 import QueryProvider from '@/lib/providers/QueryProvider';
 import SentryReplayLoader from '@/lib/providers/SentryReplayLoader';
+import ServiceWorkerRegister from '@/lib/providers/ServiceWorkerRegister';
 import ToastProvider from '@/lib/providers/ToastProvider';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
@@ -21,6 +22,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
             <PreviousPathRecorder />
             <CrossRoleAccessGuard />
             <SentryReplayLoader />
+            <ServiceWorkerRegister />
             <IntroGateProvider>{children}</IntroGateProvider>
           </ToastProvider>
         </ModalProvider>

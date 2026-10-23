@@ -38,12 +38,14 @@ export default function MoverAiSearchToggle({
       title={isExhausted ? t('aiExhausted') : undefined}
       onClick={onToggle}
       className={cn(
-        'flex h-[52px] shrink-0 cursor-pointer flex-col items-center justify-center rounded-[16px] border px-3',
-        'desktop:h-[64px] desktop:px-4',
+        'flex h-[52px] w-[120px] shrink-0 cursor-pointer flex-col items-center justify-center rounded-[16px] border-2 transition',
+        'desktop:h-[64px]',
+        // 꺼져 있어도 눈에 띄게, AI 검색창과 같은 주황 테두리 · 링 · 그림자를 쓴다
+        'border-orange-300 shadow-[0_0_0_4px_var(--color-orange-100),0_4px_16px_rgba(249,80,46,0.2)]',
         isOn
           ? 'border-orange-400 bg-orange-400 text-gray-50'
-          : 'border-orange-400 bg-transparent text-orange-400 hover:bg-orange-100',
-        'disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-300 disabled:hover:bg-transparent',
+          : 'bg-gray-50 text-orange-400 hover:bg-orange-100',
+        'disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-transparent disabled:text-gray-300 disabled:shadow-none disabled:hover:bg-transparent',
         className,
       )}
     >

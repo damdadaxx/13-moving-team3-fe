@@ -213,12 +213,19 @@ export default function MoverFindContent() {
   }
 
   // 조건을 못 찾은 문장을 그대로 별명 검색으로 넘긴다
+  // 직전 AI 검색이 넣은 지역·서비스·정렬은 비운다 (남아 있으면 그 조건 안에서만 별명을 찾아 결과가 비었다)
   function handleSearchUnmatchedByName() {
     if (!unmatchedAiQuery) return;
     setKeyword(unmatchedAiQuery);
     setUnmatchedAiQuery(null);
     setAiResult(null);
-    updateQuery({ ai: undefined });
+    updateQuery({
+      ai: undefined,
+      region: undefined,
+      serviceType: undefined,
+      sortBy: undefined,
+      q: unmatchedAiQuery,
+    });
   }
 
   const aiResultText = aiResult

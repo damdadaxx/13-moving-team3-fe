@@ -49,10 +49,12 @@ const subscribeNothing = () => () => {};
 - 서버 HTML과 hydration 첫 렌더에서는 인트로 모드를 알 수 없어(항상 skip) 랜딩 화면이 먼저 보였다가
   JS가 뜬 뒤에야 인트로가 올라왔다
 - 그래서 서버 렌더와 hydration 동안만 인트로와 같은 주황 덮개를 깔아 둔다
-  - 모바일(744px 미만)에서만 보인다 (tablet:hidden)
-  - 이미 인트로를 본 탭이면 layout의 스크립트가 html에 data-intro-seen을 붙여 처음부터 숨긴다 (globals.css)
+  - 기본은 숨김이다. layout의 스크립트가 "모바일이고 아직 인트로를 안 본 탭"일 때만 html에
+    data-intro-pending을 붙이고, 그때만 덮개가 보인다 (globals.css). 스크립트가 안 돌면 덮개도 안 보인다
   - hydration이 끝나면 덮개는 사라지고, 그 자리에 인트로(같은 주황 화면)가 바로 이어진다
   - JS가 늦거나 실패해도 화면이 막히지 않게 몇 초 뒤 CSS로 스스로 사라진다 (globals.css)
+  - position: fixed가 아니라 absolute다. iOS 사파리는 화면 가장자리의 fixed 요소 색으로 상단 상태바·
+    하단 툴바 색을 정해서, 전체 화면 fixed 덮개를 쓰면 막대가 주황으로 물들고 덮개가 사라진 뒤에도 남는다
 */
 export default function IntroOverlay() {
   const { isIntroActive } = useIntroGate();
@@ -70,7 +72,7 @@ export default function IntroOverlay() {
       <div
         data-intro-cover
         aria-hidden
-        className="fixed inset-0 z-modal bg-orange-400 tablet:hidden"
+        className="absolute top-0 left-0 z-modal h-dvh w-full bg-orange-400"
       />
     );
   }

@@ -351,6 +351,7 @@
     "reset": "Reset",
     "aiToggle": "AI search",
     "aiToggleLabel": "Turn on AI search",
+    "aiHint": "Tap the AI Search button to get smart recommendations.",
     "aiPlaceholder": "e.g. Office move in Busan, most reviewed",
     "aiHelper": "Describe what you need and press Enter. Do not enter personal information.",
     "aiRemaining": "{remaining}/{limit} left today",

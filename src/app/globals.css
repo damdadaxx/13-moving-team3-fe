@@ -337,15 +337,17 @@ html:has(body.is-scroll-locked) {
 
 /*
 @ 모바일 인트로 덮개 (IntroOverlay)
-- 이미 인트로를 본 탭(html[data-intro-seen])에서는 처음부터 숨긴다. 속성은 layout의 인라인 스크립트가 붙인다
-- JS가 늦거나 실패해도 막히지 않게 6초 뒤 스스로 사라진다
+- 기본은 숨긴다. 모바일이고 아직 인트로를 안 본 탭에서만 html[data-intro-pending]이 붙어 보인다.
+  속성은 layout의 인라인 스크립트가 붙인다 (스크립트가 안 돌면 덮개는 보이지 않는다)
+- JS가 늦거나 실패해도 막히지 않게 4초 뒤 스스로 사라진다
 */
-html[data-intro-seen] [data-intro-cover] {
+[data-intro-cover] {
   display: none;
 }
 
-[data-intro-cover] {
-  animation: intro-cover-fallback 0.4s ease 6s forwards;
+html[data-intro-pending] [data-intro-cover] {
+  display: block;
+  animation: intro-cover-fallback 0.4s ease 4s forwards;
 }
 
 @keyframes intro-cover-fallback {

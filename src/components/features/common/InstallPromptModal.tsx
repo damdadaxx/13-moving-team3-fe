@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
+import { usePathname } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
@@ -12,6 +13,7 @@ import Modal from '@/components/ui/Modal';
 
 /*
 @ 앱 설치 안내 모달 (PWA)
+- 랜딩 페이지('/')에서만 띄운다. 띄운 뒤 다른 페이지로 이동하면 닫고, 돌아와도 다시 띄우지 않는다 (새로고침하면 다시 뜬다)
 - 처음 들어왔을 때 띄운다. X·배경·ESC로 그냥 닫은 것은 아무것도 저장하지 않아 다시 들어오면 또 뜬다
 - "오늘 하루 보지 않기"를 눌렀을 때만 오늘(자정까지)은 띄우지 않는다. 이 브라우저(localStorage)에만 기억한다
 - 안내 문구는 한 덩어리로 보여준다. 크롬 계열은 설치 안내, iOS는 공유 버튼 위치까지 설명한다
@@ -81,14 +83,34 @@ export default function InstallPromptModal() {
   const t = useTranslations('InstallPrompt');
   const tCommon = useTranslations('Common');
   const controlSize = useBreakpointValue('sm', 'sm', 'md');
-  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const isLanding = pathname === '/';
+  /*
+  @ 안내 상태
+  - idle: 아직 띄울 준비가 안 됐다 (설치 이벤트를 기다리는 중)
+  - ready: 띄울 수 있다. 랜딩 페이지에 있을 때만 실제로 보인다
+  - dismissed: 닫았거나 설치했거나 랜딩을 떠났다. 새로고침 전까지 다시 띄우지 않는다
+  */
+  const [status, setStatus] = useState<'idle' | 'ready' | 'dismissed'>('idle');
+  const [wasLanding, setWasLanding] = useState(isLanding);
   const [installEvent, setInstallEvent] =
     useState<BeforeInstallPromptEvent | null>(null);
+  const isOpen = status === 'ready' && isLanding;
+
+  // 랜딩에서 다른 페이지로 이동하면 닫은 것으로 본다 (렌더 중 상태 조정)
+  if (wasLanding !== isLanding) {
+    setWasLanding(isLanding);
+    if (wasLanding && status === 'ready') setStatus('dismissed');
+  }
 
   useEffect(() => {
     if (isStandalone() || readHiddenDate() === getTodayKey()) return;
 
-    const open = () => setIsOpen(true);
+    const open = () => {
+      // 설치 이벤트는 페이지를 옮기면 다시 올 수 있어서, 열기 전에 "오늘 하루 보지 않기" 여부를 다시 본다
+      if (readHiddenDate() === getTodayKey()) return;
+      setStatus((current) => (current === 'idle' ? 'ready' : current));
+    };
 
     const handleBeforeInstallPrompt = (event: Event) => {
       // 크롬의 기본 설치 안내(미니 인포바)를 막고 이 모달로 대신한다
@@ -99,7 +121,7 @@ export default function InstallPromptModal() {
     };
     const handleInstalled = () => {
       window.__deferredInstallPrompt = undefined;
-      setIsOpen(false);
+      setStatus('dismissed');
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -127,11 +149,11 @@ export default function InstallPromptModal() {
     };
   }, []);
 
-  const handleClose = () => setIsOpen(false);
+  const handleClose = () => setStatus('dismissed');
 
   const handleHideToday = () => {
     writeHiddenDate(getTodayKey());
-    setIsOpen(false);
+    setStatus('dismissed');
   };
 
   const handleInstall = async () => {
@@ -142,7 +164,7 @@ export default function InstallPromptModal() {
     // 한 번 쓴 설치 이벤트는 다시 쓸 수 없다. 결과와 관계없이 모달을 닫는다
     window.__deferredInstallPrompt = undefined;
     setInstallEvent(null);
-    setIsOpen(false);
+    setStatus('dismissed');
   };
 
   return (

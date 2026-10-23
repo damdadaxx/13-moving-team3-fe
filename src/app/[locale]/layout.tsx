@@ -101,6 +101,13 @@ export default async function RootLayout({
         - 새로고침하면 크롬이 beforeinstallprompt를 React가 뜨기 전에 보내서 놓치게 된다
         - 여기서 받아 window.__deferredInstallPrompt에 보관하면 InstallPromptModal이 뜬 뒤 꺼내 쓴다
         */}
+        {/*
+        @ 모바일 인트로를 이미 본 탭이면 덮개를 처음부터 숨긴다
+        - sessionStorage 키는 IntroGateProvider의 INTRO_SEEN_KEY와 같다
+        */}
+        <Script id="intro-seen-flag" strategy="beforeInteractive">
+          {`try{if(sessionStorage.getItem('moving-mobile-intro-seen')==='1')document.documentElement.setAttribute('data-intro-seen','');}catch(e){}`}
+        </Script>
         <Script id="capture-install-prompt" strategy="beforeInteractive">
           {`window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__deferredInstallPrompt=e;});`}
         </Script>

@@ -12,8 +12,10 @@ import Modal from '@/components/ui/Modal';
 
 /*
 @ 앱 설치 안내 모달 (PWA)
-- 처음 들어왔을 때 한 번 띄운다. 탭(세션)에서 한 번 보여줬으면 새로고침해도 다시 띄우지 않는다
-- "오늘 하루 보지 않기"를 누르면 오늘(자정까지)은 띄우지 않는다. 이 브라우저(localStorage)에만 기억한다
+- 처음 들어왔을 때 띄운다. X·배경·ESC로 그냥 닫은 것은 아무것도 저장하지 않아 다시 들어오면 또 뜬다
+- "오늘 하루 보지 않기"를 눌렀을 때만 오늘(자정까지)은 띄우지 않는다. 이 브라우저(localStorage)에만 기억한다
+- 안내 문구는 한 덩어리로 보여준다. 크롬 계열은 설치 안내, iOS는 공유 버튼 위치까지 설명한다
+- 위에 보이는 아이콘은 설치되는 앱 아이콘(apple-touch-icon, 매니페스트 아이콘)과 같은 이미지다
 - 이미 설치된 앱(standalone)으로 열었으면 띄우지 않는다
 - 설치 방식은 브라우저에 따라 다르다
   - 크롬·엣지·삼성 인터넷: beforeinstallprompt를 받아 두었다가 "앱 설치하기"에서 설치 창을 연다
@@ -28,7 +30,6 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 const HIDDEN_DATE_KEY = 'moving-install-prompt-hidden-date';
-const SHOWN_SESSION_KEY = 'moving-install-prompt-shown';
 const IOS_SHOW_DELAY_MS = 1500;
 
 /** 로컬 날짜 기준 하루 키 (같은 날이면 같은 값) */
@@ -37,26 +38,17 @@ function getTodayKey() {
   return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
 }
 
-function readStorage(storage: 'local' | 'session', key: string) {
+function readHiddenDate() {
   try {
-    return (
-      storage === 'local' ? window.localStorage : window.sessionStorage
-    ).getItem(key);
+    return window.localStorage.getItem(HIDDEN_DATE_KEY);
   } catch {
     return null;
   }
 }
 
-function writeStorage(
-  storage: 'local' | 'session',
-  key: string,
-  value: string,
-) {
+function writeHiddenDate(value: string) {
   try {
-    (storage === 'local' ? window.localStorage : window.sessionStorage).setItem(
-      key,
-      value,
-    );
+    window.localStorage.setItem(HIDDEN_DATE_KEY, value);
   } catch {
     // 사파리 프라이빗 모드 등 storage가 막힌 경우엔 이번 페이지에서만 동작한다
   }
@@ -86,18 +78,9 @@ export default function InstallPromptModal() {
     useState<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
-    if (
-      isStandalone() ||
-      readStorage('local', HIDDEN_DATE_KEY) === getTodayKey() ||
-      readStorage('session', SHOWN_SESSION_KEY)
-    ) {
-      return;
-    }
+    if (isStandalone() || readHiddenDate() === getTodayKey()) return;
 
-    const open = () => {
-      writeStorage('session', SHOWN_SESSION_KEY, '1');
-      setIsOpen(true);
-    };
+    const open = () => setIsOpen(true);
 
     const handleBeforeInstallPrompt = (event: Event) => {
       // 크롬의 기본 설치 안내(미니 인포바)를 막고 이 모달로 대신한다
@@ -125,7 +108,7 @@ export default function InstallPromptModal() {
   const handleClose = () => setIsOpen(false);
 
   const handleHideToday = () => {
-    writeStorage('local', HIDDEN_DATE_KEY, getTodayKey());
+    writeHiddenDate(getTodayKey());
     setIsOpen(false);
   };
 
@@ -151,12 +134,14 @@ export default function InstallPromptModal() {
             variant="outlined"
             size={controlSize}
             onClick={handleHideToday}
+            className="p-0 text-md-medium!"
           >
             {t('hideToday')}
           </Button>
           <Button
             size={controlSize}
             onClick={installEvent ? () => void handleInstall() : handleClose}
+            className="p-0 text-md-medium!"
           >
             {installEvent ? t('install') : tCommon('confirm')}
           </Button>
@@ -165,20 +150,15 @@ export default function InstallPromptModal() {
     >
       <div className="flex w-full flex-col items-center gap-[16px] text-center">
         <Image
-          src="/icons/icon-192.png"
+          src="/icons/apple-touch-icon.png"
           alt=""
           width={72}
           height={72}
           className="size-[72px] rounded-[18px] border border-line-100"
         />
-        <p className="text-md-regular text-black-300 tablet:text-lg-regular">
-          {t('description')}
+        <p className="w-full text-center text-md-regular whitespace-pre-line text-black-300 tablet:text-lg-regular">
+          {installEvent ? t('description') : t('iosGuide')}
         </p>
-        {installEvent ? null : (
-          <p className="rounded-[12px] bg-background-200 px-[16px] py-[12px] text-sm-medium text-black-300 tablet:text-md-medium">
-            {t('iosGuide')}
-          </p>
-        )}
       </div>
     </Modal>
   );

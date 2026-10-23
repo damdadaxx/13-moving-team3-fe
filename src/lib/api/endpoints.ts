@@ -59,6 +59,7 @@ export const ENDPOINTS = {
   payment: {
     byEstimate: (estimateId: number | string) =>
       api(`/estimates/${estimateId}/payments`), // [GET] 로그인(고객) - 선수금·잔금 결제 현황 / [POST] 결제 주문 생성 (body: type)
+    list: api('/payments'), // [GET] 로그인(고객) - 내 결제내역(커서 무한 스크롤)
     confirm: api('/payments/confirm'), // [POST] 로그인(고객) - 결제 승인 (paymentKey, orderId, amount)
   },
 

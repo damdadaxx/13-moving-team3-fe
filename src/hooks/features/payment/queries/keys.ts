@@ -6,4 +6,5 @@ export const paymentKeys = {
       'estimate',
       estimateId,
     ] as const /* 견적의 결제 현황 */,
+  history: () => [...paymentKeys.all, 'history'] as const /* 내 결제내역 */,
 };

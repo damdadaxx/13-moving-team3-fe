@@ -15,7 +15,7 @@ export function useCreatePaymentOrderMutation(estimateId: string) {
 }
 
 /** 결제 승인
- * - 성공하면 해당 견적의 결제 현황을 다시 받는다
+ * - 성공하면 해당 견적의 결제 현황과 결제내역을 다시 받는다
  */
 export function useConfirmPaymentMutation() {
   const queryClient = useQueryClient();
@@ -26,6 +26,8 @@ export function useConfirmPaymentMutation() {
       void queryClient.invalidateQueries({
         queryKey: paymentKeys.byEstimate(payment.estimateId),
       });
+      // 결제내역 탭에도 방금 결제한 건이 나오도록
+      void queryClient.invalidateQueries({ queryKey: paymentKeys.history() });
     },
   });
 }

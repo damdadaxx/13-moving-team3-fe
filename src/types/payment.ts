@@ -4,6 +4,7 @@
 - 금액은 항상 서버가 견적가에서 계산한다. 프런트는 서버가 준 금액만 그대로 쓴다
 - 백엔드 결제 API 계약과 이름·단위를 맞춘다
 */
+import type { ServiceType } from '@/types/serviceType';
 
 /** 선수금 / 잔금 */
 export type PaymentType = 'DEPOSIT' | 'BALANCE';
@@ -16,6 +17,8 @@ export interface PaymentInfo {
   amount: number;
   status: PaymentStatus;
   paidAt: string | null;
+  /** 토스가 승인을 거절한 사유. 실패(FAILED)가 아니면 null */
+  failureMessage: string | null;
 }
 
 /** GET /estimates/:estimateId/payments */
@@ -59,4 +62,42 @@ export interface ConfirmedPayment {
   amount: number;
   status: PaymentStatus;
   paidAt: string | null;
+}
+
+/*
+@ GET /payments - 내 결제내역 (커서 기반 무한 스크롤, 최신 결제순)
+- 기본은 결제 완료(PAID) 건만 내려온다
+*/
+export interface PaymentHistoryEstimate {
+  estimateId: string;
+  serviceType: ServiceType;
+  moveDate: string;
+  departureAddress: string;
+  arrivalAddress: string;
+  /** 견적가 (선수금 + 잔금) */
+  price: number;
+  mover: { moverId: string; nickname: string };
+}
+
+export interface PaymentHistoryItem {
+  paymentId: string;
+  type: PaymentType;
+  amount: number;
+  status: PaymentStatus;
+  paidAt: string | null;
+  failureMessage: string | null;
+  orderName: string;
+  estimate: PaymentHistoryEstimate;
+}
+
+export interface PaymentHistoryList {
+  list: PaymentHistoryItem[];
+  nextCursor: string | null;
+  /** 조건에 맞는 전체 결제 건수 */
+  totalCount: number;
+}
+
+export interface PaymentHistoryQuery {
+  cursor?: string;
+  size?: number;
 }

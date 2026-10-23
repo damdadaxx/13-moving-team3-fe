@@ -56,14 +56,22 @@ export default function PaymentSection({ estimateId }: PaymentSectionProps) {
     }
   };
 
-  const renderStatus = (info: PaymentInfo | null, canPay: boolean) => {
+  const renderStatus = (
+    info: PaymentInfo | null,
+    canPay: boolean,
+    needsDeposit = false,
+  ) => {
     if (info?.status === 'PAID') {
       return info.paidAt
         ? `${t('statusPaid')} · ${formatDate(info.paidAt, 'korean')}`
         : t('statusPaid');
     }
     if (info?.status === 'FAILED') return t('statusFailed');
-    return canPay ? t('statusUnpaid') : t('statusWaiting');
+    // 승인 결과를 기다리는 중이라 다시 주문할 수 없는 상태 (카드는 즉시 승인이라 드물다)
+    if (info?.status === 'READY' && !canPay) return t('statusProcessing');
+    if (canPay) return t('statusUnpaid');
+    // 잔금은 선수금을 먼저 내야 하고, 그다음에 이사가 끝나야 열린다
+    return needsDeposit ? t('statusNeedDeposit') : t('statusWaiting');
   };
 
   const rows = [
@@ -73,13 +81,25 @@ export default function PaymentSection({ estimateId }: PaymentSectionProps) {
       amount: payments.depositAmount,
       status: renderStatus(payments.deposit, payments.canPayDeposit),
       isPaid: payments.deposit?.status === 'PAID',
+      failureMessage:
+        payments.deposit?.status === 'FAILED'
+          ? payments.deposit.failureMessage
+          : null,
     },
     {
       key: 'balance',
       label: t('balanceLabel'),
       amount: payments.balanceAmount,
-      status: renderStatus(payments.balance, payments.canPayBalance),
+      status: renderStatus(
+        payments.balance,
+        payments.canPayBalance,
+        payments.deposit?.status !== 'PAID',
+      ),
       isPaid: payments.balance?.status === 'PAID',
+      failureMessage:
+        payments.balance?.status === 'FAILED'
+          ? payments.balance.failureMessage
+          : null,
     },
   ];
 
@@ -94,7 +114,7 @@ export default function PaymentSection({ estimateId }: PaymentSectionProps) {
       className={cn(
         'border-b border-line-100 py-[20px]',
         'tablet:py-[32px]',
-        'desktop:border-b-0 desktop:py-[30px]',
+        'desktop:border-b desktop:py-[30px]',
       )}
     >
       <SectionTitle className={cn('mb-[20px]', 'tablet:mb-[28px]')}>
@@ -117,6 +137,11 @@ export default function PaymentSection({ estimateId }: PaymentSectionProps) {
               >
                 {row.status}
               </dd>
+              {row.failureMessage ? (
+                <dd className="mt-[2px] break-words text-sm-regular text-red-200">
+                  {row.failureMessage}
+                </dd>
+              ) : null}
             </div>
             <dd className="shrink-0 text-lg-semibold text-black-400 tablet:text-xl-semibold">
               {formatPrice(row.amount)}
@@ -141,7 +166,7 @@ export default function PaymentSection({ estimateId }: PaymentSectionProps) {
           {payments.canPayDeposit ? (
             <Button
               size="sm"
-              className="w-full tablet:w-auto"
+              className="w-full tablet:w-auto tablet:min-w-[200px]"
               isLoading={isOpening}
               onClick={() => void handlePay('DEPOSIT')}
             >
@@ -151,7 +176,7 @@ export default function PaymentSection({ estimateId }: PaymentSectionProps) {
           {payments.canPayBalance ? (
             <Button
               size="sm"
-              className="w-full tablet:w-auto"
+              className="w-full tablet:w-auto tablet:min-w-[200px]"
               isLoading={isOpening}
               onClick={() => void handlePay('BALANCE')}
             >

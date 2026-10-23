@@ -2,6 +2,8 @@ import type {
   ConfirmPaymentInput,
   ConfirmedPayment,
   EstimatePayments,
+  PaymentHistoryList,
+  PaymentHistoryQuery,
   PaymentOrder,
   PaymentType,
 } from '@/types/payment';
@@ -37,4 +39,17 @@ export function confirmPayment(
     method: 'POST',
     body: JSON.stringify(input),
   });
+}
+
+/** GET /payments - 내 결제내역 (커서 기반, size 기본 10) */
+export function getPaymentHistory(
+  query: PaymentHistoryQuery = {},
+): Promise<PaymentHistoryList> {
+  const params = new URLSearchParams();
+  params.set('size', String(query.size ?? 10));
+  if (query.cursor) params.set('cursor', query.cursor);
+
+  return clientFetch<PaymentHistoryList>(
+    `${ENDPOINTS.payment.list}?${params.toString()}`,
+  );
 }
